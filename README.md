@@ -2,10 +2,17 @@
 
 *Dāvar* (داور): the judge, the arbiter; from the older *dādvar*, the one who judges by law.
 
-Daavar is one judge for two model checkers. It holds, pinned at exact commits, the two tools
-that explore Must-API programs, the summary format both export, the benchmarks written against
-both, and the scripts that run the cross-language refinement check between a Java program
-explored by JMC and a Rust program explored by TraceForge.
+Daavar judges refinement across languages: given a distributed protocol written in Java and
+one written in Rust, it decides whether one refines the other, that is, whether every behaviour
+the visible parts of one program can show is a behaviour of the other. The programs are written
+against the same message-passing model, the Must API, and the comparison is on execution
+graphs: the values the visible threads send and receive, their final status, and the causal
+order among them.
+
+Each side is explored exhaustively by a DPOR model checker for its language, JMC for Java and
+TraceForge for Rust, each running the Must algorithm. The checkers are the instruments; the
+verdict is about the two programs. Both export the same compact summaries of their execution
+graphs, and one join over the two exports gives the verdict, in either direction.
 
 ## Layout
 
@@ -19,14 +26,15 @@ explored by JMC and a Rust program explored by TraceForge.
 
 ## The check, in three commands
 
-1. Run the specification program to exhaustion in tool A and export its summaries.
-2. Run the implementation program in tool B and export its summaries.
+1. Explore the program taken as the specification to exhaustion with its checker and export
+   its summaries.
+2. Explore the program taken as the implementation with its checker and export its summaries.
 3. `traceforge/target/release/conf-join spec.jsonl impl.jsonl` prints the implementation
    summaries the specification does not cover; none means the implementation refines the
    specification.
 
-The direction is the order of the two files. A `sampled` file (JMC's random strategy) is
-accepted as the implementation side only.
+Java against Rust or Rust against Java: the direction is the order of the two files. A
+`sampled` file (JMC's random strategy) is accepted as the implementation side only.
 
 ## Pins
 
