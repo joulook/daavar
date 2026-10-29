@@ -1,0 +1,4 @@
+{"format":1,"tool":"jmc","program":"a3-never-grant-k2q1","size":"k2q1","visible":["c0","c1"],"model":"p2p","enumeration":"sampled","seed":1,"iterations":300,"encoding":1}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Acq","f":[0]}},{"r":{"t":"Grant","f":[0,0]}},{"s":{"t":"Rel","f":[0]}}],"c1":[{"s":{"t":"Acq","f":[1]}},{"r":{"t":"Grant","f":[1,0]}},{"s":{"t":"Rel","f":[1]}}]},"counts":[0,0,0,0,3,3],"n":86}
+{"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"Acq","f":[0]}},{"r":{"t":"Grant","f":[0,0]}},{"s":{"t":"Rel","f":[0]}}],"c1":[{"s":{"t":"Acq","f":[1]}}]},"counts":[0,0,0,0],"n":124}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Acq","f":[0]}},{"r":{"t":"Grant","f":[0,0]}},{"s":{"t":"Rel","f":[0]}}],"c1":[{"s":{"t":"Acq","f":[1]}},{"r":{"t":"Grant","f":[1,0]}},{"s":{"t":"Rel","f":[1]}}]},"counts":[0,3,3,0,0,0],"n":90}

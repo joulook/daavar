@@ -1,0 +1,3 @@
+{"format":1,"tool":"jmc","program":"a2-sh-k2q1s1","size":"k2q1s1","visible":["c0","c1"],"model":"p2p","enumeration":"sampled","seed":1,"iterations":300,"encoding":1}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Put","f":[0,0,0]}},{"r":{"t":"Ack","f":[]}}],"c1":[{"s":{"t":"Get","f":[1,0]}},{"r":{"t":"None","f":[]}}]},"counts":[0,1,0,0],"n":81}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Put","f":[0,0,0]}},{"r":{"t":"Ack","f":[]}}],"c1":[{"s":{"t":"Get","f":[1,0]}},{"r":{"t":"Val","f":[0]}}]},"counts":[0,0,0,1],"n":219}

@@ -1,0 +1,2 @@
+{"format":1,"tool":"jmc","program":"a2-pb-k1q2","size":"k1q2","visible":["c0"],"model":"p2p","enumeration":"complete","encoding":1}
+{"statuses":{"c0":"done"},"words":{"c0":[{"s":{"t":"Put","f":[0,0,0]}},{"r":{"t":"Ack","f":[]}},{"s":{"t":"Get","f":[0,0]}},{"r":{"t":"Val","f":[0]}}]},"counts":[],"n":1}

@@ -1,0 +1,8 @@
+[submodule "jmc"]
+	path = jmc
+	url = https://github.com/mpi-sws-rse/jmc.git
+	branch = main
+[submodule "traceforge"]
+	path = traceforge
+	url = https://github.com/joulook/TraceForge.git
+	branch = feat/conformance
