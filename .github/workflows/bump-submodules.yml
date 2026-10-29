@@ -12,9 +12,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 0
       - name: Move each submodule to the newest commit of its branch
         run: |
-          git submodule update --init --remote
+          # The checkout fetches each submodule shallowly at its pinned commit, so the
+          # tracked branch is not known yet: fetch it explicitly, then move to it.
+          git submodule foreach 'b=$(git config -f "$toplevel/.gitmodules" submodule."$name".branch); git fetch --depth 1 origin "$b" && git checkout -q FETCH_HEAD'
           if git diff --quiet; then echo "Submodules up to date"; exit 0; fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
