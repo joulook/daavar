@@ -9,7 +9,7 @@
 : "${CARGO_HOME:=/local/mkhoshechin/cargo}"
 : "${TMPDIR:=/local/mkhoshechin/tmp}"
 : "${JMC_CP_FILE:=$EVAL_OUT/jmc-cp.txt}"              # written by setup-node.sh
-: "${GIT_SSH_COMMAND:=ssh -i $HOME/.ssh/brain-data -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new}"
-export DAAVAR EVAL_OUT BRAIN_DATA TFX JMCX JAVA_HOME CARGO_HOME TMPDIR JMC_CP_FILE GIT_SSH_COMMAND
+# git access: the clones use the ssh aliases gh-daavar (read) and gh-brain-data (write) from ~/.ssh/config
+export DAAVAR EVAL_OUT BRAIN_DATA TFX JMCX JAVA_HOME CARGO_HOME TMPDIR JMC_CP_FILE
 export PATH="$JAVA_HOME/bin:$CARGO_HOME/bin:$HOME/.cargo/bin:$PATH"
 mkdir -p "$EVAL_OUT" "$TFX" "$TMPDIR" 2>/dev/null || true
