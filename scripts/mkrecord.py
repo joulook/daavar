@@ -73,6 +73,16 @@ if m and dv:
         "iterations": g("executions"), "max_graph_events": g("max_paper_events"), "max_summary_bytes": g("summary_bytes"),
         "tool_stop": g("end"), "tool_wall_ms": g("wall_ms"), "tool_peak_kb": g("vmhwm_kb_max")})
     if g("threads"): rec["impl_threads"] = g("threads")
+    # engines whose record has no verdict/split cells (frozen engine): derive from reports and end states
+    ends = [x for x in (g("end"), g("impl_end"), g("spec_end")) if x]
+    if not rec.get("verdict") and g("reports") is not None:
+        rec["verdict"] = "violation" if g("reports") != "0" else ("conforms" if ends and all(e == "StateSpaceExhausted" for e in ends) else "partial")
+    rec["reports"] = g("reports")
+    if not rec.get("spec_complete") and g("spec_graphs"): rec["spec_complete"] = g("spec_graphs")
+    if not rec.get("impl_complete") and g("impl_graphs"): rec["impl_complete"] = g("impl_graphs")
+    if not rec.get("impl_complete") and g("outer_graphs(execs+block)"):
+        mm = re.search(r"\d+", g("outer_graphs(execs+block)")); rec["impl_complete"] = mm.group(0) if mm else None
+    if not rec.get("tool_stop"): rec["tool_stop"] = "/".join(dict.fromkeys(ends)) or g("end_class")
     rec.setdefault("kind", "conf-traceforge"); rec.setdefault("spec_tool", "traceforge"); rec.setdefault("impl_tool", "traceforge")
     rec.setdefault("spec_lang", "rust"); rec.setdefault("impl_lang", "rust"); rec.setdefault("mode", "in-process")
     if g("verdict") and g("reports") and g("reports") != "0" and rec.get("stop_reason") == "ok": pass

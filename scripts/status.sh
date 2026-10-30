@@ -14,4 +14,7 @@ for s in "$EVAL_OUT"/*/status; do
     printf '%s  %ds  %s  pid=%s\n' "$(basename "$d")" "$e" "$(sed -n 's/^cores=//p' "$s")" "$(sed -n 's/^pid=//p' "$s")"; fi
 done
 echo "-- results: $(wc -l < "$EVAL_OUT/results.tsv" 2>/dev/null) rows; by reason:"
-[ -f "$EVAL_OUT/results.tsv" ] && cut -f40 "$EVAL_OUT/results.tsv" | sort | uniq -c | sort -rn | head
+if [ -f "$EVAL_OUT/results.tsv" ] && [ -f "$BRAIN_DATA/results.tsv" ]; then
+  col=$(head -1 "$BRAIN_DATA/results.tsv" | tr '\t' '\n' | grep -nx stop_reason | cut -d: -f1)
+  cut -f"$col" "$EVAL_OUT/results.tsv" | sort | uniq -c | sort -rn | head
+fi
