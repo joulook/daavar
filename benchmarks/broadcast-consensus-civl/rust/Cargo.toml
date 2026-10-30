@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-traceforge = { path = "/local/home/mkhoshechin/tmp/tf-bench/traceforge" }
+traceforge = { path = "../../../traceforge/traceforge" }
 
 [workspace]
