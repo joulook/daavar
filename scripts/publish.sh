@@ -15,6 +15,16 @@ find "$dest" -maxdepth 3 -name '*.jsonl' -size +1M -exec zstd -q -19 --rm {} \; 
   cd "$BRAIN_DATA"
   mkdir -p results; hdr=$(head -1 results.tsv)
   [ -f "results/$node.tsv" ] || printf '%s\n' "$hdr" > "results/$node.tsv"
+  # the schema may gain columns (appended at the end): rewrite the node file's header, pad old rows
+  if [ "$(head -1 "results/$node.tsv")" != "$hdr" ]; then
+    python3 -I -c '
+import sys; hdr=sys.argv[1].split("\t"); f=sys.argv[2]; lines=open(f).read().splitlines()
+old=lines[0].split("\t"); pos={c:i for i,c in enumerate(old)}
+out=["\t".join(hdr)]
+for l in lines[1:]:
+    cells=l.split("\t"); out.append("\t".join(cells[pos[c]] if c in pos and pos[c]<len(cells) else "" for c in hdr))
+open(f,"w").write("\n".join(out)+"\n")' "$hdr" "results/$node.tsv"
+  fi
   if ! grep -q -P "^$(printf '%s' "$id" | sed 's/[.[\*^$]/\\&/g')\t" "results/$node.tsv" 2>/dev/null; then
     line=$(python3 -I "$DAAVAR/scripts/mkrecord.py" "$d" 2>/dev/null) && printf '%s\n' "$line" >> "results/$node.tsv"
   fi
