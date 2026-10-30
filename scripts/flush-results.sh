@@ -12,9 +12,9 @@ while [ ! -e .stop-flusher ]; do
     flock -w 120 9 || exit 0
     [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] && git rebase --abort >/dev/null 2>&1
     git symbolic-ref -q HEAD >/dev/null || git checkout -q -B main
-    if [ -n "$(git status --porcelain -- runs/"$node" results/"$node".tsv 2>/dev/null)" ]; then
+    if [ -n "$(git status --porcelain -- runs/"$node" results/"$node".*tsv 2>/dev/null)" ]; then
       n=$(git status --porcelain -- runs/"$node" | grep -c '^??\|^ M\|^A ' || true)
-      git add -A runs/"$node" results/"$node".tsv >/dev/null 2>&1
+      git add -A runs/"$node" results/"$node".*tsv >/dev/null 2>&1
       git commit -q -m "$node: $n row dir(s) updated, $(date -Is)" >/dev/null 2>&1 || true
     fi
     if [ -n "$(git log origin/main..HEAD --oneline 2>/dev/null)" ]; then

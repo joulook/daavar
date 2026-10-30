@@ -16,10 +16,12 @@ set -uo pipefail
 . "$(dirname "$0")/env.sh"
 S="$(cd "$(dirname "$0")" && pwd)"
 ROWS="$1"; QNAME="$2"; SLOTS="${3:-8}"
+: "${NUMA_SET:=$(seq -s, 0 $((SLOTS-1)))}"   # NUMA nodes this queue may use, e.g. "3,4,5,6,7" when another queue holds 0-2
+IFS=, read -r -a ALLOWED <<< "$NUMA_SET"
 : "${ROWS_TSV:=$ROWS.tsv}"; [ -f "$ROWS_TSV" ] || ROWS_TSV="$(dirname "$ROWS")/rows.tsv"; : "${PIN:=1}"; : "${FOREIGN_LOAD_POLICY:=wait}"; : "${FOREIGN_LOAD_MARGIN:=8}"; : "${PUBLISH:=1}"
 export ROWS_TSV S
 QDIR="$EVAL_OUT/queues/$QNAME"; mkdir -p "$QDIR"
-echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS host=$(hostname) pid=$$" >> "$QDIR/queue.log"
+echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS numa=$NUMA_SET pin=$TF_PIN host=$(hostname) pid=$$" >> "$QDIR/queue.log"
 
 cores_of() { local w=$1 first=$2 out=""; for ((n=first; n<first+w; n++)); do out+="${out:+,}$((16*n))-$((16*n+15))"; done; echo "$out"; }
 width_of() { case "$1" in *-t64*) echo 4;; *-t32*) echo 2;; *) echo 1;; esac; }
@@ -66,8 +68,9 @@ run_row() {  # id memGB timeoutS first-numa width cmd...
 declare -A BUSY=()   # numa-node -> pid
 declare -A ROWPID=() # pid -> "first width"
 free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; read -r f w <<< "${ROWPID[$p]}"; for ((n=f; n<f+w; n++)); do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
-find_free() {  # $1 width -> first numa node with width free nodes, or empty
-  local w=$1 n k ok; for ((n=0; n+w<=SLOTS; n++)); do ok=1; for ((k=n; k<n+w; k++)); do [ -n "${BUSY[$k]:-}" ] && { ok=0; break; }; done; [ $ok = 1 ] && { echo $n; return; }; done
+allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; done; return 1; }
+find_free() {  # $1 width -> first allowed numa node with width consecutive free allowed nodes, or empty
+  local w=$1 n k ok; for ((n=0; n+w<=SLOTS; n++)); do ok=1; for ((k=n; k<n+w; k++)); do { [ -n "${BUSY[$k]:-}" ] || ! allowed $k; } && { ok=0; break; }; done; [ $ok = 1 ] && { echo $n; return; }; done
 }
 while IFS= read -r line || [ -n "$line" ]; do
   [ -z "$line" ] && continue; case "$line" in \#*) continue;; esac

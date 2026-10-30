@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # What is running and what finished on this node (R3). usage: status.sh [queue-name]
 . "$(dirname "$0")/env.sh"
-echo "== $(hostname) $(date -Is) load $(cut -d' ' -f1-3 /proc/loadavg)"
+echo "== $(hostname) $(date -Is) load $(cut -d' ' -f1-3 /proc/loadavg) pin $TF_PIN out $EVAL_OUT"
 for q in "$EVAL_OUT"/queues/*/; do
   [ -d "$q" ] || continue; n=$(basename "$q"); [ -n "${1:-}" ] && [ "$n" != "$1" ] && continue
   if [ -f "$q/pid" ] && kill -0 "$(cat "$q/pid")" 2>/dev/null; then st=RUNNING; else st=stopped; fi

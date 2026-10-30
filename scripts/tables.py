@@ -10,8 +10,12 @@ attrs = {}
 for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"):
     for r in csv.DictReader(open(f), delimiter="\t"): attrs[r["id"].replace("'", "")] = {k: (v or "").replace("'", "") for k, v in r.items()}  # early row files carried stray quotes (the runner strips them from the id)
 # latest record per id wins (reruns append)
+import subprocess
+PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
 byid = {}
-for r in rows: byid[r["run_id"]] = r
+for r in rows:  # an id run on several pins: the current pin wins, else the last seen
+    cur = byid.get(r["run_id"])
+    if cur is None or (r.get("traceforge_commit") or "")[:7] == PIN or (cur.get("traceforge_commit") or "")[:7] != PIN: byid[r["run_id"]] = r
 rows = list(byid.values())
 for r in rows: r["a"] = attrs.get(r["run_id"], {})
 def num(x):

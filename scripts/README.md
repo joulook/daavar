@@ -4,7 +4,7 @@ Rules they implement: `plan/EVAL-RULES.md` R1–R9 of the project. Paths come fr
 
 | script | what |
 |---|---|
-| `env.sh` | paths on a node (`DAAVAR`, `EVAL_OUT`, `BRAIN_DATA`, `TFX`, `JMCX`, JDK, cargo); sourced by all |
+| `env.sh` | paths on a node (`DAAVAR`, `TF_PIN` = TraceForge short sha, `EVAL_OUT` = `out-<pin>`, `BRAIN_DATA`, `TFX`, `JMCX`, JDK, cargo); sourced by all |
 | `setup-node.sh` | once per node after `git pull`: build TraceForge (eval child + `conf-join`), JMC (+ classpath file), every benchmark |
 | `start-queue.sh <rows> <name> [slots]` | start a queue detached (`setsid nohup`); survives ssh/VPN drops |
 | `run-queue.sh` | the queue: NUMA-pinned slots (1/2/4 nodes by `-t32`/`-t64` in the id), `ulimit -v`, `timeout --signal=KILL`, `/usr/bin/time -v`, status file, load log, record, publish |
@@ -23,3 +23,5 @@ TraceForge's rows (T1–T4) come from the lead (`plan/traceForge/cluster/`); ben
 
 Node day one: `git pull && git submodule update --init`, `scripts/setup-node.sh`, clone brain-data to `$BRAIN_DATA`,
 `scripts/start-queue.sh cluster/smoke.rows smoke`, `scripts/status.sh`.
+
+Pins: every output tree, results file (`results/<node>.<pin>.tsv`) and run dir (`runs/<node>/<pin>/`) is per TraceForge pin, so a rerun on a new pin never overwrites or skips an old row. `NUMA_SET=3,4,5,6,7` lets a second queue use the idle NUMA nodes while another queue finishes.
