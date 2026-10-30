@@ -1,0 +1,16 @@
+[package]
+name = "case-study-memcached"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "memcached_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "memcached"
+path = "src/bin/memcached.rs"
+
+[dependencies]
+prusti-contracts = { path = "/srv/prusti-dev/prusti-contracts/prusti-contracts" }
+prusti-refinement = { path = "/srv/refinement-lib/prusti-refinement" }
