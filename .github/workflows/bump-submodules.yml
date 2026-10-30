@@ -1,7 +1,7 @@
 name: bump-submodules
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+  # manual only during the evaluation (2026-10-30 → 11-14): the pins are frozen and move only by
+  # the owner's decision after validation; re-enable the schedule afterwards
   workflow_dispatch:
 permissions:
   contents: write
