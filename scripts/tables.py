@@ -22,23 +22,28 @@ def fmt_s(ms):
 def fmt_gb(kb):  # prints MB below 1 GB, GB above
     v = num(kb); return "--" if v is None else (f"{v/1024:.0f}\\,MB" if v < 1048576 else f"{v/1048576:.1f}\\,GB")
 def esc(s): return s.replace("_", "\\_")
+def stats(rs):  # median and max wall (s), max peak RSS, over finished rows
+    ws = [num(r["wall_ms"]) for r in rs if r["stop_reason"] == "ok" and num(r["wall_ms"]) is not None]
+    ps = [num(r["peak_rss_kb"]) for r in rs if num(r["peak_rss_kb"]) is not None]
+    med = f"{statistics.median(ws)/1000:.1f}" if ws else "--"; mx = fmt_s(max(ws)) if ws else "--"
+    return med, mx, (fmt_gb(max(ps)) if ps else "--")
 FAM = {"a1": "2PC", "a2": "PB store", "a3": "lock", "a4": "hashed store", "a5": "2PC leader", "synth": "reset"}
 md = []
 # ---- Table RQ1: detection / acceptance on T1 ------------------------------------------------
 T1 = [r for r in rows if r["run_id"].startswith("T1.") and r["a"]]
-agg = collections.defaultdict(lambda: collections.Counter())
+agg = collections.defaultdict(lambda: collections.Counter()); grp = collections.defaultdict(list)
 for r in T1:
     fam = r["a"]["family"]; eng = r["a"]["engine"]; exp = r["a"]["expected_verdict"]; v = (r.get("verdict") or "").lower()
     cls = "conf" if exp.startswith("conforms") else "viol"   # controls are counted with their expected verdict
-    key = (fam, eng)
+    key = (fam, eng); grp[key].append(r)
     agg[key][cls + "_n"] += 1
     if "control" in exp: agg[key][cls + "_controls"] += 1
     if r["stop_reason"] != "ok": agg[key][cls + "_unfinished"] += 1
     elif (cls == "conf" and v == "conforms") or (cls == "viol" and v == "violation"): agg[key][cls + "_ok"] += 1
     else: agg[key][cls + "_wrong"] += 1
-lines = ["\\begin{tabular}{@{}llrrrrrr@{}}", "\\toprule",
-         "family & engine & \\multicolumn{3}{c}{expected conforms} & \\multicolumn{3}{c}{expected violation} \\\\",
-         " & & accepted & of & controls & reported & of & controls \\\\", "\\midrule"]
+lines = ["\\begin{tabular}{@{}llrrrrrrrrr@{}}", "\\toprule",
+         "family & engine & \\multicolumn{3}{c}{expected conforms} & \\multicolumn{3}{c}{expected violation} & \\multicolumn{2}{c}{wall s} & peak \\\\",
+         " & & accepted & of & controls & reported & of & controls & median & max & RSS \\\\", "\\midrule"]
 for (fam, eng) in sorted(agg):
     c = agg[(fam, eng)]
     def cell(cls):
@@ -48,7 +53,8 @@ for (fam, eng) in sorted(agg):
         if w: s += f"$^{{\\ast {w}}}$"
         return s, str(n)
     cc, cn = cell("conf"); fc, fn = cell("viol")
-    lines.append(f"{FAM.get(fam, fam)} & {eng} & {cc} & {cn} & {c['conf_controls']} & {fc} & {fn} & {c['viol_controls']} \\\\")
+    med, mx, pk = stats(grp[(fam, eng)])
+    lines.append(f"{FAM.get(fam, fam)} & {eng} & {cc} & {cn} & {c['conf_controls']} & {fc} & {fn} & {c['viol_controls']} & {med} & {mx} & {pk} \\\\")
 lines += ["\\bottomrule", "\\end{tabular}"]
 open(OUT + "/rq1-t1.tex", "w").write("\n".join(lines) + "\n")
 tot = collections.Counter()
@@ -58,17 +64,18 @@ md.append(f"RQ1/T1: {len(T1)} rows; expected conforms {tot['conf_ok']}/{tot['con
 for r in rows:
     if r["run_id"].startswith(("T2.join","T4.join","BX.join")) and r.get("exit_code") == "1" and r.get("verdict"): r["stop_reason"] = "ok"
 J = [r for r in rows if r["run_id"].startswith("T2.join") and r["stop_reason"] == "ok"]
-jag = collections.defaultdict(collections.Counter)
+jag = collections.defaultdict(collections.Counter); jgrp = collections.defaultdict(list)
 for r in J:
     comb = r["run_id"].rsplit(".", 1)[1]; prog = r["run_id"].split(".")[2]; fam = "a3" if prog.startswith("A3") else "a2"
-    jag[(fam, comb)][(r.get("verdict") or "-").lower()] += 1
-lines = ["\\begin{tabular}{@{}llrrr@{}}", "\\toprule", "family & spec / impl & conforms & violation & refused \\\\", "\\midrule"]
+    jag[(fam, comb)][(r.get("verdict") or "-").lower()] += 1; jgrp[(fam, comb)].append(r)
+lines = ["\\begin{tabular}{@{}llrrrrrr@{}}", "\\toprule", "family & spec / impl & conforms & violation & refused & \\multicolumn{2}{c}{join s} & peak \\\\", " & & & & & median & max & RSS \\\\", "\\midrule"]
 R = [r for r in rows if r["run_id"].startswith("T2.join") and r["stop_reason"] != "ok"]
 rag = collections.Counter()
 for r in R: rag[("a3" if r["run_id"].split(".")[2].startswith("A3") else "a2", r["run_id"].rsplit(".", 1)[1])] += 1
 for key in sorted(set(jag) | set(rag)):
     c = jag.get(key, collections.Counter()); comb = key[1].replace("jmcspec", "JMC spec").replace("tfspec", "TF spec").replace("-jmcimpl", " / JMC impl").replace("-tfimpl", " / TF impl")
-    lines.append(f"{FAM[key[0]]} & {comb} & {c['conforms']} & {c['violation']} & {rag.get(key, 0)} \\\\")
+    med, mx, pk = stats(jgrp.get(key, []))
+    lines.append(f"{FAM[key[0]]} & {comb} & {c['conforms']} & {c['violation']} & {rag.get(key, 0)} & {med} & {mx} & {pk} \\\\")
 lines += ["\\bottomrule", "\\end{tabular}"]
 open(OUT + "/rq2-joins.tex", "w").write("\n".join(lines) + "\n")
 md.append(f"RQ2/T2 joins: {len(J)} decided ({sum(c['conforms'] for c in jag.values())} conforms, {sum(c['violation'] for c in jag.values())} violations), {len(R)} refused (no TraceForge export yet)")
@@ -101,18 +108,21 @@ for r in B:
     a = r["a"]; k = (a["family"], a["size"], a["model"], a["variant"]); side = "rust" if r["run_id"].startswith("BR") else "java"
     if r["run_id"].endswith(".c24h") and side in prog[k] and prog[k][side]["stop_reason"] == "ok": continue
     prog[k][side] = r
-bag = collections.defaultdict(collections.Counter)
+bag = collections.defaultdict(collections.Counter); bgrp = collections.defaultdict(lambda: {"rust": [], "java": []})
 for k, d in prog.items():
     ru, ja = d.get("rust"), d.get("java"); c = bag[k[0]]; c["programs"] += 1
+    if ru: bgrp[k[0]]["rust"].append(ru)
+    if ja: bgrp[k[0]]["java"].append(ja)
     if ru and ja and ru["stop_reason"] == "ok" and ja["stop_reason"] == "ok":
         if (ru.get("impl_complete"), ru.get("impl_blocked")) == (ja.get("impl_complete"), ja.get("impl_blocked")): c["equal"] += 1
         else: c["differ"] += 1
     else: c["unfinished"] += 1
-lines = ["\\begin{tabular}{@{}lrrrr@{}}", "\\toprule", "benchmark & programs & counts equal & differ & unfinished \\\\", "\\midrule"]
+lines = ["\\begin{tabular}{@{}lrrrrrrrr@{}}", "\\toprule", "benchmark & programs & equal & differ & unfin. & \\multicolumn{2}{c}{TraceForge: max s, peak} & \\multicolumn{2}{c}{\\jmc: max s, peak} \\\\", "\\midrule"]
 for k in sorted(bag):
-    c = bag[k]; lines.append(f"{esc(k)} & {c['programs']} & {c['equal']} & {c['differ']} & {c['unfinished']} \\\\")
+    c = bag[k]; _, rmx, rpk = stats(bgrp[k]["rust"]); _, jmx, jpk = stats(bgrp[k]["java"])
+    lines.append(f"{esc(k)} & {c['programs']} & {c['equal']} & {c['differ']} & {c['unfinished']} & {rmx} & {rpk} & {jmx} & {jpk} \\\\")
 t = collections.Counter(); [t.update(c) for c in bag.values()]
-lines += ["\\midrule", f"all & {t['programs']} & {t['equal']} & {t['differ']} & {t['unfinished']} \\\\", "\\bottomrule", "\\end{tabular}"]
+lines += ["\\midrule", f"all & {t['programs']} & {t['equal']} & {t['differ']} & {t['unfinished']} & & & & \\\\", "\\bottomrule", "\\end{tabular}"]
 open(OUT + "/bench-counts.tex", "w").write("\n".join(lines) + "\n")
 md.append(f"Benchmarks: {t['programs']} programs with both twins run; counts equal {t['equal']}, differ {t['differ']}, unfinished {t['unfinished']}")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
