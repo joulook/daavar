@@ -1,0 +1,15 @@
+// Gradle init script: writes the core test runtime classpath to cp.txt in the project dir.
+allprojects {
+    afterEvaluate { p ->
+        if (p.name == 'core') {
+            p.tasks.register('printTestClasspath') {
+                dependsOn p.tasks.named('testClasses')
+                doLast {
+                    def cp = p.sourceSets.test.runtimeClasspath.files.collect { it.absolutePath }.join(':')
+                    new File(p.rootDir, 'cp.txt').text = cp
+                    println "classpath entries: " + p.sourceSets.test.runtimeClasspath.files.size()
+                }
+            }
+        }
+    }
+}

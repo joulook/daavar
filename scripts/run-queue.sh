@@ -1,37 +1,91 @@
 #!/usr/bin/env bash
-# One-node queue runner for the evaluation. Rows come from a text file, one per line:
-#   <row-id> <memGB> <timeoutS> <command ...>
-# The runner keeps S slots busy (default 4), pins slot k to NUMA node k (cores 16k..16k+15),
-# gives each row its own working directory under $OUT/<row-id>/ (JMC's launcher must get a
-# fresh report dir), limits memory with ulimit -v and time with timeout, feeds </dev/null
-# (gradle/java hang on an ssh stdin otherwise), and appends one result line per row to
-# $OUT/results.tsv: id, exit status, stop reason, wall seconds, peak RSS KB. Rows whose
-# $OUT/<row-id>/done marker exists are skipped, so the runner is restartable.
-# usage: run-queue.sh <rows.txt> <outdir> [slots]
+# One-node queue runner (EVAL-RULES R2, R3, R7). Rows come from a text file, one per line:
+#   <row-id> <memGB> <timeoutS> <command ...>      (# starts a comment)
+# Each row runs in its own directory $EVAL_OUT/<row-id>/ (cwd of the command; JMC's launcher
+# gets a fresh report dir there), pinned with taskset to W NUMA nodes of 16 physical cores
+# (W = 1, or 2 for ids containing -t32, 4 for -t64), under ulimit -v, timeout --signal=KILL and
+# /usr/bin/time -v, stdin </dev/null, stdout/stderr to files, a `status` file (R3), a load log
+# sampled every 60 s (R7), then mkrecord.py writes record.json + the results.tsv row and
+# publish.sh pushes the row to brain-data (R2b). Rows with a `done` marker are skipped
+# (restartable). Start it detached with start-queue.sh, never in a foreground ssh session.
+# usage: run-queue.sh <rows-file> <queue-name> [slots=8]
+# env: ROWS_TSV (attributes sidecar, default <rows-file>.tsv), FOREIGN_LOAD_POLICY=wait|kill|ignore
+#      (default wait: do not launch while foreign load is present; kill: also kill a running row
+#      and mark it invalid), FOREIGN_LOAD_MARGIN (load-average units, default 8), PUBLISH=1.
 set -uo pipefail
-ROWS="$1"; OUT="$2"; SLOTS="${3:-4}"
-mkdir -p "$OUT"
-run_row() {  # id memGB timeoutS slot cmd...
-  local id="$1" mem="$2" to="$3" slot="$4"; shift 4
-  local d="$OUT/$id"; mkdir -p "$d"
-  [ -e "$d/done" ] && return 0
-  local c0=$((16*slot)) c1=$((16*slot+15))
-  local start=$(date +%s)
-  ( ulimit -v $((mem*1024*1024)); cd "$d" && \
-    /usr/bin/time -f '%e %M' -o "$d/time.txt" \
-    taskset -c "$c0-$c1" timeout --signal=KILL "$to" "$@" </dev/null >"$d/stdout.log" 2>"$d/stderr.log" )
-  local st=$?
-  local reason=ok; [ $st -eq 137 ] && reason=timeout; { [ $st -ne 0 ] && [ $st -ne 137 ]; } && reason="exit-$st"
-  grep -qi "out of memory\|memory allocation of\|Cannot allocate" "$d/stderr.log" 2>/dev/null && reason=memory
-  local wall peak; read -r wall peak < <(tail -1 "$d/time.txt" 2>/dev/null || echo "? ?")
-  printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$st" "$reason" "$wall" "$peak" "$(hostname) slot=$slot cores=$c0-$c1 mem=${mem}G t=${to}s" >> "$OUT/results.tsv"
-  touch "$d/done"
+. "$(dirname "$0")/env.sh"
+S="$(cd "$(dirname "$0")" && pwd)"
+ROWS="$1"; QNAME="$2"; SLOTS="${3:-8}"
+: "${ROWS_TSV:=$ROWS.tsv}"; : "${PIN:=1}"; : "${FOREIGN_LOAD_POLICY:=wait}"; : "${FOREIGN_LOAD_MARGIN:=8}"; : "${PUBLISH:=1}"
+export ROWS_TSV S
+QDIR="$EVAL_OUT/queues/$QNAME"; mkdir -p "$QDIR"
+echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS host=$(hostname) pid=$$" >> "$QDIR/queue.log"
+
+cores_of() { local w=$1 first=$2 out=""; for ((n=first; n<first+w; n++)); do out+="${out:+,}$((16*n))-$((16*n+15))"; done; echo "$out"; }
+width_of() { case "$1" in *-t64*) echo 4;; *-t32*) echo 2;; *) echo 1;; esac; }
+busy_threads() { local t=0 n; for n in "${!BUSY[@]}"; do t=$((t+16)); done; echo $t; }
+foreign_load() {  # 1 if the node's 1-min load exceeds our own busy cores by the margin
+  local la; la=$(cut -d' ' -f1 /proc/loadavg); awk -v la="$la" -v ours="$(busy_threads)" -v m="$FOREIGN_LOAD_MARGIN" 'BEGIN{exit !(la > ours+m)}'
 }
-export -f run_row; export OUT
-# dispatch: slot k runs every (k mod SLOTS)-th row in file order
-for ((k=0; k<SLOTS; k++)); do
-  ( n=0; while read -r id mem to cmd; do [ -z "$id" ] && continue; case "$id" in \#*) continue;; esac
-      if [ $((n % SLOTS)) -eq $k ]; then eval "run_row '$id' '$mem' '$to' '$k' $cmd"; fi; n=$((n+1)); done < "$ROWS" ) &
-done
+sampler() {  # $1 rowdir $2 pid-of-row: every 60 s append loadavg and our busy count; kill on foreign load if asked
+  local d="$1" rp="$2" strikes=0
+  while kill -0 "$rp" 2>/dev/null; do
+    sleep 60; kill -0 "$rp" 2>/dev/null || break
+    echo "$(date +%s) $(cut -d' ' -f1-3 /proc/loadavg) ours=$(busy_threads)" >> "$d/load.log"
+    if foreign_load; then strikes=$((strikes+1)); else strikes=0; fi
+    if [ "$FOREIGN_LOAD_POLICY" = kill ] && [ $strikes -ge 3 ]; then echo "foreign-load" > "$d/killed"; pkill -KILL -P "$rp" 2>/dev/null; kill -KILL "$rp" 2>/dev/null; break; fi
+  done
+}
+run_row() {  # id memGB timeoutS first-numa width cmd...
+  local id="$1" mem="$2" to="$3" first="$4" w="$5"; shift 5
+  local d="$EVAL_OUT/$id"; mkdir -p "$d"
+  local cores; cores=$(cores_of "$w" "$first")
+  printf '%s\n' "$*" > "$d/cmd.txt"
+  local start; start=$(date +%s)
+  { echo "state=running"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "start=$(date -Is -d @$start)"; echo "start_epoch=$start"
+    echo "numa=$first+$w"; echo "cores=$cores"; echo "mem_gb=$mem"; echo "timeout_s=$to"; echo "load_before=$(cut -d' ' -f1 /proc/loadavg)"; } > "$d/status"
+  local ts=(taskset -c "$cores"); [ "$PIN" = 1 ] || ts=()
+  ( ulimit -v $((mem*1024*1024)); cd "$d" && exec /usr/bin/time -v -o "$d/time-v.txt" \
+      "${ts[@]}" timeout --signal=KILL "$to" "$@" </dev/null >"$d/stdout.log" 2>"$d/stderr.log" ) &
+  local rp=$!; echo "pid=$rp" >> "$d/status"
+  sampler "$d" "$rp" & local sp=$!
+  wait "$rp"; local st=$?; kill "$sp" 2>/dev/null; wait "$sp" 2>/dev/null
+  local reason=ok
+  [ $st -eq 137 ] && reason=timeout
+  [ -f "$d/killed" ] && reason="invalid: foreign load"
+  { [ $st -ne 0 ] && [ "$reason" = ok ]; } && reason="exit-$st"
+  grep -qi "out of memory\|memory allocation of\|Cannot allocate\|OutOfMemoryError" "$d/stderr.log" "$d/stdout.log" 2>/dev/null && reason=memory
+  { echo "state=done"; echo "end=$(date -Is)"; echo "exit=$st"; echo "reason=$reason"; echo "wall_s=$(( $(date +%s) - start ))"; } >> "$d/status"
+  sed -i 's/^state=running/state=finished/' "$d/status"
+  python3 -I "$S/mkrecord.py" "$d" >> "$EVAL_OUT/results.tsv" 2>>"$d/mkrecord.err" || echo "mkrecord failed for $id" >> "$QDIR/queue.log"
+  touch "$d/done"
+  [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
+  echo "row $id done exit=$st reason=$reason $(date -Is)" >> "$QDIR/queue.log"
+}
+
+declare -A BUSY=()   # numa-node -> pid
+declare -A ROWPID=() # pid -> "first width"
+free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; read -r f w <<< "${ROWPID[$p]}"; for ((n=f; n<f+w; n++)); do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
+find_free() {  # $1 width -> first numa node with width free nodes, or empty
+  local w=$1 n k ok; for ((n=0; n+w<=SLOTS; n++)); do ok=1; for ((k=n; k<n+w; k++)); do [ -n "${BUSY[$k]:-}" ] && { ok=0; break; }; done; [ $ok = 1 ] && { echo $n; return; }; done
+}
+while IFS= read -r line || [ -n "$line" ]; do
+  [ -z "$line" ] && continue; case "$line" in \#*) continue;; esac
+  read -r id mem to cmd <<< "$line"
+  [ -e "$EVAL_OUT/$id/done" ] && continue
+  w=$(width_of "$id")
+  while :; do
+    free_finished
+    first=$(find_free "$w")
+    if [ -n "$first" ]; then
+      if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; sleep 60; continue; fi
+      break
+    fi
+    sleep 5
+  done
+  ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
+  ROWPID[$p]="$first $w"; for ((n=first; n<first+w; n++)); do BUSY[$n]=$p; done
+  echo "$(date -Is) launched $id on numa $first+$w pid $p" >> "$QDIR/queue.log"
+done < "$ROWS"
 wait
-echo "queue $ROWS finished on $(hostname): $(wc -l < "$OUT/results.tsv") results"
+echo "queue $QNAME finished $(date -Is): $(wc -l < "$EVAL_OUT/results.tsv" 2>/dev/null) results so far on $(hostname)" >> "$QDIR/queue.log"
