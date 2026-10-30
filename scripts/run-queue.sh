@@ -16,7 +16,7 @@ set -uo pipefail
 . "$(dirname "$0")/env.sh"
 S="$(cd "$(dirname "$0")" && pwd)"
 ROWS="$1"; QNAME="$2"; SLOTS="${3:-8}"
-: "${ROWS_TSV:=$ROWS.tsv}"; : "${PIN:=1}"; : "${FOREIGN_LOAD_POLICY:=wait}"; : "${FOREIGN_LOAD_MARGIN:=8}"; : "${PUBLISH:=1}"
+: "${ROWS_TSV:=$ROWS.tsv}"; [ -f "$ROWS_TSV" ] || ROWS_TSV="$(dirname "$ROWS")/rows.tsv"; : "${PIN:=1}"; : "${FOREIGN_LOAD_POLICY:=wait}"; : "${FOREIGN_LOAD_MARGIN:=8}"; : "${PUBLISH:=1}"
 export ROWS_TSV S
 QDIR="$EVAL_OUT/queues/$QNAME"; mkdir -p "$QDIR"
 echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS host=$(hostname) pid=$$" >> "$QDIR/queue.log"

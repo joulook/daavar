@@ -136,6 +136,7 @@ rec["stdout_path"] = "stdout.log"; rec["stderr_path"] = "stderr.log"; rec["timev
 rec["replay_path"] = ";".join(str(p.relative_to(d)) for p in d.glob("*replay*")) or None
 rec["direction"] = rec.get("direction") or (f"{rec['spec_lang']}-spec/{rec['impl_lang']}-impl" if rec.get("spec_lang") and rec.get("impl_lang") else None)
 rec["slot"] = rec.get("numa_node")
+if isinstance(rec.get("verdict"), str): rec["verdict"] = rec["verdict"].lower()
 (d / "record.json").write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
 # tsv line in brain-data's column order
 hdr_path = pathlib.Path(env.get("BRAIN_DATA", "")) / "results.tsv"
