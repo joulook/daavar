@@ -1,4 +1,4 @@
-# T4: TraceForge rows for the Brain cluster (L1), engine a3a7e1b; format <id> <memGB> <timeoutS> <cmd>; needs DAAVAR (and TFX/JMCX for T2/T4) exported
+# T4: TraceForge rows for the Brain cluster (L1), engine a3a7e1b, programs at 37f37fd (H); format <id> <memGB> <timeoutS> <cmd>; needs DAAVAR (and TFX/JMCX for T2/T4) exported
 T4.join.A2Store-control-early-ack-fwd-1-1.tfspec-jmcimpl 16 600 "$DAAVAR"/traceforge/target/release/conf-join "$TFX"/A2Store-spec-1-1.traceforge.jsonl "$JMCX"/A2Store-control-early-ack-fwd-1-1.must.jsonl
 T4.join.A2Store-control-early-ack-fwd-1-1.tfspec-tfimpl 16 600 "$DAAVAR"/traceforge/target/release/conf-join "$TFX"/A2Store-spec-1-1.traceforge.jsonl "$TFX"/A2Store-control-early-ack-fwd-1-1.traceforge.jsonl
 T4.join.A2Store-control-early-ack-fwd-1-2.tfspec-jmcimpl 16 600 "$DAAVAR"/traceforge/target/release/conf-join "$TFX"/A2Store-spec-1-2.traceforge.jsonl "$JMCX"/A2Store-control-early-ack-fwd-1-2.must.jsonl

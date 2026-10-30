@@ -27,11 +27,13 @@ grep -q 'core/build/classes' cp.txt || { echo "classpath not produced"; exit 1; 
 cp cp.txt "$JMC_CP_FILE"; echo "jmc classpath: $(tr ':' '\n' < "$JMC_CP_FILE" | wc -l) entries"
 # Benchmarks: Java once per directory, Rust once per crate
 CP="$(cat "$JMC_CP_FILE")"
+# A directory may hold java/, rust/ or both; each is built where present.
 for b in "$DAAVAR"/benchmarks/*/; do
-  [ -d "$b/java" ] || continue
-  mkdir -p "$EVAL_OUT/javaout/$(basename "$b")"
-  javac -d "$EVAL_OUT/javaout/$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
-    && echo "javac ok: $(basename "$b")" || echo "javac FAILED: $(basename "$b")"
+  if [ -d "$b/java" ]; then
+    mkdir -p "$EVAL_OUT/javaout/$(basename "$b")"
+    javac -d "$EVAL_OUT/javaout/$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
+      && echo "javac ok: $(basename "$b")" || echo "javac FAILED: $(basename "$b")"
+  fi
   if [ -f "$b/rust/Cargo.toml" ]; then
     (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
       && echo "cargo ok: $(basename "$b")" || echo "cargo FAILED: $(basename "$b")"

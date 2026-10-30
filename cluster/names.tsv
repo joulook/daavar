@@ -1,0 +1,256 @@
+name	dir	args	options
+2pc/leader/conf/n2	election	leader conf 2	--model fifo --seed 0 --threshold 65536
+2pc/leader/conf/n3	election	leader conf 3	--model fifo --seed 0 --threshold 65536
+2pc/leader/conf/n4	election	leader conf 4	--model fifo --seed 0 --threshold 65536
+2pc/leader/conf/n5	election	leader conf 5	--model fifo --seed 0 --threshold 65536
+2pc/leader/silent/n2	election	leader silent 2	--model fifo --seed 0 --threshold 65536
+2pc/leader/silent/n3	election	leader silent 3	--model fifo --seed 0 --threshold 65536
+2pc/leader/split/n2	election	leader split 2	--model fifo --seed 0 --threshold 65536
+2pc/leader/split/n3	election	leader split 3	--model fifo --seed 0 --threshold 65536
+2pc/ring/conf/n2	election	ring conf 2	--model fifo --seed 8694399807746060002 --threshold 65536
+2pc/ring/conf/n3	election	ring conf 3	--model fifo --seed 1992948037369921880 --threshold 65536
+2pc/ring/split/n2	election	ring split 2	--model fifo --seed 0 --threshold 65536
+2pc/ring/split/n3	election	ring split 3	--model fifo --seed 0 --threshold 65536
+apps/a1/control-reverse/spec/n2r2	a1-commit	control-reverse 2 2	--model fifo --seed 0
+apps/a1/control-reverse/spec/n3r3	a1-commit	control-reverse 3 3	--model fifo --seed 0
+apps/a1/correct/spec/n2r2	a1-commit	correct 2 2	--model fifo --seed 0
+apps/a1/correct/spec/n3r3	a1-commit	correct 3 3	--model fifo --seed 0
+apps/a1/eager/spec/n2r2	a1-commit	eager 2 2	--model fifo --seed 0
+apps/a1/eager/spec/n3r3	a1-commit	eager 3 3	--model fifo --seed 0
+apps/a1/early-abort/spec/n2r2	a1-commit	early-abort 2 2	--model fifo --seed 0
+apps/a1/early-abort/spec/n3r3	a1-commit	early-abort 3 3	--model fifo --seed 0
+apps/a1/silent/spec/n2r2	a1-commit	silent 2 2	--model fifo --seed 0
+apps/a1/silent/spec/n3r3	a1-commit	silent 3 3	--model fifo --seed 0
+apps/a2/control-early-ack-fwd/spec/k2q2	a2-store	control-early-ack-fwd 2 2	--model fifo --seed 0
+apps/a2/control-early-ack-fwd/spec/k3q3	a2-store	control-early-ack-fwd 3 3	--model fifo --seed 0
+apps/a2/control-early-ack-primary/spec/k2q2	a2-store	control-early-ack-primary 2 2	--model fifo --seed 0
+apps/a2/control-early-ack-primary/spec/k3q3	a2-store	control-early-ack-primary 3 3	--model fifo --seed 0
+apps/a2/early-ack/spec/k2q2	a2-store	early-ack 2 2	--model fifo --seed 0
+apps/a2/early-ack/spec/k3q3	a2-store	early-ack 3 3	--model fifo --seed 0
+apps/a2/misroute/spec/k2q2s2	a2-store	misroute 2 2 2	--model fifo --seed 0
+apps/a2/misroute/spec/k3q3s2	a2-store	misroute 3 3 2	--model fifo --seed 0
+apps/a2/pb-br/spec/k2q2	a2-store	pb-br 2 2	--model fifo --seed 0
+apps/a2/pb-br/spec/k3q3	a2-store	pb-br 3 3	--model fifo --seed 0
+apps/a2/pb/spec/k2q2	a2-store	pb 2 2	--model fifo --seed 0
+apps/a2/pb/spec/k3q3	a2-store	pb 3 3	--model fifo --seed 0
+apps/a2/pb/spec/k4q4	a2-store	pb 4 4	--model fifo --seed 0
+apps/a2/sh/spec/k2q2s1	a2-store	sh 2 2 1	--model fifo --seed 0
+apps/a2/sh/spec/k2q2s2	a2-store	sh 2 2 2	--model fifo --seed 0
+apps/a2/sh/spec/k3q3s1	a2-store	sh 3 3 1	--model fifo --seed 0
+apps/a2/sh/spec/k3q3s2	a2-store	sh 3 3 2	--model fifo --seed 0
+apps/a2/silent-put/spec/k2q2	a2-store	silent-put 2 2	--model fifo --seed 0
+apps/a2/silent-put/spec/k3q3	a2-store	silent-put 3 3	--model fifo --seed 0
+apps/a2/stale-get/spec/k2q2	a2-store	stale-get 2 2	--model fifo --seed 0
+apps/a2/stale-get/spec/k3q3	a2-store	stale-get 3 3	--model fifo --seed 0
+apps/a3/control-lifo/spec/k2q2	a3-lock	control-lifo 2 2	--model fifo --seed 0
+apps/a3/control-lifo/spec/k3q2	a3-lock	control-lifo 3 2	--model fifo --seed 0
+apps/a3/double-grant/spec/k2q2	a3-lock	double-grant 2 2	--model fifo --seed 0
+apps/a3/double-grant/spec/k3q3	a3-lock	double-grant 3 3	--model fifo --seed 0
+apps/a3/fifo/spec/k2q2	a3-lock	fifo 2 2	--model fifo --seed 0
+apps/a3/fifo/spec/k3q3	a3-lock	fifo 3 3	--model fifo --seed 0
+apps/a3/never-grant/spec/k2q2	a3-lock	never-grant 2 2	--model fifo --seed 0
+apps/a3/never-grant/spec/k3q3	a3-lock	never-grant 3 3	--model fifo --seed 0
+apps/a3/wrong-round/spec/k2q2	a3-lock	wrong-round 2 2	--model fifo --seed 0
+apps/a3/wrong-round/spec/k3q2	a3-lock	wrong-round 3 2	--model fifo --seed 0
+apps/a4/drop/a4b/k2q2m2	a4-balancer	drop a4b 2 2 2	--model fifo --seed 0
+apps/a4/drop/a4b/k3q2m3	a4-balancer	drop a4b 3 2 3	--model fifo --seed 0
+apps/a4/hash/a4a/k2q2m2	a4-balancer	hash a4a 2 2 2	--model fifo --seed 0
+apps/a4/hash/a4a/k3q3m3	a4-balancer	hash a4a 3 3 3	--model fifo --seed 0
+apps/a4/hash/a4b/k2q2m2	a4-balancer	hash a4b 2 2 2	--model fifo --seed 0
+apps/a4/hash/a4b/k3q2m3	a4-balancer	hash a4b 3 2 3	--model fifo --seed 0
+apps/a4/hash-drop/a4a/k2q2m2	a4-balancer	hash-drop a4a 2 2 2	--model fifo --seed 0
+apps/a4/hash-drop/a4a/k3q3m3	a4-balancer	hash-drop a4a 3 3 3	--model fifo --seed 0
+apps/a4/pair-swap-hash/a4a/k2q2m2	a4-balancer	pair-swap-hash a4a 2 2 2	--model fifo --seed 0
+apps/a4/pair-swap-hash/a4a/k2q2m3	a4-balancer	pair-swap-hash a4a 2 2 3	--model fifo --seed 0
+apps/a4/pair-swap-hash/a4b/k2q2m2	a4-balancer	pair-swap-hash a4b 2 2 2	--model fifo --seed 0
+apps/a4/pair-swap-hash/a4b/k2q2m3	a4-balancer	pair-swap-hash a4b 2 2 3	--model fifo --seed 0
+apps/a4/pair-swap-rr/a4b/k2q2m2	a4-balancer	pair-swap-rr a4b 2 2 2	--model fifo --seed 0
+apps/a4/pair-swap-rr/a4b/k2q2m3	a4-balancer	pair-swap-rr a4b 2 2 3	--model fifo --seed 0
+apps/a4/rr/a4a/k2q2m2	a4-balancer	rr a4a 2 2 2	--model fifo --seed 0
+apps/a4/rr/a4a/k3q3m3	a4-balancer	rr a4a 3 3 3	--model fifo --seed 0
+apps/a4/rr/a4b/k2q2m2	a4-balancer	rr a4b 2 2 2	--model fifo --seed 0
+apps/a4/rr/a4b/k3q2m3	a4-balancer	rr a4b 3 2 3	--model fifo --seed 0
+ex:naive/k2/enc1	s1-naive	naive 2 1	--model bag --seed 0 --threshold 65536
+ex:naive/k2/enc2	s1-naive	naive 2 2	--model bag --seed 0 --threshold 65536
+ex:naive/k3/enc1	s1-naive	naive 3 1	--model bag --seed 0 --threshold 65536
+ex:naive/k3/enc2	s1-naive	naive 3 2	--model bag --seed 0 --threshold 65536
+ex:naive/k4/enc1	s1-naive	naive 4 1	--model bag --seed 0 --threshold 65536
+ex:naive/k4/enc2	s1-naive	naive 4 2	--model bag --seed 0 --threshold 65536
+ex:naive/k5/enc1	s1-naive	naive 5 1	--model bag --seed 0 --threshold 65536
+ex:naive/k5/enc2	s1-naive	naive 5 2	--model bag --seed 0 --threshold 65536
+ex:naive/k6/enc1	s1-naive	naive 6 1	--model bag --seed 0 --threshold 65536
+ex:naive/k6/enc2	s1-naive	naive 6 2	--model bag --seed 0 --threshold 65536
+ex:naive/k7/enc1	s1-naive	naive 7 1	--model bag --seed 0 --threshold 65536
+ex:naive/k7/enc2	s1-naive	naive 7 2	--model bag --seed 0 --threshold 65536
+synth/chain/d1024	s4-chain	1024	--model fifo --seed 0 --threshold 65536
+synth/chain/d128	s4-chain	128	--model fifo --seed 0 --threshold 65536
+synth/chain/d2	s4-chain	2	--model fifo --seed 0 --threshold 65536
+synth/chain/d2048	s4-chain	2048	--model fifo --seed 0 --threshold 65536
+synth/chain/d32	s4-chain	32	--model fifo --seed 0 --threshold 65536
+synth/chain/d512	s4-chain	512	--model fifo --seed 0 --threshold 65536
+synth/chain/d8	s4-chain	8	--model fifo --seed 0 --threshold 65536
+synth/commit/n12j0	s3-commit	12 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n12j12	s3-commit	12 12	--model fifo --seed 0 --threshold 65536
+synth/commit/n12j6	s3-commit	12 6	--model fifo --seed 0 --threshold 65536
+synth/commit/n16j0	s3-commit	16 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n16j16	s3-commit	16 16	--model fifo --seed 0 --threshold 65536
+synth/commit/n16j8	s3-commit	16 8	--model fifo --seed 0 --threshold 65536
+synth/commit/n20j0	s3-commit	20 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n20j10	s3-commit	20 10	--model fifo --seed 0 --threshold 65536
+synth/commit/n20j20	s3-commit	20 20	--model fifo --seed 0 --threshold 65536
+synth/commit/n2j0	s3-commit	2 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n2j1	s3-commit	2 1	--model fifo --seed 0 --threshold 65536
+synth/commit/n2j2	s3-commit	2 2	--model fifo --seed 0 --threshold 65536
+synth/commit/n4j0	s3-commit	4 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n4j2	s3-commit	4 2	--model fifo --seed 0 --threshold 65536
+synth/commit/n4j4	s3-commit	4 4	--model fifo --seed 0 --threshold 65536
+synth/commit/n8j0	s3-commit	8 0	--model fifo --seed 0 --threshold 65536
+synth/commit/n8j4	s3-commit	8 4	--model fifo --seed 0 --threshold 65536
+synth/commit/n8j8	s3-commit	8 8	--model fifo --seed 0 --threshold 65536
+synth/naive-self/k2enc1	s1-naive	self 2 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k2enc2	s1-naive	self 2 2	--model bag --seed 0 --threshold 65536
+synth/naive-self/k3enc1	s1-naive	self 3 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k3enc2	s1-naive	self 3 2	--model bag --seed 0 --threshold 65536
+synth/naive-self/k4enc1	s1-naive	self 4 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k4enc2	s1-naive	self 4 2	--model bag --seed 0 --threshold 65536
+synth/naive-self/k5enc1	s1-naive	self 5 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k5enc2	s1-naive	self 5 2	--model bag --seed 0 --threshold 65536
+synth/naive-self/k6enc1	s1-naive	self 6 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k6enc2	s1-naive	self 6 2	--model bag --seed 0 --threshold 65536
+synth/naive-self/k7enc1	s1-naive	self 7 1	--model bag --seed 0 --threshold 65536
+synth/naive-self/k7enc2	s1-naive	self 7 2	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k10s1	s5-reset	ctl 10 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k10s3	s5-reset	ctl 10 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k10s4	s5-reset	ctl 10 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k1s1	s5-reset	ctl 1 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k1s3	s5-reset	ctl 1 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k1s4	s5-reset	ctl 1 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k2s1	s5-reset	ctl 2 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k2s3	s5-reset	ctl 2 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k2s4	s5-reset	ctl 2 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k3s1	s5-reset	ctl 3 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k3s3	s5-reset	ctl 3 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k3s4	s5-reset	ctl 3 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k4s1	s5-reset	ctl 4 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k4s3	s5-reset	ctl 4 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k4s4	s5-reset	ctl 4 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k5s1	s5-reset	ctl 5 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k5s3	s5-reset	ctl 5 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k5s4	s5-reset	ctl 5 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k6s1	s5-reset	ctl 6 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k6s3	s5-reset	ctl 6 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k6s4	s5-reset	ctl 6 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k7s1	s5-reset	ctl 7 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k7s3	s5-reset	ctl 7 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k7s4	s5-reset	ctl 7 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k8s1	s5-reset	ctl 8 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k8s3	s5-reset	ctl 8 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k8s4	s5-reset	ctl 8 4	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k9s1	s5-reset	ctl 9 1	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k9s3	s5-reset	ctl 9 3	--model bag --seed 0 --threshold 65536
+synth/reset-ctl/k9s4	s5-reset	ctl 9 4	--model bag --seed 0 --threshold 65536
+synth/reset/k10s1	s5-reset	reset 10 1	--model bag --seed 0 --threshold 65536
+synth/reset/k10s3	s5-reset	reset 10 3	--model bag --seed 0 --threshold 65536
+synth/reset/k10s4	s5-reset	reset 10 4	--model bag --seed 0 --threshold 65536
+synth/reset/k1s1	s5-reset	reset 1 1	--model bag --seed 0 --threshold 65536
+synth/reset/k1s2	s5-reset	reset 1 2	--model bag --seed 0 --threshold 65536
+synth/reset/k1s3	s5-reset	reset 1 3	--model bag --seed 0 --threshold 65536
+synth/reset/k1s4	s5-reset	reset 1 4	--model bag --seed 0 --threshold 65536
+synth/reset/k2s1	s5-reset	reset 2 1	--model bag --seed 0 --threshold 65536
+synth/reset/k2s3	s5-reset	reset 2 3	--model bag --seed 0 --threshold 65536
+synth/reset/k2s4	s5-reset	reset 2 4	--model bag --seed 0 --threshold 65536
+synth/reset/k3s1	s5-reset	reset 3 1	--model bag --seed 0 --threshold 65536
+synth/reset/k3s3	s5-reset	reset 3 3	--model bag --seed 0 --threshold 65536
+synth/reset/k3s4	s5-reset	reset 3 4	--model bag --seed 0 --threshold 65536
+synth/reset/k4s1	s5-reset	reset 4 1	--model bag --seed 0 --threshold 65536
+synth/reset/k4s3	s5-reset	reset 4 3	--model bag --seed 0 --threshold 65536
+synth/reset/k4s4	s5-reset	reset 4 4	--model bag --seed 0 --threshold 65536
+synth/reset/k5s1	s5-reset	reset 5 1	--model bag --seed 0 --threshold 65536
+synth/reset/k5s3	s5-reset	reset 5 3	--model bag --seed 0 --threshold 65536
+synth/reset/k5s4	s5-reset	reset 5 4	--model bag --seed 0 --threshold 65536
+synth/reset/k6s1	s5-reset	reset 6 1	--model bag --seed 0 --threshold 65536
+synth/reset/k6s3	s5-reset	reset 6 3	--model bag --seed 0 --threshold 65536
+synth/reset/k6s4	s5-reset	reset 6 4	--model bag --seed 0 --threshold 65536
+synth/reset/k7s1	s5-reset	reset 7 1	--model bag --seed 0 --threshold 65536
+synth/reset/k7s3	s5-reset	reset 7 3	--model bag --seed 0 --threshold 65536
+synth/reset/k7s4	s5-reset	reset 7 4	--model bag --seed 0 --threshold 65536
+synth/reset/k8s1	s5-reset	reset 8 1	--model bag --seed 0 --threshold 65536
+synth/reset/k8s3	s5-reset	reset 8 3	--model bag --seed 0 --threshold 65536
+synth/reset/k8s4	s5-reset	reset 8 4	--model bag --seed 0 --threshold 65536
+synth/reset/k9s1	s5-reset	reset 9 1	--model bag --seed 0 --threshold 65536
+synth/reset/k9s3	s5-reset	reset 9 3	--model bag --seed 0 --threshold 65536
+synth/reset/k9s4	s5-reset	reset 9 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k10s1	s5-reset	twin 10 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k10s3	s5-reset	twin 10 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k10s4	s5-reset	twin 10 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k1s1	s5-reset	twin 1 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k1s2	s5-reset	twin 1 2	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k1s3	s5-reset	twin 1 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k1s4	s5-reset	twin 1 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k2s1	s5-reset	twin 2 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k2s3	s5-reset	twin 2 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k2s4	s5-reset	twin 2 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k3s1	s5-reset	twin 3 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k3s3	s5-reset	twin 3 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k3s4	s5-reset	twin 3 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k4s1	s5-reset	twin 4 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k4s3	s5-reset	twin 4 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k4s4	s5-reset	twin 4 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k5s1	s5-reset	twin 5 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k5s3	s5-reset	twin 5 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k5s4	s5-reset	twin 5 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k6s1	s5-reset	twin 6 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k6s3	s5-reset	twin 6 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k6s4	s5-reset	twin 6 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k7s1	s5-reset	twin 7 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k7s3	s5-reset	twin 7 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k7s4	s5-reset	twin 7 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k8s1	s5-reset	twin 8 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k8s3	s5-reset	twin 8 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k8s4	s5-reset	twin 8 4	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k9s1	s5-reset	twin 9 1	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k9s3	s5-reset	twin 9 3	--model bag --seed 0 --threshold 65536
+synth/reset-twin/k9s4	s5-reset	twin 9 4	--model bag --seed 0 --threshold 65536
+synth/share-ctl/m12c0	s2-share	ctl 12 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m12c12	s2-share	ctl 12 12	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m12c6	s2-share	ctl 12 6	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m16c0	s2-share	ctl 16 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m16c16	s2-share	ctl 16 16	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m16c8	s2-share	ctl 16 8	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m24c0	s2-share	ctl 24 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m24c12	s2-share	ctl 24 12	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m24c24	s2-share	ctl 24 24	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m2c0	s2-share	ctl 2 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m2c1	s2-share	ctl 2 1	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m2c2	s2-share	ctl 2 2	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m4c0	s2-share	ctl 4 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m4c2	s2-share	ctl 4 2	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m4c4	s2-share	ctl 4 4	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m8c0	s2-share	ctl 8 0	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m8c4	s2-share	ctl 8 4	--model fifo --seed 0 --threshold 65536
+synth/share-ctl/m8c8	s2-share	ctl 8 8	--model fifo --seed 0 --threshold 65536
+synth/share/m12c0	s2-share	share 12 0	--model fifo --seed 0 --threshold 65536
+synth/share/m12c12	s2-share	share 12 12	--model fifo --seed 0 --threshold 65536
+synth/share/m12c6	s2-share	share 12 6	--model fifo --seed 0 --threshold 65536
+synth/share/m16c0	s2-share	share 16 0	--model fifo --seed 0 --threshold 65536
+synth/share/m16c16	s2-share	share 16 16	--model fifo --seed 0 --threshold 65536
+synth/share/m16c8	s2-share	share 16 8	--model fifo --seed 0 --threshold 65536
+synth/share/m24c0	s2-share	share 24 0	--model fifo --seed 0 --threshold 65536
+synth/share/m24c12	s2-share	share 24 12	--model fifo --seed 0 --threshold 65536
+synth/share/m24c24	s2-share	share 24 24	--model fifo --seed 0 --threshold 65536
+synth/share/m2c0	s2-share	share 2 0	--model fifo --seed 0 --threshold 65536
+synth/share/m2c1	s2-share	share 2 1	--model fifo --seed 0 --threshold 65536
+synth/share/m2c2	s2-share	share 2 2	--model fifo --seed 0 --threshold 65536
+synth/share/m4c0	s2-share	share 4 0	--model fifo --seed 0 --threshold 65536
+synth/share/m4c2	s2-share	share 4 2	--model fifo --seed 0 --threshold 65536
+synth/share/m4c4	s2-share	share 4 4	--model fifo --seed 0 --threshold 65536
+synth/share/m8c0	s2-share	share 8 0	--model fifo --seed 0 --threshold 65536
+synth/share/m8c4	s2-share	share 8 4	--model fifo --seed 0 --threshold 65536
+synth/share/m8c8	s2-share	share 8 8	--model fifo --seed 0 --threshold 65536
+synth/width/w1024	s6-width	1024	--model fifo --seed 0 --threshold 65536
+synth/width/w128	s6-width	128	--model fifo --seed 0 --threshold 65536
+synth/width/w2	s6-width	2	--model fifo --seed 0 --threshold 65536
+synth/width/w2048	s6-width	2048	--model fifo --seed 0 --threshold 65536
+synth/width/w32	s6-width	32	--model fifo --seed 0 --threshold 65536
+synth/width/w512	s6-width	512	--model fifo --seed 0 --threshold 65536
+synth/width/w8	s6-width	8	--model fifo --seed 0 --threshold 65536

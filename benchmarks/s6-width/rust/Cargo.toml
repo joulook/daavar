@@ -1,0 +1,9 @@
+[package]
+name = "tf_s6_width"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]

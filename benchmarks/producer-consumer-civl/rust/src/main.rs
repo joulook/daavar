@@ -1,7 +1,7 @@
 //! Benchmark producer-consumer-civl (N4): CIVL's `samples/ProducerConsumer.bpl` as two Must-API
 //! programs, each explored on its own under plain Must.
-//! Usage: `<spec|impl> <k> [fifo|bag|causal]`.
-//! Prints `execs=<complete> blocked=<blocked>` so the Java side can be compared line for line.
+//! Usage: TraceForge's shared main (`traceforge::program`): `count spec|impl [--model m] <k>`
+//! prints `execs=<complete> blocked=<blocked>`; `export`, `conf` and `online` as for every program.
 //!
 //! Visible threads: `producer`, `consumer`. No invisible thread on either side.
 //! The producer sends `Item(1) .. Item(j)` and then `Item(0)` (the source's stop value), choosing
@@ -68,19 +68,17 @@ fn imp(k: usize) {
     program(k, false)
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec");
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
-    };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side {
-        "impl" => verify(conf, move || imp(n)),
-        _ => verify(conf, move || spec(n)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+fn main() -> std::process::ExitCode {
+    let k = |a: &[String]| -> usize { a.first().and_then(|s| s.parse().ok()).unwrap_or(2) };
+    traceforge::program::main(traceforge::program::Program {
+        visible: &|_| vec!["consumer".to_string(), "producer".to_string()],
+        spec: &|a| {
+            let k = k(a);
+            std::sync::Arc::new(move || spec(k))
+        },
+        imp: &|a| {
+            let k = k(a);
+            std::sync::Arc::new(move || imp(k))
+        },
+    })
 }
