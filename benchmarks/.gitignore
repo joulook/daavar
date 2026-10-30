@@ -1,3 +1,8 @@
 java/out/
 target/
 *.class
+*.aux
+*.log
+*.out
+*.toc
+*.pdf
