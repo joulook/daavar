@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Copy one finished row into the brain-data clone, append its results.tsv line, commit and push (R2b).
-# usage: publish.sh <rowdir>    env: PUBLISH_PUSH=1 (0 = commit only)
+# Copy one finished row into the brain-data clone and append its results line (R2b). The commit
+# and push are done in batches by flush-results.sh. usage: publish.sh <rowdir>
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
 d="$1"; id=$(basename "$d"); node=$(hostname); : "${PUBLISH_PUSH:=1}"
@@ -13,23 +13,11 @@ find "$dest" -maxdepth 3 -name '*.jsonl' -size +1M -exec zstd -q -19 --rm {} \; 
 (
   flock -w 120 9 || { echo "publish: lock timeout for $id"; exit 1; }
   cd "$BRAIN_DATA"
-  # never leave a rebase behind; always be on main
-  [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] && git rebase --abort >/dev/null 2>&1
-  git symbolic-ref -q HEAD >/dev/null || git checkout -q -B main
-  # one results file per node (results/<node>.tsv) so nodes never edit the same file
   mkdir -p results; hdr=$(head -1 results.tsv)
   [ -f "results/$node.tsv" ] || printf '%s\n' "$hdr" > "results/$node.tsv"
   if ! grep -q -P "^$(printf '%s' "$id" | sed 's/[.[\*^$]/\\&/g')\t" "results/$node.tsv" 2>/dev/null; then
     line=$(python3 -I "$DAAVAR/scripts/mkrecord.py" "$d" 2>/dev/null) && printf '%s\n' "$line" >> "results/$node.tsv"
   fi
-  git add -A runs/"$node"/"$id" "results/$node.tsv" >/dev/null 2>&1
-  git commit -q -m "$node: $id ($(sed -n 's/^reason=//p' "$d/status" | head -1))" >/dev/null 2>&1 || true
-  if [ "$PUBLISH_PUSH" = 1 ]; then
-    for i in 1 2 3; do
-      git push -q origin main 2>/dev/null && break
-      git fetch -q origin && { git rebase -q origin/main >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1; }
-      sleep $((i*15))
-    done
-  fi
+  # no git here: flush-results.sh commits and pushes every few minutes (one commit per batch)
 ) 9>"$BRAIN_DATA/.publish.lock"
 echo "published $id $(date -Is)"

@@ -10,7 +10,8 @@ Rules they implement: `plan/EVAL-RULES.md` R1–R9 of the project. Paths come fr
 | `run-queue.sh` | the queue: NUMA-pinned slots (1/2/4 nodes by `-t32`/`-t64` in the id), `ulimit -v`, `timeout --signal=KILL`, `/usr/bin/time -v`, status file, load log, record, publish |
 | `status.sh [name]` | queues alive, rows running, results by stop reason |
 | `mkrecord.py <rowdir>` | `record.json` + the `results.tsv` line from status, time -v, load log and the tool's stdout |
-| `publish.sh <rowdir>` | copy the row into the brain-data clone, append its line, commit, push |
+| `publish.sh <rowdir>` | copy the row into the brain-data clone and append its results line |
+| `start-flusher.sh [s]`, `flush-results.sh` | one commit + push per node every 10 min (default) instead of per row |
 | `jmc-run.sh`, `rust-run.sh` | run one benchmark program (JMC launcher / Rust binary) inside a row directory |
 | `gen-rows-benchmarks.sh <outdir>` | rows for the 19 literature benchmarks from the builders' run logs |
 | `print-classpath.gradle` | Gradle init script that writes JMC's test classpath |
