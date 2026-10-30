@@ -69,7 +69,7 @@ if m and dv:
     rec.update({"verdict": g("verdict"), "spec_complete": g("spec_complete"), "spec_blocked": g("spec_blocked"),
         "impl_complete": g("impl_complete"), "impl_blocked": g("impl_blocked"), "impl_summaries": g("impl_distinct_summaries"),
         "spec_summaries": g("signatures"), "uncovered_total": g("uncovered_distinct"), "first_miss_wall_ms": g("wall_ms_at_first_report"),
-        "explore_spec_ms": g("spec_wall_time_ms"), "explore_impl_ms": g("impl_wall_time_ms"), "precheck_ms": g("precheck_wall_time_ms"),
+        "spec_phase_ms": g("spec_wall_time_ms"), "impl_phase_ms": g("impl_wall_time_ms"), "precheck_ms": g("precheck_wall_time_ms"),
         "iterations": g("executions"), "max_graph_events": g("max_paper_events"), "max_summary_bytes": g("summary_bytes"),
         "tool_stop": g("end"), "tool_wall_ms": g("wall_ms"), "tool_peak_kb": g("vmhwm_kb_max")})
     if g("threads"): rec["impl_threads"] = g("threads")
