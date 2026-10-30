@@ -120,7 +120,7 @@ if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, 
             rec[f"{side}_tool"] = mm.group(1); rec[f"{side}_lang"] = "java" if mm.group(1) == "jmc" else "rust"
             rec[f"{side}_program"] = mm.group(2); rec.setdefault("sizes", mm.group(3)); rec.setdefault("comm_model", mm.group(4)); rec[f"{side}_enumeration"] = mm.group(5)
     mm = re.search(r"^verdict:\s*(.+)$", out, re.M); rec["verdict"] = mm.group(1).strip() if mm else None
-    mm = re.search(r"^uncovered:\s*(\d+)", out, re.M); rec["uncovered_total"] = mm.group(1) if mm else None
+    mm = re.search(r"^uncovered:\s*(\d+)", out, re.M); rec["uncovered_distinct"] = mm.group(1) if mm else None  # conf-join counts distinct lines, not graphs
     mm = re.search(r"refused", out); 
     if mm: rec["verdict"] = "refused"
     rec["join_ms"] = rec.get("wall_ms")
