@@ -24,7 +24,7 @@ for b in "$DAAVAR"/benchmarks/*/; do
     tsv "$id	B	$dir	$size	$model	$var	must	1	n/a	plain count	$tier	must-standalone	traceforge	traceforge	rust	rust	n/a	full	$dir" count-rust
   done
   # Java: class:args with strategy must
-  grep -o 'run-java.sh [^ ]* [^ ]* must' "$log" | awk '{print $3}' | sort -u | while read -r cls; do
+  grep -o 'run-java.sh [^ ]* [^ ]* must' "$log" | awk '{print $3}' | tr -d "'" | sort -u | while read -r cls; do
     args=${cls#*:}; IFS=, read -r side size model var <<< "$args"; model=${model:-fifo}; var=${var:-$side}
     sid=$(san "$cls")
     row "BJ.count.$dir.$sid" "\"\$DAAVAR\"/scripts/jmc-run.sh $dir '$cls' must 0 1 - $TO" count-java
@@ -33,7 +33,7 @@ for b in "$DAAVAR"/benchmarks/*/; do
     tsv "BJ.export.$dir.$sid	B	$dir	$size	$model	$var	must	1	n/a	summary export	$tier	export	jmc	jmc	java	java	offline-batch	full	$dir" export-java
   done
   # joins and online: every impl against the spec of the same size and model (Java/Java, until the Rust exports exist)
-  grep -o 'run-java.sh [^ ]* [^ ]* must' "$log" | awk '{print $3}' | sort -u > "$O/.cls.$dir"
+  grep -o 'run-java.sh [^ ]* [^ ]* must' "$log" | awk '{print $3}' | tr -d "'" | sort -u > "$O/.cls.$dir"
   grep ':spec,' "$O/.cls.$dir" | while read -r sc; do
     IFS=, read -r _ ssize smodel _ <<< "${sc#*:}"; smodel=${smodel:-fifo}
     grep ':impl,' "$O/.cls.$dir" | while read -r ic; do
