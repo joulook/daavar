@@ -4,6 +4,8 @@
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
 d="$1"; id=$(basename "$d"); node=$(hostname); : "${PUBLISH_PUSH:=1}"
+pin=$(sed -n 's/^pin=//p' "$d/status" | head -1); pin=${pin:-a3a7e1b}   # the pin the row ran on (rows launched before the field existed: a3a7e1b)
+TF_PIN=$pin
 [ -d "$BRAIN_DATA/.git" ] || { echo "no brain-data clone at $BRAIN_DATA"; exit 1; }
 dest="$BRAIN_DATA/runs/$node/$TF_PIN/$id"; mkdir -p "$dest"
 # copy the row; in the copy, compress summaries above 1 MB (the originals stay in $EVAL_OUT: later join

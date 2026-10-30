@@ -45,7 +45,7 @@ run_row() {  # id memGB timeoutS first-numa width cmd...
   printf '%s\n' "$*" > "$d/cmd.txt"
   local start; start=$(date +%s)
   { echo "state=running"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "start=$(date -Is -d @$start)"; echo "start_epoch=$start"
-    echo "numa=$first+$w"; echo "cores=$cores"; echo "mem_gb=$mem"; echo "timeout_s=$to"; echo "load_before=$(cut -d' ' -f1 /proc/loadavg)"; } > "$d/status"
+    echo "numa=$first+$w"; echo "pin=$TF_PIN"; echo "cores=$cores"; echo "mem_gb=$mem"; echo "timeout_s=$to"; echo "load_before=$(cut -d' ' -f1 /proc/loadavg)"; } > "$d/status"
   local ts=(taskset -c "$cores"); [ "$PIN" = 1 ] || ts=()
   ( ulimit -v $((mem*1024*1024)); cd "$d" && exec /usr/bin/time -v -o "$d/time-v.txt" \
       "${ts[@]}" timeout --signal=KILL "$to" "$@" </dev/null >"$d/stdout.log" 2>"$d/stderr.log" ) &

@@ -29,7 +29,8 @@ def git(path, *a):
 dv = env.get("DAAVAR", "")
 if dv:
     rec["daavar_commit"] = git(dv, "rev-parse", "--short", "HEAD")
-    rec["traceforge_commit"] = git(dv + "/traceforge", "rev-parse", "--short", "HEAD")
+    # the pin the row RAN on: recorded at launch; rows launched before that field existed ran on a3a7e1b
+    rec["traceforge_commit"] = status.get("pin") or "a3a7e1b"
     rec["jmc_commit"] = git(dv + "/jmc", "rev-parse", "--short", "HEAD")
     rec["benchmarks_commit"] = rec["daavar_commit"]; rec["scripts_commit"] = rec["daavar_commit"]
 # /usr/bin/time -v
