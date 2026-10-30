@@ -1,0 +1,16 @@
+BJ.count.bank-grove.'bench.bank_grove.Bank_impl_2_fifo_ordered'.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh bank-grove ''bench.bank_grove.Bank:impl,2,fifo,ordered'' must 0 1 - 86400
+BJ.count.bank-grove.'bench.bank_grove.Bank_impl_3_fifo_ordered'.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh bank-grove ''bench.bank_grove.Bank:impl,3,fifo,ordered'' must 0 1 - 86400
+BJ.count.bank-grove.'bench.bank_grove.Bank_impl_3_fifo_unordered'.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh bank-grove ''bench.bank_grove.Bank:impl,3,fifo,unordered'' must 0 1 - 86400
+BJ.count.ewd998-termination.bench.ewd998_termination.Ewd998_spec_3_bag.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh ewd998-termination 'bench.ewd998_termination.Ewd998:spec,3,bag' must 0 1 - 86400
+BJ.count.ewd998-termination.bench.ewd998_termination.Ewd998_impl_3_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh ewd998-termination 'bench.ewd998_termination.Ewd998:impl,3,bag,correct' must 0 1 - 86400
+BJ.count.ewd998-termination.bench.ewd998_termination.Ewd998_impl_3_bag_no-black-on-receive.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh ewd998-termination 'bench.ewd998_termination.Ewd998:impl,3,bag,no-black-on-receive' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_1_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,1,bag,correct' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_1_bag_ignore-max-vote.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,1,bag,ignore-max-vote' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_1_bag_skip-2a-check.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,1,bag,skip-2a-check' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_1_bag_half-majority.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,1,bag,half-majority' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_1_bag_1b-none.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,1,bag,1b-none' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_2_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,2,bag,correct' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_2_bag_ignore-max-vote.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,2,bag,ignore-max-vote' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_2_bag_skip-2a-check.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,2,bag,skip-2a-check' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_2_bag_half-majority.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,2,bag,half-majority' must 0 1 - 86400
+BJ.count.paxos-oopsla25.bench.paxos_oopsla25.Paxos_impl_2_bag_1b-none.c24h 250 86400 "$DAAVAR"/scripts/jmc-run.sh paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,2,bag,1b-none' must 0 1 - 86400
