@@ -1,0 +1,1 @@
+T2.export.tf-a3a2-74 250 3600 env J3_GOLDEN="$JMCX" J3_OUT="$TFX" "$DAAVAR"/traceforge/target/release/tf-lib-tests --ignored --exact conformance::interchange_tests::t8_p_eq_the_74_exports_equal_jmcs --nocapture --test-threads=1
