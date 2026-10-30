@@ -23,9 +23,14 @@ export ROWS_TSV S
 QDIR="$EVAL_OUT/queues/$QNAME"; mkdir -p "$QDIR"
 echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS numa=$NUMA_SET pin=$TF_PIN host=$(hostname) pid=$$" >> "$QDIR/queue.log"
 
-cores_of() { local w=$1 first=$2 out=""; for ((n=first; n<first+w; n++)); do out+="${out:+,}$((16*n))-$((16*n+15))"; done; echo "$out"; }
+cores_of() { local out="" n; for n in ${1//,/ }; do out+="${out:+,}$((16*n))-$((16*n+15))"; done; echo "$out"; }   # $1: comma list of numa nodes
 width_of() { case "$1" in *-t64*) echo 4;; *-t32*) echo 2;; *) echo 1;; esac; }
-busy_threads() { local t=0 n; for n in "${!BUSY[@]}"; do t=$((t+16)); done; echo $t; }
+busy_threads() {  # physical cores held by every running row on this node, across all output trees and queues
+  local t=0 s nw w
+  for s in /local/mkhoshechin/eval/out*/*/status "$EVAL_OUT"/*/status; do
+    [ -f "$s" ] && grep -q '^state=running' "$s" 2>/dev/null || continue
+    nw=$(sed -n 's/^numa=//p' "$s" | head -1); w=${nw#*+}; t=$((t + 16*${w:-1}))
+  done; echo $t; }
 foreign_load() {  # 1 if the node's 1-min load exceeds our own busy cores by the margin
   local la; la=$(cut -d' ' -f1 /proc/loadavg); awk -v la="$la" -v ours="$(busy_threads)" -v m="$FOREIGN_LOAD_MARGIN" 'BEGIN{exit !(la > ours+m)}'
 }
@@ -38,10 +43,10 @@ sampler() {  # $1 rowdir $2 pid-of-row: every 60 s append loadavg and our busy c
     if [ "$FOREIGN_LOAD_POLICY" = kill ] && [ $strikes -ge 3 ]; then echo "foreign-load" > "$d/killed"; pkill -KILL -P "$rp" 2>/dev/null; kill -KILL "$rp" 2>/dev/null; break; fi
   done
 }
-run_row() {  # id memGB timeoutS first-numa width cmd...
+run_row() {  # id memGB timeoutS numa-list width cmd...
   local id="$1" mem="$2" to="$3" first="$4" w="$5"; shift 5
   local d="$EVAL_OUT/$id"; mkdir -p "$d"
-  local cores; cores=$(cores_of "$w" "$first")
+  local cores; cores=$(cores_of "$first")
   printf '%s\n' "$*" > "$d/cmd.txt"
   local start; start=$(date +%s)
   { echo "state=running"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "start=$(date -Is -d @$start)"; echo "start_epoch=$start"
@@ -67,10 +72,10 @@ run_row() {  # id memGB timeoutS first-numa width cmd...
 
 declare -A BUSY=()   # numa-node -> pid
 declare -A ROWPID=() # pid -> "first width"
-free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; read -r f w <<< "${ROWPID[$p]}"; for ((n=f; n<f+w; n++)); do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
+free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; for n in ${ROWPID[$p]//,/ }; do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
 allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; done; return 1; }
-find_free() {  # $1 width -> first allowed numa node with width consecutive free allowed nodes, or empty
-  local w=$1 n k ok; for ((n=0; n+w<=SLOTS; n++)); do ok=1; for ((k=n; k<n+w; k++)); do { [ -n "${BUSY[$k]:-}" ] || ! allowed $k; } && { ok=0; break; }; done; [ $ok = 1 ] && { echo $n; return; }; done
+find_free() {  # $1 width -> a comma list of width free allowed numa nodes (not necessarily consecutive), or empty
+  local w=$1 k out="" c=0; for ((k=0; k<SLOTS; k++)); do { [ -z "${BUSY[$k]:-}" ] && allowed $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
 }
 while IFS= read -r line || [ -n "$line" ]; do
   [ -z "$line" ] && continue; case "$line" in \#*) continue;; esac
@@ -87,8 +92,8 @@ while IFS= read -r line || [ -n "$line" ]; do
     sleep 5
   done
   ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
-  ROWPID[$p]="$first $w"; for ((n=first; n<first+w; n++)); do BUSY[$n]=$p; done
-  echo "$(date -Is) launched $id on numa $first+$w pid $p" >> "$QDIR/queue.log"
+  ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done
+  echo "$(date -Is) launched $id on numa $first (w=$w) pid $p" >> "$QDIR/queue.log"
 done < "$ROWS"
 wait
 echo "queue $QNAME finished $(date -Is): $(wc -l < "$EVAL_OUT/results.tsv" 2>/dev/null) results so far on $(hostname)" >> "$QDIR/queue.log"
