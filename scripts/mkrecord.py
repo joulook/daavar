@@ -124,6 +124,9 @@ if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, 
     mm = re.search(r"refused", out); 
     if mm: rec["verdict"] = "refused"
     rec["join_ms"] = rec.get("wall_ms")
+    # conf-join exits 1 on a violation and 2 when it refuses an input: a verdict means the row ran fine
+    if rec.get("exit_code") == "1" and rec.get("verdict") and rec.get("stop_reason") == "exit-1": rec["stop_reason"] = "ok"
+    if rec.get("exit_code") == "2" and rec.get("stop_reason") == "exit-2": rec["stop_reason"] = "refused"
 # plain benchmark Rust count
 mm = re.search(r"^execs=(\d+) blocked=(\d+)", out, re.M)
 if mm and "impl_complete" not in rec:
