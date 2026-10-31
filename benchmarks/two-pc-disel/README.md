@@ -29,8 +29,10 @@ Roles: visible participants `p0..p{N-1}`; invisible coordinator `cn`. Per round 
 visible events are `recv Prep(e, d)`, `send Yes(i,e) | No(i,e)`, `recv Commit(e) | Abort(e)`,
 `send CommitAck(i,e) | AbortAck(i,e)`. Messages: `ToP ∈ {Prep(e, d), Commit(e), Abort(e)}` and
 `ToCn ∈ {Yes, No, CommitAck, AbortAck}(i, e)` in Rust, with Disel's tag filters as message tags
-(prep 0, vote 1, decision 3, ack 5); in Java the tags are the record types `Prep`, `Vote`,
-`Dec`, `Ack` and the filtered receives are type-guarded `Channel.recv(M, T.class)`.
+(prep 0, vote 1, decision 3, ack 5); in Java the tag filters are the types `Prep` (a `@Tag` record
+`Prep(e, d)`, `d` a list) and the sealed interfaces `Dec` (`Commit(e)`, `Abort(e)`), `Vote` (`Yes(i, e)`,
+`No(i, e)`), `Ack` (`CommitAck(i, e)`, `AbortAck(i, e)`) of `@Tag` records named as the Rust variants,
+and the filtered receives are type-guarded `Channel.recv(M, T.class)`.
 
 Parameters: N participants, K = 2 rounds with data `[1;2]`, `[3;4]` (the first two items of
 `data_seq`); each vote is a `nondet()`. Smallest interesting size N = 2, K = 2 (K = 1 is one-round

@@ -6,6 +6,7 @@ import org.mpi_sws.jmc.mp.events.CommunicationModel;
 import org.mpi_sws.jmc.mp.events.MpMessage;
 import org.mpi_sws.jmc.mp.events.Tid;
 import org.mpi_sws.jmc.mp.launch.MpProgram;
+import org.mpi_sws.jmc.mp.summary.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +23,49 @@ import java.util.List;
  */
 public final class TwoPcTrillium implements MpProgram {
 
-    /** TM to RM: {@code "PREPARE" | "COMMIT" | "ABORT"}. */
-    enum Kind { PREPARE, COMMIT, ABORT }
+    /** TM to RM: {@code "PREPARE" | "COMMIT" | "ABORT"} (Rust {@code enum ToRm}). */
+    sealed interface ToRm extends MpMessage {
+        @Tag("Prepare")
+        record Prepare() implements ToRm {}
 
-    /** A TM-to-RM message. */
-    record ToRm(Kind kind) implements MpMessage {}
+        @Tag("Commit")
+        record Commit() implements ToRm {}
 
-    /** RM to TM: {@code "PREPARED" | "ABORTED" | "COMMITTED"}, with the sender index. */
-    enum Resp { PREPARED, ABORTED, COMMITTED }
+        @Tag("Abort")
+        record Abort() implements ToRm {}
+    }
 
-    /** An RM-to-TM message. */
-    record ToTm(Resp resp, int from) implements MpMessage {}
+    /**
+     * RM to TM: {@code "PREPARED" | "ABORTED" | "COMMITTED"}, with the sender index (Rust
+     * {@code enum ToTm}).
+     */
+    sealed interface ToTm extends MpMessage {
+        /** @return the sender RM's index */
+        int from();
 
-    /** RM {@code i}'s final {@code TC_model} state, to its observer. */
-    record Outcome(boolean committed) implements MpMessage {}
+        @Tag("Prepared")
+        record Prepared(int from) implements ToTm {}
+
+        @Tag("Aborted")
+        record Aborted(int from) implements ToTm {}
+
+        @Tag("Committed")
+        record Committed(int from) implements ToTm {}
+    }
+
+    /** RM {@code i}'s final {@code TC_model} state, to its observer (Rust {@code enum Outcome}). */
+    sealed interface Outcome extends MpMessage {
+        @Tag("Committed")
+        record Committed() implements Outcome {}
+
+        @Tag("Aborted")
+        record Aborted() implements Outcome {}
+    }
+
+    /** @return {@code Committed} if {@code committed}, else {@code Aborted} */
+    private static Outcome outcome(boolean committed) {
+        return committed ? new Outcome.Committed() : new Outcome.Aborted();
+    }
 
     private final boolean impl;
     private final int n;
@@ -128,30 +158,30 @@ public final class TwoPcTrillium implements MpProgram {
             }
         }
         for (Tid o : obs) {
-            Channel.send(m, o, new Outcome(allPrepared));
+            Channel.send(m, o, outcome(allPrepared));
         }
     }
 
     /** {@code resource_manager rm tm}, plus the report of its final state. */
     private void resourceManager(int i, Tid tm, Tid obs) {
         ToRm value = Channel.recv(m, ToRm.class);
-        if (value.kind() == Kind.ABORT) {
-            Channel.send(m, tm, new ToTm(Resp.ABORTED, i));
-            Channel.send(m, obs, new Outcome(false));
+        if (value instanceof ToRm.Abort) {
+            Channel.send(m, tm, new ToTm.Aborted(i));
+            Channel.send(m, obs, outcome(false));
         } else {
             boolean localAbort = Nondet.chooseBoolean();
             if (localAbort) {
-                Channel.send(m, tm, new ToTm(Resp.ABORTED, i));
-                Channel.send(m, obs, new Outcome(false));
+                Channel.send(m, tm, new ToTm.Aborted(i));
+                Channel.send(m, obs, outcome(false));
             } else {
-                Channel.send(m, tm, new ToTm(Resp.PREPARED, i));
+                Channel.send(m, tm, new ToTm.Prepared(i));
                 ToRm decision = Channel.recv(m, ToRm.class);
-                if (decision.kind() == Kind.COMMIT) {
-                    Channel.send(m, tm, new ToTm(Resp.COMMITTED, i));
-                    Channel.send(m, obs, new Outcome(true));
+                if (decision instanceof ToRm.Commit) {
+                    Channel.send(m, tm, new ToTm.Committed(i));
+                    Channel.send(m, obs, outcome(true));
                 } else {
-                    Channel.send(m, tm, new ToTm(Resp.ABORTED, i));
-                    Channel.send(m, obs, new Outcome(false));
+                    Channel.send(m, tm, new ToTm.Aborted(i));
+                    Channel.send(m, obs, outcome(false));
                 }
             }
         }
@@ -160,13 +190,13 @@ public final class TwoPcTrillium implements MpProgram {
     /** {@code transaction_manager tm rms}; {@code ignore-abort-vote} counts ABORTED as prepared. */
     private void transactionManager(Tid[] rms) {
         for (Tid r : rms) {
-            Channel.send(m, r, new ToRm(Kind.PREPARE));
+            Channel.send(m, r, new ToRm.Prepare());
         }
         List<Integer> prepared = new ArrayList<>();
         boolean allPrepared = true;
         while (prepared.size() != n) {
             ToTm msg = Channel.recv(m, ToTm.class);
-            if (msg.resp() == Resp.PREPARED || (ignoreAbortVote && msg.resp() == Resp.ABORTED)) {
+            if (msg instanceof ToTm.Prepared || (ignoreAbortVote && msg instanceof ToTm.Aborted)) {
                 if (!prepared.contains(msg.from())) {
                     prepared.add(msg.from());
                 }
@@ -177,21 +207,21 @@ public final class TwoPcTrillium implements MpProgram {
         }
         if (allPrepared) {
             for (Tid r : rms) {
-                Channel.send(m, r, new ToRm(Kind.COMMIT));
+                Channel.send(m, r, new ToRm.Commit());
             }
             List<Integer> from = new ArrayList<>();
             while (from.size() != n) {
                 ToTm msg = Channel.recv(m, ToTm.class);
                 if (!from.contains(msg.from())) {
                     from.add(msg.from());
-                    if (msg.resp() != Resp.COMMITTED) {
+                    if (!(msg instanceof ToTm.Committed)) {
                         throw new AssertionError("assert (m = \"COMMITTED\")");
                     }
                 }
             }
         } else {
             for (Tid r : rms) {
-                Channel.send(m, r, new ToRm(Kind.ABORT));
+                Channel.send(m, r, new ToRm.Abort());
             }
         }
     }
