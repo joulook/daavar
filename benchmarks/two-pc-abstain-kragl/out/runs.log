@@ -1,0 +1,1078 @@
+# two-pc-abstain-kragl runs, 2026-10-31. TraceForge pin 37f37fd, JMC pin 504e60a. X = /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl; jrun.sh <benchdir> <Class:args> <export|-> = java -Xss4m -cp <benchdir>/java/out:$(cat daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher <Class:args> must 0 1 <fresh report dir> <export|-> 600 </dev/null. Every command under timeout 600. TraceForge progress lines are dropped from the log.
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 1
+execs=6 blocked=1
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,1\,bag -
+2026-10-31T15:09:09.249249560Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:09,282 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:09,302 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:09,303 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:09,388 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:09,445 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 7 iterations
+2026-10-31 16:09:09,445 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 6 completed iterations
+2026-10-31 16:09:09,445 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:09,445 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 blocked iterations
+2026-10-31 16:09:09,445 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        7 iterations
+blocked:    1 (counted by the strategy)
+completed:  6
+rate:       41.3 iterations/s
+elapsed:    0.169 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@639c2c1d
+graphs:     6 distinct complete, 1 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 903
+explore_ms: 169
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 6
+graphs_blocked: 1
+summaries_distinct: 0
+iterations: 7
+stop_reason: exhausted
+peak_rss_kb: 119288
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 10
+mean_graph_events: 8.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 1 correct
+execs=2 blocked=1
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,1\,bag\,correct -
+2026-10-31T15:09:10.115693844Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:10,144 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:10,156 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:10,156 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:10,244 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:10,275 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 3 iterations
+2026-10-31 16:09:10,275 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:10,275 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2 completed iterations
+2026-10-31 16:09:10,276 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:09:10,276 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 blocked iterations
+ran:        3 iterations
+blocked:    1 (counted by the strategy)
+completed:  2
+rate:       21.8 iterations/s
+elapsed:    0.138 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@3e694b3f
+graphs:     2 distinct complete, 1 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 712
+explore_ms: 137
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 2
+graphs_blocked: 1
+summaries_distinct: 0
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 122364
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 8
+mean_graph_events: 7.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 1 off-by-one
+execs=3 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,1\,bag\,off-by-one -
+2026-10-31T15:09:11.017481826Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:11,047 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:11,060 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:11,060 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:11,140 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:11,169 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 3 iterations
+2026-10-31 16:09:11,169 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:11,169 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 3 completed iterations
+2026-10-31 16:09:11,169 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:09:11,170 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        3 iterations
+blocked:    0 (counted by the strategy)
+completed:  3
+rate:       23.0 iterations/s
+elapsed:    0.130 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@65fb9ffc
+graphs:     3 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 785
+explore_ms: 130
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 3
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 129068
+max_message_events: 5
+max_porf_pairs: 0
+max_graph_events: 7
+mean_graph_events: 6.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.9 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 2
+execs=31 blocked=5
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,2\,bag -
+2026-10-31T15:09:11.712367368Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:11,758 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:11,774 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:11,774 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:11,840 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:12,031 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 36 iterations
+2026-10-31 16:09:12,031 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 31 completed iterations
+2026-10-31 16:09:12,031 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:12,031 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 5 blocked iterations
+2026-10-31 16:09:12,031 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        36 iterations
+blocked:    5 (counted by the strategy)
+completed:  31
+rate:       127.5 iterations/s
+elapsed:    0.282 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@4116aac9
+graphs:     31 distinct complete, 5 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 742
+explore_ms: 282
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 31
+graphs_blocked: 5
+summaries_distinct: 0
+iterations: 36
+stop_reason: exhausted
+peak_rss_kb: 121068
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 19
+mean_graph_events: 15.500
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 2 correct
+execs=10 blocked=3
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,2\,bag\,correct -
+2026-10-31T15:09:12.571446322Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:12,602 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:12,615 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:12,615 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:12,704 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:12,802 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 13 iterations
+2026-10-31 16:09:12,802 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 10 completed iterations
+2026-10-31 16:09:12,802 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:12,803 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 3 blocked iterations
+2026-10-31 16:09:12,803 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        13 iterations
+blocked:    3 (counted by the strategy)
+completed:  10
+rate:       63.0 iterations/s
+elapsed:    0.206 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@7c7a06ec
+graphs:     10 distinct complete, 3 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 669
+explore_ms: 206
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 10
+graphs_blocked: 3
+summaries_distinct: 0
+iterations: 13
+stop_reason: exhausted
+peak_rss_kb: 122224
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 13.846
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 2 off-by-one
+execs=12 blocked=1
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,2\,bag\,off-by-one -
+2026-10-31T15:09:13.495080593Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:13,541 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:13,553 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:13,553 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:13,646 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:13,747 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 13 iterations
+2026-10-31 16:09:13,747 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 12 completed iterations
+2026-10-31 16:09:13,747 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:13,747 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 blocked iterations
+2026-10-31 16:09:13,748 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        13 iterations
+blocked:    1 (counted by the strategy)
+completed:  12
+rate:       60.9 iterations/s
+elapsed:    0.213 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@7c7a06ec
+graphs:     12 distinct complete, 1 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 845
+explore_ms: 213
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 12
+graphs_blocked: 1
+summaries_distinct: 0
+iterations: 13
+stop_reason: exhausted
+peak_rss_kb: 122096
+max_message_events: 11
+max_porf_pairs: 0
+max_graph_events: 15
+mean_graph_events: 13.538
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.9 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 3
+execs=207 blocked=31
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,3\,bag -
+2026-10-31T15:09:14.322430011Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:14,369 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:14,383 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:14,383 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:14,480 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:15,596 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 238 iterations
+2026-10-31 16:09:15,597 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 207 completed iterations
+2026-10-31 16:09:15,597 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 31 blocked iterations
+2026-10-31 16:09:15,597 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:15,597 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        238 iterations
+blocked:    31 (counted by the strategy)
+completed:  207
+rate:       192.7 iterations/s
+elapsed:    1.235 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@268f106e
+graphs:     207 distinct complete, 31 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1738
+explore_ms: 1235
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 207
+graphs_blocked: 31
+summaries_distinct: 0
+iterations: 238
+stop_reason: exhausted
+peak_rss_kb: 170892
+max_message_events: 18
+max_porf_pairs: 0
+max_graph_events: 28
+mean_graph_events: 23.584
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 3 correct
+execs=57 blocked=10
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,3\,bag\,correct -
+2026-10-31T15:09:16.313284018Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:16,360 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:16,383 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:16,383 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:16,483 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:16,876 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 67 iterations
+2026-10-31 16:09:16,876 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 57 completed iterations
+2026-10-31 16:09:16,876 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 10 blocked iterations
+2026-10-31 16:09:16,876 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:16,876 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        67 iterations
+blocked:    10 (counted by the strategy)
+completed:  57
+rate:       127.0 iterations/s
+elapsed:    0.527 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@31f9b85e
+graphs:     57 distinct complete, 10 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1150
+explore_ms: 527
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 57
+graphs_blocked: 10
+summaries_distinct: 0
+iterations: 67
+stop_reason: exhausted
+peak_rss_kb: 120020
+max_message_events: 18
+max_porf_pairs: 0
+max_graph_events: 24
+mean_graph_events: 20.806
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 3 off-by-one
+execs=63 blocked=4
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,3\,bag\,off-by-one -
+2026-10-31T15:09:17.535391396Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:17,582 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:17,601 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:17,601 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:17,693 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:18,087 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 67 iterations
+2026-10-31 16:09:18,087 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 63 completed iterations
+2026-10-31 16:09:18,087 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:18,087 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 blocked iterations
+2026-10-31 16:09:18,087 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        67 iterations
+blocked:    4 (counted by the strategy)
+completed:  63
+rate:       130.2 iterations/s
+elapsed:    0.515 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@31f9b85e
+graphs:     63 distinct complete, 4 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1101
+explore_ms: 514
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 63
+graphs_blocked: 4
+summaries_distinct: 0
+iterations: 67
+stop_reason: exhausted
+peak_rss_kb: 119608
+max_message_events: 17
+max_porf_pairs: 0
+max_graph_events: 23
+mean_graph_events: 20.716
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 4
+execs=1713 blocked=249
+[exit 0, wall 0.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,4\,bag -
+2026-10-31T15:09:18.890914027Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:18,926 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:18,939 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:18,939 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:19,012 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:25,890 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1962 iterations
+2026-10-31 16:09:25,890 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1713 completed iterations
+2026-10-31 16:09:25,891 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:25,891 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 249 blocked iterations
+2026-10-31 16:09:25,891 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        1962 iterations
+blocked:    249 (counted by the strategy)
+completed:  1713
+rate:       281.5 iterations/s
+elapsed:    6.971 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@2e26173
+graphs:     1713 distinct complete, 249 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 7580
+explore_ms: 6970
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1713
+graphs_blocked: 249
+summaries_distinct: 0
+iterations: 1962
+stop_reason: exhausted
+peak_rss_kb: 339576
+max_message_events: 24
+max_porf_pairs: 0
+max_graph_events: 37
+mean_graph_events: 32.069
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 7.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 4 correct
+execs=336 blocked=41
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,4\,bag\,correct -
+2026-10-31T15:09:26.652463645Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:26,700 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:26,720 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:26,720 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:26,795 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:28,329 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 377 iterations
+2026-10-31 16:09:28,329 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:28,329 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 336 completed iterations
+2026-10-31 16:09:28,329 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:09:28,329 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 41 blocked iterations
+ran:        377 iterations
+blocked:    41 (counted by the strategy)
+completed:  336
+rate:       230.1 iterations/s
+elapsed:    1.639 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@479460a6
+graphs:     336 distinct complete, 41 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2294
+explore_ms: 1638
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 336
+graphs_blocked: 41
+summaries_distinct: 0
+iterations: 377
+stop_reason: exhausted
+peak_rss_kb: 172192
+max_message_events: 24
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 27.857
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 4 off-by-one
+execs=360 blocked=17
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,4\,bag\,off-by-one -
+2026-10-31T15:09:28.900210801Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:28,922 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:28,931 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:28,931 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:28,996 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:09:30,212 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 377 iterations
+2026-10-31 16:09:30,212 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:09:30,212 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 360 completed iterations
+2026-10-31 16:09:30,212 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:09:30,212 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 17 blocked iterations
+ran:        377 iterations
+blocked:    17 (counted by the strategy)
+completed:  360
+rate:       291.1 iterations/s
+elapsed:    1.295 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@479460a6
+graphs:     360 distinct complete, 17 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1770
+explore_ms: 1295
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 360
+graphs_blocked: 17
+summaries_distinct: 0
+iterations: 377
+stop_reason: exhausted
+peak_rss_kb: 180540
+max_message_events: 23
+max_porf_pairs: 0
+max_graph_events: 31
+mean_graph_events: 27.857
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.9 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 5
+execs=17253 blocked=2491
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,5\,bag -
+2026-10-31T15:09:39.310826942Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:09:39,357 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:09:39,378 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:09:39,378 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:09:39,471 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:10:48,268 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 19744 iterations
+2026-10-31 16:10:48,270 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 17253 completed iterations
+2026-10-31 16:10:48,270 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:10:48,270 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2491 blocked iterations
+2026-10-31 16:10:48,270 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        19744 iterations
+blocked:    2491 (counted by the strategy)
+completed:  17253
+rate:       286.5 iterations/s
+elapsed:    68.922 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@15b3e033
+graphs:     17253 distinct complete, 2491 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 69536
+explore_ms: 68921
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 17253
+graphs_blocked: 2491
+summaries_distinct: 0
+iterations: 19744
+stop_reason: exhausted
+peak_rss_kb: 711792
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 46
+mean_graph_events: 40.782
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 69.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 5 correct
+execs=2085 blocked=206
+[exit 0, wall 0.2 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,5\,bag\,correct -
+2026-10-31T15:10:49.180333316Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:10:49,211 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:10:49,223 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:10:49,223 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:10:49,335 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:10:58,055 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 2291 iterations
+2026-10-31 16:10:58,056 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2085 completed iterations
+2026-10-31 16:10:58,056 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:10:58,056 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 206 blocked iterations
+2026-10-31 16:10:58,056 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        2291 iterations
+blocked:    206 (counted by the strategy)
+completed:  2085
+rate:       258.8 iterations/s
+elapsed:    8.851 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@7364f68
+graphs:     2085 distinct complete, 206 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 9465
+explore_ms: 8850
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 2085
+graphs_blocked: 206
+summaries_distinct: 0
+iterations: 2291
+stop_reason: exhausted
+peak_rss_kb: 435952
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 40
+mean_graph_events: 35.077
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 9.6 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 5 off-by-one
+execs=2205 blocked=86
+[exit 0, wall 0.2 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,5\,bag\,off-by-one -
+2026-10-31T15:10:59.003231718Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:10:59,029 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:10:59,042 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:10:59,042 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:10:59,140 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:11:08,047 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 2291 iterations
+2026-10-31 16:11:08,049 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:11:08,049 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2205 completed iterations
+2026-10-31 16:11:08,049 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:11:08,049 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 86 blocked iterations
+ran:        2291 iterations
+blocked:    86 (counted by the strategy)
+completed:  2205
+rate:       253.8 iterations/s
+elapsed:    9.026 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@69a5c6be
+graphs:     2205 distinct complete, 86 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 9679
+explore_ms: 9026
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 2205
+graphs_blocked: 86
+summaries_distinct: 0
+iterations: 2291
+stop_reason: exhausted
+peak_rss_kb: 362884
+max_message_events: 29
+max_porf_pairs: 0
+max_graph_events: 39
+mean_graph_events: 35.130
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 9.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count spec --model bag 6
+execs=207045 blocked=29893
+[exit 0, wall 19.7 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,6\,bag -
+2026-10-31T15:11:28.306798312Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:11:28,336 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:11:28,350 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:11:28,350 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:11:28,427 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:15:56,752 [main]  INFO o.m.j.c.JmcModelChecker - Completed 50000 iterations
+2026-10-31 16:20:17,396 [main]  INFO o.m.j.c.JmcModelChecker - Completed 100000 iterations
+[exit 124, wall 600.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl count impl --model bag 6 correct
+execs=13968 blocked=1237
+[exit 0, wall 1.4 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,6\,bag\,correct -
+2026-10-31T15:21:30.095189141Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:21:30,145 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:21:30,170 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:21:30,170 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:21:30,326 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+[exit 143, wall 26.2 s]
+
+# NOTE: n = 5 was already over a minute (JMC spec, 69.7 s), so the sweep should have stopped there. The n = 6 runs above were started by mistake and are not part of the table: TraceForge spec n=6 207045 / 29893 (exhausted); JMC spec n=6 not exhausted at 600 s (timeout exit 124); TraceForge impl correct n=6 13968 / 1237; the JMC impl correct n=6 run was killed by hand (exit 143). No other n = 6 run was made.
+
+# conf, export and join (n = 1, the smallest size)
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl conf --model bag 1 correct
+conformance: run seed 12637615323736377950 (reproduce with the same `Config` plus `.with_seed(12637615323736377950)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl conf --model bag 1 off-by-one
+conformance: run seed 12719932812207914213 (reproduce with the same `Config` plus `.with_seed(12719932812207914213)`)
+conformance: 2 candidate violation(s).
+The list holds 1 of them; 1 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 2 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 18 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [NoOrder]
+    	(t0, 2): UNIQUE [NoOrder]
+    	(t0, 3): TCREATE(t1:"coord")
+    	(t0, 4): TCREATE(t2:"p1")
+    	(t0, 5): TJOIN(t1)
+    	(t0, 6): TJOIN(t2)
+    thread "coord"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Req, type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Dec(Commit), type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 3): END
+    thread "p1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): NONDET true
+    	(t2, 2): RECV() [(t1, 1)]
+    	(t2, 3): NONDET false
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(No), type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t2, 5): RECV() [(t1, 2)]
+    	(t2, 6): END
+  serialized replay information (9443 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-spec-n1.jsonl --model bag --program two-pc-abstain-kragl --size n1 1
+exported: 5 lines from 7 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-spec-n1.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-impl-correct-n1.jsonl --model bag --program two-pc-abstain-kragl --size n1 1 correct
+exported: 3 lines from 3 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-impl-correct-n1.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:spec\,1\,bag /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-spec-n1.jsonl
+2026-10-31T15:20:02.871846262Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-spec-n1.jsonl
+2026-10-31 16:20:02,925 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:20:02,948 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:20:02,948 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:20:03,039 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:20:03,098 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 7 iterations
+2026-10-31 16:20:03,099 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:20:03,099 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 6 completed iterations
+2026-10-31 16:20:03,099 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:20:03,099 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 blocked iterations
+ran:        7 iterations
+blocked:    1 (counted by the strategy)
+completed:  6
+rate:       38.6 iterations/s
+elapsed:    0.181 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@36fc695d
+graphs:     6 distinct complete, 1 distinct blocked; stack exhausted
+exported:   7 iterations as 5 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-spec-n1.jsonl
+--- measurements
+wall_ms: 969
+explore_ms: 169
+summarise_ms: 11
+index_ms: 0
+lookup_ms: 0
+export_ms: 2
+graphs_complete: 6
+graphs_blocked: 1
+summaries_distinct: 5
+iterations: 7
+stop_reason: exhausted
+peak_rss_kb: 120484
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 10
+mean_graph_events: 8.000
+max_visible_events: 3
+mean_visible_events: 2.286
+max_summary_bytes: 170
+max_porf_count: 0
+[exit 0, wall 1.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,1\,bag\,correct /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-correct-n1.jsonl
+2026-10-31T15:20:03.965467828Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-correct-n1.jsonl
+2026-10-31 16:20:04,016 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:20:04,034 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:20:04,034 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:20:04,129 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:20:04,159 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 3 iterations
+2026-10-31 16:20:04,160 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2 completed iterations
+2026-10-31 16:20:04,160 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:20:04,160 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:20:04,160 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 blocked iterations
+ran:        3 iterations
+blocked:    1 (counted by the strategy)
+completed:  2
+rate:       19.7 iterations/s
+elapsed:    0.152 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@2d3379b4
+graphs:     2 distinct complete, 1 distinct blocked; stack exhausted
+exported:   3 iterations as 3 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-correct-n1.jsonl
+--- measurements
+wall_ms: 967
+explore_ms: 143
+summarise_ms: 8
+index_ms: 0
+lookup_ms: 0
+export_ms: 2
+graphs_complete: 2
+graphs_blocked: 1
+summaries_distinct: 3
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 120596
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 8
+mean_graph_events: 7.000
+max_visible_events: 3
+mean_visible_events: 2.000
+max_summary_bytes: 170
+max_porf_count: 0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl bench.two_pc_abstain_kragl.TwoPc:impl\,1\,bag\,off-by-one /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-off-by-one-n1.jsonl
+2026-10-31T15:20:04.849764202Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.two_pc_abstain_kragl.TwoPc
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-off-by-one-n1.jsonl
+2026-10-31 16:20:04,900 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:20:04,929 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:20:04,929 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:20:05,040 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:20:05,073 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 3 iterations
+2026-10-31 16:20:05,073 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:20:05,073 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 3 completed iterations
+2026-10-31 16:20:05,074 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:20:05,074 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        3 iterations
+blocked:    0 (counted by the strategy)
+completed:  3
+rate:       16.0 iterations/s
+elapsed:    0.187 s
+observed:   bench.two_pc_abstain_kragl.TwoPc@618b19ad
+graphs:     3 distinct complete, 0 distinct blocked; stack exhausted
+exported:   3 iterations as 3 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-off-by-one-n1.jsonl
+--- measurements
+wall_ms: 804
+explore_ms: 176
+summarise_ms: 11
+index_ms: 0
+lookup_ms: 0
+export_ms: 5
+graphs_complete: 3
+graphs_blocked: 0
+summaries_distinct: 3
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 124692
+max_message_events: 5
+max_porf_pairs: 0
+max_graph_events: 7
+mean_graph_events: 6.000
+max_visible_events: 3
+mean_visible_events: 2.333
+max_summary_bytes: 170
+max_porf_count: 0
+[exit 0, wall 0.9 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-spec-n1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-correct-n1.jsonl
+spec: tool=traceforge program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+impl: tool=jmc program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-spec-n1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-impl-off-by-one-n1.jsonl
+spec: tool=traceforge program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+impl: tool=jmc program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+verdict: violation
+uncovered: 2
+no-slot {"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Req","f":[]}},{"s":{"t":"Vote","f":[{"t":"No","f":[]}]}},{"r":{"t":"Dec","f":[{"t":"Commit","f":[]}]}}]},"counts":[]}
+no-slot {"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Dec","f":[{"t":"Commit","f":[]}]}}]},"counts":[]}
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/java-spec-n1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/two-pc-abstain-kragl/out/export/rust-impl-correct-n1.jsonl
+spec: tool=jmc program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+impl: tool=traceforge program=two-pc-abstain-kragl size=n1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
+# conf at n = 2 (the order component of off-by-one)
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl conf --model bag 2 correct
+conformance: run seed 11589588212206595193 (reproduce with the same `Config` plus `.with_seed(11589588212206595193)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_two_pc_abstain_kragl conf --model bag 2 off-by-one
+conformance: run seed 12414301879012076217 (reproduce with the same `Config` plus `.with_seed(12414301879012076217)`)
+conformance: 6 candidate violation(s).
+The list holds 1 of them; 5 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 6 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 28 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [NoOrder]
+    	(t0, 2): UNIQUE [NoOrder]
+    	(t0, 3): UNIQUE [NoOrder]
+    	(t0, 4): TCREATE(t1:"coord")
+    	(t0, 5): TCREATE(t2:"p1")
+    	(t0, 6): TCREATE(t3:"p2")
+    	(t0, 7): TJOIN(t1)
+    	(t0, 8): TJOIN(t2)
+    	(t0, 9): TJOIN(t3)
+    thread "coord"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Req, type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Req, type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 3): RECV() [(t3, 4)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Dec(Commit), type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Dec(Commit), type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t1, 6): END
+    thread "p1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): NONDET false
+    	(t2, 2): RECV() [(t1, 4)]
+    	(t2, 3): END
+    thread "p2"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): NONDET true
+    	(t3, 2): RECV() [(t1, 2)]
+    	(t3, 3): NONDET true
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(Yes), type_name: "bench_two_pc_abstain_kragl::Msg" })
+    	(t3, 5): RECV() [(t1, 5)]
+    	(t3, 6): END
+  serialized replay information (14495 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+

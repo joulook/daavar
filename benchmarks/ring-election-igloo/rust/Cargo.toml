@@ -1,0 +1,9 @@
+[package]
+name = "bench_ring_election_igloo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]

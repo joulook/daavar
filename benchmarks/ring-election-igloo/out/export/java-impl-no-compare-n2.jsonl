@@ -1,0 +1,7 @@
+{"format":1,"tool":"jmc","program":"ring-election-igloo","size":"n2r1d1","visible":["observer"],"model":"asyn","enumeration":"complete","encoding":1}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[0,false]}},{"r":{"t":"Status","f":[1,false]}}]},"counts":[],"n":73}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[1,false]}},{"r":{"t":"Status","f":[0,false]}}]},"counts":[],"n":73}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[0,true]}},{"r":{"t":"Status","f":[1,false]}}]},"counts":[],"n":12}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[1,false]}},{"r":{"t":"Status","f":[0,true]}}]},"counts":[],"n":12}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[0,false]}},{"r":{"t":"Status","f":[1,true]}}]},"counts":[],"n":12}
+{"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[1,true]}},{"r":{"t":"Status","f":[0,false]}}]},"counts":[],"n":12}

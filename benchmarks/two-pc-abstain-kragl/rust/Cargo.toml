@@ -1,0 +1,9 @@
+[package]
+name = "bench_two_pc_abstain_kragl"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]

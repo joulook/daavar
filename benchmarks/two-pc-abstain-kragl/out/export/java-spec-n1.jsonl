@@ -1,0 +1,6 @@
+{"format":1,"tool":"jmc","program":"two-pc-abstain-kragl","size":"n1","visible":["p1"],"model":"asyn","enumeration":"complete","encoding":1}
+{"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Req","f":[]}},{"s":{"t":"Vote","f":[{"t":"Yes","f":[]}]}},{"r":{"t":"Dec","f":[{"t":"Abort","f":[]}]}}]},"counts":[],"n":2}
+{"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Req","f":[]}},{"s":{"t":"Vote","f":[{"t":"No","f":[]}]}},{"r":{"t":"Dec","f":[{"t":"Abort","f":[]}]}}]},"counts":[],"n":2}
+{"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Dec","f":[{"t":"Abort","f":[]}]}}]},"counts":[],"n":1}
+{"statuses":{"p1":"done"},"words":{"p1":[{"r":{"t":"Req","f":[]}},{"s":{"t":"Vote","f":[{"t":"Yes","f":[]}]}},{"r":{"t":"Dec","f":[{"t":"Commit","f":[]}]}}]},"counts":[],"n":1}
+{"statuses":{"p1":"blocked"},"words":{"p1":[]},"counts":[],"n":1}

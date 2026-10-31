@@ -1,0 +1,1260 @@
+# replicated-log-esop20 runs, 2026-10-31. TraceForge pin 37f37fd, JMC pin 504e60a. X = /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20; jrun.sh <benchdir> <Class:args> <export|-> = java -Xss4m -cp <benchdir>/java/out:$(cat daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher <Class:args> must 0 1 <fresh report dir> <export|-> 600 </dev/null. Every command under timeout 600. TraceForge progress lines are dropped from the log.
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model bag 1
+execs=4 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,1\,bag -
+2026-10-31T15:25:17.906343881Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:17,968 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:17,992 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:17,992 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:18,143 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:18,214 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-10-31 16:25:18,214 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:18,214 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-10-31 16:25:18,215 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:25:18,215 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       15.5 iterations/s
+elapsed:    0.258 s
+observed:   bench.replicated_log_esop20.RepLog@443118b0
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1043
+explore_ms: 257
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 120436
+max_message_events: 14
+max_porf_pairs: 0
+max_graph_events: 14
+mean_graph_events: 14.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 1 correct
+execs=8 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,bag\,correct -
+2026-10-31T15:25:19.238045075Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:19,314 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:19,339 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:19,339 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:19,465 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:19,594 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 8 iterations
+2026-10-31 16:25:19,594 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 8 completed iterations
+2026-10-31 16:25:19,594 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:19,594 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:25:19,594 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        8 iterations
+blocked:    0 (counted by the strategy)
+completed:  8
+rate:       26.7 iterations/s
+elapsed:    0.300 s
+observed:   bench.replicated_log_esop20.RepLog@3c46e67a
+graphs:     8 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1182
+explore_ms: 299
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 8
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 8
+stop_reason: exhausted
+peak_rss_kb: 132328
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.3 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 1 early-reply
+execs=32 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,bag\,early-reply -
+2026-10-31T15:25:20.387408161Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:20,421 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:20,434 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:20,434 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:20,589 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:21,033 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 32 iterations
+2026-10-31 16:25:21,033 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 32 completed iterations
+2026-10-31 16:25:21,033 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:21,033 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+ran:        32 iterations
+2026-10-31 16:25:21,033 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+blocked:    0 (counted by the strategy)
+completed:  32
+rate:       51.8 iterations/s
+elapsed:    0.618 s
+observed:   bench.replicated_log_esop20.RepLog@d35dea7
+graphs:     32 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1283
+explore_ms: 617
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 32
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 32
+stop_reason: exhausted
+peak_rss_kb: 127444
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model bag 2
+execs=16 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,2\,bag -
+2026-10-31T15:25:21.867063067Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:21,931 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:21,962 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:21,962 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:22,076 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:22,209 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 16 iterations
+2026-10-31 16:25:22,209 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 16 completed iterations
+2026-10-31 16:25:22,209 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:22,210 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:22,210 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        16 iterations
+blocked:    0 (counted by the strategy)
+completed:  16
+rate:       54.4 iterations/s
+elapsed:    0.294 s
+observed:   bench.replicated_log_esop20.RepLog@3b69e7d1
+graphs:     16 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1009
+explore_ms: 294
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 16
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 16
+stop_reason: exhausted
+peak_rss_kb: 129656
+max_message_events: 20
+max_porf_pairs: 0
+max_graph_events: 20
+mean_graph_events: 20.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 2 correct
+execs=128 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,2\,bag\,correct -
+2026-10-31T15:25:23.017837096Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:23,055 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:23,073 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:23,073 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:23,226 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:24,869 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 128 iterations
+2026-10-31 16:25:24,869 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:24,869 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 128 completed iterations
+2026-10-31 16:25:24,869 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:25:24,869 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        128 iterations
+blocked:    0 (counted by the strategy)
+completed:  128
+rate:       70.2 iterations/s
+elapsed:    1.823 s
+observed:   bench.replicated_log_esop20.RepLog@25641d39
+graphs:     128 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2474
+explore_ms: 1822
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 128
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 128
+stop_reason: exhausted
+peak_rss_kb: 169404
+max_message_events: 52
+max_porf_pairs: 0
+max_graph_events: 52
+mean_graph_events: 52.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.6 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 2 early-reply
+execs=512 blocked=0
+[exit 0, wall 0.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,2\,bag\,early-reply -
+2026-10-31T15:25:25.783264715Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:25,842 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:25,870 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:25,870 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:26,077 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:31,436 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 512 iterations
+2026-10-31 16:25:31,436 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 512 completed iterations
+2026-10-31 16:25:31,436 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:31,436 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:31,436 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        512 iterations
+blocked:    0 (counted by the strategy)
+completed:  512
+rate:       91.3 iterations/s
+elapsed:    5.607 s
+observed:   bench.replicated_log_esop20.RepLog@f73dcd6
+graphs:     512 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 6299
+explore_ms: 5606
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 512
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 512
+stop_reason: exhausted
+peak_rss_kb: 305960
+max_message_events: 52
+max_porf_pairs: 0
+max_graph_events: 52
+mean_graph_events: 52.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 6.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model bag 3
+execs=144 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,3\,bag -
+2026-10-31T15:25:32.426600671Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:32,469 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:32,484 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:32,484 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:32,611 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:33,766 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 144 iterations
+2026-10-31 16:25:33,767 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:33,767 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 144 completed iterations
+2026-10-31 16:25:33,767 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:25:33,767 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        144 iterations
+blocked:    0 (counted by the strategy)
+completed:  144
+rate:       110.0 iterations/s
+elapsed:    1.309 s
+observed:   bench.replicated_log_esop20.RepLog@1c7696c6
+graphs:     144 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2170
+explore_ms: 1308
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 144
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 144
+stop_reason: exhausted
+peak_rss_kb: 154560
+max_message_events: 26
+max_porf_pairs: 0
+max_graph_events: 26
+mean_graph_events: 26.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.3 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 3 correct
+execs=4608 blocked=0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,3\,bag\,correct -
+2026-10-31T15:25:35.484832057Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:25:35,529 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:35,555 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:35,555 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:35,747 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:26:32,684 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4608 iterations
+2026-10-31 16:26:32,687 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4608 completed iterations
+2026-10-31 16:26:32,687 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:26:32,688 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:26:32,688 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4608 iterations
+blocked:    0 (counted by the strategy)
+completed:  4608
+rate:       80.6 iterations/s
+elapsed:    57.172 s
+observed:   bench.replicated_log_esop20.RepLog@1f315f3d
+graphs:     4608 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 57993
+explore_ms: 57172
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4608
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4608
+stop_reason: exhausted
+peak_rss_kb: 406792
+max_message_events: 74
+max_porf_pairs: 0
+max_graph_events: 74
+mean_graph_events: 74.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 58.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model bag 3 early-reply
+execs=18432 blocked=0
+[exit 0, wall 2.9 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,3\,bag\,early-reply -
+2026-10-31T15:26:36.423928380Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:26:36,465 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:26:36,489 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:26:36,489 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:26:36,696 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:09,367 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 18432 iterations
+2026-10-31 16:30:09,368 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 18432 completed iterations
+2026-10-31 16:30:09,368 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:09,368 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:30:09,368 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        18432 iterations
+blocked:    0 (counted by the strategy)
+completed:  18432
+rate:       86.6 iterations/s
+elapsed:    212.914 s
+observed:   bench.replicated_log_esop20.RepLog@7b9e0ca7
+graphs:     18432 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 213648
+explore_ms: 212914
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 18432
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 18432
+stop_reason: exhausted
+peak_rss_kb: 654496
+max_message_events: 74
+max_porf_pairs: 0
+max_graph_events: 74
+mean_graph_events: 74.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 213.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model fifo 1
+execs=1 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,1\,fifo -
+2026-10-31T15:30:10.271405585Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:10,318 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:10,344 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:10,344 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:10,444 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:10,455 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1 iterations
+2026-10-31 16:30:10,455 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 completed iterations
+2026-10-31 16:30:10,455 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:10,455 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:30:10,455 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        1 iterations
+blocked:    0 (counted by the strategy)
+completed:  1
+rate:       6.8 iterations/s
+elapsed:    0.147 s
+observed:   bench.replicated_log_esop20.RepLog@65fb9ffc
+graphs:     1 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 903
+explore_ms: 146
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 1
+stop_reason: exhausted
+peak_rss_kb: 119992
+max_message_events: 14
+max_porf_pairs: 0
+max_graph_events: 14
+mean_graph_events: 14.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 1 correct
+execs=8 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,fifo\,correct -
+2026-10-31T15:30:11.286390170Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:11,341 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:11,363 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:11,363 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:11,517 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:11,677 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 8 iterations
+2026-10-31 16:30:11,677 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 8 completed iterations
+2026-10-31 16:30:11,677 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:11,677 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:30:11,677 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        8 iterations
+blocked:    0 (counted by the strategy)
+completed:  8
+rate:       23.1 iterations/s
+elapsed:    0.347 s
+observed:   bench.replicated_log_esop20.RepLog@292b08d6
+graphs:     8 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1103
+explore_ms: 346
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 8
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 8
+stop_reason: exhausted
+peak_rss_kb: 123328
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 1 early-reply
+execs=32 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,fifo\,early-reply -
+2026-10-31T15:30:12.423099061Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:12,459 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:12,475 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:12,475 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:12,635 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:13,154 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 32 iterations
+2026-10-31 16:30:13,154 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:13,155 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:30:13,155 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 32 completed iterations
+2026-10-31 16:30:13,155 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        32 iterations
+blocked:    0 (counted by the strategy)
+completed:  32
+rate:       45.4 iterations/s
+elapsed:    0.705 s
+observed:   bench.replicated_log_esop20.RepLog@24313fcc
+graphs:     32 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1362
+explore_ms: 705
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 32
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 32
+stop_reason: exhausted
+peak_rss_kb: 120176
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.5 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model fifo 2
+execs=4 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,2\,fifo -
+2026-10-31T15:30:14.131242918Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:14,175 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:14,192 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:14,192 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:14,343 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:14,430 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-10-31 16:30:14,430 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-10-31 16:30:14,430 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:14,431 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:30:14,431 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       15.1 iterations/s
+elapsed:    0.265 s
+observed:   bench.replicated_log_esop20.RepLog@6771beb3
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1090
+explore_ms: 264
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 125712
+max_message_events: 20
+max_porf_pairs: 0
+max_graph_events: 20
+mean_graph_events: 20.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 2 correct
+execs=128 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,2\,fifo\,correct -
+2026-10-31T15:30:15.362422376Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:15,405 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:15,423 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:15,423 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:15,601 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:17,439 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 128 iterations
+2026-10-31 16:30:17,440 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:17,440 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 128 completed iterations
+2026-10-31 16:30:17,440 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:30:17,440 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        128 iterations
+blocked:    0 (counted by the strategy)
+completed:  128
+rate:       62.6 iterations/s
+elapsed:    2.045 s
+observed:   bench.replicated_log_esop20.RepLog@537f60bf
+graphs:     128 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2855
+explore_ms: 2044
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 128
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 128
+stop_reason: exhausted
+peak_rss_kb: 165308
+max_message_events: 52
+max_porf_pairs: 0
+max_graph_events: 52
+mean_graph_events: 52.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.9 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 2 early-reply
+execs=512 blocked=0
+[exit 0, wall 0.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,2\,fifo\,early-reply -
+2026-10-31T15:30:18.248999715Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:18,313 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:18,332 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:18,333 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:18,491 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:23,449 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 512 iterations
+2026-10-31 16:30:23,450 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 512 completed iterations
+2026-10-31 16:30:23,450 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:23,450 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:30:23,450 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        512 iterations
+blocked:    0 (counted by the strategy)
+completed:  512
+rate:       99.5 iterations/s
+elapsed:    5.146 s
+observed:   bench.replicated_log_esop20.RepLog@40499e4f
+graphs:     512 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 5789
+explore_ms: 5146
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 512
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 512
+stop_reason: exhausted
+peak_rss_kb: 176476
+max_message_events: 52
+max_porf_pairs: 0
+max_graph_events: 52
+mean_graph_events: 52.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 5.9 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count spec --model fifo 3
+execs=36 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,3\,fifo -
+2026-10-31T15:30:24.313961757Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:24,380 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:24,402 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:24,402 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:24,524 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:30:25,074 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 36 iterations
+2026-10-31 16:30:25,074 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 36 completed iterations
+2026-10-31 16:30:25,074 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:30:25,074 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:30:25,074 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        36 iterations
+blocked:    0 (counted by the strategy)
+completed:  36
+rate:       50.8 iterations/s
+elapsed:    0.709 s
+observed:   bench.replicated_log_esop20.RepLog@3d34d211
+graphs:     36 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1448
+explore_ms: 708
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 36
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 36
+stop_reason: exhausted
+peak_rss_kb: 134672
+max_message_events: 26
+max_porf_pairs: 0
+max_graph_events: 26
+mean_graph_events: 26.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.6 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 3 correct
+execs=4608 blocked=0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,3\,fifo\,correct -
+2026-10-31T15:30:26.698121386Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:30:26,754 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:30:26,773 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:30:26,773 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:30:26,961 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:31:21,546 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4608 iterations
+2026-10-31 16:31:21,548 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4608 completed iterations
+2026-10-31 16:31:21,548 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:31:21,549 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:31:21,549 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4608 iterations
+blocked:    0 (counted by the strategy)
+completed:  4608
+rate:       84.1 iterations/s
+elapsed:    54.804 s
+observed:   bench.replicated_log_esop20.RepLog@3b6b9981
+graphs:     4608 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 55518
+explore_ms: 54804
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4608
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4608
+stop_reason: exhausted
+peak_rss_kb: 411196
+max_message_events: 74
+max_porf_pairs: 0
+max_graph_events: 74
+mean_graph_events: 74.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 55.6 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 count impl --model fifo 3 early-reply
+execs=18432 blocked=0
+[exit 0, wall 3.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,3\,fifo\,early-reply -
+2026-10-31T15:31:25.255657501Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:31:25,298 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:31:25,321 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:31:25,321 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:31:25,556 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:34:55,302 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 18432 iterations
+2026-10-31 16:34:55,304 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 18432 completed iterations
+2026-10-31 16:34:55,304 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:34:55,304 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+ran:        18432 iterations
+blocked:    0 (counted by the strategy)
+2026-10-31 16:34:55,305 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+completed:  18432
+rate:       87.8 iterations/s
+elapsed:    210.016 s
+observed:   bench.replicated_log_esop20.RepLog@b4f9a4
+graphs:     18432 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 210643
+explore_ms: 210015
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 18432
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 18432
+stop_reason: exhausted
+peak_rss_kb: 409948
+max_message_events: 74
+max_porf_pairs: 0
+max_graph_events: 74
+mean_graph_events: 74.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 210.7 s]
+
+# conf (bag and fifo), export and join (bag), c = 1
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 conf --model bag 1 correct
+conformance: run seed 15487331053895543537 (reproduce with the same `Config` plus `.with_seed(15487331053895543537)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 conf --model bag 1 early-reply
+conformance: run seed 15105161102595790059 (reproduce with the same `Config` plus `.with_seed(15105161102595790059)`)
+conformance: 24 candidate violation(s).
+The list holds 1 of them; 23 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 24 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 56 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [NoOrder]
+    	(t0, 2): UNIQUE [NoOrder]
+    	(t0, 3): UNIQUE [NoOrder]
+    	(t0, 4): UNIQUE [NoOrder]
+    	(t0, 5): UNIQUE [NoOrder]
+    	(t0, 6): TCREATE(t1:"coordinator")
+    	(t0, 7): TCREATE(t2:"db1")
+    	(t0, 8): TCREATE(t3:"db2")
+    	(t0, 9): TCREATE(t4:"auditor")
+    	(t0, 10): TCREATE(t5:"client1")
+    	(t0, 11): TJOIN(t1)
+    	(t0, 12): TJOIN(t2)
+    	(t0, 13): TJOIN(t3)
+    	(t0, 14): TJOIN(t4)
+    	(t0, 15): TJOIN(t5)
+    thread "coordinator"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t5, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Request("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Request("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 4): RECV() [(t2, 2)]
+    	(t1, 5): RECV() [(t3, 2)]
+    	(t1, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Dec(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Dec(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 8): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Result(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 9): RECV() [(t2, 4)]
+    	(t1, 10): RECV() [(t3, 6)]
+    	(t1, 11): END
+    thread "db1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 3): RECV() [(t1, 6)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Ack, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 5): RECV() [(t4, 2)]
+    	(t2, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Log("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 7): END
+    thread "db2"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 3)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 3): RECV() [(t4, 3)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Log(""), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 5): RECV() [(t1, 7)]
+    	(t3, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Ack, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 7): END
+    thread "auditor"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t5, 3)]
+    	(t4, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Read, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Read, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t4, 4): RECV() [(t2, 6)]
+    	(t4, 5): RECV() [(t3, 4)]
+    	(t4, 6): END
+    thread "client1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Event { from: 1, ev: "EVENT X" }, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t5, 2): RECV() [(t1, 8)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Done, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t5, 4): END
+  serialized replay information (30384 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 conf --model fifo 1 correct
+conformance: run seed 5366447221764352751 (reproduce with the same `Config` plus `.with_seed(5366447221764352751)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 conf --model fifo 1 early-reply
+conformance: run seed 7464496098699566284 (reproduce with the same `Config` plus `.with_seed(7464496098699566284)`)
+conformance: 24 candidate violation(s).
+The list holds 1 of them; 23 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 24 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 56 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"coordinator")
+    	(t0, 7): TCREATE(t2:"db1")
+    	(t0, 8): TCREATE(t3:"db2")
+    	(t0, 9): TCREATE(t4:"auditor")
+    	(t0, 10): TCREATE(t5:"client1")
+    	(t0, 11): TJOIN(t1)
+    	(t0, 12): TJOIN(t2)
+    	(t0, 13): TJOIN(t3)
+    	(t0, 14): TJOIN(t4)
+    	(t0, 15): TJOIN(t5)
+    thread "coordinator"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t5, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Request("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Request("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 4): RECV() [(t2, 2)]
+    	(t1, 5): RECV() [(t3, 2)]
+    	(t1, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Dec(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Dec(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 8): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Result(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t1, 9): RECV() [(t2, 4)]
+    	(t1, 10): RECV() [(t3, 6)]
+    	(t1, 11): END
+    thread "db1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 3): RECV() [(t1, 6)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Ack, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 5): RECV() [(t4, 2)]
+    	(t2, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Log("EVENT X"), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t2, 7): END
+    thread "db2"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 3)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Vote(Commit), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 3): RECV() [(t4, 3)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Log(""), type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 5): RECV() [(t1, 7)]
+    	(t3, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Ack, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t3, 7): END
+    thread "auditor"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t5, 3)]
+    	(t4, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Read, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Read, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t4, 4): RECV() [(t2, 6)]
+    	(t4, 5): RECV() [(t3, 4)]
+    	(t4, 6): END
+    thread "client1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Event { from: 1, ev: "EVENT X" }, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t5, 2): RECV() [(t1, 8)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Done, type_name: "bench_replicated_log_esop20::Msg" })
+    	(t5, 4): END
+  serialized replay information (31004 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-spec-c1.jsonl --model bag --program replicated-log-esop20 --size c1 1
+exported: 1 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-spec-c1.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_replicated_log_esop20 export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-impl-correct-c1.jsonl --model bag --program replicated-log-esop20 --size c1 1 correct
+exported: 1 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-impl-correct-c1.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:spec\,1\,bag /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-spec-c1.jsonl
+2026-10-31T15:25:28.806167844Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-spec-c1.jsonl
+2026-10-31 16:25:28,859 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:28,877 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:28,877 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:29,004 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:29,076 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-10-31 16:25:29,077 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-10-31 16:25:29,077 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:29,077 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:29,077 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       17.5 iterations/s
+elapsed:    0.228 s
+observed:   bench.replicated_log_esop20.RepLog@13c9d689
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-spec-c1.jsonl
+--- measurements
+wall_ms: 1187
+explore_ms: 214
+summarise_ms: 13
+index_ms: 0
+lookup_ms: 0
+export_ms: 5
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 1
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 121888
+max_message_events: 14
+max_porf_pairs: 5
+max_graph_events: 14
+mean_graph_events: 14.000
+max_visible_events: 8
+mean_visible_events: 8.000
+max_summary_bytes: 368
+max_porf_count: 3
+[exit 0, wall 1.3 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,bag\,correct /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-correct-c1.jsonl
+2026-10-31T15:25:30.059533388Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-correct-c1.jsonl
+2026-10-31 16:25:30,106 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:30,120 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:30,120 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:30,280 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:30,447 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 8 iterations
+2026-10-31 16:25:30,448 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 8 completed iterations
+2026-10-31 16:25:30,448 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:30,448 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:30,448 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        8 iterations
+blocked:    0 (counted by the strategy)
+completed:  8
+rate:       22.9 iterations/s
+elapsed:    0.349 s
+observed:   bench.replicated_log_esop20.RepLog@40a4337a
+graphs:     8 distinct complete, 0 distinct blocked; stack exhausted
+exported:   8 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-correct-c1.jsonl
+--- measurements
+wall_ms: 1243
+explore_ms: 326
+summarise_ms: 22
+index_ms: 0
+lookup_ms: 0
+export_ms: 4
+graphs_complete: 8
+graphs_blocked: 0
+summaries_distinct: 1
+iterations: 8
+stop_reason: exhausted
+peak_rss_kb: 125756
+max_message_events: 30
+max_porf_pairs: 5
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 8
+mean_visible_events: 8.000
+max_summary_bytes: 368
+max_porf_count: 3
+[exit 0, wall 1.3 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20 bench.replicated_log_esop20.RepLog:impl\,1\,bag\,early-reply /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-early-reply-c1.jsonl
+2026-10-31T15:25:31.283522985Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.replicated_log_esop20.RepLog
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-early-reply-c1.jsonl
+2026-10-31 16:25:31,346 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:25:31,377 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:25:31,377 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:25:31,517 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:25:32,007 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 32 iterations
+2026-10-31 16:25:32,007 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 32 completed iterations
+2026-10-31 16:25:32,007 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:25:32,007 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:25:32,007 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        32 iterations
+blocked:    0 (counted by the strategy)
+completed:  32
+rate:       47.8 iterations/s
+elapsed:    0.669 s
+observed:   bench.replicated_log_esop20.RepLog@70325e14
+graphs:     32 distinct complete, 0 distinct blocked; stack exhausted
+exported:   32 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-early-reply-c1.jsonl
+--- measurements
+wall_ms: 1434
+explore_ms: 619
+summarise_ms: 49
+index_ms: 0
+lookup_ms: 0
+export_ms: 3
+graphs_complete: 32
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 32
+stop_reason: exhausted
+peak_rss_kb: 130720
+max_message_events: 30
+max_porf_pairs: 5
+max_graph_events: 30
+mean_graph_events: 30.000
+max_visible_events: 8
+mean_visible_events: 8.000
+max_summary_bytes: 368
+max_porf_count: 3
+[exit 0, wall 1.5 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-spec-c1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-correct-c1.jsonl
+spec: tool=traceforge program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+impl: tool=jmc program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-spec-c1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-impl-early-reply-c1.jsonl
+spec: tool=traceforge program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+impl: tool=jmc program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+verdict: violation
+uncovered: 3
+no-slot {"statuses":{"auditor":"done","client1":"done"},"words":{"auditor":[{"r":{"t":"Done","f":[]}},{"s":{"t":"Read","f":[]}},{"s":{"t":"Read","f":[]}},{"r":{"t":"Log","f":["EVENT X"]}},{"r":{"t":"Log","f":[""]}}],"client1":[{"s":{"t":"Event","f":[1,"EVENT X"]}},{"r":{"t":"Result","f":[{"t":"Commit","f":[]}]}},{"s":{"t":"Done","f":[]}}]},"counts":[3,3,3,3,3,0,0,0]}
+no-slot {"statuses":{"auditor":"done","client1":"done"},"words":{"auditor":[{"r":{"t":"Done","f":[]}},{"s":{"t":"Read","f":[]}},{"s":{"t":"Read","f":[]}},{"r":{"t":"Log","f":[""]}},{"r":{"t":"Log","f":["EVENT X"]}}],"client1":[{"s":{"t":"Event","f":[1,"EVENT X"]}},{"r":{"t":"Result","f":[{"t":"Commit","f":[]}]}},{"s":{"t":"Done","f":[]}}]},"counts":[3,3,3,3,3,0,0,0]}
+no-slot {"statuses":{"auditor":"done","client1":"done"},"words":{"auditor":[{"r":{"t":"Done","f":[]}},{"s":{"t":"Read","f":[]}},{"s":{"t":"Read","f":[]}},{"r":{"t":"Log","f":[""]}},{"r":{"t":"Log","f":[""]}}],"client1":[{"s":{"t":"Event","f":[1,"EVENT X"]}},{"r":{"t":"Result","f":[{"t":"Commit","f":[]}]}},{"s":{"t":"Done","f":[]}}]},"counts":[3,3,3,3,3,0,0,0]}
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/java-spec-c1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/replicated-log-esop20/out/export/rust-impl-correct-c1.jsonl
+spec: tool=jmc program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+impl: tool=traceforge program=replicated-log-esop20 size=c1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+

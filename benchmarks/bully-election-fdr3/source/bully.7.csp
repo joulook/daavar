@@ -1,0 +1,335 @@
+-- The bully algorithm modelled in CSP
+
+-- Bill Roscoe 
+
+-- See chapter 14 of Understanding Concurrent Systems for details of the
+-- algorithm.
+
+-- The number of nodes, the time-out intervals (T1 and T2) and the settle-by
+-- parameter for the specifications
+
+N=7
+
+T1 = 1
+T2 = 3
+TS = 7
+
+Proc = {0..N-1}
+
+-- All communications in this algorithm go from high to low or low to high
+-- so it is useful to have the following sets defined:
+
+above(n) = {k | k <- Proc, k>n}
+below(n) = {k | k <- Proc, k<n}
+
+-- The alphabet as described in the assignment
+
+channel election:Proc.Proc
+
+channel answer:Proc.Proc
+
+channel coordinator:Proc.Proc
+
+channel fail, revive:Proc
+
+channel test,ok:Proc.Proc
+
+channel leader:Proc.Proc
+
+channel tock
+
+-- Now we have a number of states a node can be in.  The first is when it
+-- is about to begin an election
+
+BeginElection(n) = SendElections(N-1,n)
+
+-- which results in it sending successive election messages to the appropriate
+-- nodes.  Note how it can handle the receipt of any message it might
+-- receive, with varying results...
+
+SendElections(k,n) = (if k<=n then AwaitAnswers(T1,n)
+                     else election.n.k -> SendElections(k-1,n))
+                    [] election?k':below(n)!n ->answer.n.k' ->SendElections(k,n)
+                    [] answer?k:above(n)!n -> AwaitCoordinator(T2,n)
+                    [] ok?k':above(n)!n -> SendElections(k,n)
+                    [] coordinator?k:above(n)!n -> Running'(n,k)
+		    [] fail.n -> Failed(n)
+                    [] test?k':below(n)!n  ->  SendElections(k,n)
+
+-- Here is is waiting for answers from its election messages, with the
+-- time-out making it the coordinator if it has not had one within T1.
+
+AwaitAnswers(t,n) = if t==0 then BecomeCoordinator(n)
+                            else
+                    tock -> AwaitAnswers(t-1,n)
+                 [] answer?k:above(n)!n -> AwaitCoordinator(T2,n)
+                 [] ok?k:above(n)!n -> AwaitAnswers(t,n)
+                 [] election?k:below(n)!n -> answer.n.k -> AwaitAnswers(t,n)
+                 [] coordinator?k:above(n)!n -> Running'(n,k)
+		    [] fail.n -> Failed(n)
+                    [] test?k:below(n)!n  ->  AwaitAnswers(t,n)
+
+-- After it has had its answer message, it sits and waits to be sent a
+-- coordinator message (or any of a number of others), before starting 
+-- another election if nothing has happened.
+
+
+AwaitCoordinator(t,n) = if t==0 then BeginElection(n)
+                                else
+                        tock ->AwaitCoordinator(t-1,n)
+                    []  coordinator?k:above(n)!n -> Running'(n,k)
+                    [] answer?k:above(n)!n -> AwaitCoordinator(t,n)
+                    [] ok?k:above(n)!n -> AwaitCoordinator(t,n)
+                    [] election?k:below(n)!n -> answer.n.k -> 
+                                          AwaitCoordinator(t,n)
+		    [] fail.n -> Failed(n)
+                    [] test?k:below(n)!n  ->  AwaitCoordinator(t,n)
+
+-- This is the state it is in when it has decided, for want of life above it,
+-- that it is the current coordinator
+
+BecomeCoordinator(n) = SendCoords(n-1,n)
+
+-- It distributes a coordinator message to all below it.  Note that since it
+-- is the coordinator, it sends a positive response to the test message,
+-- unlike earlier states
+
+SendCoords(j,n) = if j<0 then RunAsCoord(n)
+                  else coordinator.n.j -> SendCoords(j-1,n)
+                  [] election?k:below(n)!n -> coordinator.n.k -> SendCoords(j,n)
+                  [] coordinator?k:above(n)!n -> Running'(n,k)
+                  [] fail.n -> Failed(n)
+                  [] test?k:below(n)!n  -> ok.n.k -> SendCoords(j,n)
+
+-- There are two running states, one as coordinator...
+
+RunAsCoord(n) =   tock -> RunAsCoord(n)
+                  [] test?k:below(n)!n -> ok.n.k -> RunAsCoord(n)
+                  [] coordinator?k:above(n)!n -> Running'(n,k)
+                  [] election?k:below(n)!n -> answer.n.k -> BeginElection(n)
+                  [] fail.n -> Failed(n)
+		  [] leader.n.n -> RunAsCoord(n)
+
+-- and one not, that thinks k is coordinator... 
+
+Running(n,k) =    test.n.k -> Testing(n,k)
+                  [] tock -> Running(n,k)
+                  [] coordinator?k:above(n)!n -> Running'(n,k)
+                  [] answer?j:above(n)!n  -> Running(n,k)
+		  [] leader.n.k -> Running(n,k)
+                  [] election?k:below(n)!n -> answer.n.k -> BeginElection(n)
+                  [] test?j:below(n)!n  -> Running(n,k)
+                  [] fail.n -> Failed(n)
+
+-- thus it can test its supposed corrdinator, insitaged by the test.n.k event
+-- above, the test being successful if ok is received, failing by time-out
+-- of tock occurs first.
+
+Testing(n,k) =       ok.k.n -> Running'(n,k)
+                  [] tock -> BeginElection(n)
+                  [] answer?j:above(n)!n  -> Testing(n,k)
+                  [] coordinator?k:above(n)!n -> Running'(n,k)
+                  [] election?k:below(n)!n -> answer.n.k -> BeginElection(n)
+                  [] fail.n -> Failed(n)
+                  [] test?j:below(n)!n  -> Testing(n,k)
+		  [] leader.n.k -> Testing(n,k)
+
+-- After performing one test successfully, it goes into the following state
+-- in which it has to wait a time unit before performing another one (thereby
+-- avoiding a potential divergence)
+
+Running'(n,k)  =  tock -> Running(n,k)
+                  [] coordinator?k:above(n)!n -> Running'(n,k)
+                  [] answer?k:above(n)!n  -> Running'(n,k)
+                  [] election?k:below(n)!n -> answer.n.k -> BeginElection(n)
+                  [] fail.n -> Failed(n)
+		  [] leader.n.k -> Running'(n,k)
+                  [] test?j:below(n)!n  -> Running'(n,k)
+                  [] ok?j:above(n)!n -> Running'(n,k)
+
+-- When a process has failed...
+                 
+Failed(n) = tock -> Failed'(n)
+            [] coordinator?k:above(n)!n -> Failed(n)
+            [] election?k:below(n)!n -> Failed(n)
+            [] test?k:below(n)!n  -> Failed(n)
+            [] ok?k:above(n)!n  -> Failed(n)
+            [] answer?k:above(n)!n  -> Failed(n)
+            [] fail.n -> Failed(n)
+
+-- it can't be revived until one time unit has passed
+
+Failed'(n) = tock -> Failed'(n)
+            [] coordinator?k:above(n)!n -> Failed'(n)
+            [] election?k:below(n)!n -> Failed'(n)
+            [] test?k:below(n)!n  -> Failed'(n)
+            [] ok?k:above(n)!n  -> Failed'(n)
+            [] answer?k:above(n)!n  -> Failed'(n)
+            [] fail.n -> Failed(n)
+            [] revive.n -> (if n==N-1 then BecomeCoordinator(n)
+	                              else BeginElection(n))
+
+
+-- We can put the system together (exploiting a little bit of compression
+-- on the individual nodes) as follows:
+
+transparent normal
+
+Alpha(n) = union({|tock, fail.n, revive.n, election.n, coordinator.n, test.n,
+            answer.n, leader.n, ok.n|} ,
+          {election.k.n, coordinator.k.n, 
+	   test.k.n, answer.k.n, ok.k.n| k <- Proc})
+
+Node(n) = normal(if n==N-1 then RunAsCoord(n) else Running(n,N-1))
+
+Network = || n:Proc @ [Alpha(n)] Node(n)
+
+-- The first thing to try with any timed example is a timing consistency
+-- check.  The following events are all deemed "delayable" because we
+-- do not want to have to rely on them happening urgently for time to
+-- pass (the inclusion of test here is not essential, and might be wrong
+-- in other modelling approaches).
+
+Delayable = {|fail, revive, leader, test|}
+Urgent = diff(Events,union({tock},Delayable))
+
+-- The following give us two nearly equivalent ways of testing it, the
+-- second being stronger because it proves that hiding the urgent events
+-- can't introduce divergence, which would break various assumptions of
+-- the abstraction method.
+
+--assert TOCKS [F= (Network [|Delayable|] 
+--                  normal(CHAOS(Delayable)))\diff(Events,{tock})
+
+--assert TOCKS ||| CHAOS(Delayable) [FD=  Network \ Urgent
+
+TOCKS = tock -> TOCKS
+
+-- We will want normally to have our processes agree that the maximum
+-- live one is the leader, so the following function comes in handy:
+
+max(S) = let pick({x}) = x within
+         pick({x | x <- S, {y | y <- S, y > x} == {}})
+
+-- The following specification holds the current set of live processes
+-- as a parameter, and says that when appropriate things have happened since
+-- a node last failed or revived, anyone who expresses an opinion about
+-- who the leader is says the highest live one.
+
+-- Initially this condition holds, but it is disabled by a failure or
+-- revival.
+
+AGREEBY(0,alive) = alive != {} & leader?m:alive!max(alive) -> AGREEBY(0,alive)
+            [] tock -> AGREEBY(0,alive)
+	    [] fail?k -> AGREEBY'(diff(alive,{k}))
+	    [] revive?k -> AGREEBY(TS,union(alive,{k}))
+            [] test?n?k -> AGREEBY(0,alive)
+
+-- The following states will allow any leader events until n tocks have
+-- passed..
+
+AGREEBY(n,alive) = (leader?m?k -> AGREEBY(n,alive))
+            [] tock -> AGREEBY(n-1,alive)
+	    [] fail?k -> AGREEBY'(diff(alive,{k}))
+	    [] revive?k -> AGREEBY(TS,union(alive,{k}))
+            [] test?m?k -> AGREEBY(n,alive)
+
+-- while this one allows any until a test event has occurred followed by
+-- TS tocks.
+
+AGREEBY'(alive) =  (STOP |~| leader?m?k -> AGREEBY'(alive))
+            [] tock -> AGREEBY'(alive)
+            [] fail?k -> AGREEBY'(diff(alive,{k}))
+            [] revive?k -> AGREEBY(TS,union(alive,{k}))
+            [] test?n?k -> AGREEBY(TS,alive)
+
+
+AlphaAgree = {|tock, fail, revive, leader, test|}
+
+assert not AGREEBY(0,Proc) [T= Network\diff(Events,AlphaAgree)
+
+-- So the above trace spec (which fails) says that the network has the
+-- given property.
+
+-- The above having failed, we can see if the max-process always agrees
+-- it is the leader in the same circumstances....
+
+
+INLEADER(0,alive) = alive != {} & 
+            (let m=max(alive) within leader.m.m -> INLEADER(0,alive)
+            [] (STOP |~| leader?j:diff(Proc,{m})?k -> INLEADER(0,alive)))
+            [] tock -> INLEADER(0,alive)
+	    [] fail?k -> INLEADER'(diff(alive,{k}))
+	    [] revive?k -> INLEADER(TS,union(alive,{k}))
+            [] test?m?k -> INLEADER(0,alive)
+
+INLEADER(n,alive) = (STOP |~| leader?m?k -> INLEADER(n,alive))
+            [] tock -> INLEADER(n-1,alive)
+	    [] fail?k -> INLEADER'(diff(alive,{k}))
+	    [] revive?k -> INLEADER(TS,union(alive,{k}))
+            [] test?m?k -> INLEADER(n,alive)
+
+INLEADER'(alive) = (STOP |~| leader?m?k -> INLEADER'(alive))
+            [] tock -> INLEADER'(alive)
+	    [] fail?k -> INLEADER'(diff(alive,{k}))
+	    [] revive?k -> INLEADER(TS,union(alive,{k}))
+            [] test?m?k -> INLEADER(TS,alive)
+
+-- assert not INLEADER(0,Proc) [T= Network\diff(Events,AlphaAgree)
+
+-- This fails as well (in turns out that making the distribution of the
+-- co-ordinator messages non-atomic with the possibility of a process
+-- failing mid-way through a distribution creates havoc with the
+-- algorithm: it is certainly not clear from the book that it depends on
+-- this atomicity).  We could have strengthened this into a failures
+-- specification, saying that the max process can always say it is the
+-- leader in the given circumstances, as follows (which explains why
+-- all the leader events above that we do not want to insist on are
+-- put in |~| choice with STOP; the other events being refusable by
+-- the CHAOS below)
+
+FailINLEADER = INLEADER(0,Proc) [|{|fail, revive, test|}|] 
+               normal(CHAOS({|fail, revive, test|}))
+
+--assert FailINLEADER [F=  Network\diff(Events,AlphaAgree)
+
+-- On the same principle, the following specification says that
+-- under the same stability conditions as before, every living process
+-- has an option about the leader, even if not the right one!
+
+SOMELEADER(0,alive) = 
+           ([] i:alive @ (|~| j:Proc @ leader.i.j -> SOMELEADER(0,alive)))
+            [] tock -> SOMELEADER(0,alive)
+	    [] fail?k -> SOMELEADER'(diff(alive,{k}))
+	    [] revive?k -> SOMELEADER(TS,union(alive,{k}))
+            [] test?m?k -> SOMELEADER(0,alive)
+
+SOMELEADER(n,alive) = (STOP |~| leader?m?k -> SOMELEADER(n,alive))
+            [] tock -> SOMELEADER(n-1,alive)
+	    [] fail?k -> SOMELEADER'(diff(alive,{k}))
+	    [] revive?k -> SOMELEADER(TS,union(alive,{k}))
+            [] test?m?k -> SOMELEADER(n,alive)
+
+SOMELEADER'(alive) = (STOP |~| leader?m?k -> SOMELEADER'(alive))
+            [] tock -> SOMELEADER'(alive)
+	    [] fail?k -> SOMELEADER'(diff(alive,{k}))
+	    [] revive?k -> SOMELEADER(TS,union(alive,{k}))
+            [] test?m?k -> SOMELEADER(TS,alive)
+
+-- As a trace specification the above says nothing of any interest.  The
+-- same device as above turns it into the right failures spec:
+
+FailSOMELEADER = SOMELEADER(0,Proc) [|{|fail, revive, test|}|] 
+               normal(CHAOS({|fail, revive, test|}))
+
+--assert FailSOMELEADER [F=  Network\diff(Events,AlphaAgree)
+
+-- As it turns out (and somewhat to my surprise, even having seen the
+-- problems that arise earlier on) even this specification fails.
+-- It would be a great achievement (I think) to spot what can go wrong
+-- without running the check!
+
+-- You can fix the algorithm by making nodes test their coordinator
+-- a small interval (one tock in our case, and in any case enough for
+-- the coordinator to have finished distribution) after being "bullied"
+-- namely told the identity of the coordinator.  See bully2.csp

@@ -1,0 +1,629 @@
+# ring-election-igloo runs, 2026-10-31. TraceForge pin 37f37fd, JMC pin 504e60a. X = /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo; jrun.sh <benchdir> <Class:args> <export|-> = java -Xss4m -cp <benchdir>/java/out:$(cat daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher <Class:args> must 0 1 <fresh report dir> <export|-> 600 </dev/null. Every command under timeout 600. TraceForge progress lines are dropped from the log.
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count spec --model bag 2
+execs=4 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:spec\,2\,bag -
+2026-10-31T15:42:32.646945151Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:42:32,827 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:32,893 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:32,893 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:33,165 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:33,225 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-10-31 16:42:33,225 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:33,226 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:42:33,226 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-10-31 16:42:33,226 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       9.2 iterations/s
+elapsed:    0.435 s
+observed:   bench.ring_election_igloo.RingElection@77888435
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 3151
+explore_ms: 434
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 113348
+max_message_events: 4
+max_porf_pairs: 0
+max_graph_events: 5
+mean_graph_events: 5.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 3.5 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 2 correct
+execs=202 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,2\,bag\,correct -
+2026-10-31T15:42:35.323297315Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:42:35,408 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:35,478 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:35,478 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:35,893 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:38,845 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 202 iterations
+2026-10-31 16:42:38,846 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 202 completed iterations
+2026-10-31 16:42:38,846 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:38,846 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:42:38,846 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        202 iterations
+blocked:    0 (counted by the strategy)
+completed:  202
+rate:       58.5 iterations/s
+elapsed:    3.455 s
+observed:   bench.ring_election_igloo.RingElection@35aea049
+graphs:     202 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 5357
+explore_ms: 3455
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 202
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 202
+stop_reason: exhausted
+peak_rss_kb: 123228
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 14.495
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 5.5 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 2 no-compare
+execs=194 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,2\,bag\,no-compare -
+2026-10-31T15:42:40.953012080Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:42:41,102 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:41,180 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:41,184 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:41,671 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:44,190 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 194 iterations
+2026-10-31 16:42:44,191 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:44,192 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:42:44,192 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 194 completed iterations
+2026-10-31 16:42:44,193 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        194 iterations
+blocked:    0 (counted by the strategy)
+completed:  194
+rate:       62.4 iterations/s
+elapsed:    3.110 s
+observed:   bench.ring_election_igloo.RingElection@4efc180e
+graphs:     194 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 5115
+explore_ms: 3110
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 194
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 194
+stop_reason: exhausted
+peak_rss_kb: 121576
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 14.289
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 5.3 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count spec --model bag 3
+execs=12 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:spec\,3\,bag -
+2026-10-31T15:42:46.725893918Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:42:46,885 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:46,986 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:46,988 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:47,321 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:47,631 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 12 iterations
+2026-10-31 16:42:47,632 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 12 completed iterations
+2026-10-31 16:42:47,632 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:42:47,633 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:47,634 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        12 iterations
+blocked:    0 (counted by the strategy)
+completed:  12
+rate:       15.4 iterations/s
+elapsed:    0.777 s
+observed:   bench.ring_election_igloo.RingElection@443118b0
+graphs:     12 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 3137
+explore_ms: 776
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 12
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 12
+stop_reason: exhausted
+peak_rss_kb: 117704
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 7
+mean_graph_events: 7.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 3.3 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 3 correct
+execs=7506 blocked=0
+[exit 0, wall 0.9 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,3\,bag\,correct -
+2026-10-31T15:42:50.883628224Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:42:51,015 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:51,070 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:51,071 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:51,433 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:43:33,392 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 7506 iterations
+2026-10-31 16:43:33,394 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 7506 completed iterations
+2026-10-31 16:43:33,394 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:43:33,394 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:43:33,395 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        7506 iterations
+blocked:    0 (counted by the strategy)
+completed:  7506
+rate:       177.0 iterations/s
+elapsed:    42.402 s
+observed:   bench.ring_election_igloo.RingElection@21f27bb5
+graphs:     7506 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 44522
+explore_ms: 42401
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 7506
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 7506
+stop_reason: exhausted
+peak_rss_kb: 428804
+max_message_events: 18
+max_porf_pairs: 0
+max_graph_events: 24
+mean_graph_events: 22.007
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 44.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 3 no-compare
+execs=7314 blocked=0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,3\,bag\,no-compare -
+2026-10-31T15:43:36.007729316Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:43:36,126 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:43:36,159 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:43:36,159 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:43:36,366 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:44:11,436 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 7314 iterations
+2026-10-31 16:44:11,440 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:44:11,441 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:44:11,441 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 7314 completed iterations
+2026-10-31 16:44:11,442 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        7314 iterations
+blocked:    0 (counted by the strategy)
+completed:  7314
+rate:       207.0 iterations/s
+elapsed:    35.331 s
+observed:   bench.ring_election_igloo.RingElection@42a89cef
+graphs:     7314 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 37003
+explore_ms: 35330
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 7314
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 7314
+stop_reason: exhausted
+peak_rss_kb: 381172
+max_message_events: 18
+max_porf_pairs: 0
+max_graph_events: 24
+mean_graph_events: 21.876
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 37.2 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count spec --model bag 4
+execs=48 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:spec\,4\,bag -
+2026-10-31T15:44:12.801165530Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:44:12,885 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:44:12,927 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:44:12,927 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:44:13,119 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:44:13,616 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 48 iterations
+2026-10-31 16:44:13,617 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 48 completed iterations
+2026-10-31 16:44:13,617 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:44:13,617 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:44:13,617 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        48 iterations
+blocked:    0 (counted by the strategy)
+completed:  48
+rate:       63.8 iterations/s
+elapsed:    0.752 s
+observed:   bench.ring_election_igloo.RingElection@6ed3ccb2
+graphs:     48 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1994
+explore_ms: 752
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 48
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 48
+stop_reason: exhausted
+peak_rss_kb: 128272
+max_message_events: 8
+max_porf_pairs: 0
+max_graph_events: 9
+mean_graph_events: 9.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 4 correct
+execs=343704 blocked=0
+[exit 0, wall 38.8 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,4\,bag\,correct -
+2026-10-31T15:44:53.731027669Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:44:53,808 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:44:53,845 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:44:53,845 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:44:54,052 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:49:32,595 [main]  INFO o.m.j.c.JmcModelChecker - Completed 50000 iterations
+2026-10-31 16:53:28,281 [main]  INFO o.m.j.c.JmcModelChecker - Completed 100000 iterations
+[exit 124, wall 600.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo count impl --model bag 4 no-compare
+execs=339096 blocked=0
+[exit 0, wall 30.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,4\,bag\,no-compare -
+2026-10-31T15:55:23.844397434Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:55:23,901 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:55:23,925 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:55:23,925 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:55:24,123 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:59:33,604 [main]  INFO o.m.j.c.JmcModelChecker - Completed 50000 iterations
+2026-10-31 17:03:38,510 [main]  INFO o.m.j.c.JmcModelChecker - Completed 100000 iterations
+[exit 124, wall 600.1 s]
+
+# conf, export and join, n = 2
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo conf --model bag 2 correct
+conformance: run seed 12015070857776510078 (reproduce with the same `Config` plus `.with_seed(12015070857776510078)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo conf --model bag 2 no-compare
+conformance: run seed 6470345035936183430 (reproduce with the same `Config` plus `.with_seed(6470345035936183430)`)
+conformance: 24 candidate violation(s).
+The list holds 1 of them; 23 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 24 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 30 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [NoOrder]
+    	(t0, 2): UNIQUE [NoOrder]
+    	(t0, 3): UNIQUE [NoOrder]
+    	(t0, 4): TCREATE(t1:"observer")
+    	(t0, 5): TCREATE(t2:"node0")
+    	(t0, 6): TCREATE(t3:"node1")
+    	(t0, 7): TJOIN(t1)
+    	(t0, 8): TJOIN(t2)
+    	(t0, 9): TJOIN(t3)
+    thread "observer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t2, 5)]
+    	(t1, 2): RECV() [(t3, 7)]
+    	(t1, 3): END
+    thread "node0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Id(0), type_name: "bench_ring_election_igloo::Msg" })
+    	(t2, 2): NONDET true
+    	(t2, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Id(0), type_name: "bench_ring_election_igloo::Msg" })
+    	(t2, 4): RECV() [(t3, 6)]
+    	(t2, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Status { node: 0, leader: true }, type_name: "bench_ring_election_igloo::Msg" })
+    	(t2, 6): END
+    thread "node1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Id(1), type_name: "bench_ring_election_igloo::Msg" })
+    	(t3, 2): NONDET false
+    	(t3, 3): RECV() [(t2, 3)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Id(0), type_name: "bench_ring_election_igloo::Msg" })
+    	(t3, 5): NONDET true
+    	(t3, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Id(0), type_name: "bench_ring_election_igloo::Msg" })
+    	(t3, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Status { node: 1, leader: false }, type_name: "bench_ring_election_igloo::Msg" })
+    	(t3, 8): END
+  serialized replay information (15518 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-spec-n2.jsonl --model bag --program ring-election-igloo --size n2r1d1 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-spec-n2.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_ring_election_igloo export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-impl-correct-n2.jsonl --model bag --program ring-election-igloo --size n2r1d1 2 correct
+exported: 4 lines from 202 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-impl-correct-n2.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:spec\,2\,bag /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-spec-n2.jsonl
+2026-10-31T15:42:40.908848384Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-spec-n2.jsonl
+2026-10-31 16:42:41,035 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:41,075 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:41,075 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:41,421 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:41,612 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-10-31 16:42:41,613 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:41,613 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:42:41,615 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-10-31 16:42:41,617 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       6.5 iterations/s
+elapsed:    0.616 s
+observed:   bench.ring_election_igloo.RingElection@33d512c1
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-spec-n2.jsonl
+--- measurements
+wall_ms: 2592
+explore_ms: 564
+summarise_ms: 51
+index_ms: 0
+lookup_ms: 0
+export_ms: 9
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 117220
+max_message_events: 4
+max_porf_pairs: 0
+max_graph_events: 5
+mean_graph_events: 5.000
+max_visible_events: 2
+mean_visible_events: 2.000
+max_summary_bytes: 137
+max_porf_count: 0
+[exit 0, wall 2.8 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,2\,bag\,correct /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-correct-n2.jsonl
+2026-10-31T15:42:44.022469829Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-correct-n2.jsonl
+2026-10-31 16:42:44,167 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:44,201 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:44,201 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:44,569 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:48,391 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 202 iterations
+2026-10-31 16:42:48,392 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:42:48,392 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 202 completed iterations
+2026-10-31 16:42:48,394 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:42:48,393 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        202 iterations
+blocked:    0 (counted by the strategy)
+completed:  202
+rate:       47.6 iterations/s
+elapsed:    4.244 s
+observed:   bench.ring_election_igloo.RingElection@7e7be63f
+graphs:     202 distinct complete, 0 distinct blocked; stack exhausted
+exported:   202 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-correct-n2.jsonl
+--- measurements
+wall_ms: 6187
+explore_ms: 3984
+summarise_ms: 259
+index_ms: 0
+lookup_ms: 0
+export_ms: 6
+graphs_complete: 202
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 202
+stop_reason: exhausted
+peak_rss_kb: 132188
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 14.495
+max_visible_events: 2
+mean_visible_events: 2.000
+max_summary_bytes: 137
+max_porf_count: 0
+[exit 0, wall 6.7 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun2.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo bench.ring_election_igloo.RingElection:impl\,2\,bag\,no-compare /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-no-compare-n2.jsonl
+2026-10-31T15:42:50.662764720Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.ring_election_igloo.RingElection
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report2
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-no-compare-n2.jsonl
+2026-10-31 16:42:50,810 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:42:50,870 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:42:50,870 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:42:51,156 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:42:54,159 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 194 iterations
+2026-10-31 16:42:54,160 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 194 completed iterations
+2026-10-31 16:42:54,160 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        194 iterations
+2026-10-31 16:42:54,161 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+blocked:    0 (counted by the strategy)
+completed:  194
+2026-10-31 16:42:54,161 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+rate:       57.5 iterations/s
+elapsed:    3.375 s
+observed:   bench.ring_election_igloo.RingElection@28f2a10f
+graphs:     194 distinct complete, 0 distinct blocked; stack exhausted
+exported:   194 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-no-compare-n2.jsonl
+--- measurements
+wall_ms: 5584
+explore_ms: 3163
+summarise_ms: 211
+index_ms: 0
+lookup_ms: 0
+export_ms: 7
+graphs_complete: 194
+graphs_blocked: 0
+summaries_distinct: 6
+iterations: 194
+stop_reason: exhausted
+peak_rss_kb: 121520
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 14.289
+max_visible_events: 2
+mean_visible_events: 2.000
+max_summary_bytes: 137
+max_porf_count: 0
+[exit 0, wall 5.8 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-correct-n2.jsonl
+spec: tool=traceforge program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+impl: tool=jmc program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-impl-no-compare-n2.jsonl
+spec: tool=traceforge program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+impl: tool=jmc program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+verdict: violation
+uncovered: 2
+no-slot {"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[0,true]}},{"r":{"t":"Status","f":[1,false]}}]},"counts":[]}
+no-slot {"statuses":{"observer":"done"},"words":{"observer":[{"r":{"t":"Status","f":[1,false]}},{"r":{"t":"Status","f":[0,true]}}]},"counts":[]}
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/java-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/ring-election-igloo/out/export/rust-impl-correct-n2.jsonl
+spec: tool=jmc program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+impl: tool=traceforge program=ring-election-igloo size=n2r1d1 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+

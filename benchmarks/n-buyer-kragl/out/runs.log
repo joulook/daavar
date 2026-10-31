@@ -1,0 +1,899 @@
+# n-buyer-kragl runs, 2026-10-31. TraceForge pin 37f37fd, JMC pin 504e60a. X = /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl; jrun.sh = java -Xss4m -cp java/out:$(cat daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher <Class:args> must 0 1 <fresh report dir> <export|-> 600 </dev/null. TraceForge progress lines are dropped from the log.
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,2\,bag -
+2026-10-31T15:01:30.427236843Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:30,448 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:30,459 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:30,459 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:30,500 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:30,595 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:01:30,595 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:01:30,595 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:30,595 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:01:30,595 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       158.5 iterations/s
+elapsed:    0.151 s
+observed:   bench.n_buyer_kragl.NBuyer@3c46e67a
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 541
+explore_ms: 151
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 128748
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 8
+mean_graph_events: 8.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.6 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count spec --model bag 2
+execs=24 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,2\,bag -
+2026-10-31T15:01:41.125524666Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:41,161 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:41,182 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:41,182 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:41,235 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:41,331 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:01:41,331 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:01:41,331 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:41,331 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:41,331 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       133.9 iterations/s
+elapsed:    0.179 s
+observed:   bench.n_buyer_kragl.NBuyer@3c46e67a
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 589
+explore_ms: 179
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 120124
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 8
+mean_graph_events: 8.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 2 correct
+execs=24 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,2\,bag\,correct -
+2026-10-31T15:01:41.861894630Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:41,896 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:41,911 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:41,911 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:41,984 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:42,142 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:01:42,142 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:01:42,142 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:42,142 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:42,142 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       94.7 iterations/s
+elapsed:    0.253 s
+observed:   bench.n_buyer_kragl.NBuyer@6f03482
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 714
+explore_ms: 253
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 120352
+max_message_events: 16
+max_porf_pairs: 0
+max_graph_events: 18
+mean_graph_events: 18.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 2 no-subtract
+execs=24 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,2\,bag\,no-subtract -
+2026-10-31T15:01:42.682436899Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:42,704 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:42,717 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:42,717 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:42,774 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:42,915 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:01:42,916 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:01:42,916 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:42,916 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:01:42,916 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       111.1 iterations/s
+elapsed:    0.216 s
+observed:   bench.n_buyer_kragl.NBuyer@6f03482
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 673
+explore_ms: 216
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 122216
+max_message_events: 16
+max_porf_pairs: 0
+max_graph_events: 18
+mean_graph_events: 18.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 0.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count spec --model bag 3
+execs=192 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,3\,bag -
+2026-10-31T15:01:43.385054419Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:43,406 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:43,416 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:43,416 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:43,463 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:43,887 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 192 iterations
+2026-10-31 16:01:43,887 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 192 completed iterations
+2026-10-31 16:01:43,887 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:43,887 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:43,887 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        192 iterations
+blocked:    0 (counted by the strategy)
+completed:  192
+rate:       395.7 iterations/s
+elapsed:    0.485 s
+observed:   bench.n_buyer_kragl.NBuyer@524d6d96
+graphs:     192 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 894
+explore_ms: 485
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 192
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 192
+stop_reason: exhausted
+peak_rss_kb: 125316
+max_message_events: 8
+max_porf_pairs: 0
+max_graph_events: 11
+mean_graph_events: 11.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 3 correct
+execs=192 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,3\,bag\,correct -
+2026-10-31T15:01:44.358111998Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:44,382 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:44,398 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:44,398 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:44,483 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:45,265 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 192 iterations
+2026-10-31 16:01:45,266 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 192 completed iterations
+2026-10-31 16:01:45,266 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:45,266 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:45,266 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        192 iterations
+blocked:    0 (counted by the strategy)
+completed:  192
+rate:       216.0 iterations/s
+elapsed:    0.889 s
+observed:   bench.n_buyer_kragl.NBuyer@451001e5
+graphs:     192 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1288
+explore_ms: 888
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 192
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 192
+stop_reason: exhausted
+peak_rss_kb: 160088
+max_message_events: 22
+max_porf_pairs: 0
+max_graph_events: 25
+mean_graph_events: 25.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 3 no-subtract
+execs=192 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,3\,bag\,no-subtract -
+2026-10-31T15:01:45.894176942Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:45,932 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:45,949 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:45,949 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:46,032 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:46,856 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 192 iterations
+2026-10-31 16:01:46,857 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 192 completed iterations
+2026-10-31 16:01:46,857 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:46,857 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:46,857 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        192 iterations
+blocked:    0 (counted by the strategy)
+completed:  192
+rate:       206.0 iterations/s
+elapsed:    0.932 s
+observed:   bench.n_buyer_kragl.NBuyer@451001e5
+graphs:     192 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1478
+explore_ms: 931
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 192
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 192
+stop_reason: exhausted
+peak_rss_kb: 159344
+max_message_events: 22
+max_porf_pairs: 0
+max_graph_events: 25
+mean_graph_events: 25.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 1.5 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count spec --model bag 4
+execs=1920 blocked=0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,4\,bag -
+2026-10-31T15:01:47.349860078Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:47,388 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:47,407 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:47,407 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:47,478 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:49,776 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1920 iterations
+2026-10-31 16:01:49,776 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:49,776 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1920 completed iterations
+2026-10-31 16:01:49,776 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:01:49,776 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        1920 iterations
+blocked:    0 (counted by the strategy)
+completed:  1920
+rate:       801.5 iterations/s
+elapsed:    2.395 s
+observed:   bench.n_buyer_kragl.NBuyer@3935e9a8
+graphs:     1920 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2784
+explore_ms: 2395
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1920
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 1920
+stop_reason: exhausted
+peak_rss_kb: 247044
+max_message_events: 10
+max_porf_pairs: 0
+max_graph_events: 14
+mean_graph_events: 14.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 2.8 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 4 correct
+execs=1920 blocked=0
+[exit 0, wall 0.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,4\,bag\,correct -
+2026-10-31T15:01:50.338927034Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:50,370 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:50,382 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:50,382 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:50,497 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:01:56,260 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1920 iterations
+2026-10-31 16:01:56,260 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1920 completed iterations
+2026-10-31 16:01:56,260 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:01:56,260 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:01:56,260 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        1920 iterations
+blocked:    0 (counted by the strategy)
+completed:  1920
+rate:       325.6 iterations/s
+elapsed:    5.897 s
+observed:   bench.n_buyer_kragl.NBuyer@6661d8c0
+graphs:     1920 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 6333
+explore_ms: 5896
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1920
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 1920
+stop_reason: exhausted
+peak_rss_kb: 322688
+max_message_events: 28
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 32.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 6.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 4 no-subtract
+execs=1920 blocked=0
+[exit 0, wall 0.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,4\,bag\,no-subtract -
+2026-10-31T15:01:56.783188637Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:01:56,807 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:01:56,815 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:01:56,815 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:01:56,913 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:02:02,449 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1920 iterations
+2026-10-31 16:02:02,451 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:02:02,451 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1920 completed iterations
+2026-10-31 16:02:02,451 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:02:02,451 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        1920 iterations
+blocked:    0 (counted by the strategy)
+completed:  1920
+rate:       339.9 iterations/s
+elapsed:    5.648 s
+observed:   bench.n_buyer_kragl.NBuyer@32256e68
+graphs:     1920 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 6040
+explore_ms: 5648
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1920
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 1920
+stop_reason: exhausted
+peak_rss_kb: 350936
+max_message_events: 28
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 32.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 6.1 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count spec --model bag 5
+execs=23040 blocked=0
+[exit 0, wall 0.5 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,5\,bag -
+2026-10-31T15:02:03.508109364Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:02:03,544 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:02:03,555 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:02:03,555 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:02:03,627 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:02:26,422 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 23040 iterations
+2026-10-31 16:02:26,422 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:02:26,422 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 23040 completed iterations
+2026-10-31 16:02:26,422 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:02:26,422 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        23040 iterations
+blocked:    0 (counted by the strategy)
+completed:  23040
+rate:       1006.7 iterations/s
+elapsed:    22.886 s
+observed:   bench.n_buyer_kragl.NBuyer@757a48f9
+graphs:     23040 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 23400
+explore_ms: 22886
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 23040
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 23040
+stop_reason: exhausted
+peak_rss_kb: 430144
+max_message_events: 12
+max_porf_pairs: 0
+max_graph_events: 17
+mean_graph_events: 17.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 23.5 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 5 correct
+execs=23040 blocked=0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,5\,bag\,correct -
+2026-10-31T15:02:28.164081290Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:02:28,207 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:02:28,217 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:02:28,217 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:02:28,324 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:03:43,929 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 23040 iterations
+2026-10-31 16:03:43,931 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:03:43,931 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 23040 completed iterations
+2026-10-31 16:03:43,932 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:03:43,932 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        23040 iterations
+blocked:    0 (counted by the strategy)
+completed:  23040
+rate:       304.2 iterations/s
+elapsed:    75.730 s
+observed:   bench.n_buyer_kragl.NBuyer@667ac658
+graphs:     23040 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 76284
+explore_ms: 75729
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 23040
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 23040
+stop_reason: exhausted
+peak_rss_kb: 842548
+max_message_events: 34
+max_porf_pairs: 0
+max_graph_events: 39
+mean_graph_events: 39.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 76.4 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl count impl --model bag 5 no-subtract
+execs=23040 blocked=0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,5\,bag\,no-subtract -
+2026-10-31T15:03:45.469689824Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+2026-10-31 16:03:45,503 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:03:45,518 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:03:45,518 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:03:45,603 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:04:58,756 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 23040 iterations
+2026-10-31 16:04:58,758 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 23040 completed iterations
+2026-10-31 16:04:58,758 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:04:58,758 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:04:58,758 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        23040 iterations
+blocked:    0 (counted by the strategy)
+completed:  23040
+rate:       314.5 iterations/s
+elapsed:    73.262 s
+observed:   bench.n_buyer_kragl.NBuyer@2cbcfaf1
+graphs:     23040 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 73632
+explore_ms: 73261
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 23040
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 23040
+stop_reason: exhausted
+peak_rss_kb: 796756
+max_message_events: 34
+max_porf_pairs: 0
+max_graph_events: 39
+mean_graph_events: 39.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+[exit 0, wall 73.7 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl conf --model bag 2 correct
+conformance: run seed 6998380890417245362 (reproduce with the same `Config` plus `.with_seed(6998380890417245362)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl conf --model bag 2 no-subtract
+conformance: run seed 12666664147808690918 (reproduce with the same `Config` plus `.with_seed(12666664147808690918)`)
+conformance: 6 candidate violation(s).
+The list holds 1 of them; 5 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 6 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 39 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [NoOrder]
+    	(t0, 2): UNIQUE [NoOrder]
+    	(t0, 3): UNIQUE [NoOrder]
+    	(t0, 4): UNIQUE [NoOrder]
+    	(t0, 5): TCREATE(t1:"ledger")
+    	(t0, 6): TCREATE(t2:"seller")
+    	(t0, 7): TCREATE(t3:"b1")
+    	(t0, 8): TCREATE(t4:"b2")
+    	(t0, 9): TJOIN(t1)
+    	(t0, 10): TJOIN(t2)
+    	(t0, 11): TJOIN(t3)
+    	(t0, 12): TJOIN(t4)
+    thread "ledger"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t3, 4)]
+    	(t1, 2): RECV() [(t4, 4)]
+    	(t1, 3): RECV() [(t2, 5)]
+    	(t1, 4): END
+    thread "seller"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t3, 1)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Quote(2), type_name: "bench_n_buyer_kragl::Msg" })
+    	(t2, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Quote(2), type_name: "bench_n_buyer_kragl::Msg" })
+    	(t2, 4): RECV() [(t4, 5)]
+    	(t2, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Final(false), type_name: "bench_n_buyer_kragl::Msg" })
+    	(t2, 6): END
+    thread "b1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Req, type_name: "bench_n_buyer_kragl::Msg" })
+    	(t3, 2): RECV() [(t2, 2)]
+    	(t3, 3): NONDET true
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Contrib { i: 1, a: 1 }, type_name: "bench_n_buyer_kragl::Msg" })
+    	(t3, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Rem(2), type_name: "bench_n_buyer_kragl::Msg" })
+    	(t3, 6): END
+    thread "b2"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t2, 3)]
+    	(t4, 2): RECV() [(t3, 5)]
+    	(t4, 3): NONDET true
+    	(t4, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Contrib { i: 2, a: 1 }, type_name: "bench_n_buyer_kragl::Msg" })
+    	(t4, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Dec(false), type_name: "bench_n_buyer_kragl::Msg" })
+    	(t4, 6): END
+  serialized replay information (20507 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-spec-n2.jsonl --model bag --program n-buyer-kragl --size n2 2
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-spec-n2.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/bench-target/release/bench_n_buyer_kragl export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-impl-correct-n2.jsonl --model bag --program n-buyer-kragl --size n2 2 correct
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-impl-correct-n2.jsonl
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:spec\,2\,bag /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-spec-n2.jsonl
+2026-10-31T15:05:17.117025182Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-spec-n2.jsonl
+2026-10-31 16:05:17,151 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:05:17,162 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:05:17,162 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:05:17,217 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:05:17,324 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:05:17,324 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:05:17,324 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:05:17,324 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+2026-10-31 16:05:17,324 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       133.7 iterations/s
+elapsed:    0.179 s
+observed:   bench.n_buyer_kragl.NBuyer@40a4337a
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-spec-n2.jsonl
+--- measurements
+wall_ms: 838
+explore_ms: 163
+summarise_ms: 16
+index_ms: 0
+lookup_ms: 0
+export_ms: 4
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 24
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 120388
+max_message_events: 6
+max_porf_pairs: 0
+max_graph_events: 8
+mean_graph_events: 8.000
+max_visible_events: 3
+mean_visible_events: 3.000
+max_summary_bytes: 159
+max_porf_count: 0
+[exit 0, wall 0.9 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,2\,bag\,correct /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-correct-n2.jsonl
+2026-10-31T15:05:18.013248936Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-correct-n2.jsonl
+2026-10-31 16:05:18,065 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:05:18,081 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:05:18,081 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:05:18,203 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:05:18,433 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:05:18,434 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:05:18,434 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:05:18,434 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:05:18,434 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       63.2 iterations/s
+elapsed:    0.380 s
+observed:   bench.n_buyer_kragl.NBuyer@3857f613
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-correct-n2.jsonl
+--- measurements
+wall_ms: 1040
+explore_ms: 347
+summarise_ms: 32
+index_ms: 0
+lookup_ms: 0
+export_ms: 4
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 24
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 123300
+max_message_events: 16
+max_porf_pairs: 0
+max_graph_events: 18
+mean_graph_events: 18.000
+max_visible_events: 3
+mean_visible_events: 3.000
+max_summary_bytes: 159
+max_porf_count: 0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/tmp/cand/jrun.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl bench.n_buyer_kragl.NBuyer:impl\,2\,bag\,no-subtract /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-no-subtract-n2.jsonl
+2026-10-31T15:05:19.128896628Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.n_buyer_kragl.NBuyer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/cand/report
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-no-subtract-n2.jsonl
+2026-10-31 16:05:19,179 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-10-31 16:05:19,202 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-10-31 16:05:19,202 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-10-31 16:05:19,322 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-10-31 16:05:19,523 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 24 iterations
+2026-10-31 16:05:19,524 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 24 completed iterations
+2026-10-31 16:05:19,524 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-10-31 16:05:19,524 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-10-31 16:05:19,524 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       67.6 iterations/s
+elapsed:    0.355 s
+observed:   bench.n_buyer_kragl.NBuyer@3857f613
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-no-subtract-n2.jsonl
+--- measurements
+wall_ms: 994
+explore_ms: 327
+summarise_ms: 27
+index_ms: 0
+lookup_ms: 0
+export_ms: 3
+graphs_complete: 24
+graphs_blocked: 0
+summaries_distinct: 24
+iterations: 24
+stop_reason: exhausted
+peak_rss_kb: 126292
+max_message_events: 16
+max_porf_pairs: 0
+max_graph_events: 18
+mean_graph_events: 18.000
+max_visible_events: 3
+mean_visible_events: 3.000
+max_summary_bytes: 159
+max_porf_count: 0
+[exit 0, wall 1.1 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-correct-n2.jsonl
+spec: tool=traceforge program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+impl: tool=jmc program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-impl-no-subtract-n2.jsonl
+spec: tool=traceforge program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+impl: tool=jmc program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+verdict: violation
+uncovered: 6
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Contrib","f":[1,1]}},{"r":{"t":"Contrib","f":[2,1]}},{"r":{"t":"Final","f":[false]}}]},"counts":[]}
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Contrib","f":[1,1]}},{"r":{"t":"Final","f":[false]}},{"r":{"t":"Contrib","f":[2,1]}}]},"counts":[]}
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Final","f":[false]}},{"r":{"t":"Contrib","f":[1,1]}},{"r":{"t":"Contrib","f":[2,1]}}]},"counts":[]}
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Final","f":[false]}},{"r":{"t":"Contrib","f":[2,1]}},{"r":{"t":"Contrib","f":[1,1]}}]},"counts":[]}
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Contrib","f":[2,1]}},{"r":{"t":"Contrib","f":[1,1]}},{"r":{"t":"Final","f":[false]}}]},"counts":[]}
+no-slot {"statuses":{"ledger":"done"},"words":{"ledger":[{"r":{"t":"Contrib","f":[2,1]}},{"r":{"t":"Final","f":[false]}},{"r":{"t":"Contrib","f":[1,1]}}]},"counts":[]}
+[exit 1, wall 0.0 s]
+
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/java-spec-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/n-buyer-kragl/out/export/rust-impl-correct-n2.jsonl
+spec: tool=jmc program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+impl: tool=traceforge program=n-buyer-kragl size=n2 model=asyn enumeration=complete
+verdict: conforms
+uncovered: 0
+[exit 0, wall 0.0 s]
+
