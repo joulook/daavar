@@ -1,0 +1,6 @@
+{"format":1,"tool":"jmc","program":"balancer-load-aware","size":"l2-stale-k2q1m1c1","visible":["c0","c1"],"model":"p2p","enumeration":"complete","encoding":1}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reply","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reply","f":[0,0]}}]},"counts":[0,1,0,1],"n":92}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reply","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reject","f":[0,0]}}]},"counts":[0,1,0,1],"n":16}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reject","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reply","f":[0,0]}}]},"counts":[0,1,0,1],"n":16}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reply","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reply","f":[0,0]}}]},"counts":[0,0,0,1],"n":12}
+{"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reply","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reply","f":[0,0]}}]},"counts":[0,1,0,0],"n":12}

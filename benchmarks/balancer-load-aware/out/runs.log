@@ -1,0 +1,887 @@
+# balancer-load-aware runs, 2026-10-31. TF = /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware
+# (built from rust/ with CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/bench-target cargo build --release -j 4,
+# traceforge at 37f37fd); JMC at 504e60a. Output filtered: TraceForge's "Executions attempted so far" progress
+# lines, blank lines and log INFO lines dropped. [secs N] is the shell's wall time, exit the command's status.
+# Commands are run with </dev/null and `timeout 600`.
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l1 2 2 2
+execs=96 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l1 2 2 2
+execs=10240 blocked=528
+  [secs 1] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2 2 2 2 1
+execs=96 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2 2 2 2 1
+execs=10240 blocked=528
+  [secs 1] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2-stale 2 2 2 1
+execs=460 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2-stale 2 2 2 1
+  [secs 600] exit=124
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2 2 1 1 1
+execs=2 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2 2 1 1 1
+execs=12 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2-stale 2 1 1 1
+execs=6 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2-stale 2 1 1 1
+execs=148 blocked=0
+  [secs 0] exit=0
+# NOTE: the runs above used the first server encoding (`if queue non-empty && nondet() { serve } else blocking recv`).
+# The impl's 528 blocked graphs at k2q2m2 are real deadlocks of that encoding (both servers hold a request and
+# chose to receive; the clients wait for replies, the balancer for requests). The server was changed to a
+# non-blocking receive when its queue is non-empty (⊥ = serve). Every run below is of the final encoding.
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l1 2 2 2
+execs=96 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l1 2 2 2
+execs=10240 blocked=0
+  [secs 1] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2 2 2 2 1
+execs=96 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2 2 2 2 1
+execs=10240 blocked=0
+  [secs 1] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2 2 1 1 1
+execs=2 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2 2 1 1 1
+execs=12 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2-stale 2 1 1 1
+execs=6 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2-stale 2 1 1 1
+execs=148 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l2-stale 2 2 2 1
+execs=460 blocked=0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2-stale 2 2 2 1
+  [secs 600] exit=124
+# (the run above: not exhausted at 600 s; the last progress line before the kill read 'Executions attempted so far: 5000000 total 5000000 finished normally 0 blocked')
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l2,2,1,1,1
+2026-10-31T15:29:48.970981260Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        2 iterations
+blocked:    0 (counted by the strategy)
+completed:  2
+rate:       12.1 iterations/s
+elapsed:    0.165 s
+observed:   bench.balancer_load_aware.Balancer@78691363
+graphs:     2 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 1040
+explore_ms: 164
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 2
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 2
+stop_reason: exhausted
+peak_rss_kb: 124420
+max_message_events: 14
+max_porf_pairs: 0
+max_graph_events: 14
+mean_graph_events: 14.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2,2,1,1,1
+2026-10-31T15:29:49.784987494Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        12 iterations
+blocked:    0 (counted by the strategy)
+completed:  12
+rate:       38.8 iterations/s
+elapsed:    0.309 s
+observed:   bench.balancer_load_aware.Balancer@22555ebf
+graphs:     12 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 824
+explore_ms: 309
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 12
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 12
+stop_reason: exhausted
+peak_rss_kb: 120856
+max_message_events: 28
+max_porf_pairs: 0
+max_graph_events: 28
+mean_graph_events: 25.833
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l2-stale,2,1,1,1
+2026-10-31T15:29:50.829778436Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        6 iterations
+blocked:    0 (counted by the strategy)
+completed:  6
+rate:       23.0 iterations/s
+elapsed:    0.261 s
+observed:   bench.balancer_load_aware.Balancer@13c9d689
+graphs:     6 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 941
+explore_ms: 261
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 6
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 6
+stop_reason: exhausted
+peak_rss_kb: 122760
+max_message_events: 16
+max_porf_pairs: 0
+max_graph_events: 16
+mean_graph_events: 16.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2-stale,2,1,1,1
+2026-10-31T15:29:51.908061218Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        148 iterations
+blocked:    0 (counted by the strategy)
+completed:  148
+rate:       112.5 iterations/s
+elapsed:    1.316 s
+observed:   bench.balancer_load_aware.Balancer@130c12b7
+graphs:     148 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2036
+explore_ms: 1315
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 148
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 148
+stop_reason: exhausted
+peak_rss_kb: 160700
+max_message_events: 30
+max_porf_pairs: 0
+max_graph_events: 30
+mean_graph_events: 26.622
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l1,2,2,2
+2026-10-31T15:29:54.166770170Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        96 iterations
+blocked:    0 (counted by the strategy)
+completed:  96
+rate:       73.7 iterations/s
+elapsed:    1.303 s
+observed:   bench.balancer_load_aware.Balancer@22e357dc
+graphs:     96 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2112
+explore_ms: 1302
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 96
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 96
+stop_reason: exhausted
+peak_rss_kb: 150736
+max_message_events: 28
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 32.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l1,2,2,2
+2026-10-31T15:29:56.298314903Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        10240 iterations
+blocked:    0 (counted by the strategy)
+completed:  10240
+rate:       95.0 iterations/s
+elapsed:    107.767 s
+observed:   bench.balancer_load_aware.Balancer@78679286
+graphs:     10240 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 108521
+explore_ms: 107766
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 10240
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 10240
+stop_reason: exhausted
+peak_rss_kb: 430380
+max_message_events: 64
+max_porf_pairs: 0
+max_graph_events: 68
+mean_graph_events: 66.225
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 109] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l2,2,2,2,1
+2026-10-31T15:31:45.070443149Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        96 iterations
+blocked:    0 (counted by the strategy)
+completed:  96
+rate:       69.6 iterations/s
+elapsed:    1.379 s
+observed:   bench.balancer_load_aware.Balancer@22e357dc
+graphs:     96 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 2244
+explore_ms: 1378
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 96
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 96
+stop_reason: exhausted
+peak_rss_kb: 157192
+max_message_events: 28
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 32.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2,2,2,2,1
+2026-10-31T15:31:47.609804242Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        10240 iterations
+blocked:    0 (counted by the strategy)
+completed:  10240
+rate:       95.8 iterations/s
+elapsed:    106.858 s
+observed:   bench.balancer_load_aware.Balancer@78679286
+graphs:     10240 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 107868
+explore_ms: 106858
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 10240
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 10240
+stop_reason: exhausted
+peak_rss_kb: 423356
+max_message_events: 64
+max_porf_pairs: 0
+max_graph_events: 68
+mean_graph_events: 66.225
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 108] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l2-stale,2,2,2,1
+2026-10-31T15:33:35.347942379Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+ran:        460 iterations
+blocked:    0 (counted by the strategy)
+completed:  460
+rate:       122.4 iterations/s
+elapsed:    3.760 s
+observed:   bench.balancer_load_aware.Balancer@17cdf2d0
+graphs:     460 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 4512
+explore_ms: 3759
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 460
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 460
+stop_reason: exhausted
+peak_rss_kb: 176644
+max_message_events: 32
+max_porf_pairs: 0
+max_graph_events: 36
+mean_graph_events: 36.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 5] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2-stale,2,2,2,1
+2026-10-31T15:33:39.977896372Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+2026-10-31 16:43:40,033 [main] ERROR o.m.j.c.JmcModelChecker - Halting execution: 49367 due to timeout
+2026-10-31 16:43:40,037 [main] ERROR o.m.j.c.JmcModelChecker - Model checker timeout out: Timeout
+ran:        49367 iterations
+blocked:    0 (counted by the strategy)
+completed:  49367
+rate:       82.3 iterations/s
+error:      Halting execution: 49367 due to timeout
+elapsed:    600.034 s
+observed:   bench.balancer_load_aware.Balancer@6eee3cac
+graphs:     49367 distinct complete, 0 distinct blocked; stack not exhausted
+--- measurements
+wall_ms: 600784
+explore_ms: 600034
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 49367
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 49367
+stop_reason: timeout
+peak_rss_kb: 933560
+max_message_events: 76
+max_porf_pairs: 0
+max_graph_events: 80
+mean_graph_events: 71.096
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 601] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware conf --model fifo l1 2 2 2
+conformance: run seed 1183494983599376175 (reproduce with the same `Config` plus `.with_seed(1183494983599376175)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+  [secs 2] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware conf --model fifo l2 2 2 2 1
+conformance: run seed 10847917789675414686 (reproduce with the same `Config` plus `.with_seed(10847917789675414686)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+  [secs 3] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware conf --model fifo l2 2 1 1 1
+conformance: run seed 4575889656863522732 (reproduce with the same `Config` plus `.with_seed(4575889656863522732)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware conf --model fifo l2-stale 2 1 1 1
+conformance: run seed 11893880232343797796 (reproduce with the same `Config` plus `.with_seed(11893880232343797796)`)
+conformance: 32 candidate violation(s).
+The list holds 1 of them; 31 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 32 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 53 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): UNIQUE [LocalOrder]
+    	(t0, 7): UNIQUE [LocalOrder]
+    	(t0, 8): TCREATE(t1:"balancer0")
+    	(t0, 9): TCREATE(t2:"balancer1")
+    	(t0, 10): TCREATE(t3:"s0")
+    	(t0, 11): TCREATE(t4:"c0")
+    	(t0, 12): TCREATE(t5:"c1")
+    	(t0, 13): TJOIN(t1)
+    	(t0, 14): TJOIN(t2)
+    	(t0, 15): TJOIN(t3)
+    	(t0, 16): TJOIN(t4)
+    	(t0, 17): TJOIN(t5)
+    thread "balancer0"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 0, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 3): RECV() [(t3, 2)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 6): END
+    thread "balancer1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t5, 1)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 1, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 3): RECV() [(t3, 4)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 1, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 5): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 6): END
+    thread "s0"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 2)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 3): RECV() [(t2, 2)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 6 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 5): RECV() [(t1, 4)]
+    	(t3, 6): RECV() [(t2, 4)]
+    	(t3, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Reject { s: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 8): RECV() [TIMEOUT]
+    	(t3, 9): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Reply { s: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 10): RECV() [(t1, 5)]
+    	(t3, 11): RECV() [(t2, 5)]
+    	(t3, 12): END
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Req { c: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t4, 2): RECV() [(t3, 9)]
+    	(t4, 3): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Req { c: 1, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t5, 2): RECV() [(t3, 7)]
+    	(t5, 3): END
+  serialized replay information (28878 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+  [secs 0] exit=1
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware conf --stop-at-first --model fifo l2-stale 2 2 2 1
+conformance: run seed 6143364450218358850 (reproduce with the same `Config` plus `.with_seed(6143364450218358850)`)
+conformance: 1 candidate violation(s).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+**This list is truncated by configuration.** `stop_at_first_report` was set, so the outer loop stopped at the report below and looked for no others. There may be more; this run did not ask.
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 104 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): UNIQUE [LocalOrder]
+    	(t0, 7): UNIQUE [LocalOrder]
+    	(t0, 8): UNIQUE [LocalOrder]
+    	(t0, 9): TCREATE(t1:"balancer0")
+    	(t0, 10): TCREATE(t2:"balancer1")
+    	(t0, 11): TCREATE(t3:"s0")
+    	(t0, 12): TCREATE(t4:"s1")
+    	(t0, 13): TCREATE(t5:"c0")
+    	(t0, 14): TCREATE(t6:"c1")
+    	(t0, 15): TJOIN(t1)
+    	(t0, 16): TJOIN(t2)
+    	(t0, 17): TJOIN(t3)
+    	(t0, 18): TJOIN(t4)
+    	(t0, 19): TJOIN(t5)
+    	(t0, 20): TJOIN(t6)
+    thread "balancer0"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t5, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 0, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Poll { b: 0, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 4): RECV() [(t3, 2)]
+    	(t1, 5): RECV() [(t4, 2)]
+    	(t1, 6): CHOOSE 0[0-1)
+    	(t1, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 8): RECV() [(t5, 3)]
+    	(t1, 9): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 0, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 10): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Poll { b: 0, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 11): RECV() [(t3, 12)]
+    	(t1, 12): RECV() [(t4, 6)]
+    	(t1, 13): CHOOSE 0[0-1)
+    	(t1, 14): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 0, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 15): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 16): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t1, 17): END
+    thread "balancer1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t6, 1)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 1, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Poll { b: 1, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 4): RECV() [(t3, 4)]
+    	(t2, 5): RECV() [(t4, 4)]
+    	(t2, 6): CHOOSE 0[0-1)
+    	(t2, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 1, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 8): RECV() [(t6, 3)]
+    	(t2, 9): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Poll { b: 1, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 10): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Poll { b: 1, again: false }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 11): RECV() [(t3, 14)]
+    	(t2, 12): RECV() [(t4, 8)]
+    	(t2, 13): CHOOSE 0[0-1)
+    	(t2, 14): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Req { c: 1, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 15): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 7 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 16): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 8 })), Val { val: Stop, type_name: "bench_balancer_load_aware::Msg" })
+    	(t2, 17): END
+    thread "s0"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 2)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 3): RECV() [(t2, 2)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 6 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 5): RECV() [(t1, 7)]
+    	(t3, 6): RECV() [TIMEOUT]
+    	(t3, 7): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Reply { s: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 8): RECV() [(t2, 7)]
+    	(t3, 9): RECV() [TIMEOUT]
+    	(t3, 10): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Reply { s: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 11): RECV() [(t1, 9)]
+    	(t3, 12): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 13): RECV() [(t2, 9)]
+    	(t3, 14): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 6 })), Val { val: Load { s: 0, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 15): RECV() [(t1, 14)]
+    	(t3, 16): RECV() [(t2, 14)]
+    	(t3, 17): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: Reject { s: 0, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 18): RECV() [TIMEOUT]
+    	(t3, 19): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: Reply { s: 0, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t3, 20): RECV() [(t1, 15)]
+    	(t3, 21): RECV() [(t2, 15)]
+    	(t3, 22): END
+    thread "s1"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t1, 3)]
+    	(t4, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Load { s: 1, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t4, 3): RECV() [(t2, 3)]
+    	(t4, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 6 })), Val { val: Load { s: 1, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t4, 5): RECV() [(t1, 10)]
+    	(t4, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: Load { s: 1, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t4, 7): RECV() [(t2, 10)]
+    	(t4, 8): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 6 })), Val { val: Load { s: 1, n: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t4, 9): RECV() [(t1, 16)]
+    	(t4, 10): RECV() [(t2, 16)]
+    	(t4, 11): END
+    thread "c0"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Req { c: 0, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t5, 2): RECV() [(t3, 7)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: Req { c: 0, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t5, 4): RECV() [(t3, 19)]
+    	(t5, 5): END
+    thread "c1"[tid=t6]:
+    	(t6, 0): BEGIN
+    	(t6, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Req { c: 1, j: 0 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t6, 2): RECV() [(t3, 10)]
+    	(t6, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: Req { c: 1, j: 1 }, type_name: "bench_balancer_load_aware::Msg" })
+    	(t6, 4): RECV() [(t3, 17)]
+    	(t6, 5): END
+  serialized replay information (61192 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+  [secs 0] exit=1
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l1-k2q2m2.jsonl --model fifo --program balancer-load-aware --size l1-k2q2m2 l1 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l1-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l1,2,2,2 /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l1-k2q2m2.jsonl
+2026-10-31T15:51:25.166855146Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l1-k2q2m2.jsonl
+ran:        10240 iterations
+blocked:    0 (counted by the strategy)
+completed:  10240
+rate:       63.2 iterations/s
+elapsed:    162.131 s
+observed:   bench.balancer_load_aware.Balancer@5209c486
+graphs:     10240 distinct complete, 0 distinct blocked; stack exhausted
+exported:   10240 iterations as 168 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l1-k2q2m2.jsonl
+--- measurements
+wall_ms: 163489
+explore_ms: 156307
+summarise_ms: 5822
+index_ms: 0
+lookup_ms: 0
+export_ms: 10
+graphs_complete: 10240
+graphs_blocked: 0
+summaries_distinct: 168
+iterations: 10240
+stop_reason: exhausted
+peak_rss_kb: 446760
+max_message_events: 64
+max_porf_pairs: 6
+max_graph_events: 68
+mean_graph_events: 66.225
+max_visible_events: 8
+mean_visible_events: 8.000
+max_summary_bytes: 321
+max_porf_count: 3
+  [secs 164] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l1-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l1-k2q2m2.jsonl
+spec: tool=traceforge program=balancer-load-aware size=l1-k2q2m2 model=p2p enumeration=complete
+impl: tool=jmc program=balancer-load-aware size=l1-k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l2-stale-k2q1m1c1.jsonl --model fifo --program balancer-load-aware --size l2-stale-k2q1m1c1 l2-stale 2 1 1 1
+exported: 2 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l2-stale-k2q1m1c1.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2-stale,2,1,1,1 /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l2-stale-k2q1m1c1.jsonl
+2026-10-31T15:54:08.596332216Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l2-stale-k2q1m1c1.jsonl
+ran:        148 iterations
+blocked:    0 (counted by the strategy)
+completed:  148
+rate:       61.4 iterations/s
+elapsed:    2.412 s
+observed:   bench.balancer_load_aware.Balancer@52719fb6
+graphs:     148 distinct complete, 0 distinct blocked; stack exhausted
+exported:   148 iterations as 5 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l2-stale-k2q1m1c1.jsonl
+--- measurements
+wall_ms: 3512
+explore_ms: 2262
+summarise_ms: 148
+index_ms: 0
+lookup_ms: 0
+export_ms: 5
+graphs_complete: 148
+graphs_blocked: 0
+summaries_distinct: 5
+iterations: 148
+stop_reason: exhausted
+peak_rss_kb: 156404
+max_message_events: 30
+max_porf_pairs: 2
+max_graph_events: 30
+mean_graph_events: 26.622
+max_visible_events: 4
+mean_visible_events: 4.000
+max_summary_bytes: 198
+max_porf_count: 1
+  [secs 4] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/tf-spec-l2-stale-k2q1m1c1.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/balancer-load-aware/out/jmc-impl-l2-stale-k2q1m1c1.jsonl
+spec: tool=traceforge program=balancer-load-aware size=l2-stale-k2q1m1c1 model=p2p enumeration=complete
+impl: tool=jmc program=balancer-load-aware size=l2-stale-k2q1m1c1 model=p2p enumeration=complete
+verdict: violation
+uncovered: 2
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reply","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reject","f":[0,0]}}]},"counts":[0,1,0,1]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"Req","f":[0,0]}},{"r":{"t":"Reject","f":[0,0]}}],"c1":[{"s":{"t":"Req","f":[1,0]}},{"r":{"t":"Reply","f":[0,0]}}]},"counts":[0,1,0,1]}
+  [secs 0] exit=1
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count spec --model fifo l1 3 3 3
+  [secs 600] exit=124
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l1 3 3 3
+  [secs 600] exit=124
+$ timeout 600 /local/home/mkhoshechin/tmp/bench-target/release/bench_balancer_load_aware count impl --model fifo l2 3 3 3 2
+  [secs 600] exit=124
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:spec,l1,3,3,3
+2026-10-31T16:24:23.579901014Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+2026-10-31 17:34:23,696 [main] ERROR o.m.j.c.JmcModelChecker - Halting execution: 28489 due to timeout
+2026-10-31 17:34:23,699 [main] ERROR o.m.j.c.JmcModelChecker - Model checker timeout out: Timeout
+ran:        28489 iterations
+blocked:    0 (counted by the strategy)
+completed:  28489
+rate:       47.5 iterations/s
+error:      Halting execution: 28489 due to timeout
+elapsed:    600.064 s
+observed:   bench.balancer_load_aware.Balancer@6e8112b8
+graphs:     28489 distinct complete, 0 distinct blocked; stack not exhausted
+--- measurements
+wall_ms: 601218
+explore_ms: 600063
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 28489
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 28489
+stop_reason: timeout
+peak_rss_kb: 447220
+max_message_events: 60
+max_porf_pairs: 0
+max_graph_events: 69
+mean_graph_events: 69.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 601] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l1,3,3,3
+2026-10-31T16:34:24.678182102Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+2026-10-31 17:44:24,804 [main] ERROR o.m.j.c.JmcModelChecker - Halting execution: 8181 due to timeout
+2026-10-31 17:44:24,805 [main] ERROR o.m.j.c.JmcModelChecker - Model checker timeout out: Timeout
+ran:        8181 iterations
+blocked:    0 (counted by the strategy)
+completed:  8181
+rate:       13.6 iterations/s
+error:      Halting execution: 8181 due to timeout
+elapsed:    600.075 s
+observed:   bench.balancer_load_aware.Balancer@26cee3d7
+graphs:     8181 distinct complete, 0 distinct blocked; stack not exhausted
+--- measurements
+wall_ms: 600955
+explore_ms: 600074
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 8181
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 8181
+stop_reason: timeout
+peak_rss_kb: 700188
+max_message_events: 177
+max_porf_pairs: 0
+max_graph_events: 186
+mean_graph_events: 185.238
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 601] exit=0
+$ /local/home/mkhoshechin/tmp/lb/jrun.sh bench.balancer_load_aware.Balancer:impl,l2,3,3,3,2
+2026-10-31T16:44:25.529982103Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.balancer_load_aware.Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/lb/report
+2026-10-31 17:54:25,611 [main] ERROR o.m.j.c.JmcModelChecker - Halting execution: 12914 due to timeout
+2026-10-31 17:54:25,613 [main] ERROR o.m.j.c.JmcModelChecker - Model checker timeout out: Timeout
+ran:        12914 iterations
+blocked:    0 (counted by the strategy)
+completed:  12914
+rate:       21.5 iterations/s
+error:      Halting execution: 12914 due to timeout
+elapsed:    600.055 s
+observed:   bench.balancer_load_aware.Balancer@4bbdcf0b
+graphs:     12914 distinct complete, 0 distinct blocked; stack not exhausted
+--- measurements
+wall_ms: 600686
+explore_ms: 600055
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 12914
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 12914
+stop_reason: timeout
+peak_rss_kb: 392232
+max_message_events: 177
+max_porf_pairs: 0
+max_graph_events: 186
+mean_graph_events: 185.229
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0
+  [secs 601] exit=0
+# The three TraceForge s=3 runs above were killed at 600 s (exit 124, not exhausted); their last progress lines:
+#   spec l1 3 3 3:   Executions attempted so far: 2000000 total 2000000 finished normally 0 blocked
+#   impl l1 3 3 3:   Executions attempted so far: 1000000 total 1000000 finished normally 0 blocked
+#   impl l2 3 3 3 2: Executions attempted so far: 1000000 total 1000000 finished normally 0 blocked
+# jrun.sh <Class:args> [export] is: rm -rf and mkdir a fresh report dir /local/home/mkhoshechin/tmp/lb/report, then
+#   timeout 660 java -Xss4m -cp daavar/benchmarks/balancer-load-aware/java/out:$(cat daavar/jmc/cp.txt) \
+#     org.mpi_sws.jmc.mp.launch.MpLauncher '<Class:args>' must 0 1 <report dir> <export|-> 600 </dev/null
+# Java compiled with: javac -d java/out -cp $(cat daavar/jmc/cp.txt) java/bench/balancer_load_aware/*.java
+# cp.txt from: cd daavar/jmc && GRADLE_USER_HOME=/local/home/mkhoshechin/tmp/gradle-lb ./gradlew -q --no-daemon --offline :core:testClasses
+#   && ./gradlew -q --no-daemon --offline -I ../scripts/print-classpath.gradle :core:printTestClasspath
+#   (gradle-lb seeded by a local copy of /local/home/mkhoshechin/tmp/gradle-twins; --offline, nothing downloaded)
