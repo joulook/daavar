@@ -42,11 +42,15 @@ final class Abd {
     record Query(int p) implements ToReplica {}
 
     @Tag("Update")
-    record Update(int p, int t, int pid, int v) implements ToReplica {}
+    record Update(int p, Ts ts, int v) implements ToReplica {}
 
     /** Replica to proxy: the {@code Query#0} result. */
     @Tag("QueryReply")
-    record QueryReply(int t, int pid, int v) implements MpMessage {}
+    record QueryReply(Ts ts, int v) implements MpMessage {}
+
+    /** The source's {@code TimeStamp(t, pid)} (Rust {@code struct Ts(i32, i32)}); compared by {@link #lt}. */
+    @Tag("Ts")
+    record Ts(int t, int pid) {}
 
     /** Replica to proxy: {@code Update#0} done. */
     @Tag("UpdateAck")
