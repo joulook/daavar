@@ -6,6 +6,7 @@ import org.mpi_sws.jmc.mp.events.CommunicationModel;
 import org.mpi_sws.jmc.mp.events.MpMessage;
 import org.mpi_sws.jmc.mp.events.Tid;
 import org.mpi_sws.jmc.mp.launch.MpProgram;
+import org.mpi_sws.jmc.mp.summary.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,22 @@ public final class TwoPcLbinria implements MpProgram {
     /** Resends per RM: the proxy forwards {@code Prepared} {@code 1..=R} times. */
     static final int R = 2;
 
-    /** {@code TwoPhaseMessage.Prepared} with the sender index. */
+    /** {@code TwoPhaseMessage.Prepared} with the sender index (Rust {@code struct Prepared(usize)}). */
+    @Tag("Prepared")
     record Prepared(int from) implements MpMessage {}
 
-    /** {@code TwoPhaseMessage.Commit} / {@code Abort}, TM to RM. */
-    record Decision(boolean commit) implements MpMessage {}
+    /** {@code TwoPhaseMessage.Commit} / {@code Abort}, TM to RM (Rust {@code enum Decision}). */
+    sealed interface Decision extends MpMessage {
+        static Decision of(boolean commit) {
+            return commit ? new Commit() : new Abort();
+        }
+
+        @Tag("Commit")
+        record Commit() implements Decision {}
+
+        @Tag("Abort")
+        record Abort() implements Decision {}
+    }
 
     private final boolean impl;
     private final int n;
@@ -118,7 +130,7 @@ public final class TwoPcLbinria implements MpProgram {
 
     private void sendAll(Tid[] rms, boolean commit) {
         for (Tid r : rms) {
-            Channel.send(m, r, new Decision(commit));
+            Channel.send(m, r, Decision.of(commit));
         }
     }
 

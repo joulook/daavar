@@ -6,6 +6,7 @@ import org.mpi_sws.jmc.mp.events.CommunicationModel;
 import org.mpi_sws.jmc.mp.events.MpMessage;
 import org.mpi_sws.jmc.mp.events.Tid;
 import org.mpi_sws.jmc.mp.launch.MpProgram;
+import org.mpi_sws.jmc.mp.summary.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +26,99 @@ public final class TwoPcDisel implements MpProgram {
     static final int K = 2;
     static final int[][] DATA = {{1, 2}, {3, 4}};
 
-    /** {@code prep_req}, contents {@code e :: data}. */
-    record Prep(int e, int d0, int d1) implements MpMessage {}
+    /** {@code prep_req}, contents {@code e :: data} (Rust {@code ToP::Prep(e, [d0, d1])}). */
+    @Tag("Prep")
+    record Prep(int e, List<Integer> d) implements MpMessage {}
 
-    /** {@code commit_req} / {@code abort_req}, contents {@code [e]}. */
-    record Dec(boolean commit, int e) implements MpMessage {}
+    /** {@code commit_req} / {@code abort_req}, contents {@code [e]} (Rust {@code ToP::Commit | Abort}). */
+    sealed interface Dec extends MpMessage {
+        /** @return the round */
+        int e();
 
-    /** {@code prep_yes} / {@code prep_no} from participant {@code from}. */
-    record Vote(int from, int e, boolean yes) implements MpMessage {}
+        /** @return whether this is {@code commit_req} */
+        boolean commit();
 
-    /** {@code commit_ack} / {@code abort_ack} from participant {@code from}. */
-    record Ack(int from, int e, boolean commit) implements MpMessage {}
+        static Dec of(boolean commit, int e) {
+            return commit ? new Commit(e) : new Abort(e);
+        }
+
+        @Tag("Commit")
+        record Commit(int e) implements Dec {
+            public boolean commit() {
+                return true;
+            }
+        }
+
+        @Tag("Abort")
+        record Abort(int e) implements Dec {
+            public boolean commit() {
+                return false;
+            }
+        }
+    }
+
+    /** {@code prep_yes} / {@code prep_no} from participant {@code from} (Rust {@code ToCn::Yes | No}). */
+    sealed interface Vote extends MpMessage {
+        /** @return the sender participant */
+        int from();
+
+        /** @return the round */
+        int e();
+
+        /** @return whether this is {@code prep_yes} */
+        boolean yes();
+
+        static Vote of(int from, int e, boolean yes) {
+            return yes ? new Yes(from, e) : new No(from, e);
+        }
+
+        @Tag("Yes")
+        record Yes(int from, int e) implements Vote {
+            public boolean yes() {
+                return true;
+            }
+        }
+
+        @Tag("No")
+        record No(int from, int e) implements Vote {
+            public boolean yes() {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * {@code commit_ack} / {@code abort_ack} from participant {@code from} (Rust
+     * {@code ToCn::CommitAck | AbortAck}).
+     */
+    sealed interface Ack extends MpMessage {
+        /** @return the sender participant */
+        int from();
+
+        /** @return the round */
+        int e();
+
+        /** @return whether this is {@code commit_ack} */
+        boolean commit();
+
+        static Ack of(int from, int e, boolean commit) {
+            return commit ? new CommitAck(from, e) : new AbortAck(from, e);
+        }
+
+        @Tag("CommitAck")
+        record CommitAck(int from, int e) implements Ack {
+            public boolean commit() {
+                return true;
+            }
+        }
+
+        @Tag("AbortAck")
+        record AbortAck(int from, int e) implements Ack {
+            public boolean commit() {
+                return false;
+            }
+        }
+    }
 
     private final boolean impl;
     private final int n;
@@ -114,10 +197,10 @@ public final class TwoPcDisel implements MpProgram {
             // port), so one receive and an assertion.
             check(Channel.recv(m, Prep.class).e() == e, "prep_req of another round");
             boolean doCommit = Nondet.chooseBoolean();
-            Channel.send(m, cn, new Vote(i, e, doCommit));
+            Channel.send(m, cn, Vote.of(i, e, doCommit));
             Dec d = Channel.recv(m, Dec.class);
             check(d.e() == e, "decision of another round");
-            Channel.send(m, cn, new Ack(i, e, d.commit()));
+            Channel.send(m, cn, Ack.of(i, e, d.commit()));
         }
     }
 
@@ -125,7 +208,7 @@ public final class TwoPcDisel implements MpProgram {
     private void coordinator(Tid[] ps, boolean freeAbort, boolean skip) {
         for (int e = 0; e < K; e++) {
             for (Tid p : ps) {
-                Channel.send(m, p, new Prep(e, DATA[e][0], DATA[e][1]));
+                Channel.send(m, p, new Prep(e, List.of(DATA[e][0], DATA[e][1])));
             }
             List<Integer> from = new ArrayList<>();
             boolean allYes = true;
@@ -137,7 +220,7 @@ public final class TwoPcDisel implements MpProgram {
             }
             boolean commit = freeAbort ? allYes && Nondet.chooseBoolean() : allYes;
             for (Tid p : ps) {
-                Channel.send(m, p, new Dec(commit, e));
+                Channel.send(m, p, Dec.of(commit, e));
             }
             if (skip) {
                 continue;

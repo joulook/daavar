@@ -22,7 +22,7 @@ server with `"unordered"` boxes, so messages are reordered.
 Roles: visible `rm0..rm{N-1}`; invisible `tm` (both sides) and `p0..p{N-1}` (implementation only:
 the transport of each RM, which performs its resends). Messages: `Prepared(i)` (RM index `i`, the
 source's `Message.from`) and `Decision ∈ {Commit, Abort}` (Rust `enum Decision`, Java
-`record Decision(boolean commit)`).
+the sealed interface `Decision` of the `@Tag` records `Commit()`, `Abort()`).
 
 Each RM's visible events: nothing (crash), or one send `Prepared(i)` followed by one blocking
 receive of the decision. The RM is the same code on both sides.

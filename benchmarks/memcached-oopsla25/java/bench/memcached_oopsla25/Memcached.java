@@ -45,9 +45,25 @@ public final class Memcached implements MpProgram {
     @Tag("Stored")
     public record Stored() implements Reply {}
 
-    /** {@code AbsResponse::Get}; {@code value == null} is {@code None}. */
+    /** {@code AbsResponse::Get} (Rust {@code Res::Got { key, value: Option<u8> }}). */
     @Tag("Got")
-    public record Got(int key, Integer value) implements Reply {}
+    public record Got(int key, Opt value) implements Reply {}
+
+    /** Rust {@code Option<u8>}: {@code Some(v)} or {@code None}. */
+    public sealed interface Opt permits Some, None {
+        /** @return {@code Some(v)} if {@code v != null}, else {@code None} */
+        static Opt of(Integer v) {
+            return v == null ? new None() : new Some(v);
+        }
+    }
+
+    /** {@code Some(v)}. */
+    @Tag("Some")
+    public record Some(int v) implements Opt {}
+
+    /** {@code None}. */
+    @Tag("None")
+    public record None() implements Opt {}
 
     /** A response (Rust {@code Msg::Res}). */
     @Tag("Res")
@@ -202,7 +218,7 @@ public final class Memcached implements MpProgram {
                 res = new Stored();
             } else {
                 Get g = (Get) cmd.op();
-                res = new Got(g.key(), store[g.key()]);
+                res = new Got(g.key(), Opt.of(store[g.key()]));
             }
             Channel.send(m, replyTo[cmd.c()], new Res(res));
         }
