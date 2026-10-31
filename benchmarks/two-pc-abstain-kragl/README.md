@@ -35,8 +35,14 @@ source's channels are multisets).
 
 ## 2. The specification program
 
-`coord` runs `MAIN5`: `dec ∈ {COMMIT, ABORT}` with `dec == COMMIT ==> forall i :: votes[i] ==
-YES()`, and every participant's decision equals `dec`. As a program: send `Req` to every
+`coord` runs a message-level specification derived from `MAIN5`. `MAIN5` is a ghost-state predicate:
+`dec ∈ {COMMIT, ABORT}` with `dec == COMMIT ==> forall i :: votes[i] == YES()`, where `votes` is
+havoced by `MAIN5` itself, not initialised by `Init`, and never written by an abstainer; taken
+literally it does not say that every participant *sent* `Yes`, nor that those sends precede the
+commit. The specification program adds that commit evidence on purpose: `COMMIT` is decided only
+after a `Yes` vote has been received from every participant, so every `Yes` send causally precedes
+every `Commit` receive; `ABORT` is allowed at any point, as `MAIN5` places no precondition on it.
+As a program: send `Req` to every
 participant (they must be able to vote); then, before each of up to `n` blocking vote receives,
 it may abort (`nondet()`: send `Abort` to everyone and stop); after `n` votes, `Commit` if all
 were `Yes` and a `nondet()` says so, else `Abort`; the decision goes to every participant. One
@@ -93,8 +99,13 @@ reading only one vote, `Dec(Commit)` at either participant has the other partici
 
 The source ships no fault (its `.expect` is "0 errors") and the abstain path is the protocol's own
 behaviour, not a fault. The seeded fault is the catalogue's (c), a quorum off-by-one: it breaks
-exactly `MAIN5`'s clause `dec == COMMIT ==> forall i :: votes[i] == YES()`, and with abstaining
-participants a missing vote is an ordinary run, so the fault is reachable at the smallest size.
+the derived commit-evidence requirement of §2 (a `Commit` decided without a `Yes` received from
+every participant), which is what `MAIN5`'s clause `dec == COMMIT ==> forall i :: votes[i] ==
+YES()` expresses for the participants that voted; the abstention witness (a `Commit` reaching a
+participant that never voted) and the order witness at n = 2 (a `Commit` not causally after one
+participant's `Yes`) are violations of the derived requirement, not of the literal ghost predicate.
+With abstaining participants a missing vote is an ordinary run, so the fault is reachable at the
+smallest size.
 
 ## 6. Files
 
@@ -127,8 +138,10 @@ participants a missing vote is an ordinary run, so the fault is reachable at the
 | impl `correct` | n=5 | bag | 2085 / 206 | 2085 / 206 | yes |
 | impl `off-by-one` | n=5 | bag | 2205 / 86 | 2205 / 86 | yes |
 
-All runs exhausted; no disagreement. n = 5 is the first size over a minute (JMC spec), so the
-table stops there. Three n = 6 runs were started by mistake after that point; they are in
+All runs in the table exhausted; no disagreement. n = 5 is the first size over a minute (JMC
+spec), so the table stops there. Four n = 6 runs were started by mistake after that point (three
+finished; the JMC `impl,6,bag,correct` run was terminated by hand, exit 143, and has no final
+counts); they are in
 `out/runs.log`, marked, and not in the table (TraceForge spec 207045 / 29893, JMC spec not
 exhausted at 600 s, TraceForge impl `correct` 13968 / 1237).
 

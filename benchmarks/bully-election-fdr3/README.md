@@ -45,35 +45,44 @@ matter, the `tock`s (§4).
 
 ## 4. Where they differ, and why the verdict is what it is
 
-The source cannot be modelled faithfully in the Must API (one mailbox per thread, blocking
-receives with type-test guards, non-blocking receives that may read ⊥ at any time), for three
-reasons, each sufficient to change the verdicts:
+**Status: deferred, not impossible.** No faithful *distributed* port of these two files was built,
+for the three reasons below, and a direct translation of the nodes to Must threads (asynchronous
+sends, timeouts as non-blocking receives) changes the source: with that encoding both `bully.7` and
+`bully.8` mis-elect already at N = 2 without any failure, so the buggy/fixed pair no longer
+separates. That is a property of the naive encoding, not an expressiveness limit of the API.
+Discrete time can be represented explicitly in finite state and messages: an invisible driver can
+hold the CSP control states of all nodes, choose an enabled joint event, update both endpoints of a
+rendezvous atomically, and advance every node on an enabled `tock`, with one visible observer
+receiving the retained alphabet (`tock`, `fail`, `revive`, `test`, `leader`) and the specification
+generating the bounded `AGREEBY` traces through the same interface. Such a central interpreter is a
+bounded *trace encoding* of the CSP scripts: it would decide the pair, but its evaluation value
+differs from a distributed port (one driver thread, no message-level concurrency), and whether a
+small bound separates the two versions has not been shown by a witness. The directory therefore
+keeps the sources and this record; the encoding is deferred.
 
-1. **Every timeout is a count of global `tock`s under maximal progress.** `tock` is in every
-   node's alphabet, so all nodes advance time together, and the events `election`, `answer`,
-   `coordinator`, `ok` are urgent (`Urgent = diff(Events, union({tock}, Delayable))`, the timing
-   consistency check `TOCKS`): a live higher node's `answer` always happens before the `T1`-th
-   tock. In the Must API a timeout can only be a non-blocking receive that reads ⊥, and rule 1
-   (`RELATED-BENCHMARKS.tex`) lets it read ⊥ whether or not a message is pending. A timeout can then
-   fire before an answer that a live node is about to send. Already at N = 2 without any failure:
-   node 0's test of node 1 times out, node 0 starts an election, its `AwaitAnswers` times out before
-   node 1's `answer`, and node 0 becomes coordinator and says `leader.0.0` while node 1 says
-   `leader.1.1`. This run exists in both `bully.7` and `bully.8` once time is gone, so both
-   versions violate any agreement specification and the buggy/fixed pair no longer separates. The
-   fix of `bully.8` is itself a timing fix ("test their coordinator a small time after being sent
-   the coordinator message", "in any case enough for the coordinator to have finished
-   distribution"), and it has no untimed counterpart.
-2. **The specification is a timed trace property.** `AGREEBY(n, alive)` allows any `leader`
-   event until `n` tocks have passed, and is reset by every `fail`, `revive` and `test`. Without
-   `tock` there is no stability point. The catalogue's substitute (compare final opinions, status
-   done) needs the run to end, but every node of the source runs forever (`RunAsCoord`,
-   `Running` loop on `tock`), so "final" would be an artefact of the bound chosen for elections
-   and tests, not a property of the source.
-3. **Communication is synchronous.** `coordinator.n.j` in `SendCoords` happens only together with
-   node j's receive; the bug the comments describe is about which lower nodes have *received* the
-   coordinator message when `fail.n` happens mid-distribution. An asynchronous send separates
-   sending from receiving and adds interleavings in which a node has been sent the message but not
-   received it, so even the failure scenario differs from the source's.
+Why the direct translation does not work:
+
+1. **Every timeout counts global `tock`s.** `tock` is in every node's alphabet, so all nodes advance
+   time together; a live higher node's `answer` is meant to precede the `T1`-th tock. (The scripts
+   name a set `Urgent = diff(Events, union({tock}, Delayable))`, which by itself installs no priority
+   operator, and the timing-consistency `TOCKS` assertions are commented out; the timing
+   restrictions follow from the process transitions and the `tock` synchronisation, not from the
+   set name.) Translated as a non-blocking receive, a timeout can read ⊥ whether or not a message is
+   pending (rule 1 of `RELATED-BENCHMARKS.tex`), so it can fire before an answer a live node is
+   about to send: node 0's test of node 1 times out, node 0 starts an election, its `AwaitAnswers`
+   times out before node 1's `answer`, and the two nodes announce different leaders. The `bully.8`
+   fix is itself a timing fix ("test their coordinator a small time after being sent the
+   coordinator message") with no untimed counterpart.
+2. **The specification is a timed trace property.** `AGREEBY(n, alive)` allows any `leader` event
+   until `n` tocks have passed; it is reset by `fail` and `revive`, and only the post-failure state
+   `AGREEBY'` starts its countdown on `test` (`bully.7.csp` lines 226 and 235 preserve the counter on
+   `test`; line 244 starts it), with the analogous distinction in `bully.8.csp`. Without `tock` there
+   is no stability point; the catalogue's substitute (compare final opinions) needs the run to end,
+   but every node runs forever (`RunAsCoord`, the `Running` loop on `tock`).
+3. **Communication is synchronous.** `coordinator.n.j` happens only together with node j's receive;
+   the described bug is about which lower nodes have *received* the coordinator message when
+   `fail.n` happens mid-distribution. An asynchronous send separates sending from receiving and adds
+   interleavings the source does not have.
 
 The candidate record already rated this pair `maybe` for the same reason ("the bug's mechanism
 depends on timing (`tock`) and the settle window"). A Must program that replaced the timeouts by a
