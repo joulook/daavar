@@ -1,0 +1,2 @@
+{"format":1,"tool":"jmc","program":"election-leader-silent","size":"n2","visible":["p0","p1"],"model":"p2p","enumeration":"complete","encoding":1}
+{"statuses":{"p0":"blocked","p1":"blocked"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2],"n":3}

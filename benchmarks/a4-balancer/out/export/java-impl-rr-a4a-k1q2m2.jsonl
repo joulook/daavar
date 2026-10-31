@@ -1,0 +1,2 @@
+{"format":1,"tool":"jmc","program":"a4-balancer-impl-rr","size":"k1q2m2","visible":["c0"],"model":"p2p","enumeration":"complete","encoding":1}
+{"statuses":{"c0":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[],"n":1}

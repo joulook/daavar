@@ -1,0 +1,2432 @@
+# a4-balancer: Java twin (JMC) runs, 2026-10-31, builder 'twins'. Pins: daavar/traceforge 37f37fd, daavar/jmc 504e60af.
+# Rust: CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/bench-target cargo build --release -j 4 (in rust/); binary $R = /local/home/mkhoshechin/tmp/bench-target/release.
+# Java compile (jc.sh): javac -d /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/java/out -cp "$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt)" $(find /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/java -name '*.java' -not -path '*/out/*')
+# Java run (jr.sh <benchdir> <Class:args> [export|-]): java -Xss4m -cp <benchdir>/java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher '<Class:args>' must 0 1 <fresh report dir> <export|-> 600 </dev/null
+# Output filtered when logged: TraceForge 'Executions attempted' progress lines, JMC INFO log lines, the JMC measurement block (stop_reason kept), 'observed:'. Every run one process, timeout 600 s.
+$ jc.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer   (exit 0)
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,1,1,1,fifo,a4a
+2026-10-31T15:05:07.397711530Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.0JJsey
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       10.8 iterations/s
+elapsed:    0.093 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4b 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,1,1,1,fifo,a4b
+2026-10-31T15:05:07.978453018Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.kJShmC
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       13.1 iterations/s
+elapsed:    0.076 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,hash
+2026-10-31T15:05:08.609893712Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.Gyqf3D
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       11.4 iterations/s
+elapsed:    0.088 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- rr a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,rr
+2026-10-31T15:05:09.272446325Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.sTFlER
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       12.2 iterations/s
+elapsed:    0.082 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash-drop a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,hash-drop
+2026-10-31T15:05:09.869817974Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.TjCRZf
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       13.0 iterations/s
+elapsed:    0.077 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- drop a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,drop
+2026-10-31T15:05:10.440863043Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.quXg10
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       14.4 iterations/s
+elapsed:    0.069 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-hash a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,pair-swap-hash
+2026-10-31T15:05:10.953243399Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.z0ACVd
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       11.4 iterations/s
+elapsed:    0.088 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-rr a4a 1 1 1
+execs=0 blocked=1
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,1,1,fifo,pair-swap-rr
+2026-10-31T15:05:11.711884397Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.RiyRye
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       8.1 iterations/s
+elapsed:    0.123 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4a 2 1 2
+execs=0 blocked=8
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4a
+2026-10-31T15:05:12.489274719Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.81OCTb
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       47.5 iterations/s
+elapsed:    0.169 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4b 2 1 2
+execs=0 blocked=8
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b
+2026-10-31T15:05:13.156125543Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.NYxaWJ
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       50.7 iterations/s
+elapsed:    0.158 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,hash
+2026-10-31T15:05:13.860705342Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.ITVgEE
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       18.5 iterations/s
+elapsed:    0.108 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- rr a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,rr
+2026-10-31T15:05:14.406403769Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.k0C4IC
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       20.4 iterations/s
+elapsed:    0.098 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash-drop a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,hash-drop
+2026-10-31T15:05:14.920549357Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.83ps1T
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       24.3 iterations/s
+elapsed:    0.082 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- drop a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,drop
+2026-10-31T15:05:15.477338858Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.3PCRlV
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       18.3 iterations/s
+elapsed:    0.109 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-hash a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,pair-swap-hash
+2026-10-31T15:05:16.131485702Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.zdcC1a
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       13.5 iterations/s
+elapsed:    0.148 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-rr a4a 2 1 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,pair-swap-rr
+2026-10-31T15:05:16.929051501Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.8zl1Ai
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       16.4 iterations/s
+elapsed:    0.122 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4a 2 2 2
+execs=0 blocked=24
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4a
+2026-10-31T15:05:17.698296391Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.ruKfqu
+ran:        24 iterations
+blocked:    24 (counted by the strategy)
+completed:  0
+rate:       55.1 iterations/s
+elapsed:    0.436 s
+graphs:     0 distinct complete, 24 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- hash a4b 2 2 2
+execs=0 blocked=96
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b
+2026-10-31T15:05:18.882719091Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.GDeHhy
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       108.2 iterations/s
+elapsed:    0.887 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash a4a 2 2 2
+execs=0 blocked=6
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,hash
+2026-10-31T15:05:20.278363038Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.mzcia4
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       38.3 iterations/s
+elapsed:    0.157 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- rr a4a 2 2 2
+execs=0 blocked=6
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,rr
+2026-10-31T15:05:20.943316581Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.rOnv5m
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       34.5 iterations/s
+elapsed:    0.174 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- hash-drop a4a 2 2 2
+execs=0 blocked=6
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,hash-drop
+2026-10-31T15:05:21.661036464Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.fltBT3
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       29.5 iterations/s
+elapsed:    0.204 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- drop a4a 2 2 2
+execs=0 blocked=6
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,drop
+2026-10-31T15:05:22.522385242Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.LWxsJF
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       35.7 iterations/s
+elapsed:    0.168 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-hash a4a 2 2 2
+execs=0 blocked=4
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,pair-swap-hash
+2026-10-31T15:05:23.265234842Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.zSJUty
+ran:        4 iterations
+blocked:    4 (counted by the strategy)
+completed:  0
+rate:       32.3 iterations/s
+elapsed:    0.124 s
+graphs:     0 distinct complete, 4 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- pair-swap-rr a4a 2 2 2
+execs=0 blocked=4
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,pair-swap-rr
+2026-10-31T15:05:23.909531987Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.6Ep7gf
+ran:        4 iterations
+blocked:    4 (counted by the strategy)
+completed:  0
+rate:       28.0 iterations/s
+elapsed:    0.143 s
+graphs:     0 distinct complete, 4 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash a4a 2 1 2
+conformance: run seed 12297726745057722545 (reproduce with the same `Config` plus `.with_seed(12297726745057722545)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q1m2.jsonl --model fifo -- hash a4a 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q1m2.jsonl --model fifo -- hash a4a 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl
+2026-10-31T15:06:56.709195556Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.GyG6Aq
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       50.4 iterations/s
+elapsed:    0.159 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl
+2026-10-31T15:06:57.536095527Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.AGdLsT
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       14.5 iterations/s
+elapsed:    0.138 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- rr a4a 2 1 2
+conformance: run seed 14491230018403313578 (reproduce with the same `Config` plus `.with_seed(14491230018403313578)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q1m2.jsonl --model fifo -- rr a4a 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q1m2.jsonl --model fifo -- rr a4a 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl
+2026-10-31T15:06:58.296647456Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.hqIFWL
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       46.9 iterations/s
+elapsed:    0.171 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl
+2026-10-31T15:06:59.015126730Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.9UIcXW
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       14.1 iterations/s
+elapsed:    0.141 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash-drop a4a 2 1 2
+conformance: run seed 7897985816636051721 (reproduce with the same `Config` plus `.with_seed(7897985816636051721)`)
+conformance: 2 candidate violation(s).
+The list holds 1 of them; 1 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 2 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 29 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"balancer")
+    	(t0, 7): TCREATE(t2:"s0")
+    	(t0, 8): TCREATE(t3:"s1")
+    	(t0, 9): TCREATE(t4:"c0")
+    	(t0, 10): TCREATE(t5:"c1")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t5, 1)]
+    	(t1, 4): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 2): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })]), tag: None }, 1)
+  serialized replay information (15918 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q1m2.jsonl --model fifo -- hash-drop a4a 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q1m2.jsonl --model fifo -- hash-drop a4a 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl
+2026-10-31T15:06:59.825659079Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.1cGgFI
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       44.1 iterations/s
+elapsed:    0.182 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,hash-drop /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl
+2026-10-31T15:07:00.669488643Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.S3pXLk
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       17.1 iterations/s
+elapsed:    0.117 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash-drop size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash-drop size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash-drop size=k2q1m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 2
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,1,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,1,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 2
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,1,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash a4b 2 1 2
+conformance: run seed 906902816391292917 (reproduce with the same `Config` plus `.with_seed(906902816391292917)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q1m2.jsonl --model fifo -- hash a4b 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q1m2.jsonl --model fifo -- hash a4b 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl
+2026-10-31T15:07:01.441936890Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.tWF71Y
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       49.4 iterations/s
+elapsed:    0.162 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl
+2026-10-31T15:07:02.104912597Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.F6lVK7
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       15.4 iterations/s
+elapsed:    0.130 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- rr a4b 2 1 2
+conformance: run seed 10006751845936618451 (reproduce with the same `Config` plus `.with_seed(10006751845936618451)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q1m2.jsonl --model fifo -- rr a4b 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q1m2.jsonl --model fifo -- rr a4b 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl
+2026-10-31T15:07:02.876989815Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.StmzYn
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       36.7 iterations/s
+elapsed:    0.218 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl
+2026-10-31T15:07:03.616958823Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.dhwc0c
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       16.4 iterations/s
+elapsed:    0.122 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- drop a4b 2 1 2
+conformance: run seed 263675106742373948 (reproduce with the same `Config` plus `.with_seed(263675106742373948)`)
+conformance: 2 candidate violation(s).
+The list holds 1 of them; 1 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 2 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 29 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"balancer")
+    	(t0, 7): TCREATE(t2:"s0")
+    	(t0, 8): TCREATE(t3:"s1")
+    	(t0, 9): TCREATE(t4:"c0")
+    	(t0, 10): TCREATE(t5:"c1")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t5, 1)]
+    	(t1, 4): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 2): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })]), tag: None }, 1)
+  serialized replay information (15917 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q1m2.jsonl --model fifo -- drop a4b 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q1m2.jsonl --model fifo -- drop a4b 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl
+2026-10-31T15:07:04.660485919Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.PwcNul
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       41.2 iterations/s
+elapsed:    0.194 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,drop /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl
+2026-10-31T15:07:05.349620978Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.bHtNOa
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       23.0 iterations/s
+elapsed:    0.087 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-drop size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-drop size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-drop size=k2q1m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 2
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,1,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,1,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 2
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}}]},"counts":[0,1,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-hash a4a 2 1 2
+conformance: run seed 13140429382098756871 (reproduce with the same `Config` plus `.with_seed(13140429382098756871)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q1m2.jsonl --model fifo -- pair-swap-hash a4a 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q1m2.jsonl --model fifo -- pair-swap-hash a4a 2 1 2
+exported: 1 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+2026-10-31T15:07:06.095741739Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.UOGzCO
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       41.3 iterations/s
+elapsed:    0.194 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,pair-swap-hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+2026-10-31T15:07:06.896788774Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.5bAcfB
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       17.4 iterations/s
+elapsed:    0.115 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-hash a4b 2 1 2
+conformance: run seed 15099578159970866861 (reproduce with the same `Config` plus `.with_seed(15099578159970866861)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q1m2.jsonl --model fifo -- pair-swap-hash a4b 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q1m2.jsonl --model fifo -- pair-swap-hash a4b 2 1 2
+exported: 1 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+2026-10-31T15:07:07.840463408Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.m7BwLU
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       46.3 iterations/s
+elapsed:    0.173 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,pair-swap-hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+2026-10-31T15:07:09.063485247Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.Hv3lrK
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       15.0 iterations/s
+elapsed:    0.133 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-rr a4b 2 1 2
+conformance: run seed 1656344076807651014 (reproduce with the same `Config` plus `.with_seed(1656344076807651014)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q1m2.jsonl --model fifo -- pair-swap-rr a4b 2 1 2
+exported: 8 lines from 8 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q1m2.jsonl --model fifo -- pair-swap-rr a4b 2 1 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,1,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+2026-10-31T15:07:09.949086297Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.FavEtV
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+ran:        8 iterations
+blocked:    8 (counted by the strategy)
+completed:  0
+rate:       45.2 iterations/s
+elapsed:    0.177 s
+graphs:     0 distinct complete, 8 distinct blocked; stack exhausted
+exported:   8 iterations as 8 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,1,2,fifo,pair-swap-rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+2026-10-31T15:07:10.640778820Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.20ZTFc
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       18.7 iterations/s
+elapsed:    0.107 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q1m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q1m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q1m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q1m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,1,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash a4a 2 2 2
+conformance: run seed 12864896121232523424 (reproduce with the same `Config` plus `.with_seed(12864896121232523424)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q2m2.jsonl --model fifo -- hash a4a 2 2 2
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q2m2.jsonl --model fifo -- hash a4a 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl
+2026-10-31T15:07:11.493492990Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.pbOsCJ
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl
+ran:        24 iterations
+blocked:    24 (counted by the strategy)
+completed:  0
+rate:       56.4 iterations/s
+elapsed:    0.426 s
+graphs:     0 distinct complete, 24 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl
+2026-10-31T15:07:12.516463737Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.fktgD1
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       30.4 iterations/s
+elapsed:    0.198 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- rr a4a 2 2 2
+conformance: run seed 17543705380655360899 (reproduce with the same `Config` plus `.with_seed(17543705380655360899)`)
+conformance: 4 candidate violation(s).
+The list holds 1 of them; 3 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 4 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 45 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"balancer")
+    	(t0, 7): TCREATE(t2:"s0")
+    	(t0, 8): TCREATE(t3:"s1")
+    	(t0, 9): TCREATE(t4:"c0")
+    	(t0, 10): TCREATE(t5:"c1")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t5, 1)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 5): RECV() [(t5, 3)]
+    	(t1, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(1, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 7): RECV() [(t4, 3)]
+    	(t1, 8): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 9): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): RECV() [(t1, 6)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: A4Reply(0, 1), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 5): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 4)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: A4Reply(1, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t3, 3): RECV() [(t1, 8)]
+    	(t3, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(1, 1), type_name: "tf_a4_balancer::A4Reply" })
+    	(t3, 5): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 4): RECV() [(t3, 4)]
+    	(t4, 5): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 2): RECV() [(t3, 2)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 4): RECV() [(t2, 4)]
+    	(t5, 5): END
+  serialized replay information (25659 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q2m2.jsonl --model fifo -- rr a4a 2 2 2
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q2m2.jsonl --model fifo -- rr a4a 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl
+2026-10-31T15:07:13.669826656Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.cjyA1a
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl
+ran:        24 iterations
+blocked:    24 (counted by the strategy)
+completed:  0
+rate:       63.9 iterations/s
+elapsed:    0.375 s
+graphs:     0 distinct complete, 24 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl
+2026-10-31T15:07:14.539223499Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.LolBZ9
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       28.9 iterations/s
+elapsed:    0.208 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 4
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[0,1]}}]},"counts":[0,0,0,3,0,1,1,1]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3,3]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0,3]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,2,2,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 4
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[0,1]}}]},"counts":[0,0,0,3,0,1,1,1]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3,3]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0,0]}
+no-slot {"statuses":{"c0":"done","c1":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0,3]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash-drop a4a 2 2 2
+conformance: run seed 7935597956493580331 (reproduce with the same `Config` plus `.with_seed(7935597956493580331)`)
+conformance: 6 candidate violation(s).
+The list holds 1 of them; 5 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 6 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 41 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"balancer")
+    	(t0, 7): TCREATE(t2:"s0")
+    	(t0, 8): TCREATE(t3:"s1")
+    	(t0, 9): TCREATE(t4:"c0")
+    	(t0, 10): TCREATE(t5:"c1")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t5, 1)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 5): RECV() [(t4, 3)]
+    	(t1, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 7): RECV() [(t5, 3)]
+    	(t1, 8): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): RECV() [(t1, 6)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 1), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 5): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 4)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: A4Reply(1, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t3, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 4): RECV() [(t2, 4)]
+    	(t4, 5): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 2): RECV() [(t3, 2)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 4): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })]), tag: None }, 1)
+  serialized replay information (23475 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q2m2.jsonl --model fifo -- hash-drop a4a 2 2 2
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q2m2.jsonl --model fifo -- hash-drop a4a 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl
+2026-10-31T15:07:15.321145411Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.jOiDAp
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl
+ran:        24 iterations
+blocked:    24 (counted by the strategy)
+completed:  0
+rate:       66.8 iterations/s
+elapsed:    0.359 s
+graphs:     0 distinct complete, 24 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,hash-drop /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl
+2026-10-31T15:07:16.104820362Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.g1PYWK
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       42.6 iterations/s
+elapsed:    0.141 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash-drop size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash-drop size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash-drop size=k2q2m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 6
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,1,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,3,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,3,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-drop-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-drop-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash-drop,a4a,2,2,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 6
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,1,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,3,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,3,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- hash a4b 2 2 2
+conformance: run seed 9544865000734875983 (reproduce with the same `Config` plus `.with_seed(9544865000734875983)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q2m2.jsonl --model fifo -- hash a4b 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q2m2.jsonl --model fifo -- hash a4b 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl
+2026-10-31T15:07:16.862227532Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.YCWU7X
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       119.5 iterations/s
+elapsed:    0.803 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+exported:   96 iterations as 96 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl
+2026-10-31T15:07:18.487618658Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.zmRLZw
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       32.1 iterations/s
+elapsed:    0.187 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- rr a4b 2 2 2
+conformance: run seed 15229637023070278501 (reproduce with the same `Config` plus `.with_seed(15229637023070278501)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q2m2.jsonl --model fifo -- rr a4b 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q2m2.jsonl --model fifo -- rr a4b 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl
+2026-10-31T15:07:19.551446093Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.dV2xDa
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       123.1 iterations/s
+elapsed:    0.780 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+exported:   96 iterations as 96 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl
+2026-10-31T15:07:20.931854150Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.0GkPNZ
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       27.4 iterations/s
+elapsed:    0.219 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- drop a4b 2 2 2
+conformance: run seed 8641343963592846568 (reproduce with the same `Config` plus `.with_seed(8641343963592846568)`)
+conformance: 6 candidate violation(s).
+The list holds 1 of them; 5 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 6 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 41 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): UNIQUE [LocalOrder]
+    	(t0, 6): TCREATE(t1:"balancer")
+    	(t0, 7): TCREATE(t2:"s0")
+    	(t0, 8): TCREATE(t3:"s1")
+    	(t0, 9): TCREATE(t4:"c0")
+    	(t0, 10): TCREATE(t5:"c1")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t5, 1)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 5): RECV() [(t4, 3)]
+    	(t1, 6): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 7): RECV() [(t5, 3)]
+    	(t1, 8): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): RECV() [(t1, 6)]
+    	(t2, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 1), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 5): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 4)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: A4Reply(1, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t3, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 5 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 4): RECV() [(t2, 4)]
+    	(t4, 5): END
+    thread "c1"[tid=t5]:
+    	(t5, 0): BEGIN
+    	(t5, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 2): RECV() [(t3, 2)]
+    	(t5, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(1, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t5, 4): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })]), tag: None }, 1)
+  serialized replay information (23475 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q2m2.jsonl --model fifo -- drop a4b 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q2m2.jsonl --model fifo -- drop a4b 2 2 2
+exported: 6 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl
+2026-10-31T15:07:21.857576915Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.qmGKiS
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       112.3 iterations/s
+elapsed:    0.855 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+exported:   96 iterations as 96 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,drop /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl
+2026-10-31T15:07:23.354496129Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.YEdRfT
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl
+ran:        6 iterations
+blocked:    6 (counted by the strategy)
+completed:  0
+rate:       28.1 iterations/s
+elapsed:    0.214 s
+graphs:     0 distinct complete, 6 distinct blocked; stack exhausted
+exported:   6 iterations as 6 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-drop size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-drop size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-drop-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=drop,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-drop size=k2q2m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 6
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,1,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,3,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,3,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-drop-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-drop-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=drop,a4b,2,2,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 6
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,1,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,3,0,1,1]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,0,0,0,0,3,3]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,1,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,1,1,3,0,0,0]}
+no-bucket {"statuses":{"c0":"done","c1":"blocked"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[1,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[0,1]}}],"c1":[{"s":{"t":"A4Req","f":[1,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[1,1]}}]},"counts":[0,3,3,3,0,0,0]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-hash a4a 2 2 2
+conformance: run seed 17670643482239703356 (reproduce with the same `Config` plus `.with_seed(17670643482239703356)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q2m2.jsonl --model fifo -- pair-swap-hash a4a 2 2 2
+exported: 24 lines from 24 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q2m2.jsonl --model fifo -- pair-swap-hash a4a 2 2 2
+exported: 1 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+2026-10-31T15:07:24.354713965Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.sSKrtI
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+ran:        24 iterations
+blocked:    24 (counted by the strategy)
+completed:  0
+rate:       69.0 iterations/s
+elapsed:    0.348 s
+graphs:     0 distinct complete, 24 distinct blocked; stack exhausted
+exported:   24 iterations as 24 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,pair-swap-hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+2026-10-31T15:07:25.300150108Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.VohyhY
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+ran:        4 iterations
+blocked:    4 (counted by the strategy)
+completed:  0
+rate:       22.7 iterations/s
+elapsed:    0.176 s
+graphs:     0 distinct complete, 4 distinct blocked; stack exhausted
+exported:   4 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4a-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4a-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4a,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-hash a4b 2 2 2
+conformance: run seed 3161064304044723325 (reproduce with the same `Config` plus `.with_seed(3161064304044723325)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q2m2.jsonl --model fifo -- pair-swap-hash a4b 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q2m2.jsonl --model fifo -- pair-swap-hash a4b 2 2 2
+exported: 1 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+2026-10-31T15:07:26.128178183Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.Mnqu1f
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       134.9 iterations/s
+elapsed:    0.712 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+exported:   96 iterations as 96 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,pair-swap-hash /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+2026-10-31T15:07:27.362103065Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.aQmw4j
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+ran:        4 iterations
+blocked:    4 (counted by the strategy)
+completed:  0
+rate:       22.6 iterations/s
+elapsed:    0.177 s
+graphs:     0 distinct complete, 4 distinct blocked; stack exhausted
+exported:   4 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-hash size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-hash-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-hash-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-hash,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- pair-swap-rr a4b 2 2 2
+conformance: run seed 12763872771929944044 (reproduce with the same `Config` plus `.with_seed(12763872771929944044)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q2m2.jsonl --model fifo -- pair-swap-rr a4b 2 2 2
+exported: 96 lines from 96 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q2m2.jsonl --model fifo -- pair-swap-rr a4b 2 2 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,2,2,2,fifo,a4b /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+2026-10-31T15:07:28.288153300Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.81BmxW
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+ran:        96 iterations
+blocked:    96 (counted by the strategy)
+completed:  0
+rate:       120.9 iterations/s
+elapsed:    0.794 s
+graphs:     0 distinct complete, 96 distinct blocked; stack exhausted
+exported:   96 iterations as 96 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,2,2,2,fifo,pair-swap-rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+2026-10-31T15:07:29.613527825Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.0iyDgN
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+ran:        4 iterations
+blocked:    4 (counted by the strategy)
+completed:  0
+rate:       22.5 iterations/s
+elapsed:    0.178 s
+graphs:     0 distinct complete, 4 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-pair-swap-rr size=k2q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-pair-swap-rr-a4b-k2q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-pair-swap-rr-a4b-k2q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4b size=k2q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=pair-swap-rr,a4b,2,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count spec --model fifo -- rr a4a 1 2 2
+execs=0 blocked=2
+  [secs 0] exit=0
+$ tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,1,2,2,fifo,a4a
+2026-10-31T15:10:09.876418820Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.Rm5T77
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       17.3 iterations/s
+elapsed:    0.116 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer count impl --model fifo -- rr a4a 1 2 2
+execs=0 blocked=1
+  [secs 0] exit=0
+$ tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,2,2,fifo,rr
+2026-10-31T15:10:10.589505789Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.5n8JvI
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       7.3 iterations/s
+elapsed:    0.137 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer conf --model fifo -- rr a4a 1 2 2
+conformance: run seed 16330321394298473986 (reproduce with the same `Config` plus `.with_seed(16330321394298473986)`)
+conformance: 1 candidate violation(s).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 1 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 29 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): UNIQUE [LocalOrder]
+    	(t0, 2): UNIQUE [LocalOrder]
+    	(t0, 3): UNIQUE [LocalOrder]
+    	(t0, 4): UNIQUE [LocalOrder]
+    	(t0, 5): TCREATE(t1:"balancer")
+    	(t0, 6): TCREATE(t2:"s0")
+    	(t0, 7): TCREATE(t3:"s1")
+    	(t0, 8): TCREATE(t4:"c0")
+    thread "balancer"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t4, 1)]
+    	(t1, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 3): RECV() [(t4, 3)]
+    	(t1, 4): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t1, 5): END
+    thread "s0"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(0, 0), type_name: "tf_a4_balancer::A4Reply" })
+    	(t2, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 3 })]), tag: None }, 1)
+    thread "s1"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t1, 4)]
+    	(t3, 2): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 2 })), Val { val: A4Reply(1, 1), type_name: "tf_a4_balancer::A4Reply" })
+    	(t3, 3): BLK Value(RecvLoc { locs: Some([Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 4 })]), tag: None }, 1)
+    thread "c0"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 0), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 2): RECV() [(t2, 2)]
+    	(t4, 3): SEND(TSome(Loc(Event { thread: ThreadId { opaque_id: 0 }, index: 1 })), Val { val: A4Req(0, 1), type_name: "tf_a4_balancer::A4Req" })
+    	(t4, 4): RECV() [(t3, 2)]
+    	(t4, 5): END
+  serialized replay information (16108 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k1q2m2.jsonl --model fifo -- rr a4a 1 2 2
+exported: 2 lines from 2 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k1q2m2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_a4_balancer export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k1q2m2.jsonl --model fifo -- rr a4a 1 2 2
+exported: 1 lines from 1 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k1q2m2.jsonl
+  [secs 0] exit=0
+$ tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:spec,1,2,2,fifo,a4a /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl
+2026-10-31T15:10:11.477568203Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.3OoUoc
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl
+ran:        2 iterations
+blocked:    2 (counted by the strategy)
+completed:  0
+rate:       14.3 iterations/s
+elapsed:    0.140 s
+graphs:     0 distinct complete, 2 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer bench.a4_balancer.A4Balancer:impl,1,2,2,fifo,rr /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl
+2026-10-31T15:10:12.336454042Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.a4_balancer.A4Balancer
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.6J02TY
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl
+ran:        1 iterations
+blocked:    1 (counted by the strategy)
+completed:  0
+rate:       7.4 iterations/s
+elapsed:    0.134 s
+graphs:     0 distinct complete, 1 distinct blocked; stack exhausted
+exported:   1 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,1,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-spec-a4a size=k1q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k1q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k1q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,1,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,1,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k1q2m2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k1q2m2.jsonl
+spec: tool=jmc program=a4-balancer-impl-rr size=k1q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,1,2,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-spec-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-impl-rr-a4a-k1q2m2.jsonl
+spec: tool=traceforge program=tf_a4_balancer:spec size=rr,a4a,1,2,2 model=p2p enumeration=complete
+impl: tool=jmc program=a4-balancer-impl-rr size=k1q2m2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 1
+no-slot {"statuses":{"c0":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/java-spec-rr-a4a-k1q2m2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/a4-balancer/out/export/rust-impl-rr-a4a-k1q2m2.jsonl
+spec: tool=jmc program=a4-balancer-spec-a4a size=k1q2m2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_a4_balancer:impl size=rr,a4a,1,2,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 1
+no-slot {"statuses":{"c0":"done"},"words":{"c0":[{"s":{"t":"A4Req","f":[0,0]}},{"r":{"t":"A4Reply","f":[0,0]}},{"s":{"t":"A4Req","f":[0,1]}},{"r":{"t":"A4Reply","f":[1,1]}}]},"counts":[]}
+  [secs 0] exit=1

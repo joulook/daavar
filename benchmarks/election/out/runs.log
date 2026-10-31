@@ -1,0 +1,845 @@
+# election: Java twin (JMC) runs, 2026-10-31, builder 'twins'. Pins: daavar/traceforge 37f37fd, daavar/jmc 504e60af.
+# Rust: CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/bench-target cargo build --release -j 4 (in rust/); binary $R = /local/home/mkhoshechin/tmp/bench-target/release.
+# Java compile (jc.sh): javac -d /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/java/out -cp "$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt)" $(find /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/java -name '*.java' -not -path '*/out/*')
+# Java run (jr.sh <benchdir> <Class:args> [export|-]): java -Xss4m -cp <benchdir>/java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher '<Class:args>' must 0 1 <fresh report dir> <export|-> 600 </dev/null
+# Output filtered when logged: TraceForge 'Executions attempted' progress lines, JMC INFO log lines, the JMC measurement block (stop_reason kept), 'observed:'. Every run one process, timeout 600 s.
+$ jc.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election   (exit 0)
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count spec --model fifo -- leader conf 2
+execs=4 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo
+2026-10-31T15:05:28.391672192Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.AOYaTR
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       43.2 iterations/s
+elapsed:    0.093 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader conf 2
+execs=6 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-conf
+2026-10-31T15:05:29.036108734Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.UqoANg
+ran:        6 iterations
+blocked:    0 (counted by the strategy)
+completed:  6
+rate:       44.0 iterations/s
+elapsed:    0.136 s
+graphs:     6 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader split 2
+execs=9 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-split
+2026-10-31T15:05:29.695348220Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.MKYS2j
+ran:        9 iterations
+blocked:    0 (counted by the strategy)
+completed:  9
+rate:       53.4 iterations/s
+elapsed:    0.169 s
+graphs:     9 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader silent 2
+execs=0 blocked=3
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-silent
+2026-10-31T15:05:30.475497167Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.746S1U
+ran:        3 iterations
+blocked:    3 (counted by the strategy)
+completed:  0
+rate:       19.2 iterations/s
+elapsed:    0.156 s
+graphs:     0 distinct complete, 3 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring conf 2
+execs=4 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,ring-conf
+2026-10-31T15:05:31.229668546Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.tLvPze
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       24.4 iterations/s
+elapsed:    0.164 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring split 2
+execs=6 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,ring-split
+2026-10-31T15:05:31.985023594Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.QA9Z4h
+ran:        6 iterations
+blocked:    0 (counted by the strategy)
+completed:  6
+rate:       34.8 iterations/s
+elapsed:    0.172 s
+graphs:     6 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count spec --model fifo -- leader conf 3
+execs=18 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,3,fifo
+2026-10-31T15:05:32.696554124Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.KUUSEB
+ran:        18 iterations
+blocked:    0 (counted by the strategy)
+completed:  18
+rate:       71.8 iterations/s
+elapsed:    0.251 s
+graphs:     18 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader conf 3
+execs=588 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,3,fifo,leader-conf
+2026-10-31T15:05:33.380239259Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.ufHu2b
+ran:        588 iterations
+blocked:    0 (counted by the strategy)
+completed:  588
+rate:       220.7 iterations/s
+elapsed:    2.664 s
+graphs:     588 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 3] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader split 3
+execs=0 blocked=882
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,3,fifo,leader-split
+2026-10-31T15:05:36.737226549Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.tf0Se4
+ran:        882 iterations
+blocked:    882 (counted by the strategy)
+completed:  0
+rate:       241.1 iterations/s
+elapsed:    3.658 s
+graphs:     0 distinct complete, 882 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 4] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- leader silent 3
+execs=0 blocked=196
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,3,fifo,leader-silent
+2026-10-31T15:05:40.933734238Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.yNMvbW
+ran:        196 iterations
+blocked:    196 (counted by the strategy)
+completed:  0
+rate:       174.7 iterations/s
+elapsed:    1.122 s
+graphs:     0 distinct complete, 196 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring conf 3
+execs=24 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,3,fifo,ring-conf
+2026-10-31T15:05:42.491363759Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.pAHH8H
+ran:        24 iterations
+blocked:    0 (counted by the strategy)
+completed:  24
+rate:       85.4 iterations/s
+elapsed:    0.281 s
+graphs:     24 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring split 3
+execs=0 blocked=28
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,3,fifo,ring-split
+2026-10-31T15:05:43.270964609Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.FLiJbF
+ran:        28 iterations
+blocked:    28 (counted by the strategy)
+completed:  0
+rate:       81.4 iterations/s
+elapsed:    0.344 s
+graphs:     0 distinct complete, 28 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election conf --model fifo -- leader conf 2
+conformance: run seed 5324338481326526827 (reproduce with the same `Config` plus `.with_seed(5324338481326526827)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-conf-n2.jsonl --model fifo -- leader conf 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-conf-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-conf-n2.jsonl --model fifo -- leader conf 2
+exported: 2 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-conf-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo,leader-conf /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl
+2026-10-31T15:07:30.568368043Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.8aGBLl
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       26.8 iterations/s
+elapsed:    0.149 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-conf /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl
+2026-10-31T15:07:31.286944960Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.uhrORi
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl
+ran:        6 iterations
+blocked:    0 (counted by the strategy)
+completed:  6
+rate:       34.8 iterations/s
+elapsed:    0.173 s
+graphs:     6 distinct complete, 0 distinct blocked; stack exhausted
+exported:   6 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-conf-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:spec size=leader,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:impl size=leader,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-conf size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-conf-n2.jsonl
+spec: tool=jmc program=election-leader-conf size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-conf size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-conf-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election conf --model fifo -- leader split 2
+conformance: run seed 2465479838394711898 (reproduce with the same `Config` plus `.with_seed(2465479838394711898)`)
+conformance: 9 candidate violation(s).
+The list holds 1 of them; 8 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 9 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 29 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): TCREATE(t1:"p0")
+    	(t0, 2): TCREATE(t2:"p1")
+    	(t0, 3): TCREATE(t3:"e0")
+    	(t0, 4): TCREATE(t4:"e1")
+    	(t0, 5): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Setup(Setup { me: 0, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::EIn" })
+    	(t0, 6): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Setup(Setup { me: 1, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::EIn" })
+    thread "p0"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t2, 2)]
+    	(t1, 2): RECV() [(t3, 4)]
+    	(t1, 3): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 2 }))), Val { val: Vote(true), type_name: "tf_election::PIn" })
+    	(t1, 4): END
+    thread "p1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t4, 4)]
+    	(t2, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 1 }))), Val { val: Vote(true), type_name: "tf_election::PIn" })
+    	(t2, 3): RECV() [(t1, 3)]
+    	(t2, 4): END
+    thread "e0"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t0, 5)]
+    	(t3, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Elect(0), type_name: "tf_election::EIn" })
+    	(t3, 3): RECV() [(t4, 2)]
+    	(t3, 4): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 1 }))), Val { val: BeFollower(ThreadId { opaque_id: 2 }), type_name: "tf_election::PIn" })
+    	(t3, 5): END
+    thread "e1"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t0, 6)]
+    	(t4, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Elect(1), type_name: "tf_election::EIn" })
+    	(t4, 3): RECV() [(t3, 2)]
+    	(t4, 4): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 2 }))), Val { val: BeFollower(ThreadId { opaque_id: 1 }), type_name: "tf_election::PIn" })
+    	(t4, 5): END
+  serialized replay information (17351 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-split-n2.jsonl --model fifo -- leader split 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-split-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-split-n2.jsonl --model fifo -- leader split 2
+exported: 3 lines from 9 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-split-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo,leader-split /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl
+2026-10-31T15:07:32.166375148Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.lqGK0C
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       27.2 iterations/s
+elapsed:    0.147 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-split /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl
+2026-10-31T15:07:32.971182171Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.AQTwOj
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl
+ran:        9 iterations
+blocked:    0 (counted by the strategy)
+completed:  9
+rate:       41.0 iterations/s
+elapsed:    0.219 s
+graphs:     9 distinct complete, 0 distinct blocked; stack exhausted
+exported:   9 iterations as 3 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-split-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:spec size=leader,split,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl
+spec: tool=traceforge program=tf_election:impl size=leader,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-split size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-split-n2.jsonl
+spec: tool=jmc program=election-leader-split size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,split,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-split-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-split size=n2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 3
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[2,2,2,0,0,3]}
+no-bucket {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2,0,0,2]}
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}}]},"counts":[0,0,3,2,2,2]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-split-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,split,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 3
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[2,2,2,0,0,3]}
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}}]},"counts":[0,0,3,2,2,2]}
+no-bucket {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2,0,0,2]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election conf --model fifo -- leader silent 2
+conformance: run seed 5099078977760354225 (reproduce with the same `Config` plus `.with_seed(5099078977760354225)`)
+conformance: 3 candidate violation(s).
+The list holds 1 of them; 2 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 3 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 25 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): TCREATE(t1:"p0")
+    	(t0, 2): TCREATE(t2:"p1")
+    	(t0, 3): TCREATE(t3:"e0")
+    	(t0, 4): TCREATE(t4:"e1")
+    	(t0, 5): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Setup(Setup { me: 0, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::EIn" })
+    	(t0, 6): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Setup(Setup { me: 1, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::EIn" })
+    thread "p0"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t3, 4)]
+    	(t1, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 2 }))), Val { val: Vote(true), type_name: "tf_election::PIn" })
+    	(t1, 3): BLK Value(RecvLoc { locs: Some([Loc(Thread(ThreadId { opaque_id: 1 }))]), tag: None }, 1)
+    thread "p1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t1, 2)]
+    	(t2, 2): BLK Value(RecvLoc { locs: Some([Loc(Thread(ThreadId { opaque_id: 2 }))]), tag: None }, 1)
+    thread "e0"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t0, 5)]
+    	(t3, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Elect(0), type_name: "tf_election::EIn" })
+    	(t3, 3): RECV() [(t4, 2)]
+    	(t3, 4): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 1 }))), Val { val: BeFollower(ThreadId { opaque_id: 2 }), type_name: "tf_election::PIn" })
+    	(t3, 5): END
+    thread "e1"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t0, 6)]
+    	(t4, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Elect(1), type_name: "tf_election::EIn" })
+    	(t4, 3): RECV() [(t3, 2)]
+    	(t4, 4): END
+  serialized replay information (14997 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-silent-n2.jsonl --model fifo -- leader silent 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-silent-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-silent-n2.jsonl --model fifo -- leader silent 2
+exported: 1 lines from 3 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-silent-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo,leader-silent /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl
+2026-10-31T15:07:33.966158007Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.P851Uv
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       23.5 iterations/s
+elapsed:    0.170 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,leader-silent /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl
+2026-10-31T15:07:34.629438775Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.yDksuw
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl
+ran:        3 iterations
+blocked:    3 (counted by the strategy)
+completed:  0
+rate:       21.0 iterations/s
+elapsed:    0.143 s
+graphs:     0 distinct complete, 3 distinct blocked; stack exhausted
+exported:   3 iterations as 1 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,silent,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-silent-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:spec size=leader,silent,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl
+spec: tool=traceforge program=tf_election:impl size=leader,silent,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-silent size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-silent-n2.jsonl
+spec: tool=jmc program=election-leader-silent size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,silent,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-leader-silent-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=leader,silent,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-leader-silent size=n2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 1
+no-bucket {"statuses":{"p0":"blocked","p1":"blocked"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-leader-silent-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-leader-silent-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=leader,silent,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 1
+no-bucket {"statuses":{"p0":"blocked","p1":"blocked"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election conf --model fifo -- ring conf 2
+conformance: run seed 1483437072816043876 (reproduce with the same `Config` plus `.with_seed(1483437072816043876)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-conf-n2.jsonl --model fifo -- ring conf 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-conf-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-conf-n2.jsonl --model fifo -- ring conf 2
+exported: 2 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-conf-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo,ring-conf /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl
+2026-10-31T15:07:35.506632998Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.brultR
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       29.0 iterations/s
+elapsed:    0.138 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,ring-conf /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl
+2026-10-31T15:07:36.281862912Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.1D5myl
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       26.7 iterations/s
+elapsed:    0.150 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 2 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=ring,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-conf-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:spec size=ring,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:impl size=ring,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-ring-conf size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-conf-n2.jsonl
+spec: tool=jmc program=election-ring-conf size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=ring,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-conf-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=ring,conf,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-ring-conf size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-conf-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-conf-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=ring,conf,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election conf --model fifo -- ring split 2
+conformance: run seed 18115840127999133145 (reproduce with the same `Config` plus `.with_seed(18115840127999133145)`)
+conformance: 6 candidate violation(s).
+The list holds 1 of them; 5 further candidate violation(s) counted, not kept (ConfBuilder::all_reports).
+Every graph in this list is an uncovered complete graph of the implementation: each was looked up in an index of every specification graph, and either no specification graph has its signature or no order stored under its signature is contained in its own (lem:sig).
+There are exactly 6 such graphs (thm:stateful): both enumerations reached the end of their state spaces.
+"Candidate" has two named sources: (i) single-cover is sufficient but not necessary for trace inclusion, so a union of specification graphs may still cover these traces; (ii) the lemmas this rests on carry the open A4 transport gap.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+
+#0
+  candidate violation: no specification graph covers the implementation graph below
+  raised at: the completion gate — the execution had ended, so the implementation graph was complete
+  certifies (CompleteCoverage): no graph of the specification covers the reported complete graph: its signature has no slot in the index, or no order in the slot is contained in the graph's (lem:sig, thm:stateful)
+  implementation graph size: 29 events
+  the stateful engine computes no inner-search diagnostics; this report is a failed signature or containment lookup (lem:sig)
+  implementation graph:
+    Printing exec graph
+    thread "main"[tid=t0]:
+    	(t0, 0): BEGIN
+    	(t0, 1): TCREATE(t1:"p0")
+    	(t0, 2): TCREATE(t2:"p1")
+    	(t0, 3): TCREATE(t3:"e0")
+    	(t0, 4): TCREATE(t4:"e1")
+    	(t0, 5): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Setup(Setup { me: 0, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::RIn" })
+    	(t0, 6): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Setup(Setup { me: 1, electors: [ThreadId { opaque_id: 3 }, ThreadId { opaque_id: 4 }], participants: [ThreadId { opaque_id: 1 }, ThreadId { opaque_id: 2 }] }), type_name: "tf_election::RIn" })
+    thread "p0"[tid=t1]:
+    	(t1, 0): BEGIN
+    	(t1, 1): RECV() [(t2, 2)]
+    	(t1, 2): RECV() [(t3, 4)]
+    	(t1, 3): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 2 }))), Val { val: Vote(true), type_name: "tf_election::PIn" })
+    	(t1, 4): END
+    thread "p1"[tid=t2]:
+    	(t2, 0): BEGIN
+    	(t2, 1): RECV() [(t4, 3)]
+    	(t2, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 1 }))), Val { val: Vote(true), type_name: "tf_election::PIn" })
+    	(t2, 3): RECV() [(t1, 3)]
+    	(t2, 4): END
+    thread "e0"[tid=t3]:
+    	(t3, 0): BEGIN
+    	(t3, 1): RECV() [(t0, 5)]
+    	(t3, 2): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 4 }))), Val { val: Tok(0), type_name: "tf_election::RIn" })
+    	(t3, 3): RECV() [(t4, 4)]
+    	(t3, 4): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 1 }))), Val { val: BeFollower(ThreadId { opaque_id: 2 }), type_name: "tf_election::PIn" })
+    	(t3, 5): END
+    thread "e1"[tid=t4]:
+    	(t4, 0): BEGIN
+    	(t4, 1): RECV() [(t0, 6)]
+    	(t4, 2): RECV() [(t3, 2)]
+    	(t4, 3): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 2 }))), Val { val: BeFollower(ThreadId { opaque_id: 1 }), type_name: "tf_election::PIn" })
+    	(t4, 4): SEND(TSome(Loc(Thread(ThreadId { opaque_id: 3 }))), Val { val: Tok(1), type_name: "tf_election::RIn" })
+    	(t4, 5): END
+  serialized replay information (17235 bytes of JSON) is attached to this report; see `ConfReport::replay_snapshot`
+
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export spec --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-split-n2.jsonl --model fifo -- ring split 2
+exported: 4 lines from 4 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-split-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election export impl --out /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-split-n2.jsonl --model fifo -- ring split 2
+exported: 3 lines from 6 graphs to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-split-n2.jsonl
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,2,fifo,ring-split /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl
+2026-10-31T15:07:37.101763895Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.a6ckJf
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       39.4 iterations/s
+elapsed:    0.102 s
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,2,fifo,ring-split /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl
+2026-10-31T15:07:37.701551238Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.PtgmV4
+exportFile: /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl
+ran:        6 iterations
+blocked:    0 (counted by the strategy)
+completed:  6
+rate:       32.2 iterations/s
+elapsed:    0.186 s
+graphs:     6 distinct complete, 0 distinct blocked; stack exhausted
+exported:   6 iterations as 3 distinct summaries (complete, 0 not exported) to /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl
+stop_reason: exhausted
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=ring,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-split-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:spec size=ring,split,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl
+spec: tool=traceforge program=tf_election:impl size=ring,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-ring-split size=n2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-split-n2.jsonl
+spec: tool=jmc program=election-ring-split size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=ring,split,2 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-spec-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-impl-ring-split-n2.jsonl
+spec: tool=traceforge program=tf_election:spec size=ring,split,2 model=p2p enumeration=complete
+impl: tool=jmc program=election-ring-split size=n2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 3
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[2,2,2,0,0,3]}
+no-bucket {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2,0,0,2]}
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}}]},"counts":[0,0,3,2,2,2]}
+  [secs 0] exit=1
+$ /local/home/mkhoshechin/Documents/github-jmc/daavar/traceforge/target/release/conf-join /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/java-spec-ring-split-n2.jsonl /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election/out/export/rust-impl-ring-split-n2.jsonl
+spec: tool=jmc program=election-spec size=n2 model=p2p enumeration=complete
+impl: tool=traceforge program=tf_election:impl size=ring,split,2 model=p2p enumeration=complete
+verdict: violation
+uncovered: 3
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[2,2,2,0,0,3]}
+no-slot {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"Vote","f":[true]}},{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}}]},"counts":[0,0,3,2,2,2]}
+no-bucket {"statuses":{"p0":"done","p1":"done"},"words":{"p0":[{"r":{"t":"BeFollower","f":["p1"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}],"p1":[{"r":{"t":"BeFollower","f":["p0"]}},{"s":{"t":"Vote","f":[true]}},{"r":{"t":"Vote","f":[true]}}]},"counts":[0,0,2,0,0,2]}
+  [secs 0] exit=1
+# n = 4: the spec and the ring variants only (leader-* at n = 4 is 1 839 744 graphs for leader-conf, not run)
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count spec --model fifo -- ring conf 4
+execs=96 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:spec,4,fifo
+2026-10-31T15:08:30.016322219Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.xQECP6
+ran:        96 iterations
+blocked:    0 (counted by the strategy)
+completed:  96
+rate:       152.4 iterations/s
+elapsed:    0.630 s
+graphs:     96 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 1] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring conf 4
+execs=192 blocked=0
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,4,fifo,ring-conf
+2026-10-31T15:08:31.160790033Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.9wVPzF
+ran:        192 iterations
+blocked:    0 (counted by the strategy)
+completed:  192
+rate:       126.3 iterations/s
+elapsed:    1.521 s
+graphs:     192 distinct complete, 0 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 2] exit=0
+$ /local/home/mkhoshechin/tmp/bench-target/release/tf_election count impl --model fifo -- ring split 4
+execs=0 blocked=120
+  [secs 0] exit=0
+$ /local/home/mkhoshechin/tmp/twins/tools/jr.sh /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks/election bench.election.Election:impl,4,fifo,ring-split
+2026-10-31T15:08:33.290485609Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.election.Election
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: /local/home/mkhoshechin/tmp/twins/reports/r.pvTz4n
+ran:        120 iterations
+blocked:    120 (counted by the strategy)
+completed:  0
+rate:       104.4 iterations/s
+elapsed:    1.150 s
+graphs:     0 distinct complete, 120 distinct blocked; stack exhausted
+stop_reason: exhausted
+  [secs 2] exit=0
