@@ -38,7 +38,8 @@ public final class ZabBroadcast implements MpProgram {
     @Tag("AckEpoch")
     public record AckEpoch() implements Msg {}
 
-    /** A history entry {@code (zxid, client, value)} (Rust's tuple). */
+    /** A history entry {@code (zxid, client, value)} (Rust {@code struct Entry(u8, u8, u8)}). */
+    @Tag("Entry")
     public record Entry(int zxid, int c, int v) {}
 
     /** {@code NEWLEADER} with the history. */

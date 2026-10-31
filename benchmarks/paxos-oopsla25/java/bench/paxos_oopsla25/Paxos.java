@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 public final class Paxos implements MpProgram {
 
-    /** A vote {@code (Ballot, Value)} (Rust tuple). */
+    /** A vote {@code (Ballot, Value)} (Rust {@code struct Vote(Ballot, Value)}). */
     @Tag("Vote")
     public record Vote(int ballot, int value) {}
 
@@ -36,9 +36,36 @@ public final class Paxos implements MpProgram {
     @Tag("Msg1a")
     public record Msg1a(int b) implements MpMessage {}
 
-    /** {@code Msg1b(Acceptor, Ballot, Option<(Ballot, Value)>)}; {@code vote == null} is None. */
+    /** Rust {@code Option<Vote>}: {@code Some(vote)} or {@code None}; never {@code null}. */
+    public sealed interface MaybeVote permits SomeVote, NoVote {
+        /** @return {@code SomeVote(vote)} if {@code vote != null}, else {@code NoVote} */
+        static MaybeVote of(Vote vote) {
+            return vote == null ? new NoVote() : new SomeVote(vote);
+        }
+
+        /** @return the vote, or {@code null} for {@code None} (local use only, never sent) */
+        Vote orNull();
+    }
+
+    /** {@code Some(vote)}. */
+    @Tag("Some")
+    public record SomeVote(Vote vote) implements MaybeVote {
+        public Vote orNull() {
+            return vote;
+        }
+    }
+
+    /** {@code None}. */
+    @Tag("None")
+    public record NoVote() implements MaybeVote {
+        public Vote orNull() {
+            return null;
+        }
+    }
+
+    /** {@code Msg1b(Acceptor, Ballot, Option<Vote>)}. */
     @Tag("Msg1b")
-    public record Msg1b(int a, int b, Vote vote) implements MpMessage {}
+    public record Msg1b(int a, int b, MaybeVote vote) implements MpMessage {}
 
     /** {@code Msg2a(Ballot, Value)}. */
     @Tag("Msg2a")
@@ -205,8 +232,9 @@ public final class Paxos implements MpProgram {
             MpMessage r = Channel.recv(m);
             if (r instanceof Msg1b p && p.b() == b && !q.contains(p.a())) {
                 q.add(p.a());
-                if (p.vote() != null && (maxVote == null || p.vote().ballot() > maxVote.ballot())) {
-                    maxVote = p.vote();
+                Vote pv = p.vote().orNull();
+                if (pv != null && (maxVote == null || pv.ballot() > maxVote.ballot())) {
+                    maxVote = pv;
                 }
             }
         }
@@ -240,7 +268,7 @@ public final class Paxos implements MpProgram {
             if (r instanceof Msg1a p) {
                 if (maxBal == null || p.b() > maxBal) {
                     maxBal = p.b();
-                    Channel.send(m, proposers[p.b()], new Msg1b(me, p.b(), reportNone ? null : maxVote));
+                    Channel.send(m, proposers[p.b()], new Msg1b(me, p.b(), MaybeVote.of(reportNone ? null : maxVote)));
                 }
             } else if (r instanceof Msg2a p) {
                 if (skip2aCheck || maxBal == null || p.b() >= maxBal) {

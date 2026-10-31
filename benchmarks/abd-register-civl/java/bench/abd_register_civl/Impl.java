@@ -98,12 +98,12 @@ public final class Impl implements MpProgram {
         for (int k = 0; k < requests; k++) {
             Abd.ToReplica msg = Channel.recv(m, Abd.ToReplica.class);
             if (msg instanceof Abd.Query q) {
-                Channel.send(m, proxies[q.p()], new Abd.QueryReply(t, pid, val));
+                Channel.send(m, proxies[q.p()], new Abd.QueryReply(new Abd.Ts(t, pid), val));
             } else {
                 Abd.Update u = (Abd.Update) msg;
-                if (Abd.lt(t, pid, u.t(), u.pid())) {
-                    t = u.t();
-                    pid = u.pid();
+                if (Abd.lt(t, pid, u.ts().t(), u.ts().pid())) {
+                    t = u.ts().t();
+                    pid = u.ts().pid();
                     val = u.v();
                 }
                 Channel.send(m, proxies[u.p()], new Abd.UpdateAck());
@@ -122,9 +122,9 @@ public final class Impl implements MpProgram {
         int bv = 0;
         for (int k = 0; k < maj; k++) {
             Abd.QueryReply q = Channel.recv(m, Abd.QueryReply.class);
-            if (Abd.lt(bt, bp, q.t(), q.pid())) {
-                bt = q.t();
-                bp = q.pid();
+            if (Abd.lt(bt, bp, q.ts().t(), q.ts().pid())) {
+                bt = q.ts().t();
+                bp = q.ts().pid();
                 bv = q.v();
             }
         }
@@ -141,7 +141,7 @@ public final class Impl implements MpProgram {
 
     private void updatePhase(int me, Tid[] reps, int t, int pid, int v) {
         for (Tid r : reps) {
-            Channel.send(m, r, new Abd.Update(me, t, pid, v));
+            Channel.send(m, r, new Abd.Update(me, new Abd.Ts(t, pid), v));
         }
         for (int k = 0; k < maj; k++) {
             Channel.recv(m, Abd.UpdateAck.class);
