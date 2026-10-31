@@ -45,13 +45,18 @@ clients (`q` per client `i` with `i mod b = d`), forwards each to server `(0..m)
 `a4_spec(.., A4Spec::A4b)` of `a4-balancer` with one change: the servers end on `Stop` instead of
 looping forever, so every graph is complete.
 
-There is no explicit capacity oracle (LB-VARIANTS' A4c). Choice made here: since the specification's
-servers answer at once, a queue never holds a request at a dispatch, so "never forward to a full
-server" constrains nothing visible, and an A4c whose dispatcher reads the true queue lengths would
-only add order (spec order must be contained in the implementation's, §4), never a visible value.
-The one visible thing capacity changes is `Reject`, and the relay never produces one. So the same
-relay serves L1 and L2 (`b = 1`) and L2-stale (`b = 2`: "A4c with `b` dispatchers sharing the
-atomic view").
+The specification used here is the **relay abstraction** A4b, not LB-VARIANTS' capacity oracle A4c,
+and the two are not claimed equivalent. A4b covers L2's waiting path: polls and re-polls create no
+client events, every eventual `Reply` carries a matching value, and the relay may choose the same
+destinations with no additional required visible order; conversely `Reject` has no specification
+behaviour at all, which is what makes the stale variant's violation visible. What this check does
+*not* do is verify the capacity discipline itself: an implementation that silently exceeded a
+server's capacity but eventually replied would still refine A4b. Capacity safety (a server never
+holds more than `c` requests) is a separate implementation invariant, checked by the fault-check
+assertions, not by this conformance check. An order-sensitive argument against a defined A4c
+oracle (a dispatcher reading true queue lengths adds causal order that a client can observe through
+this refinement relation) would be needed to claim more; it is not made here. The same relay serves
+L1 and L2 (`b = 1`) and L2-stale (`b = 2`, two dispatchers sharing the servers).
 
 ## 3. The implementation program
 
@@ -162,9 +167,9 @@ summaries); `l2-stale w` → `verdict: violation, uncovered: 2`, the two `Reject
 
 ## 6. Files
 
-- `source/`: none. No source program exists: the benchmark comes from the designers' note
-  `plan/traceForge/LB-VARIANTS.md` and from `daavar/benchmarks/a4-balancer/rust` (its `a4_spec`
-  `A4b` is the specification, its client, request and reply shape the visible interface).
+- `source/`: snapshots of the two origins with `PROVENANCE.md`: the designers' note
+  `LB-VARIANTS.md` and `a4-balancer`'s `main.rs` (its `a4_spec` `A4b` is the specification; its
+  client, request and reply shape the visible interface), with the adaptations listed there.
 - `rust/`: crate `bench_balancer_load_aware` on TraceForge's shared main; ARGS
   `<l1|l2|l2-stale> <k> <q> <m> [<c>]` (the same ARGS build both sides; the spec ignores `c`).
 - `java/`: `bench.balancer_load_aware.Balancer` (`MpProgram`), args
