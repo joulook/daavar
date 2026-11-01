@@ -28,8 +28,9 @@ for f in stdout.log stderr.log; do
   if [ "$sz" -gt $((2*1024*1048576)) ] || [ "$csz" -gt $((BULK_MB*1048576)) ]; then
     rm -f "$dest/$f.zst"
     { head -n 2000 "$src"; echo "... [$sz bytes; full log kept on $(hostname):$src] ..."; tail -n 2000 "$src"; } > "$dest/$f.headtail"
-    grep -a -m1 "EVALROW" "$src" > "$dest/evalrow.txt" 2>/dev/null || true
-    grep -a -A40 -- "--- measurements" "$src" | head -60 > "$dest/measurements.txt" 2>/dev/null || true
+    # the record line and the measurement block are printed at the end: scan only the last 64 MB
+    tail -c 67108864 "$src" | grep -a -m1 "EVALROW" > "$dest/evalrow.txt" 2>/dev/null || true
+    tail -c 67108864 "$src" | grep -a -A40 -- "--- measurements" | head -60 > "$dest/measurements.txt" 2>/dev/null || true
     printf '%s\t%s\t%s\n' "$f" "$sz" "$(hostname):$src" >> "$dest/bulk.txt"
   fi
 done
