@@ -1,0 +1,138 @@
+C3E.a1-commit.spec_correct_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo -- correct 2 1
+C3E.a1-commit.spec_correct_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.spec_correct_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo -- correct 2 2
+C3E.a1-commit.spec_correct_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.spec_correct_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo -- correct 3 1
+C3E.a1-commit.impl_correct_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- correct 2 1
+C3E.a1-commit.impl_correct_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.impl_correct_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- correct 2 2
+C3E.a1-commit.impl_correct_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.impl_correct_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- correct 3 1
+C3E.a1-commit.impl_eager_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- eager 2 1
+C3E.a1-commit.impl_eager_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.impl_eager_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- eager 2 2
+C3E.a1-commit.impl_eager_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.impl_eager_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- eager 3 1
+C3E.a1-commit.impl_early-abort_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- early-abort 2 1
+C3E.a1-commit.impl_early-abort_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.impl_early-abort_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- early-abort 2 2
+C3E.a1-commit.impl_early-abort_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.impl_early-abort_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- early-abort 3 1
+C3E.a1-commit.impl_silent_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- silent 2 1
+C3E.a1-commit.impl_silent_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.impl_silent_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- silent 2 2
+C3E.a1-commit.impl_silent_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.impl_silent_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- silent 3 1
+C3E.a1-commit.impl_control-reverse_2_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- control-reverse 2 1
+C3E.a1-commit.impl_control-reverse_2_2_fifo.t1 250 3600 needok:C3E.a1-commit.impl_control-reverse_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- control-reverse 2 2
+C3E.a1-commit.impl_control-reverse_3_1_fifo.t1 250 3600 needok:C3E.a1-commit.impl_control-reverse_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo -- control-reverse 3 1
+C3E.a4-balancer.spec_hash_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4a 1 1 1
+C3E.a4-balancer.spec_hash_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.spec_hash_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4a 2 1 2
+C3E.a4-balancer.spec_hash_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.spec_hash_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4a 2 2 2
+C3E.a4-balancer.spec_hash_a4b_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4b 1 1 1
+C3E.a4-balancer.spec_hash_a4b_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.spec_hash_a4b_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4b 2 1 2
+C3E.a4-balancer.spec_hash_a4b_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.spec_hash_a4b_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- hash a4b 2 2 2
+C3E.a4-balancer.impl_hash_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash a4a 1 1 1
+C3E.a4-balancer.impl_hash_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_hash_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash a4a 2 1 2
+C3E.a4-balancer.impl_hash_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_hash_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash a4a 2 2 2
+C3E.a4-balancer.impl_rr_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- rr a4a 1 1 1
+C3E.a4-balancer.impl_rr_a4a_1_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_rr_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- rr a4a 1 2 2
+C3E.a4-balancer.impl_rr_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_rr_a4a_1_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- rr a4a 2 1 2
+C3E.a4-balancer.impl_rr_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_rr_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- rr a4a 2 2 2
+C3E.a4-balancer.impl_hash-drop_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash-drop a4a 1 1 1
+C3E.a4-balancer.impl_hash-drop_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_hash-drop_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash-drop a4a 2 1 2
+C3E.a4-balancer.impl_hash-drop_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_hash-drop_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- hash-drop a4a 2 2 2
+C3E.a4-balancer.impl_drop_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- drop a4a 1 1 1
+C3E.a4-balancer.impl_drop_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_drop_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- drop a4a 2 1 2
+C3E.a4-balancer.impl_drop_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_drop_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- drop a4a 2 2 2
+C3E.a4-balancer.impl_pair-swap-hash_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-hash a4a 1 1 1
+C3E.a4-balancer.impl_pair-swap-hash_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_pair-swap-hash_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-hash a4a 2 1 2
+C3E.a4-balancer.impl_pair-swap-hash_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_pair-swap-hash_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-hash a4a 2 2 2
+C3E.a4-balancer.impl_pair-swap-rr_a4a_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-rr a4a 1 1 1
+C3E.a4-balancer.impl_pair-swap-rr_a4a_2_1_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_pair-swap-rr_a4a_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-rr a4a 2 1 2
+C3E.a4-balancer.impl_pair-swap-rr_a4a_2_2_2_fifo.t1 250 3600 needok:C3E.a4-balancer.impl_pair-swap-rr_a4a_2_1_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo -- pair-swap-rr a4a 2 2 2
+C3E.a4-balancer.spec_rr_a4a_1_2_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo -- rr a4a 1 2 2
+C3E.balancer-load-aware.spec_l1_2_2_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l1 2 2 2
+C3E.balancer-load-aware.spec_l1_3_3_3_fifo.t1 250 3600 needok:C3E.balancer-load-aware.spec_l1_2_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l1 3 3 3
+C3E.balancer-load-aware.impl_l1_2_2_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l1 2 2 2
+C3E.balancer-load-aware.impl_l1_3_3_3_fifo.t1 250 3600 needok:C3E.balancer-load-aware.impl_l1_2_2_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l1 3 3 3
+C3E.balancer-load-aware.spec_l2_2_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l2 2 1 1 1
+C3E.balancer-load-aware.spec_l2_2_2_2_1_fifo.t1 250 3600 needok:C3E.balancer-load-aware.spec_l2_2_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l2 2 2 2 1
+C3E.balancer-load-aware.impl_l2_2_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l2 2 1 1 1
+C3E.balancer-load-aware.impl_l2_2_2_2_1_fifo.t1 250 3600 needok:C3E.balancer-load-aware.impl_l2_2_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l2 2 2 2 1
+C3E.balancer-load-aware.impl_l2_3_3_3_2_fifo.t1 250 3600 needok:C3E.balancer-load-aware.impl_l2_2_2_2_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l2 3 3 3 2
+C3E.balancer-load-aware.spec_l2-stale_2_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l2-stale 2 1 1 1
+C3E.balancer-load-aware.spec_l2-stale_2_2_2_1_fifo.t1 250 3600 needok:C3E.balancer-load-aware.spec_l2-stale_2_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo -- l2-stale 2 2 2 1
+C3E.balancer-load-aware.impl_l2-stale_2_1_1_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l2-stale 2 1 1 1
+C3E.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo.t1 250 3600 needok:C3E.balancer-load-aware.impl_l2-stale_2_1_1_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo -- l2-stale 2 2 2 1
+C3E.election.spec_leader_conf_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo -- leader conf 2
+C3E.election.spec_leader_conf_3_fifo.t1 250 3600 needok:C3E.election.spec_leader_conf_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo -- leader conf 3
+C3E.election.impl_leader_conf_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader conf 2
+C3E.election.impl_leader_conf_3_fifo.t1 250 3600 needok:C3E.election.impl_leader_conf_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader conf 3
+C3E.election.impl_leader_split_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader split 2
+C3E.election.impl_leader_split_3_fifo.t1 250 3600 needok:C3E.election.impl_leader_split_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader split 3
+C3E.election.impl_leader_silent_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader silent 2
+C3E.election.impl_leader_silent_3_fifo.t1 250 3600 needok:C3E.election.impl_leader_silent_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- leader silent 3
+C3E.election.impl_ring_conf_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring conf 2
+C3E.election.impl_ring_conf_3_fifo.t1 250 3600 needok:C3E.election.impl_ring_conf_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring conf 3
+C3E.election.impl_ring_conf_4_fifo.t1 250 3600 needok:C3E.election.impl_ring_conf_3_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring conf 4
+C3E.election.impl_ring_split_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring split 2
+C3E.election.impl_ring_split_3_fifo.t1 250 3600 needok:C3E.election.impl_ring_split_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring split 3
+C3E.election.impl_ring_split_4_fifo.t1 250 3600 needok:C3E.election.impl_ring_split_3_fifo.t1 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo -- ring split 4
+C3E.election.spec_ring_conf_4_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo -- ring conf 4
+C3E.n-buyer-kragl.spec_2_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag -- 2
+C3E.n-buyer-kragl.spec_3_bag.t1 250 3600 needok:C3E.n-buyer-kragl.spec_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag -- 3
+C3E.n-buyer-kragl.spec_4_bag.t1 250 3600 needok:C3E.n-buyer-kragl.spec_3_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag -- 4
+C3E.n-buyer-kragl.spec_5_bag.t1 250 3600 needok:C3E.n-buyer-kragl.spec_4_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag -- 5
+C3E.n-buyer-kragl.impl_2_correct_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 2 correct
+C3E.n-buyer-kragl.impl_3_correct_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_2_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 3 correct
+C3E.n-buyer-kragl.impl_4_correct_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_3_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 4 correct
+C3E.n-buyer-kragl.impl_5_correct_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_4_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 5 correct
+C3E.n-buyer-kragl.impl_2_no-subtract_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 2 no-subtract
+C3E.n-buyer-kragl.impl_3_no-subtract_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_2_no-subtract_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 3 no-subtract
+C3E.n-buyer-kragl.impl_4_no-subtract_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_3_no-subtract_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 4 no-subtract
+C3E.n-buyer-kragl.impl_5_no-subtract_bag.t1 250 3600 needok:C3E.n-buyer-kragl.impl_4_no-subtract_bag.t1 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag -- 5 no-subtract
+C3E.producer-consumer-civl.spec_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo -- 2
+C3E.producer-consumer-civl.spec_3_fifo.t1 250 3600 needok:C3E.producer-consumer-civl.spec_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo -- 3
+C3E.producer-consumer-civl.spec_4_fifo.t1 250 3600 needok:C3E.producer-consumer-civl.spec_3_fifo.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo -- 4
+C3E.producer-consumer-civl.spec_2_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag -- 2
+C3E.producer-consumer-civl.spec_3_bag.t1 250 3600 needok:C3E.producer-consumer-civl.spec_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag -- 3
+C3E.producer-consumer-civl.spec_4_bag.t1 250 3600 needok:C3E.producer-consumer-civl.spec_3_bag.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag -- 4
+C3E.producer-consumer-civl.impl_2_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo -- 2
+C3E.producer-consumer-civl.impl_3_fifo.t1 250 3600 needok:C3E.producer-consumer-civl.impl_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo -- 3
+C3E.producer-consumer-civl.impl_4_fifo.t1 250 3600 needok:C3E.producer-consumer-civl.impl_3_fifo.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo -- 4
+C3E.producer-consumer-civl.impl_2_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag -- 2
+C3E.producer-consumer-civl.impl_3_bag.t1 250 3600 needok:C3E.producer-consumer-civl.impl_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag -- 3
+C3E.producer-consumer-civl.impl_4_bag.t1 250 3600 needok:C3E.producer-consumer-civl.impl_3_bag.t1 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag -- 4
+C3E.replicated-log-esop20.spec_1_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag -- 1
+C3E.replicated-log-esop20.spec_2_bag.t1 250 3600 needok:C3E.replicated-log-esop20.spec_1_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag -- 2
+C3E.replicated-log-esop20.spec_3_bag.t1 250 3600 needok:C3E.replicated-log-esop20.spec_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag -- 3
+C3E.replicated-log-esop20.impl_1_correct_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 1 correct
+C3E.replicated-log-esop20.impl_2_correct_bag.t1 250 3600 needok:C3E.replicated-log-esop20.impl_1_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 2 correct
+C3E.replicated-log-esop20.impl_3_correct_bag.t1 250 3600 needok:C3E.replicated-log-esop20.impl_2_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 3 correct
+C3E.replicated-log-esop20.impl_1_early-reply_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 1 early-reply
+C3E.replicated-log-esop20.impl_2_early-reply_bag.t1 250 3600 needok:C3E.replicated-log-esop20.impl_1_early-reply_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 2 early-reply
+C3E.replicated-log-esop20.impl_3_early-reply_bag.t1 250 3600 needok:C3E.replicated-log-esop20.impl_2_early-reply_bag.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag -- 3 early-reply
+C3E.replicated-log-esop20.spec_1_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo -- 1
+C3E.replicated-log-esop20.spec_2_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.spec_1_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo -- 2
+C3E.replicated-log-esop20.spec_3_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.spec_2_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo -- 3
+C3E.replicated-log-esop20.impl_1_correct_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 1 correct
+C3E.replicated-log-esop20.impl_2_correct_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.impl_1_correct_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 2 correct
+C3E.replicated-log-esop20.impl_3_correct_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.impl_2_correct_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 3 correct
+C3E.replicated-log-esop20.impl_1_early-reply_fifo.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 1 early-reply
+C3E.replicated-log-esop20.impl_2_early-reply_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.impl_1_early-reply_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 2 early-reply
+C3E.replicated-log-esop20.impl_3_early-reply_fifo.t1 250 3600 needok:C3E.replicated-log-esop20.impl_2_early-reply_fifo.t1 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo -- 3 early-reply
+C3E.ring-election-igloo.spec_2_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag -- 2
+C3E.ring-election-igloo.spec_3_bag.t1 250 3600 needok:C3E.ring-election-igloo.spec_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag -- 3
+C3E.ring-election-igloo.spec_4_bag.t1 250 3600 needok:C3E.ring-election-igloo.spec_3_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag -- 4
+C3E.ring-election-igloo.impl_2_correct_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 2 correct
+C3E.ring-election-igloo.impl_3_correct_bag.t1 250 3600 needok:C3E.ring-election-igloo.impl_2_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 3 correct
+C3E.ring-election-igloo.impl_4_correct_bag.t1 250 3600 needok:C3E.ring-election-igloo.impl_3_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 4 correct
+C3E.ring-election-igloo.impl_2_no-compare_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 2 no-compare
+C3E.ring-election-igloo.impl_3_no-compare_bag.t1 250 3600 needok:C3E.ring-election-igloo.impl_2_no-compare_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 3 no-compare
+C3E.ring-election-igloo.impl_4_no-compare_bag.t1 250 3600 needok:C3E.ring-election-igloo.impl_3_no-compare_bag.t1 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag -- 4 no-compare
+C3E.two-pc-abstain-kragl.spec_1_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag -- 1
+C3E.two-pc-abstain-kragl.spec_2_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.spec_1_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag -- 2
+C3E.two-pc-abstain-kragl.spec_3_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.spec_2_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag -- 3
+C3E.two-pc-abstain-kragl.spec_4_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.spec_3_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag -- 4
+C3E.two-pc-abstain-kragl.spec_5_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.spec_4_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag -- 5
+C3E.two-pc-abstain-kragl.impl_1_correct_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 1 correct
+C3E.two-pc-abstain-kragl.impl_2_correct_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_1_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 2 correct
+C3E.two-pc-abstain-kragl.impl_3_correct_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_2_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 3 correct
+C3E.two-pc-abstain-kragl.impl_4_correct_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_3_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 4 correct
+C3E.two-pc-abstain-kragl.impl_5_correct_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_4_correct_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 5 correct
+C3E.two-pc-abstain-kragl.impl_1_off-by-one_bag.t1 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 1 off-by-one
+C3E.two-pc-abstain-kragl.impl_2_off-by-one_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_1_off-by-one_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 2 off-by-one
+C3E.two-pc-abstain-kragl.impl_3_off-by-one_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_2_off-by-one_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 3 off-by-one
+C3E.two-pc-abstain-kragl.impl_4_off-by-one_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_3_off-by-one_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 4 off-by-one
+C3E.two-pc-abstain-kragl.impl_5_off-by-one_bag.t1 250 3600 needok:C3E.two-pc-abstain-kragl.impl_4_off-by-one_bag.t1 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag -- 5 off-by-one
