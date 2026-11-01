@@ -77,7 +77,6 @@ two-pc-trillium	bag	ignore-abort-vote	-	<N>; N>=2	all	violation
 zab-broadcast-remix	fifo	correct	-	<Q>; Q>=1	all	conforms	
 zab-broadcast-remix	fifo	issue1-propose-to-ackld	-	<Q>; Q>=1	all	violation	
 raft-rs	fifo	correct	-	<variant> <e> <t> [<cand>]; e>=1, t>=1	all	conforms	raft-rs ad13f3d unmodified; spike 2026-10-31 certified e=1 t=1 cand=1
-raft-rs	fifo	reorder	-	<variant> <e> <t> [<cand>]; e>=1, t>=1	all	violation	hand-derived: a committed batch of two entries delivered in reverse gives two clients different orders; a run where no two entries commit in one batch conforms
 a2-store	fifo	pb	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	T1 attrs (lead), README
 a2-store	fifo	pb-br	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	T1 attrs (lead), README
 a2-store	fifo	control-early-ack-fwd	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	control

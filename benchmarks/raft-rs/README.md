@@ -8,10 +8,9 @@ have been seen. `t` bounds the election timeouts each candidate node may fire (a
 time out. Model: `fifo` (per-pair order; raft-rs assumes an ordered transport per peer).
 
 **Expected verdict:** `correct`: **CONFORMS** (certified by the spike of 2026-10-31 at
-`e=1 t=1 cand=1`, in-process stateful, 7m48s, sequential; `source/spike-runs.log`). `reorder`:
-**DOES NOT REFINE** when the two clients observe incompatible delivery orders of the same log
-(hand-derived, not measured; §2 gives the witness and the schedule that produces it; a run whose
-schedules never apply a reversed batch of two values behaves as `correct`).
+`e=1 t=1 cand=1`, in-process stateful, sequential; `source/spike-runs.log`). `reorder`: **no hand-derived
+verdict** (the run decides; §2 gives the analysis: under per-pair FIFO delivery the two clients
+appear to see the same application batches, so the fault may be unobservable in this harness).
 
 **No Java side.** This directory has no Java twin; the Java side of the case study is
 `benchmarks/microraft` (a real Java Raft core under JMC's Must API, in preparation), with the same
@@ -39,17 +38,23 @@ same program on both sides.
 
 - `correct`: raft-rs as is.
 - `reorder`: a fault of this harness's delivery layer, not of raft-rs: `apply` hands a batch of
-  committed entries to the client in reverse log order. It is visible only through incompatible
-  prefixes at two clients, because each client's word ends when it has seen its own values and
-  empty leader entries are not delivered. Smallest arguments: `e=1` (values `1` from `c0`, `2`
-  from `c1`), `t>=1`, `cand>=1`. Witness: `c0: R(Committed(2)) R(Committed(1))` and
-  `c1: R(Committed(1)) R(Committed(2))`; the specification delivers one log order to every client,
-  so no specification graph has both words. Schedule: the leader appends `1` then `2`; node `n0`
-  (client `c0`) receives both entries in one `AppendEntries`, learns the commit index covering both
-  in one `Ready`, and `apply` reverses that batch; node `n1` (client `c1`) receives the two entries
-  in two messages, or learns the two commit indices in two `Ready`s, and applies them one at a
-  time in log order. Whether the enumeration contains this schedule at a given size is what the
-  run decides; the expectation is hand-derived. Component: **signature word order**.
+  committed entries to the client in reverse log order. A violation needs two clients to observe
+  incompatible orders of the same values, e.g. `c0: R(Committed(3)) R(Committed(1))` against
+  `c1: R(Committed(1)) R(Committed(3))` at `e=2` (`c0` proposes 1 and 3, `c1` proposes 2 and 4; at
+  `e=1` each client stops after its single own value, so no client can observe two values in an
+  order the specification lacks). A batch forms where a node's commit index jumps over two data
+  entries in one `Ready`: at the leader, when one acknowledgement covers two entries (a follower in
+  raft-rs's probe state receives the entries it missed in one `AppendEntries` and acknowledges them
+  together); at a follower, when one message raises its commit index over two entries it holds.
+  Whether the two clients can see *different* batchings is not established: the leader broadcasts
+  its commit index after every commit step, per-pair FIFO delivery hands a follower those
+  broadcasts in order and after the entries they cover, so the follower's commit-index jumps repeat
+  the leader's and both clients see the same batches, reversed alike, which some single
+  specification order matches. This analysis is hand-derived and not a proof; the campaign rows
+  (`reorder` at `1 1 1` and, on the 48 h tier, `2 1 1`) decide, and the expectation file carries no
+  verdict for `reorder`. raft-rs requires an ordered transport, so the variant is not run under
+  `bag`, where out-of-order commit broadcasts would separate the batchings. Component, if observed:
+  **signature word order**.
 
 ## 3. Counts (plain Must, `count`)
 
@@ -57,34 +62,36 @@ Historical, from the spike of 2026-10-31 (`source/spike-runs.log`, crate without
 argument, one thread, 600 s cap, `--model fifo`; every execution ends blocked because the nodes
 loop forever, so "complete" is 0 and the count is the blocked graphs):
 
-| command (spike crate) | graphs (complete / blocked) | wall |
-|---|---|---|
-| `count spec --model fifo -- 1 0` | 0 / 24 | 0.004 s |
-| `count spec --model fifo -- 2 0` | 0 / 480 | 0.03 s |
-| `count spec --model fifo -- 3 0` | 0 / 8960 | 0.54 s |
-| `count impl --model fifo -- 1 1 1` | 0 / 1,323,550 | 4m10s |
-| `count impl --model fifo -- 1 1 2` | not finished in 600 s | — |
-| `count impl --model fifo -- 1 1 3` | not finished in 600 s | — |
-| `count impl --model fifo -- 2 1 1` | not finished in 600 s | — |
-| `conf --model fifo -- 1 1 1` (stateful, in-process) | conforms, exhausted | 7m48s |
-| `export spec` + `export impl` at `1 1 1`, `conf-join` | conforms, 0 uncovered | 5m35s (impl export) |
-| `conf --model fifo -- 1 1 2` | not finished in 600 s | — |
+| command (spike crate) | graphs (complete / blocked) |
+|---|---|
+| `count spec --model fifo -- 1 0` | 0 / 24 |
+| `count spec --model fifo -- 2 0` | 0 / 480 |
+| `count spec --model fifo -- 3 0` | 0 / 8960 |
+| `count impl --model fifo -- 1 1 1` | 0 / 1,323,550 |
+| `count impl --model fifo -- 1 1 2` | not finished in 600 s |
+| `count impl --model fifo -- 1 1 3` | not finished in 600 s |
+| `count impl --model fifo -- 2 1 1` | not finished in 600 s |
+| `conf --model fifo -- 1 1 1` (stateful, in-process) | conforms, exhausted |
+| `export spec` + `export impl` at `1 1 1`, `conf-join` | conforms, 0 uncovered |
+| `conf --model fifo -- 1 1 2` | not finished in 600 s |
+
+(Wall times of these runs are in `source/spike-runs.log`: the in-process check 7m48s, the
+implementation export 5m35s, the implementation count 4m10s, one thread.)
 
 Measurements of this crate (with the `<variant>` argument and the full-`u64` value encoding), from
 `out/runs.log` (workstation, one thread, 2026-11-01/02):
 
-| command (this crate) | graphs (complete / blocked) | wall |
-|---|---|---|
-| `count spec --model fifo -- correct 1 1 1` | 0 / 24 | 0.004 s |
-| `count spec --model fifo -- correct 2 1 1` | 0 / 480 | 0.04 s |
-| `count impl --model fifo -- correct 1 1 1` | 0 / 1,323,550 | 5m57s |
-| `count impl --model fifo -- reorder 1 1 1` | 0 / 1,323,550 | 5m25s |
+| command (this crate) | graphs (complete / blocked) |
+|---|---|
+| `count spec --model fifo -- correct 1 1 1` | 0 / 24 |
+| `count spec --model fifo -- correct 2 1 1` | 0 / 480 |
+| `count impl --model fifo -- correct 1 1 1` | 0 / 1,323,550 |
+| `count impl --model fifo -- reorder 1 1 1` | 0 / 1,323,550 |
 
-The spec counts equal the spike's (the value encoding does not change the graphs), the `correct`
-implementation count equals the spike's, and `reorder` has the same number of graphs as `correct`
-at this size (the fault changes delivered values, not the graph count). Conformance of this crate
-(`conf`, the exports and the join, `reorder`'s verdict) is measured by the campaign rows (§4), not
-run yet.
+Observed: the spec counts and the `correct` implementation count equal the spike's, and `reorder`
+and `correct` have the same count at `1 1 1` (an observation at this size, not derived). Wall
+times are in `out/runs.log`. Conformance of this crate (`conf`, the exports and the join,
+`reorder`'s verdict) is measured by the campaign rows (§4), not run yet.
 
 ## 4. Sizes
 
