@@ -1,0 +1,12 @@
+[package]
+name = "tf_raft_rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+# tikv/raft-rs, unmodified, at the commit the spike used (2026-05-13)
+raft = { git = "https://github.com/tikv/raft-rs", rev = "ad13f3d90780f53aea2488c6a4b76c0d334bf136", default-features = false, features = ["protobuf-codec"] }
+slog = "2.2"
+
+[workspace]

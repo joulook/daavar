@@ -224,8 +224,8 @@ for pre, fname, title in CAMP:
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2")
-    hdr = "program & variant & size & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
-    spec = "@{}llllrrrrl" + ("" if offline else "r") + "r@{}"
+    hdr = "program(size) & variant & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
+    spec = "@{}lllrrrrl" + ("" if offline else "r") + "r@{}"
     L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached; skipped = the smaller size did not finish" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + f"; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
          hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
     for r in rs:
@@ -243,7 +243,7 @@ for pre, fname, title in CAMP:
         sg = tot("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"); ig = tot("impl_complete", "impl_blocked", "impl_graphs_total")
         prog, var = paper_name(a)
         miss = "" if offline else f" & {(r.get('first_miss_wall_ms') or '') if verdict.startswith('violation') else ''}"
-        L.append(f"\\textsf{{{esc(prog)}}} & {esc(var)} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict}{miss} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
+        L.append(f"\\textsf{{{esc(prog)}}}$({esc(a.get('size',''))})$ & {esc(var)} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict}{miss} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
     L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
