@@ -135,6 +135,8 @@ if "rust-run.sh" in rec["command"] and "--- measurements" in out:
     if " conf " in rec["command"] and len(blocks) >= 2:
         rec["spec_complete"], rec["spec_blocked"] = blocks[0][1], blocks[0][2]; rec["impl_complete"], rec["impl_blocked"] = blocks[1][1], blocks[1][2]
     elif blocks: rec["impl_complete"], rec["impl_blocked"] = blocks[-1][1], blocks[-1][2]
+    mm = re.search(r"^exported: (\d+) lines from (\d+) graphs", out, re.M)   # the exporter's own count
+    if mm: rec["impl_summaries"] = mm.group(1); rec.setdefault("impl_complete", mm.group(2)); rec["impl_complete"] = rec.get("impl_complete") or mm.group(2)
     if re.search(r"^conformance: silence", out, re.M): rec["verdict"] = "conforms"
     elif re.search(r"^conformance: \d+ candidate violation", out, re.M) or re.search(r"^\d+ uncovered implementation execution", out, re.M): rec["verdict"] = "violation"
     mm = re.search(r"^(\d+) uncovered implementation execution\(s\), (\d+) distinct summar", out, re.M)
