@@ -114,8 +114,14 @@ variant, i.e. type tests; the Java side uses `Channel.recv(M, OpMsg.class)` etc.
 - `source/`: `ml_sources-one_server/` (the OCaml server, client proxy, network, serialization,
   dune), `coq-spec/` (the SC memory specification `.v` files), `coq-clients/` (`example1_code.v`,
   `example2_code.v`), copied verbatim, with provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_rpc_at_most_once_aneris`. CLI: `<spec|impl> <K> [fifo|bag|causal]
-  [dedup|no-dedup]`, default model `bag`, default variant `dedup`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_rpc_at_most_once_aneris`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <K> [dedup|no-dedup]`; default K 2, default variant
+  `dedup`. `--model` left out means `bag`, this benchmark's model, which the crate declares. `conf`
+  is not this crate's conformance check: visible values carry a `ThreadId`, the two sides spawn in
+  different orders, and `conf` compares typed values, so it reports every implementation graph; use
+  `online` or `conf-join`, which compare role names. The `out/fault-check` crate is a separate copy,
+  not on the shared main: it keeps the old positional CLI `<spec|impl> <size> [fifo|bag|causal]
+  [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.rpc_at_most_once_aneris`, class `AtMostOnceRpc` (args
   `<spec|impl>,<K>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `server, p0, p1, c0, c1`. Visible roles
@@ -152,8 +158,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `K ∈ {1, 2, 3, 4}`, `v ∈ {dedup, no-dedup}`:
 
 ```
-$B/_tools/run-rust.sh $B/rpc-at-most-once-aneris spec <K> bag
-$B/_tools/run-rust.sh $B/rpc-at-most-once-aneris impl <K> bag <v>
+$B/_tools/run-rust.sh $B/rpc-at-most-once-aneris count spec --model bag -- <K>
+$B/_tools/run-rust.sh $B/rpc-at-most-once-aneris count impl --model bag -- <K> <v>
 $B/_tools/run-java.sh $B/rpc-at-most-once-aneris 'bench.rpc_at_most_once_aneris.AtMostOnceRpc:spec,<K>,bag' must 100000 600
 $B/_tools/run-java.sh $B/rpc-at-most-once-aneris 'bench.rpc_at_most_once_aneris.AtMostOnceRpc:impl,<K>,bag,<v>' must 100000 600
 ```

@@ -114,8 +114,11 @@ variant, so the filter is a type test, and the Java side uses `Channel.recv(M, R
 
 - `source/`: the seven `.v` files of `theories/Examples/Calculator/`, copied verbatim, with
   provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_calculator_disel`. CLI: `<spec|impl> <K> [fifo|bag|causal] [variant]`,
-  default model `bag`, default variant `batched`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_calculator_disel`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <K> [variant]`; default K 1, default variant `batched`. `--model` left out means
+  `bag`, this benchmark's model, which the crate declares. The `out/fault-check` crate is a separate
+  copy, not on the shared main: it keeps the old positional CLI `<spec|impl> <size>
+  [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.calculator_disel`, class `Calculator` (args
   `<spec|impl>,<K>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `batcher | memo | memo, delegator`, then
@@ -166,8 +169,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `K ∈ {1, 2, 3, 4}`, `v ∈ {batched, batched-swap, memo, memo-ignore-args, delegating, delegating-prev}`:
 
 ```
-$B/_tools/run-rust.sh $B/calculator-disel spec <K> bag
-$B/_tools/run-rust.sh $B/calculator-disel impl <K> bag <v>
+$B/_tools/run-rust.sh $B/calculator-disel count spec --model bag -- <K>
+$B/_tools/run-rust.sh $B/calculator-disel count impl --model bag -- <K> <v>
 $B/_tools/run-java.sh $B/calculator-disel 'bench.calculator_disel.Calculator:spec,<K>,bag' must 100000 600
 $B/_tools/run-java.sh $B/calculator-disel 'bench.calculator_disel.Calculator:impl,<K>,bag,<v>' must 100000 600
 ```

@@ -2,11 +2,13 @@
 //! request ids, retransmission and duplicate suppression (`ctable`), against a sequentially
 //! consistent memory server.
 //!
-//! Usage: `<spec|impl> <K> [fifo|bag|causal] [variant]`; `K` = operations per client (2
+//! Usage: `<bin> count|export|conf|online … --model M -- <K> [variant]`; `K` = operations per
+//! client (2
 //! clients; client `i`'s operation `j` is `Wr(x, i+1)` for even `j`, `Rd(x)` for odd `j`),
-//! default model `bag` (asyn), default variant `dedup`. Variants (impl side): `dedup`,
+//! model `--model bag` (asyn; the default this program declares), default variant `dedup`.
+//! Variants (impl side): `dedup`,
 //! `no-dedup`. One duplicate in all: proxy `p0` may resend one request once (`if nondet()`).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
 
@@ -182,20 +184,23 @@ fn imp(k: usize, variant: &str) {
     server.join().unwrap();
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("bag") {
-        "fifo" => ConsType::FIFO,
-        "causal" => ConsType::Causal,
-        _ => ConsType::Bag,
+fn parse(a: &[String]) -> (usize, String) {
+    let k: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let variant = a.get(1).cloned().unwrap_or_else(|| "dedup".to_string());
+    (k, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["c0".to_string(), "c1".to_string()],
+        spec: &|a| {
+            let (k, _) = parse(a);
+            std::sync::Arc::new(move || spec(k))
+        },
+        imp: &|a| {
+            let (k, variant) = parse(a);
+            std::sync::Arc::new(move || imp(k, &variant))
+        },
     };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "dedup".to_string());
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(n, &variant)),
-        _ => verify(conf, move || spec(n)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

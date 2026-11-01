@@ -17,10 +17,11 @@
 //!   next expected one (`ackId`) is enqueued in `rbuf`, any other is dropped, and every `Data`
 //!   is answered with `Ack { ack: ackId }`.
 //!
-//! Usage: `<spec|impl> <K> [fifo|bag|causal] [variant]`; K messages, default model `bag`
-//! (asyn: UDP reorders), default variant `correct`. Variants (impl side): `correct`, `no-seqno`
+//! Usage: `<bin> count|export|conf|online … --model M -- <K> [variant]`; K messages, model
+//! `--model bag` (asyn: UDP reorders; the default this program declares), default variant
+//! `correct`. Variants (impl side): `correct`, `no-seqno`
 //! (`ep_r` ignores the sequence id: every `Data` is enqueued and counted).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
 use traceforge::channel::{Builder, Receiver, Sender};
 use traceforge::thread;
 use traceforge::*;
@@ -199,25 +200,27 @@ fn impl_ep_r_no_seqno(k: usize, rx: Rx, t: Vec<Tx>) {
     ep_r_with(k, rx, t, false)
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let k: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("bag") {
-        "fifo" => ConsType::FIFO,
-        "causal" => ConsType::Causal,
-        _ => ConsType::Bag,
-    };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "correct".to_string());
-    let ep_r: fn(usize, Rx, Vec<Tx>) = match variant.as_str() {
+fn parse(a: &[String]) -> (usize, fn(usize, Rx, Vec<Tx>)) {
+    let k: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let ep_r: fn(usize, Rx, Vec<Tx>) = match a.get(1).map(String::as_str).unwrap_or("correct") {
         "correct" => impl_ep_r,
         "no-seqno" => impl_ep_r_no_seqno,
         v => panic!("unknown variant {v}"),
     };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || run(k, impl_ep_s, ep_r)),
-        _ => verify(conf, move || run(k, spec_ep_s, spec_ep_r)),
+    (k, ep_r)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["sender".to_string(), "receiver".to_string()],
+        spec: &|a| {
+            let (k, _) = parse(a);
+            std::sync::Arc::new(move || run(k, spec_ep_s, spec_ep_r))
+        },
+        imp: &|a| {
+            let (k, ep_r) = parse(a);
+            std::sync::Arc::new(move || run(k, impl_ep_s, ep_r))
+        },
     };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

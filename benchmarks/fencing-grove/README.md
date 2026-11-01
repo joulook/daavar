@@ -119,8 +119,13 @@ servers that ignore the epoch) gives the same uncovered word through a different
 
 - `source/fencing/`: the whole `gokv/fencing/` directory (Go, `notes.txt`, `test.py`), copied
   verbatim, with provenance in `source/PROVENANCE.md`. The Perennial proof is not on disk.
-- `rust/`: crate `bench_fencing_grove`. CLI: `<spec|impl> <K> [fifo|bag|causal]
-  [fenced|stale-frontend]`, default model `fifo`, default variant `fenced`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_fencing_grove`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <K> [fenced|stale-frontend]`; default K 1, default model `fifo`, default variant
+  `fenced`. `conf` is not this crate's conformance check: visible values carry a `ThreadId`, the two
+  sides spawn in different orders, and `conf` compares typed values, so it reports every
+  implementation graph; use `online` or `conf-join`, which compare role names. The `out/fault-check`
+  crate is a separate copy, not on the shared main: it keeps the old positional CLI `<spec|impl>
+  <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.fencing_grove`, class `Fencing` (args
   `<spec|impl>,<K>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `config, ctr, fe1, fe2, p0, p1, c0, c1`.
@@ -149,8 +154,8 @@ All runs exhausted on both tools. No disagreement. `stale-frontend` has more gra
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `K ∈ {1, 2, 3}` (and `spec` 4), `v ∈ {fenced, stale-frontend}`:
 
 ```
-timeout 600 $B/_tools/run-rust.sh $B/fencing-grove spec <K> fifo
-timeout 600 $B/_tools/run-rust.sh $B/fencing-grove impl <K> fifo <v>
+timeout 600 $B/_tools/run-rust.sh $B/fencing-grove count spec --model fifo -- <K>
+timeout 600 $B/_tools/run-rust.sh $B/fencing-grove count impl --model fifo -- <K> <v>
 $B/_tools/run-java.sh $B/fencing-grove 'bench.fencing_grove.Fencing:spec,<K>,fifo' must 100000 600
 $B/_tools/run-java.sh $B/fencing-grove 'bench.fencing_grove.Fencing:impl,<K>,fifo,<v>' must 100000 600
 ```

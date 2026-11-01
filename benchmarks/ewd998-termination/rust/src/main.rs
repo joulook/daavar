@@ -22,11 +22,12 @@
 //! Every thread has one inbox channel, created by main before any thread is spawned (the
 //! threads address each other circularly; the Java twin mints the thread ids first instead).
 //!
-//! Usage: `<spec|impl> <N> [fifo|bag|causal] [variant]`; `N` nodes (K = 1 payload per node,
-//! R = 2 probes), default model `bag` (asyn; `EWD998Chan` receives from any inbox index),
+//! Usage: `<bin> count|export|conf|online … --model M -- <N> [variant]`; `N` nodes (K = 1 payload
+//! per node, R = 2 probes), model `--model bag` (asyn; `EWD998Chan` receives from any inbox
+//! index; the default this program declares),
 //! default variant `correct`. Variants (impl side): `correct`, `no-black-on-receive` (a detector
 //! does not turn black when it receives a payload: Rule 3 / `RecvMsg`'s `color' = black` dropped).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
 use traceforge::channel::{Builder, Receiver, Sender};
 use traceforge::thread;
 use traceforge::*;
@@ -263,25 +264,27 @@ fn detector(i: usize, n: usize, black_on_receive: bool, rx: Rx, t: Vec<Tx>) {
     }
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(3);
-    let model = match a.get(3).map(String::as_str).unwrap_or("bag") {
-        "fifo" => ConsType::FIFO,
-        "causal" => ConsType::Causal,
-        _ => ConsType::Bag,
-    };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "correct".to_string());
-    let black_on_receive = match variant.as_str() {
+fn parse(a: &[String]) -> (usize, bool) {
+    let n: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(3);
+    let black_on_receive = match a.get(1).map(String::as_str).unwrap_or("correct") {
         "correct" => true,
         "no-black-on-receive" => false,
         v => panic!("unknown variant {v}"),
     };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(n, black_on_receive)),
-        _ => verify(conf, move || spec(n)),
+    (n, black_on_receive)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|a| (0..parse(a).0).map(|i| format!("app{i}")).collect(),
+        spec: &|a| {
+            let (n, _) = parse(a);
+            std::sync::Arc::new(move || spec(n))
+        },
+        imp: &|a| {
+            let (n, black_on_receive) = parse(a);
+            std::sync::Arc::new(move || imp(n, black_on_receive))
+        },
     };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

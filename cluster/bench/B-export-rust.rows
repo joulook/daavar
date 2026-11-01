@@ -1,0 +1,344 @@
+BR.export.a1-commit.spec_correct_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo --seed 0 -- correct 2 1
+BR.export.a1-commit.impl_correct_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- correct 2 1
+BR.export.a1-commit.impl_eager_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- eager 2 1
+BR.export.a1-commit.impl_early-abort_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- early-abort 2 1
+BR.export.a1-commit.impl_silent_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- silent 2 1
+BR.export.a1-commit.impl_control-reverse_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- control-reverse 2 1
+BR.export.a1-commit.spec_correct_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo --seed 0 -- correct 2 2
+BR.export.a1-commit.impl_correct_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- correct 2 2
+BR.export.a1-commit.impl_eager_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- eager 2 2
+BR.export.a1-commit.impl_early-abort_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- early-abort 2 2
+BR.export.a1-commit.impl_silent_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- silent 2 2
+BR.export.a1-commit.impl_control-reverse_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- control-reverse 2 2
+BR.export.a1-commit.spec_correct_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --model fifo --seed 0 -- correct 3 1
+BR.export.a1-commit.impl_correct_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- correct 3 1
+BR.export.a1-commit.impl_eager_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- eager 3 1
+BR.export.a1-commit.impl_early-abort_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- early-abort 3 1
+BR.export.a1-commit.impl_silent_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- silent 3 1
+BR.export.a1-commit.impl_control-reverse_3_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --model fifo --seed 0 -- control-reverse 3 1
+BR.export.a4-balancer.spec_hash_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4a 1 1 1
+BR.export.a4-balancer.spec_hash_a4b_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4b 1 1 1
+BR.export.a4-balancer.impl_hash_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash a4a 1 1 1
+BR.export.a4-balancer.impl_rr_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- rr a4a 1 1 1
+BR.export.a4-balancer.impl_hash-drop_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash-drop a4a 1 1 1
+BR.export.a4-balancer.impl_drop_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- drop a4a 1 1 1
+BR.export.a4-balancer.impl_pair-swap-hash_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-hash a4a 1 1 1
+BR.export.a4-balancer.impl_pair-swap-rr_a4a_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-rr a4a 1 1 1
+BR.export.a4-balancer.spec_rr_a4a_1_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- rr a4a 1 2 2
+BR.export.a4-balancer.impl_rr_a4a_1_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- rr a4a 1 2 2
+BR.export.a4-balancer.spec_hash_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4a 2 1 2
+BR.export.a4-balancer.spec_hash_a4b_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4b 2 1 2
+BR.export.a4-balancer.impl_hash_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash a4a 2 1 2
+BR.export.a4-balancer.impl_rr_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- rr a4a 2 1 2
+BR.export.a4-balancer.impl_hash-drop_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash-drop a4a 2 1 2
+BR.export.a4-balancer.impl_drop_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- drop a4a 2 1 2
+BR.export.a4-balancer.impl_pair-swap-hash_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-hash a4a 2 1 2
+BR.export.a4-balancer.impl_pair-swap-rr_a4a_2_1_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-rr a4a 2 1 2
+BR.export.a4-balancer.spec_hash_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4a 2 2 2
+BR.export.a4-balancer.spec_hash_a4b_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export spec --out export.jsonl --model fifo --seed 0 -- hash a4b 2 2 2
+BR.export.a4-balancer.impl_hash_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash a4a 2 2 2
+BR.export.a4-balancer.impl_rr_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- rr a4a 2 2 2
+BR.export.a4-balancer.impl_hash-drop_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- hash-drop a4a 2 2 2
+BR.export.a4-balancer.impl_drop_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- drop a4a 2 2 2
+BR.export.a4-balancer.impl_pair-swap-hash_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-hash a4a 2 2 2
+BR.export.a4-balancer.impl_pair-swap-rr_a4a_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a4-balancer export impl --out export.jsonl --model fifo --seed 0 -- pair-swap-rr a4a 2 2 2
+BR.export.abd-register-civl.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.abd-register-civl.impl_2_bag_read-no-writeback 250 3600 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export impl --out export.jsonl --model bag --seed 0 -- 2 read-no-writeback
+BR.export.abd-register-civl.impl_3_bag_read-no-writeback 250 3600 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export impl --out export.jsonl --model bag --seed 0 -- 3 read-no-writeback
+BR.export.abd-register-civl.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.abd-register-civl.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.balancer-load-aware.spec_l1_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l1 2 2 2
+BR.export.balancer-load-aware.impl_l1_2_2_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l1 2 2 2
+BR.export.balancer-load-aware.spec_l2_2_2_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l2 2 2 2 1
+BR.export.balancer-load-aware.impl_l2_2_2_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l2 2 2 2 1
+BR.export.balancer-load-aware.spec_l2-stale_2_2_2_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l2-stale 2 2 2 1
+BR.export.balancer-load-aware.spec_l2_2_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l2 2 1 1 1
+BR.export.balancer-load-aware.impl_l2_2_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l2 2 1 1 1
+BR.export.balancer-load-aware.spec_l2-stale_2_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l2-stale 2 1 1 1
+BR.export.balancer-load-aware.impl_l2-stale_2_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l2-stale 2 1 1 1
+BR.export.bank-grove.impl_1_fifo_ordered 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 1 ordered
+BR.export.bank-grove.impl_1_fifo_unordered 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 1 unordered
+BR.export.bank-grove.impl_2_fifo_ordered 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 2 ordered
+BR.export.bank-grove.impl_2_fifo_unordered 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 2 unordered
+BR.export.bank-grove.impl_3_fifo_unordered 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 3 unordered
+BR.export.bank-grove.spec_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export spec --out export.jsonl --model fifo --seed 0 -- 1
+BR.export.bank-grove.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.bank-grove.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.bank-grove.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh bank-grove export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.broadcast-consensus-civl.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.broadcast-consensus-civl.impl_2_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 2 decide-early
+BR.export.broadcast-consensus-civl.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.broadcast-consensus-civl.impl_3_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 3 decide-early
+BR.export.broadcast-consensus-civl.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.broadcast-consensus-civl.impl_4_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --model bag --seed 0 -- 4 decide-early
+BR.export.broadcast-consensus-civl.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.broadcast-consensus-civl.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.broadcast-consensus-civl.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.calculator-disel.impl_1_bag_batched 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 batched
+BR.export.calculator-disel.impl_1_bag_batched-swap 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 batched-swap
+BR.export.calculator-disel.impl_1_bag_delegating 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 delegating
+BR.export.calculator-disel.impl_1_bag_delegating-prev 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 delegating-prev
+BR.export.calculator-disel.impl_1_bag_memo 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 memo
+BR.export.calculator-disel.impl_1_bag_memo-ignore-args 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 1 memo-ignore-args
+BR.export.calculator-disel.impl_2_bag_batched 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 batched
+BR.export.calculator-disel.impl_2_bag_batched-swap 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 batched-swap
+BR.export.calculator-disel.impl_2_bag_delegating 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 delegating
+BR.export.calculator-disel.impl_2_bag_delegating-prev 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 delegating-prev
+BR.export.calculator-disel.impl_2_bag_memo 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 memo
+BR.export.calculator-disel.impl_2_bag_memo-ignore-args 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 2 memo-ignore-args
+BR.export.calculator-disel.impl_3_bag_batched 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 batched
+BR.export.calculator-disel.impl_3_bag_batched-swap 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 batched-swap
+BR.export.calculator-disel.impl_3_bag_delegating 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 delegating
+BR.export.calculator-disel.impl_3_bag_delegating-prev 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 delegating-prev
+BR.export.calculator-disel.impl_3_bag_memo 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 memo
+BR.export.calculator-disel.impl_3_bag_memo-ignore-args 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 3 memo-ignore-args
+BR.export.calculator-disel.impl_4_bag_batched 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 batched
+BR.export.calculator-disel.impl_4_bag_batched-swap 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 batched-swap
+BR.export.calculator-disel.impl_4_bag_delegating 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 delegating
+BR.export.calculator-disel.impl_4_bag_delegating-prev 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 delegating-prev
+BR.export.calculator-disel.impl_4_bag_memo 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 memo
+BR.export.calculator-disel.impl_4_bag_memo-ignore-args 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export impl --out export.jsonl --model bag --seed 0 -- 4 memo-ignore-args
+BR.export.calculator-disel.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.calculator-disel.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.calculator-disel.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.calculator-disel.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh calculator-disel export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.election.spec_leader_conf_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader conf 2
+BR.export.election.impl_leader_conf_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader conf 2
+BR.export.election.impl_leader_split_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader split 2
+BR.export.election.impl_leader_silent_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader silent 2
+BR.export.election.impl_ring_conf_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 8694399807746060002 --threshold 65536 -- ring conf 2
+BR.export.election.impl_ring_split_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- ring split 2
+BR.export.election.spec_leader_conf_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader conf 3
+BR.export.election.impl_leader_conf_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader conf 3
+BR.export.election.impl_leader_split_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader split 3
+BR.export.election.impl_leader_silent_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- leader silent 3
+BR.export.election.impl_ring_conf_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 1992948037369921880 --threshold 65536 -- ring conf 3
+BR.export.election.impl_ring_split_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- ring split 3
+BR.export.election.spec_ring_conf_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --model fifo --seed 13733943097982699720 --threshold 65536 -- ring conf 4
+BR.export.election.impl_ring_conf_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 13733943097982699720 --threshold 65536 -- ring conf 4
+BR.export.election.impl_ring_split_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --model fifo --seed 0 --threshold 65536 -- ring split 4
+BR.export.ewd998-termination.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.ewd998-termination.impl_2_bag_no-black-on-receive 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export impl --out export.jsonl --model bag --seed 0 -- 2 no-black-on-receive
+BR.export.ewd998-termination.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.ewd998-termination.impl_3_bag_no-black-on-receive 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export impl --out export.jsonl --model bag --seed 0 -- 3 no-black-on-receive
+BR.export.ewd998-termination.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.ewd998-termination.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.fencing-grove.impl_1_fifo_fenced 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 1 fenced
+BR.export.fencing-grove.impl_1_fifo_stale-frontend 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 1 stale-frontend
+BR.export.fencing-grove.impl_2_fifo_fenced 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 2 fenced
+BR.export.fencing-grove.impl_2_fifo_stale-frontend 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 2 stale-frontend
+BR.export.fencing-grove.impl_3_fifo_fenced 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 3 fenced
+BR.export.fencing-grove.impl_3_fifo_stale-frontend 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export impl --out export.jsonl --model fifo --seed 0 -- 3 stale-frontend
+BR.export.fencing-grove.spec_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export spec --out export.jsonl --model fifo --seed 0 -- 1
+BR.export.fencing-grove.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.fencing-grove.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.fencing-grove.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh fencing-grove export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.ironlock.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.ironlock.impl_2_bag_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 2 double-hold
+BR.export.ironlock.impl_2_bag_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 2 grant-without-token
+BR.export.ironlock.impl_2_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 2 correct
+BR.export.ironlock.impl_2_fifo_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 2 double-hold
+BR.export.ironlock.impl_2_fifo_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 2 grant-without-token
+BR.export.ironlock.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.ironlock.impl_3_bag_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 3 double-hold
+BR.export.ironlock.impl_3_bag_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 3 grant-without-token
+BR.export.ironlock.impl_3_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 3 correct
+BR.export.ironlock.impl_3_fifo_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 3 double-hold
+BR.export.ironlock.impl_3_fifo_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 3 grant-without-token
+BR.export.ironlock.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.ironlock.impl_4_bag_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 4 double-hold
+BR.export.ironlock.impl_4_bag_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model bag --seed 0 -- 4 grant-without-token
+BR.export.ironlock.impl_4_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 4 correct
+BR.export.ironlock.impl_4_fifo_double-hold 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 4 double-hold
+BR.export.ironlock.impl_4_fifo_grant-without-token 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export impl --out export.jsonl --model fifo --seed 0 -- 4 grant-without-token
+BR.export.ironlock.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.ironlock.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.ironlock.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.ironlock.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.ironlock.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.ironlock.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.ironlock.spec-ring_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 2 correct ring
+BR.export.ironlock.spec-ring_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 2 correct ring
+BR.export.ironlock.spec-ring_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 3 correct ring
+BR.export.ironlock.spec-ring_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 3 correct ring
+BR.export.ironlock.spec-ring_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model bag --seed 0 -- 4 correct ring
+BR.export.ironlock.spec-ring_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh ironlock export spec --out export.jsonl --model fifo --seed 0 -- 4 correct ring
+BR.export.kv-exactly-once-grove.impl_1_bag_exactly-once 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 1 exactly-once
+BR.export.kv-exactly-once-grove.impl_1_bag_no-request-id 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 1 no-request-id
+BR.export.kv-exactly-once-grove.impl_2_bag_exactly-once 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 2 exactly-once
+BR.export.kv-exactly-once-grove.impl_2_bag_no-request-id 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 2 no-request-id
+BR.export.kv-exactly-once-grove.impl_3_bag_exactly-once 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 3 exactly-once
+BR.export.kv-exactly-once-grove.impl_3_bag_no-request-id 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export impl --out export.jsonl --model bag --seed 0 -- 3 no-request-id
+BR.export.kv-exactly-once-grove.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.kv-exactly-once-grove.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.kv-exactly-once-grove.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-exactly-once-grove export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.kv-snapshot-isolation-tla.impl_2_fifo_serializable 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 2 serializable
+BR.export.kv-snapshot-isolation-tla.impl_2_fifo_si 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 2 si
+BR.export.kv-snapshot-isolation-tla.impl_3_fifo_serializable 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 3 serializable
+BR.export.kv-snapshot-isolation-tla.impl_3_fifo_si 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 3 si
+BR.export.kv-snapshot-isolation-tla.impl_4_fifo_serializable 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 4 serializable
+BR.export.kv-snapshot-isolation-tla.impl_4_fifo_si 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export impl --out export.jsonl --model fifo --seed 0 -- 4 si
+BR.export.kv-snapshot-isolation-tla.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.kv-snapshot-isolation-tla.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.kv-snapshot-isolation-tla.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.memcached-oopsla25.impl_1_fifo_lost-set 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 1 lost-set
+BR.export.memcached-oopsla25.impl_1_fifo_shared-bucket 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 1 shared-bucket
+BR.export.memcached-oopsla25.impl_1_fifo_v3 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 1 v3
+BR.export.memcached-oopsla25.impl_2_fifo_lost-set 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 2 lost-set
+BR.export.memcached-oopsla25.impl_2_fifo_shared-bucket 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 2 shared-bucket
+BR.export.memcached-oopsla25.impl_2_fifo_v3 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 2 v3
+BR.export.memcached-oopsla25.impl_3_fifo_lost-set 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 3 lost-set
+BR.export.memcached-oopsla25.impl_3_fifo_shared-bucket 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 3 shared-bucket
+BR.export.memcached-oopsla25.impl_3_fifo_v3 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export impl --out export.jsonl --model fifo --seed 0 -- 3 v3
+BR.export.memcached-oopsla25.spec_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export spec --out export.jsonl --model fifo --seed 0 -- 1
+BR.export.memcached-oopsla25.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.memcached-oopsla25.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh memcached-oopsla25 export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.n-buyer-kragl.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.n-buyer-kragl.impl_2_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.n-buyer-kragl.impl_2_no-subtract_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 2 no-subtract
+BR.export.n-buyer-kragl.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.n-buyer-kragl.impl_3_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.n-buyer-kragl.impl_3_no-subtract_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 3 no-subtract
+BR.export.n-buyer-kragl.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.n-buyer-kragl.impl_4_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.n-buyer-kragl.impl_4_no-subtract_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 4 no-subtract
+BR.export.n-buyer-kragl.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export spec --out export.jsonl --model bag --seed 0 -- 5
+BR.export.n-buyer-kragl.impl_5_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 5 correct
+BR.export.n-buyer-kragl.impl_5_no-subtract_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl export impl --out export.jsonl --model bag --seed 0 -- 5 no-subtract
+BR.export.paxos-oopsla25.impl_1_bag_1b-none 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 1 1b-none
+BR.export.paxos-oopsla25.impl_1_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 1 correct
+BR.export.paxos-oopsla25.impl_1_bag_half-majority 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 1 half-majority
+BR.export.paxos-oopsla25.impl_1_bag_ignore-max-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 1 ignore-max-vote
+BR.export.paxos-oopsla25.impl_1_bag_skip-2a-check 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 1 skip-2a-check
+BR.export.paxos-oopsla25.impl_2_bag_1b-none 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 2 1b-none
+BR.export.paxos-oopsla25.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.paxos-oopsla25.impl_2_bag_half-majority 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 2 half-majority
+BR.export.paxos-oopsla25.impl_2_bag_ignore-max-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 2 ignore-max-vote
+BR.export.paxos-oopsla25.impl_2_bag_skip-2a-check 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export impl --out export.jsonl --model bag --seed 0 -- 2 skip-2a-check
+BR.export.paxos-oopsla25.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.paxos-oopsla25.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh paxos-oopsla25 export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.producer-consumer-civl.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.producer-consumer-civl.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.producer-consumer-civl.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.producer-consumer-civl.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.producer-consumer-civl.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.producer-consumer-civl.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.producer-consumer-civl.impl_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.producer-consumer-civl.impl_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag --seed 0 -- 2
+BR.export.producer-consumer-civl.impl_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.producer-consumer-civl.impl_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag --seed 0 -- 3
+BR.export.producer-consumer-civl.impl_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.producer-consumer-civl.impl_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl export impl --out export.jsonl --model bag --seed 0 -- 4
+BR.export.reliable-channel-aneris.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.reliable-channel-aneris.impl_2_bag_no-seqno 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 no-seqno
+BR.export.reliable-channel-aneris.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.reliable-channel-aneris.impl_3_bag_no-seqno 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 no-seqno
+BR.export.reliable-channel-aneris.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.reliable-channel-aneris.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.replicated-log-aneris.impl_2_bag_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 asyn-fault
+BR.export.replicated-log-aneris.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.replicated-log-aneris.impl_2_fifo_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 2 asyn-fault
+BR.export.replicated-log-aneris.impl_2_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 2 correct
+BR.export.replicated-log-aneris.impl_3_bag_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 asyn-fault
+BR.export.replicated-log-aneris.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.replicated-log-aneris.impl_3_fifo_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 3 asyn-fault
+BR.export.replicated-log-aneris.impl_3_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 3 correct
+BR.export.replicated-log-aneris.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.replicated-log-aneris.impl_4_fifo_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 4 asyn-fault
+BR.export.replicated-log-aneris.impl_4_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --model fifo --seed 0 -- 4 correct
+BR.export.replicated-log-aneris.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.replicated-log-aneris.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.replicated-log-aneris.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.replicated-log-aneris.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.replicated-log-aneris.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.replicated-log-aneris.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --model fifo --seed 0 -- 4
+BR.export.replicated-log-esop20.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.replicated-log-esop20.impl_1_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 1 correct
+BR.export.replicated-log-esop20.impl_1_early-reply_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 1 early-reply
+BR.export.replicated-log-esop20.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.replicated-log-esop20.impl_2_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.replicated-log-esop20.impl_2_early-reply_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 2 early-reply
+BR.export.replicated-log-esop20.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.replicated-log-esop20.impl_3_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.replicated-log-esop20.impl_3_early-reply_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model bag --seed 0 -- 3 early-reply
+BR.export.replicated-log-esop20.spec_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo --seed 0 -- 1
+BR.export.replicated-log-esop20.impl_1_correct_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 1 correct
+BR.export.replicated-log-esop20.impl_1_early-reply_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 1 early-reply
+BR.export.replicated-log-esop20.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.replicated-log-esop20.impl_2_correct_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 2 correct
+BR.export.replicated-log-esop20.impl_2_early-reply_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 2 early-reply
+BR.export.replicated-log-esop20.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.replicated-log-esop20.impl_3_correct_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 3 correct
+BR.export.replicated-log-esop20.impl_3_early-reply_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --model fifo --seed 0 -- 3 early-reply
+BR.export.ring-election-igloo.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.ring-election-igloo.impl_2_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.ring-election-igloo.impl_2_no-compare_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 2 no-compare
+BR.export.ring-election-igloo.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.ring-election-igloo.impl_3_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.ring-election-igloo.impl_3_no-compare_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 3 no-compare
+BR.export.ring-election-igloo.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.ring-election-igloo.impl_4_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.ring-election-igloo.impl_4_no-compare_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --model bag --seed 0 -- 4 no-compare
+BR.export.rpc-at-most-once-aneris.impl_1_bag_dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 1 dedup
+BR.export.rpc-at-most-once-aneris.impl_1_bag_no-dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 1 no-dedup
+BR.export.rpc-at-most-once-aneris.impl_2_bag_dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 dedup
+BR.export.rpc-at-most-once-aneris.impl_2_bag_no-dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 2 no-dedup
+BR.export.rpc-at-most-once-aneris.impl_3_bag_dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 dedup
+BR.export.rpc-at-most-once-aneris.impl_3_bag_no-dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 3 no-dedup
+BR.export.rpc-at-most-once-aneris.impl_4_bag_dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 4 dedup
+BR.export.rpc-at-most-once-aneris.impl_4_bag_no-dedup 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export impl --out export.jsonl --model bag --seed 0 -- 4 no-dedup
+BR.export.rpc-at-most-once-aneris.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.rpc-at-most-once-aneris.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.rpc-at-most-once-aneris.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.rpc-at-most-once-aneris.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh rpc-at-most-once-aneris export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.two-pc-abstain-kragl.spec_1_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag --seed 0 -- 1
+BR.export.two-pc-abstain-kragl.impl_1_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 1 correct
+BR.export.two-pc-abstain-kragl.impl_1_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 1 off-by-one
+BR.export.two-pc-abstain-kragl.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.two-pc-abstain-kragl.impl_2_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.two-pc-abstain-kragl.impl_2_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 2 off-by-one
+BR.export.two-pc-abstain-kragl.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.two-pc-abstain-kragl.impl_3_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.two-pc-abstain-kragl.impl_3_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 3 off-by-one
+BR.export.two-pc-abstain-kragl.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.two-pc-abstain-kragl.impl_4_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.two-pc-abstain-kragl.impl_4_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 4 off-by-one
+BR.export.two-pc-abstain-kragl.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --model bag --seed 0 -- 5
+BR.export.two-pc-abstain-kragl.impl_5_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 5 correct
+BR.export.two-pc-abstain-kragl.impl_5_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --model bag --seed 0 -- 5 off-by-one
+BR.export.two-pc-disel.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.two-pc-disel.impl_2_bag_skip-ack-loop 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model bag --seed 0 -- 2 skip-ack-loop
+BR.export.two-pc-disel.impl_2_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model fifo --seed 0 -- 2 correct
+BR.export.two-pc-disel.impl_2_fifo_skip-ack-loop 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model fifo --seed 0 -- 2 skip-ack-loop
+BR.export.two-pc-disel.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.two-pc-disel.impl_3_bag_skip-ack-loop 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model bag --seed 0 -- 3 skip-ack-loop
+BR.export.two-pc-disel.impl_3_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model fifo --seed 0 -- 3 correct
+BR.export.two-pc-disel.impl_3_fifo_skip-ack-loop 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --model fifo --seed 0 -- 3 skip-ack-loop
+BR.export.two-pc-disel.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.two-pc-disel.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --model fifo --seed 0 -- 2
+BR.export.two-pc-disel.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.two-pc-disel.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --model fifo --seed 0 -- 3
+BR.export.two-pc-lbinria.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.two-pc-lbinria.impl_2_bag_counting-bug 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 2 counting-bug
+BR.export.two-pc-lbinria.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.two-pc-lbinria.impl_3_bag_counting-bug 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 3 counting-bug
+BR.export.two-pc-lbinria.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.two-pc-lbinria.impl_4_bag_counting-bug 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --model bag --seed 0 -- 4 counting-bug
+BR.export.two-pc-lbinria.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.two-pc-lbinria.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.two-pc-lbinria.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.two-pc-trillium.impl_2_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 2 correct
+BR.export.two-pc-trillium.impl_2_bag_ignore-abort-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 2 ignore-abort-vote
+BR.export.two-pc-trillium.impl_3_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.export.two-pc-trillium.impl_3_bag_ignore-abort-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 3 ignore-abort-vote
+BR.export.two-pc-trillium.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 4 correct
+BR.export.two-pc-trillium.impl_4_bag_ignore-abort-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --model bag --seed 0 -- 4 ignore-abort-vote
+BR.export.two-pc-trillium.spec_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export spec --out export.jsonl --model bag --seed 0 -- 2
+BR.export.two-pc-trillium.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export spec --out export.jsonl --model bag --seed 0 -- 3
+BR.export.two-pc-trillium.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export spec --out export.jsonl --model bag --seed 0 -- 4
+BR.export.zab-broadcast-remix.impl_1_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --model fifo --seed 0 -- 1 correct
+BR.export.zab-broadcast-remix.impl_1_fifo_issue1-propose-to-ackld 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --model fifo --seed 0 -- 1 issue1-propose-to-ackld
+BR.export.zab-broadcast-remix.impl_2_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --model fifo --seed 0 -- 2 correct
+BR.export.zab-broadcast-remix.impl_2_fifo_issue1-propose-to-ackld 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --model fifo --seed 0 -- 2 issue1-propose-to-ackld
+BR.export.zab-broadcast-remix.spec_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export spec --out export.jsonl --model fifo --seed 0 -- 1
+BR.export.zab-broadcast-remix.spec_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export spec --out export.jsonl --model fifo --seed 0 -- 2

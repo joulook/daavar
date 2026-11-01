@@ -7,11 +7,13 @@
 //! `epoch < lastEpoch` with `EStale`), and one client clerk per client (`p0`, `p1`: call the
 //! current front end, on an error ask `config` for the current one and retry).
 //!
-//! Usage: `<spec|impl> <K> [fifo|bag|causal] [variant]`; `K` = `FetchAndIncrement(0)` calls per
+//! Usage: `<bin> count|export|conf|online … --model M -- <K> [variant]`; `K` =
+//! `FetchAndIncrement(0)` calls per
 //! client (`c0`, `c1`). Default model `fifo` (p2p), default variant `fenced`. Variants (impl
 //! side): `fenced` (the source: a front end that sees `EStale` exits, so its callers get an
 //! error) and `stale-frontend` (a front end ignores `EStale` and keeps serving with its old
-//! epoch). Prints `execs=<complete> blocked=<blocked>`.
+//! epoch). `count` prints `execs=<complete> blocked=<blocked>`.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
 
@@ -253,20 +255,23 @@ fn imp(k: usize, variant: &str) {
     config.join().unwrap();
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let k: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
+fn parse(a: &[String]) -> (usize, String) {
+    let k: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(1);
+    let variant = a.get(1).cloned().unwrap_or_else(|| "fenced".to_string());
+    (k, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["c0".to_string(), "c1".to_string()],
+        spec: &|a| {
+            let (k, _) = parse(a);
+            std::sync::Arc::new(move || spec(k))
+        },
+        imp: &|a| {
+            let (k, variant) = parse(a);
+            std::sync::Arc::new(move || imp(k, &variant))
+        },
     };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "fenced".to_string());
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(k, &variant)),
-        _ => verify(conf, move || spec(k)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

@@ -6,13 +6,15 @@
 //! Implementation: `leader` (client writes, `follower_request_handler` with `log_wait_until`)
 //! and one `follower` (`sync_loop` + `client_request_handler_at_follower`).
 //!
-//! Usage: `<spec|impl> <W> [fifo|bag|causal] [variant]`; `W` writes by `writer` at the leader
+//! Usage: `<bin> count|export|conf|online … --model M -- <W> [variant]`; `W` writes by `writer`
+//! at the leader
 //! (key `i` := `VAL(i)`, so `x = 37`, `y = 1` at W = 2), then `W` reads by `reader` at the
 //! follower in reverse key order (`y` first, then `x`). Default model `fifo` (p2p), default
 //! variant `correct`. Variants (impl side): `correct` (the source's `sync_loop`: request entry
 //! `i`, wait for it, `assert (i = j)`, apply, ask for `i+1`) and `asyn-fault` (a pipelined sync:
 //! the follower asks for every entry at once and applies the entries in arrival order).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
 
@@ -202,20 +204,23 @@ fn imp(w: usize, variant: &str) {
     follower.join().unwrap();
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let w: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
+fn parse(a: &[String]) -> (usize, String) {
+    let w: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let variant = a.get(1).cloned().unwrap_or_else(|| "correct".to_string());
+    (w, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["writer".to_string(), "reader".to_string()],
+        spec: &|a| {
+            let (w, _) = parse(a);
+            std::sync::Arc::new(move || spec(w))
+        },
+        imp: &|a| {
+            let (w, variant) = parse(a);
+            std::sync::Arc::new(move || imp(w, &variant))
+        },
     };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "correct".to_string());
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(w, &variant)),
-        _ => verify(conf, move || spec(w)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

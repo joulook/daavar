@@ -219,9 +219,14 @@ source, which `Service_Correspondence` (a predicate over a set of packets) admit
 
 - `source/`: the Lock service, protocol, implementation and proof `.dfy` files, and
   `IronLockServer/Program.cs`, copied verbatim with provenance in `source/PROVENANCE.md`.
-- `rust/`: the Must-API Rust crate `bench_ironlock`. CLI:
-  `<spec|spec-ring|impl> <n> [fifo|bag|causal] [correct|double-hold|grant-without-token]` (the
-  variant is read only for `impl`). See `_tools/run-rust.sh`.
+- `rust/`: the Must-API Rust crate `bench_ironlock`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <n> [correct|double-hold|grant-without-token] [any|ring]`;
+  defaults: n 2, model `fifo`, variant `correct`, spec-kind `any`. The last argument is the
+  spec-kind: `any` is the old side `spec` and `ring` the old side `spec-ring`, the two specification
+  programs this README names `spec` and `spec-ring`; anything else panics. Old `spec-ring <n> <m>`
+  is new `count spec --model <m> -- <n> correct ring`; `conf` and `export spec` read the spec-kind
+  too. The variant is used only by `impl` and the spec-kind only by `spec`. See
+  `_tools/run-rust.sh`.
 - `java/`: package `bench.ironlock`, with `Spec` (IronFleet's specification, args `n,model`),
   `SpecRing` (`spec-ring`, args `n,model`) and `Impl` (args `n,model,variant`). Shared parts are
   in `Lock.java`: `NodeMsg` = `Transfer` | `Stop`, `Wire` = `Locked` | `End`, and the observer. Spawn order: both
@@ -283,9 +288,9 @@ time, for `n ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`, `v ∈ {correct, double-hold, 
 `java-spec-<n>-<m>.log`, `java-spec-ring-<n>-<m>.log` and `java-impl-<v>-<n>-<m>.log`):
 
 ```
-$B/_tools/run-rust.sh $B/ironlock spec <n> <m>
-$B/_tools/run-rust.sh $B/ironlock spec-ring <n> <m>
-$B/_tools/run-rust.sh $B/ironlock impl <n> <m> <v>
+$B/_tools/run-rust.sh $B/ironlock count spec --model <m> -- <n>
+$B/_tools/run-rust.sh $B/ironlock count spec --model <m> -- <n> correct ring
+$B/_tools/run-rust.sh $B/ironlock count impl --model <m> -- <n> <v>
 $B/_tools/run-java.sh $B/ironlock 'bench.ironlock.Spec:<n>,<m>' must 100000 600
 $B/_tools/run-java.sh $B/ironlock 'bench.ironlock.SpecRing:<n>,<m>' must 100000 600
 $B/_tools/run-java.sh $B/ironlock 'bench.ironlock.Impl:<n>,<m>,<v>' must 100000 600

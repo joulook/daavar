@@ -5,17 +5,17 @@
 //! handler per client (`handle_client`) and one storage thread per bucket (`Storage::process`
 //! locks only the key's bucket; the thread plays the bucket's lock).
 //!
-//! Usage: `<spec|impl|conf> <Q> [fifo|bag|causal] [v3|shared-bucket|lost-set]`; `Q` = commands
+//! Usage: `<bin> count|export|conf|online … --model M -- <Q> [v3|shared-bucket|lost-set]`;
+//! `Q` = commands
 //! per client (1..=3), 2 clients, 2 keys. Default model `fifo` (p2p: TCP), default variant `v3`.
-//! `spec`/`impl` print `execs=<complete> blocked=<blocked>` of plain Must; `conf` runs
+//! `count` prints `execs=<complete> blocked=<blocked>` of plain Must; `conf` runs
 //! TraceForge's conformance check of `impl <variant>` against `spec` and prints the verdict.
 //!
 //! Visible threads: `c0`, `c1`. Invisible: `k0`, `k1` (spec); `b0`, `b1` (or `b0` alone for
 //! `shared-bucket`), `w0`, `w1` (impl). Every thread receives only on its own named channel.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::channel::{self, Receiver, Sender};
-use traceforge::conformance::{self, ConfBuilder, Engine};
 use traceforge::thread::{self, JoinHandle};
-use traceforge::*;
 
 const N: usize = 2; // clients (connections)
 const KEYS: usize = 2;
@@ -169,37 +169,24 @@ fn variant_of(s: &str) -> &'static str {
     }
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let q: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
+fn parse(a: &[String]) -> (usize, &'static str) {
+    let q: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(1);
     assert!((1..=3).contains(&q), "Q must be 1..=3");
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
+    let variant = variant_of(a.get(1).map(String::as_str).unwrap_or("v3"));
+    (q, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["c0".to_string(), "c1".to_string()],
+        spec: &|a| {
+            let (q, _) = parse(a);
+            std::sync::Arc::new(move || spec(q))
+        },
+        imp: &|a| {
+            let (q, variant) = parse(a);
+            std::sync::Arc::new(move || imp(q, variant))
+        },
     };
-    let variant = variant_of(a.get(4).map(String::as_str).unwrap_or("v3"));
-    if side == "conf" {
-        let cfg = ConfBuilder::new()
-            .config(Config::builder().with_cons_type(model).with_verbose(0).build())
-            .cons_type(model)
-            .visible_threads(["c0", "c1"])
-            .engine(match a.get(5).map(String::as_str).unwrap_or("stateful") {
-                "enumerator" => Engine::Enumerator,
-                _ => Engine::Stateful,
-            })
-            .all_reports(a.iter().any(|x| x == "all"))
-            .build()
-            .expect("conformance config");
-        let v = conformance::verify(cfg, move || imp(q, variant), move || spec(q)).expect("conformance run");
-        println!("{v}");
-        return;
-    }
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(q, variant)),
-        _ => verify(conf, move || spec(q)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

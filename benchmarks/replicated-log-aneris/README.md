@@ -141,8 +141,11 @@ Each against `spec` under the same model. The source ships no fault.
   `coq-spec/*.v` (the Iris specification), copied verbatim, with provenance in
   `source/PROVENANCE.md`. The path `aneris/aneris/examples/repdb/` named in the task does not
   exist; these are the repdb files.
-- `rust/`: crate `bench_replicated_log_aneris`. CLI: `<spec|impl> <W> [fifo|bag|causal]
-  [correct|asyn-fault]`, default model `fifo`, default variant `correct`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_replicated_log_aneris`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <W> [correct|asyn-fault]`; default W 2, default model
+  `fifo`, default variant `correct`. The `out/fault-check` crate is a separate copy, not on the
+  shared main: it keeps the old positional CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so
+  its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.replicated_log_aneris`, class `RepDb` (args
   `<spec|impl>,<W>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `follower, leader, writer, reader`; impl `leader, follower, writer, reader`.
@@ -179,8 +182,8 @@ The spec rows are from the second specification (leader + follower, after the re
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `W ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`, `v ∈ {correct, asyn-fault}`:
 
 ```
-timeout 600 $B/_tools/run-rust.sh $B/replicated-log-aneris spec <W> <m>
-timeout 600 $B/_tools/run-rust.sh $B/replicated-log-aneris impl <W> <m> <v>
+timeout 600 $B/_tools/run-rust.sh $B/replicated-log-aneris count spec --model <m> -- <W>
+timeout 600 $B/_tools/run-rust.sh $B/replicated-log-aneris count impl --model <m> -- <W> <v>
 $B/_tools/run-java.sh $B/replicated-log-aneris 'bench.replicated_log_aneris.RepDb:spec,<W>,<m>' must 100000 600
 $B/_tools/run-java.sh $B/replicated-log-aneris 'bench.replicated_log_aneris.RepDb:impl,<W>,<m>,<v>' must 100000 600
 ```

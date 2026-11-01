@@ -23,6 +23,7 @@
 //! Options every row spells (never set here; they are the shared main's `--model`, `--seed`,
 //! `--threshold`): `--model bag --seed 0 --threshold 65536` (`cfg(ConsType::Bag)`,
 //! `grid.rs:88-99`). Example: `<bin> row --model bag --seed 0 --threshold 65536 -- self 3 2`.
+//! Declared default model, used when `--model` is left out: `bag`.
 
 use std::sync::Arc;
 
@@ -145,7 +146,7 @@ fn parse(args: &[String]) -> Args {
 }
 
 fn main() -> std::process::ExitCode {
-    traceforge::program::main(traceforge::program::Program {
+    let program = traceforge::program::Program {
         visible: &|a| naive_visible(parse(a).k),
         spec: &|a| {
             let p = parse(a);
@@ -155,5 +156,6 @@ fn main() -> std::process::ExitCode {
             let p = parse(a);
             naive_d(p.k, p.impl_v, p.c_first, None)
         },
-    })
+    };
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

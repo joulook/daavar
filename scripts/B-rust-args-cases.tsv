@@ -1,0 +1,138 @@
+a1-commit	spec	fifo	correct 2 1	readme	--seed 0
+a1-commit	impl	fifo	correct 2 1	readme	--seed 0
+a1-commit	impl	fifo	eager 2 1	readme	--seed 0
+a1-commit	impl	fifo	early-abort 2 1	readme	--seed 0
+a1-commit	impl	fifo	silent 2 1	readme	--seed 0
+a1-commit	impl	fifo	control-reverse 2 1	readme	--seed 0
+a1-commit	spec	fifo	correct 2 2	readme	--seed 0
+a1-commit	impl	fifo	correct 2 2	readme	--seed 0
+a1-commit	impl	fifo	eager 2 2	readme	--seed 0
+a1-commit	impl	fifo	early-abort 2 2	readme	--seed 0
+a1-commit	impl	fifo	silent 2 2	readme	--seed 0
+a1-commit	impl	fifo	control-reverse 2 2	readme	--seed 0
+a1-commit	spec	fifo	correct 3 1	readme	--seed 0
+a1-commit	impl	fifo	correct 3 1	readme	--seed 0
+a1-commit	impl	fifo	eager 3 1	readme	--seed 0
+a1-commit	impl	fifo	early-abort 3 1	readme	--seed 0
+a1-commit	impl	fifo	silent 3 1	readme	--seed 0
+a1-commit	impl	fifo	control-reverse 3 1	readme	--seed 0
+a4-balancer	spec	fifo	hash a4a 1 1 1	readme	--seed 0
+a4-balancer	spec	fifo	hash a4b 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	hash a4a 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	rr a4a 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	hash-drop a4a 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	drop a4a 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-hash a4a 1 1 1	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-rr a4a 1 1 1	readme	--seed 0
+a4-balancer	spec	fifo	rr a4a 1 2 2	readme	--seed 0
+a4-balancer	impl	fifo	rr a4a 1 2 2	readme	--seed 0
+a4-balancer	spec	fifo	hash a4a 2 1 2	readme	--seed 0
+a4-balancer	spec	fifo	hash a4b 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	hash a4a 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	rr a4a 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	hash-drop a4a 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	drop a4a 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-hash a4a 2 1 2	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-rr a4a 2 1 2	readme	--seed 0
+a4-balancer	spec	fifo	hash a4a 2 2 2	readme	--seed 0
+a4-balancer	spec	fifo	hash a4b 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	hash a4a 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	rr a4a 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	hash-drop a4a 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	drop a4a 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-hash a4a 2 2 2	readme	--seed 0
+a4-balancer	impl	fifo	pair-swap-rr a4a 2 2 2	readme	--seed 0
+election	spec	fifo	leader conf 2	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader conf 2	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader split 2	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader silent 2	readme	--seed 0 --threshold 65536
+election	impl	fifo	ring conf 2	readme	--seed 8694399807746060002 --threshold 65536
+election	impl	fifo	ring split 2	readme	--seed 0 --threshold 65536
+election	spec	fifo	leader conf 3	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader conf 3	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader split 3	readme	--seed 0 --threshold 65536
+election	impl	fifo	leader silent 3	readme	--seed 0 --threshold 65536
+election	impl	fifo	ring conf 3	readme	--seed 1992948037369921880 --threshold 65536
+election	impl	fifo	ring split 3	readme	--seed 0 --threshold 65536
+election	spec	fifo	ring conf 4	readme	--seed 13733943097982699720 --threshold 65536
+election	impl	fifo	ring conf 4	readme	--seed 13733943097982699720 --threshold 65536
+election	impl	fifo	ring split 4	readme	--seed 0 --threshold 65536
+n-buyer-kragl	spec	bag	2	readme	--seed 0
+n-buyer-kragl	impl	bag	2 correct	readme	--seed 0
+n-buyer-kragl	impl	bag	2 no-subtract	readme	--seed 0
+n-buyer-kragl	spec	bag	3	readme	--seed 0
+n-buyer-kragl	impl	bag	3 correct	readme	--seed 0
+n-buyer-kragl	impl	bag	3 no-subtract	readme	--seed 0
+n-buyer-kragl	spec	bag	4	readme	--seed 0
+n-buyer-kragl	impl	bag	4 correct	readme	--seed 0
+n-buyer-kragl	impl	bag	4 no-subtract	readme	--seed 0
+n-buyer-kragl	spec	bag	5	readme	--seed 0
+n-buyer-kragl	impl	bag	5 correct	readme	--seed 0
+n-buyer-kragl	impl	bag	5 no-subtract	readme	--seed 0
+two-pc-abstain-kragl	spec	bag	1	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	1 correct	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	1 off-by-one	readme	--seed 0
+two-pc-abstain-kragl	spec	bag	2	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	2 correct	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	2 off-by-one	readme	--seed 0
+two-pc-abstain-kragl	spec	bag	3	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	3 correct	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	3 off-by-one	readme	--seed 0
+two-pc-abstain-kragl	spec	bag	4	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	4 correct	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	4 off-by-one	readme	--seed 0
+two-pc-abstain-kragl	spec	bag	5	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	5 correct	readme	--seed 0
+two-pc-abstain-kragl	impl	bag	5 off-by-one	readme	--seed 0
+replicated-log-esop20	spec	bag	1	readme	--seed 0
+replicated-log-esop20	impl	bag	1 correct	readme	--seed 0
+replicated-log-esop20	impl	bag	1 early-reply	readme	--seed 0
+replicated-log-esop20	spec	bag	2	readme	--seed 0
+replicated-log-esop20	impl	bag	2 correct	readme	--seed 0
+replicated-log-esop20	impl	bag	2 early-reply	readme	--seed 0
+replicated-log-esop20	spec	bag	3	readme	--seed 0
+replicated-log-esop20	impl	bag	3 correct	readme	--seed 0
+replicated-log-esop20	impl	bag	3 early-reply	readme	--seed 0
+replicated-log-esop20	spec	fifo	1	readme	--seed 0
+replicated-log-esop20	impl	fifo	1 correct	readme	--seed 0
+replicated-log-esop20	impl	fifo	1 early-reply	readme	--seed 0
+replicated-log-esop20	spec	fifo	2	readme	--seed 0
+replicated-log-esop20	impl	fifo	2 correct	readme	--seed 0
+replicated-log-esop20	impl	fifo	2 early-reply	readme	--seed 0
+replicated-log-esop20	spec	fifo	3	readme	--seed 0
+replicated-log-esop20	impl	fifo	3 correct	readme	--seed 0
+replicated-log-esop20	impl	fifo	3 early-reply	readme	--seed 0
+ring-election-igloo	spec	bag	2	readme	--seed 0
+ring-election-igloo	impl	bag	2 correct	readme	--seed 0
+ring-election-igloo	impl	bag	2 no-compare	readme	--seed 0
+ring-election-igloo	spec	bag	3	readme	--seed 0
+ring-election-igloo	impl	bag	3 correct	readme	--seed 0
+ring-election-igloo	impl	bag	3 no-compare	readme	--seed 0
+ring-election-igloo	spec	bag	4	readme	--seed 0
+ring-election-igloo	impl	bag	4 correct	readme	--seed 0
+ring-election-igloo	impl	bag	4 no-compare	readme	--seed 0
+producer-consumer-civl	spec	fifo	2	readme	--seed 0
+producer-consumer-civl	spec	bag	2	readme	--seed 0
+producer-consumer-civl	spec	fifo	3	readme	--seed 0
+producer-consumer-civl	spec	bag	3	readme	--seed 0
+producer-consumer-civl	spec	fifo	4	readme	--seed 0
+producer-consumer-civl	spec	bag	4	readme	--seed 0
+producer-consumer-civl	impl	fifo	2	readme	--seed 0
+producer-consumer-civl	impl	bag	2	readme	--seed 0
+producer-consumer-civl	impl	fifo	3	readme	--seed 0
+producer-consumer-civl	impl	bag	3	readme	--seed 0
+producer-consumer-civl	impl	fifo	4	readme	--seed 0
+producer-consumer-civl	impl	bag	4	readme	--seed 0
+balancer-load-aware	spec	fifo	l1 2 2 2	readme	--seed 0
+balancer-load-aware	impl	fifo	l1 2 2 2	readme	--seed 0
+balancer-load-aware	spec	fifo	l2 2 2 2 1	readme	--seed 0
+balancer-load-aware	impl	fifo	l2 2 2 2 1	readme	--seed 0
+balancer-load-aware	spec	fifo	l2-stale 2 2 2 1	readme	--seed 0
+balancer-load-aware	impl	fifo	l2-stale 2 2 2 1	readme	--seed 0
+balancer-load-aware	spec	fifo	l2 2 1 1 1	readme	--seed 0
+balancer-load-aware	impl	fifo	l2 2 1 1 1	readme	--seed 0
+balancer-load-aware	spec	fifo	l2-stale 2 1 1 1	readme	--seed 0
+balancer-load-aware	impl	fifo	l2-stale 2 1 1 1	readme	--seed 0
+balancer-load-aware	spec	fifo	l1 3 3 3	readme	--seed 0
+balancer-load-aware	impl	fifo	l1 3 3 3	readme	--seed 0
+balancer-load-aware	impl	fifo	l2 3 3 3 2	readme	--seed 0

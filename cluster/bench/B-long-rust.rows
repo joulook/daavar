@@ -1,46 +1,12 @@
-BR.count.bank-grove.spec_1_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove spec 1 fifo
-BR.count.bank-grove.spec_2_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove spec 2 fifo
-BR.count.bank-grove.spec_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove spec 3 fifo
-BR.count.bank-grove.spec_4_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove spec 4 fifo
-BR.count.bank-grove.impl_1_fifo_ordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 1 fifo ordered
-BR.count.bank-grove.impl_2_fifo_ordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 2 fifo ordered
-BR.count.bank-grove.impl_3_fifo_ordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 3 fifo ordered
-BR.count.bank-grove.impl_1_fifo_unordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 1 fifo unordered
-BR.count.bank-grove.impl_2_fifo_unordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 2 fifo unordered
-BR.count.bank-grove.impl_3_fifo_unordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove impl 3 fifo unordered
-BR.count.fencing-grove.spec_1_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove spec 1 fifo
-BR.count.fencing-grove.spec_2_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove spec 2 fifo
-BR.count.fencing-grove.spec_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove spec 3 fifo
-BR.count.fencing-grove.spec_4_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove spec 4 fifo
-BR.count.fencing-grove.impl_1_fifo_fenced.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 1 fifo fenced
-BR.count.fencing-grove.impl_2_fifo_fenced.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 2 fifo fenced
-BR.count.fencing-grove.impl_3_fifo_fenced.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 3 fifo fenced
-BR.count.fencing-grove.impl_1_fifo_stale-frontend.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 1 fifo stale-frontend
-BR.count.fencing-grove.impl_2_fifo_stale-frontend.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 2 fifo stale-frontend
-BR.count.fencing-grove.impl_3_fifo_stale-frontend.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh fencing-grove impl 3 fifo stale-frontend
-BR.count.kv-snapshot-isolation-tla.spec_2_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla spec 2 fifo
-BR.count.kv-snapshot-isolation-tla.spec_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla spec 3 fifo
-BR.count.kv-snapshot-isolation-tla.spec_4_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla spec 4 fifo
-BR.count.kv-snapshot-isolation-tla.impl_2_fifo_si.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 2 fifo si
-BR.count.kv-snapshot-isolation-tla.impl_3_fifo_si.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 3 fifo si
-BR.count.kv-snapshot-isolation-tla.impl_4_fifo_si.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 4 fifo si
-BR.count.kv-snapshot-isolation-tla.impl_2_fifo_serializable.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 2 fifo serializable
-BR.count.kv-snapshot-isolation-tla.impl_3_fifo_serializable.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 3 fifo serializable
-BR.count.kv-snapshot-isolation-tla.impl_4_fifo_serializable.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh kv-snapshot-isolation-tla impl 4 fifo serializable
-BR.count.replicated-log-aneris.spec_2_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 2 fifo
-BR.count.replicated-log-aneris.spec_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 3 fifo
-BR.count.replicated-log-aneris.spec_4_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 4 fifo
-BR.count.replicated-log-aneris.impl_2_fifo_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 2 fifo correct
-BR.count.replicated-log-aneris.impl_3_fifo_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 3 fifo correct
-BR.count.replicated-log-aneris.impl_4_fifo_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 4 fifo correct
-BR.count.replicated-log-aneris.impl_2_fifo_asyn-fault.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 2 fifo asyn-fault
-BR.count.replicated-log-aneris.impl_3_fifo_asyn-fault.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 3 fifo asyn-fault
-BR.count.replicated-log-aneris.impl_4_fifo_asyn-fault.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 4 fifo asyn-fault
-BR.count.replicated-log-aneris.spec_2_bag.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 2 bag
-BR.count.replicated-log-aneris.spec_3_bag.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 3 bag
-BR.count.replicated-log-aneris.spec_4_bag.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris spec 4 bag
-BR.count.replicated-log-aneris.impl_2_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 2 bag correct
-BR.count.replicated-log-aneris.impl_3_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 3 bag correct
-BR.count.replicated-log-aneris.impl_4_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 4 bag correct
-BR.count.replicated-log-aneris.impl_2_bag_asyn-fault.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 2 bag asyn-fault
-BR.count.replicated-log-aneris.impl_3_bag_asyn-fault.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris impl 3 bag asyn-fault
+BR.count.abd-register-civl.impl_3_bag_correct.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh abd-register-civl count impl --model bag --seed 0 -- 3 correct
+BR.export.abd-register-civl.impl_3_bag_correct 250 86400 "$DAAVAR"/scripts/rust-run.sh abd-register-civl export impl --out export.jsonl --model bag --seed 0 -- 3 correct
+BR.count.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware count impl --model fifo --seed 0 -- l2-stale 2 2 2 1
+BR.export.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l2-stale 2 2 2 1
+BR.count.balancer-load-aware.spec_l1_3_3_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware count spec --model fifo --seed 0 -- l1 3 3 3
+BR.export.balancer-load-aware.spec_l1_3_3_3_fifo 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export spec --out export.jsonl --model fifo --seed 0 -- l1 3 3 3
+BR.count.balancer-load-aware.impl_l1_3_3_3_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware count impl --model fifo --seed 0 -- l1 3 3 3
+BR.export.balancer-load-aware.impl_l1_3_3_3_fifo 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l1 3 3 3
+BR.count.balancer-load-aware.impl_l2_3_3_3_2_fifo.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware count impl --model fifo --seed 0 -- l2 3 3 3 2
+BR.export.balancer-load-aware.impl_l2_3_3_3_2_fifo 250 86400 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware export impl --out export.jsonl --model fifo --seed 0 -- l2 3 3 3 2
+BR.count.bank-grove.impl_3_fifo_ordered.c24h 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove count impl --model fifo --seed 0 -- 3 ordered
+BR.export.bank-grove.impl_3_fifo_ordered 250 86400 "$DAAVAR"/scripts/rust-run.sh bank-grove export impl --out export.jsonl --model fifo --seed 0 -- 3 ordered

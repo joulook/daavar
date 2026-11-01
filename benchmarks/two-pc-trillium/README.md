@@ -87,9 +87,12 @@ of the source (CATALOGUE-coq-iris.md lists TM-side early commits as the natural 
 - `source/`: `two_phase_code.ml`, `two_phase_code.v`, `two_phase_runner_code.v`, `tc_model.v`,
   `two_phase_adequacy.v` and `Readme.md`, copied verbatim in the repository's layout, with
   provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_two_pc_trillium`. CLI: `<spec|impl|conf> <N> [fifo|bag|causal]
-  [correct|ignore-abort-vote]` (defaults `bag`, `correct`); `conf` runs TraceForge's conformance
-  check with visible threads `obs0..obs{N-1}`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_two_pc_trillium`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <N> [correct|ignore-abort-vote]`; defaults: N 2, variant `correct`. `--model` left
+  out means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
+  conformance check with visible threads `obs0..obs{N-1}` (`--engine enumerator` for the diagnosing
+  engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has no flag for
+  it). See `_tools/run-rust.sh`.
 - `java/`: package `bench.two_pc_trillium`: `TwoPcTrillium` (args `<spec|impl>,N[,model[,variant]]`)
   and `Support`. See `_tools/run-java.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-bag.log`.
@@ -121,8 +124,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `N ∈ {2, 3, 4}`, `v ∈ {correct, ignore-abort-vote}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-trillium spec <N> bag correct
-$B/_tools/run-rust.sh $B/two-pc-trillium impl <N> bag <v>
+$B/_tools/run-rust.sh $B/two-pc-trillium count spec --model bag -- <N> correct
+$B/_tools/run-rust.sh $B/two-pc-trillium count impl --model bag -- <N> <v>
 $B/_tools/run-java.sh $B/two-pc-trillium 'bench.two_pc_trillium.TwoPcTrillium:spec,<N>,bag,correct' must 100000 600
 $B/_tools/run-java.sh $B/two-pc-trillium 'bench.two_pc_trillium.TwoPcTrillium:impl,<N>,bag,<v>' must 100000 600
 ```
@@ -130,6 +133,6 @@ $B/_tools/run-java.sh $B/two-pc-trillium 'bench.two_pc_trillium.TwoPcTrillium:im
 Verdict check (TraceForge conformance, default stateful engine), `N ∈ {2, 3}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-trillium conf <N> bag correct            # silence at N=2 and N=3
-$B/_tools/run-rust.sh $B/two-pc-trillium conf <N> bag ignore-abort-vote  # 4 (N=2) / 54 (N=3) uncovered graphs
+$B/_tools/run-rust.sh $B/two-pc-trillium conf --model bag -- <N> correct            # silence at N=2 and N=3
+$B/_tools/run-rust.sh $B/two-pc-trillium conf --model bag -- <N> ignore-abort-vote  # 4 (N=2) / 54 (N=3) uncovered graphs
 ```

@@ -1,0 +1,75 @@
+abd-register-civl	spec 2 bag
+abd-register-civl	spec 3 bag
+abd-register-civl	impl 2 bag correct
+abd-register-civl	impl 3 bag correct
+abd-register-civl	impl 2 bag read-no-writeback
+abd-register-civl	impl 3 bag read-no-writeback
+broadcast-consensus-civl	spec 2 bag
+broadcast-consensus-civl	spec 3 bag
+broadcast-consensus-civl	spec 4 bag
+broadcast-consensus-civl	impl 2 bag correct
+broadcast-consensus-civl	impl 3 bag correct
+broadcast-consensus-civl	impl 4 bag correct
+broadcast-consensus-civl	impl 2 bag decide-early
+broadcast-consensus-civl	impl 3 bag decide-early
+broadcast-consensus-civl	impl 4 bag decide-early
+ironlock	spec 2 fifo
+ironlock	spec 2 bag
+ironlock	spec 3 fifo
+ironlock	spec 3 bag
+ironlock	spec 4 fifo
+ironlock	spec 4 bag
+ironlock	spec-ring 2 fifo
+ironlock	spec-ring 2 bag
+ironlock	spec-ring 3 fifo
+ironlock	spec-ring 3 bag
+ironlock	spec-ring 4 fifo
+ironlock	spec-ring 4 bag
+ironlock	impl 2 fifo correct
+ironlock	impl 2 bag correct
+ironlock	impl 3 fifo correct
+ironlock	impl 3 bag correct
+ironlock	impl 4 fifo correct
+ironlock	impl 4 bag correct
+ironlock	impl 2 fifo double-hold
+ironlock	impl 2 bag double-hold
+ironlock	impl 3 fifo double-hold
+ironlock	impl 3 bag double-hold
+ironlock	impl 4 fifo double-hold
+ironlock	impl 4 bag double-hold
+ironlock	impl 2 fifo grant-without-token
+ironlock	impl 2 bag grant-without-token
+ironlock	impl 3 fifo grant-without-token
+ironlock	impl 3 bag grant-without-token
+ironlock	impl 4 fifo grant-without-token
+ironlock	impl 4 bag grant-without-token
+two-pc-disel	spec 2 bag
+two-pc-disel	impl 2 bag correct
+two-pc-disel	impl 2 bag skip-ack-loop
+two-pc-disel	spec 2 fifo
+two-pc-disel	impl 2 fifo correct
+two-pc-disel	impl 2 fifo skip-ack-loop
+two-pc-disel	spec 3 bag
+two-pc-disel	impl 3 bag correct
+two-pc-disel	impl 3 bag skip-ack-loop
+two-pc-disel	spec 3 fifo
+two-pc-disel	impl 3 fifo correct
+two-pc-disel	impl 3 fifo skip-ack-loop
+two-pc-lbinria	spec 2 bag
+two-pc-lbinria	impl 2 bag correct
+two-pc-lbinria	impl 2 bag counting-bug
+two-pc-lbinria	spec 3 bag
+two-pc-lbinria	impl 3 bag correct
+two-pc-lbinria	impl 3 bag counting-bug
+two-pc-lbinria	spec 4 bag
+two-pc-lbinria	impl 4 bag correct
+two-pc-lbinria	impl 4 bag counting-bug
+two-pc-trillium	spec 2 bag
+two-pc-trillium	impl 2 bag correct
+two-pc-trillium	impl 2 bag ignore-abort-vote
+two-pc-trillium	spec 3 bag
+two-pc-trillium	impl 3 bag correct
+two-pc-trillium	impl 3 bag ignore-abort-vote
+two-pc-trillium	spec 4 bag
+two-pc-trillium	impl 4 bag correct
+two-pc-trillium	impl 4 bag ignore-abort-vote

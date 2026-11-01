@@ -119,8 +119,14 @@ Two pairs against the one `spec`. The source's fault is `si` itself (the comment
   `Util.tla`, `README.md`, `LICENSE`, copied verbatim, with provenance in `source/PROVENANCE.md`.
   `KeyValueStore.tla` is itself a snapshot-isolation specification; the serializable
   specification program here is ours (catalogue pair (i)).
-- `rust/`: crate `bench_kv_snapshot_isolation_tla`. CLI: `<spec|impl> <n> [fifo|bag|causal]
-  [si|serializable]`, default model `fifo`, default variant `si`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_kv_snapshot_isolation_tla`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <n> [si|serializable]`; default n 2, default model `fifo`,
+  default variant `si`. `conf` is not this crate's conformance check: visible values carry a
+  `ThreadId`, the two sides spawn in different orders, and `conf` compares typed values, so it
+  reports every implementation graph; use `online` or `conf-join`, which compare role names. The
+  `out/fault-check` crate is a separate copy, not on the shared main: it keeps the old positional
+  CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See
+  `_tools/run-rust.sh`.
 - `java/`: package `bench.kv_snapshot_isolation_tla`, class `KvSnap` (args
   `<spec|impl>,<n>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, …`; impl `store, t0, …, c0, …`. Visible roles
@@ -148,8 +154,8 @@ All runs exhausted on both tools (JMC: "stack exhausted"). No disagreement. The 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `n ∈ {2, 3, 4}`, `v ∈ {si, serializable}`:
 
 ```
-timeout 600 $B/_tools/run-rust.sh $B/kv-snapshot-isolation-tla spec <n> fifo
-timeout 600 $B/_tools/run-rust.sh $B/kv-snapshot-isolation-tla impl <n> fifo <v>
+timeout 600 $B/_tools/run-rust.sh $B/kv-snapshot-isolation-tla count spec --model fifo -- <n>
+timeout 600 $B/_tools/run-rust.sh $B/kv-snapshot-isolation-tla count impl --model fifo -- <n> <v>
 $B/_tools/run-java.sh $B/kv-snapshot-isolation-tla 'bench.kv_snapshot_isolation_tla.KvSnap:spec,<n>,fifo' must 100000 600
 $B/_tools/run-java.sh $B/kv-snapshot-isolation-tla 'bench.kv_snapshot_isolation_tla.KvSnap:impl,<n>,fifo,<v>' must 100000 600
 ```

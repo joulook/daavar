@@ -1,8 +1,10 @@
 //! Benchmark ironlock (N13): IronFleet's IronLock token ring
 //! (`Protocol/Lock/Node.i.dfy`, `Impl/Lock/NodeImpl.i.dfy`, spec `Services/Lock/AbstractService.s.dfy`)
 //! as Must-API programs, each explored on its own under plain Must.
-//! Usage: `<spec|spec-ring|impl> <n> [fifo|bag|causal] [correct|double-hold|grant-without-token]`;
-//! K = 2 transfers. Prints `execs=<complete> blocked=<blocked>`.
+//! Usage: `<bin> count|export|conf|online … --model M -- <n> [variant] [spec-kind]`;
+//! variant `correct`, `double-hold` or `grant-without-token`; spec-kind `any` (default, the
+//! specification `spec` below) or `ring` (`spec-ring` below); `imp` ignores it.
+//! K = 2 transfers. `count` prints `execs=<complete> blocked=<blocked>`.
 //!
 //! Visible threads `obs0 .. obs{n-1}`: `obs_i` stands for the wire out of node i. It receives the
 //! `Locked(e)` packets node i emits (the packets `Service_Correspondence` constrains: a `Locked(e)`
@@ -25,6 +27,7 @@
 //!   (`nondet()`) also take epoch e+1 itself (keep the token it gave away) and emit `Locked(e+1)`.
 //! * variant `grant-without-token`: node 1 may (`nondet()`) run `NodeGrant` once at start without
 //!   holding the token (the `s.held` guard dropped): it sends `Transfer(0 + 1)` to node 2 mod n.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::channel::{Builder, Receiver, Sender};
 use traceforge::thread;
 use traceforge::*;
@@ -157,27 +160,33 @@ fn imp(n: usize, variant: Variant) {
     }
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec");
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
-    };
-    let variant = match a.get(4).map(String::as_str).unwrap_or("correct") {
+fn parse(a: &[String]) -> (usize, Variant, bool) {
+    let n: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let variant = match a.get(1).map(String::as_str).unwrap_or("correct") {
         "correct" => Variant::Correct,
         "double-hold" => Variant::DoubleHold,
         "grant-without-token" => Variant::GrantWithoutToken,
         v => panic!("unknown variant {v}; one of correct, double-hold, grant-without-token"),
     };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side {
-        "impl" => verify(conf, move || imp(n, variant)),
-        "spec" => verify(conf, move || spec(n, false)),
-        "spec-ring" => verify(conf, move || spec(n, true)),
-        s => panic!("unknown side {s}; one of spec, spec-ring, impl"),
+    let ring = match a.get(2).map(String::as_str).unwrap_or("any") {
+        "any" => false,
+        "ring" => true,
+        s => panic!("unknown spec-kind {s}; one of any, ring"),
     };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    (n, variant, ring)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|a| (0..parse(a).0).map(|i| format!("obs{i}")).collect(),
+        spec: &|a| {
+            let (n, _, ring) = parse(a);
+            std::sync::Arc::new(move || spec(n, ring))
+        },
+        imp: &|a| {
+            let (n, variant, _) = parse(a);
+            std::sync::Arc::new(move || imp(n, variant))
+        },
+    };
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

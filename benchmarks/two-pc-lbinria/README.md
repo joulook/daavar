@@ -81,7 +81,8 @@ communication and joins every thread last.
   receives and `p1`'s forward is never read (or the mirror image); both RMs receive `Commit`, the specification's word,
   but `rm1`'s `send Prepared(1)` is not causally before `rm0`'s `recv Commit`, while in every
   specification graph with a `Commit` the oracle received both `Prepared` before deciding. With
-  every report kept (`conf 2 bag counting-bug all`, log `out/logs/conf-counting-bug-2-bag-all.log`)
+  every report kept (the old CLI's `conf 2 bag counting-bug all`; `all` is gone, the shared `conf` has
+  no flag for it; log `out/logs/conf-counting-bug-2-bag-all.log`)
   TraceForge's 12 uncovered complete graphs at N = 2 are 4 with a crashed RM (value) and 8 with
   both RMs prepared (order); 324 at N = 3.
   **DOES NOT REFINE.**
@@ -101,9 +102,12 @@ The source's alternative "alt1" (the TM does not send the final commit) and the
 - `source/`: the Java program (all 16 files under `src/main/java/org/lbee/`), the TLA+ specs
   `TwoPhase.tla`, `TCommit.tla`, `TwoPhaseTrace.tla`, `run_impl.py`, `README.md` and the bug trace
   `TracesCompact/trace-4RM-BUG-E.ndjson`, copied verbatim, with provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_two_pc_lbinria`. CLI: `<spec|impl|conf> <N> [fifo|bag|causal]
-  [correct|counting-bug]` (defaults `bag`, `correct`); `conf` runs TraceForge's conformance check of
-  `impl <variant>` against `spec` with visible threads `rm0..rm{N-1}`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_two_pc_lbinria`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <N> [correct|counting-bug]`; defaults: N 2, variant `correct`. `--model` left out
+  means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
+  conformance check of `impl <variant>` against `spec` with visible threads `rm0..rm{N-1}`
+  (`--engine enumerator` for the diagnosing engine; the old `all` suffix, which kept every report,
+  is gone: the shared `conf` has no flag for it). See `_tools/run-rust.sh`.
 - `java/`: package `bench.two_pc_lbinria`: `TwoPcLbinria` (args `<spec|impl>,N[,model[,variant]]`)
   and `Support` (model parsing, construct-first spawning). See `_tools/run-java.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-bag.log`, and the all-reports conformance log.
@@ -140,8 +144,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `N ∈ {2, 3, 4}`, `v ∈ {correct, counting-bug}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-lbinria spec <N> bag correct
-$B/_tools/run-rust.sh $B/two-pc-lbinria impl <N> bag <v>
+$B/_tools/run-rust.sh $B/two-pc-lbinria count spec --model bag -- <N> correct
+$B/_tools/run-rust.sh $B/two-pc-lbinria count impl --model bag -- <N> <v>
 $B/_tools/run-java.sh $B/two-pc-lbinria 'bench.two_pc_lbinria.TwoPcLbinria:spec,<N>,bag,correct' must 100000 600
 $B/_tools/run-java.sh $B/two-pc-lbinria 'bench.two_pc_lbinria.TwoPcLbinria:impl,<N>,bag,<v>' must 100000 600
 ```
@@ -149,7 +153,8 @@ $B/_tools/run-java.sh $B/two-pc-lbinria 'bench.two_pc_lbinria.TwoPcLbinria:impl,
 Verdict check (TraceForge conformance, default stateful engine), `N ∈ {2, 3}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-lbinria conf <N> bag correct        # silence at N=2 and N=3
-$B/_tools/run-rust.sh $B/two-pc-lbinria conf <N> bag counting-bug   # 12 (N=2) / 324 (N=3) uncovered complete graphs
-$B/_tools/run-rust.sh $B/two-pc-lbinria conf 2 bag counting-bug all  # every report kept: 4 crash (value) + 8 early commit (order)
+$B/_tools/run-rust.sh $B/two-pc-lbinria conf --model bag -- <N> correct        # silence at N=2 and N=3
+$B/_tools/run-rust.sh $B/two-pc-lbinria conf --model bag -- <N> counting-bug   # 12 (N=2) / 324 (N=3) uncovered complete graphs
+# Old `conf 2 bag counting-bug all` (every report kept: 4 crash (value) + 8 early commit (order)):
+# gone, the shared `conf` has no flag for `all`.
 ```

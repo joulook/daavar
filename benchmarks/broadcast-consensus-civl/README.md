@@ -86,9 +86,10 @@ the `decide-early` counts equal `correct`'s, because n!/1! = n! orders per node.
 
 - `source/`: `BroadcastConsensus.bpl` and its `.expect`, copied verbatim, with provenance in
   `source/PROVENANCE.md`.
-- `rust/`: the Must-API Rust crate `bench_broadcast_consensus_civl`. CLI:
-  `<spec|impl> <n> [fifo|bag|causal] [correct|decide-early]`. Each node has one `Input` channel
-  and one `Val` channel. See `_tools/run-rust.sh`.
+- `rust/`: the Must-API Rust crate `bench_broadcast_consensus_civl`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <n> [correct|decide-early]`; defaults: n 2, model `bag`,
+  variant `correct`. Each node has one `Input` channel and one `Val` channel. See
+  `_tools/run-rust.sh`.
 - `java/`: package `bench.broadcast_consensus_civl`, with `Spec` (args `n,model`) and `Impl` (args
   `n,model,variant`). A node's two Rust channels are two type guards (`Input.class`, `Val.class`)
   on its mailbox. Spawn order: spec `oracle, c0..`; impl `node0.., c0..`. See
@@ -121,8 +122,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `n ∈ {2, 3, 4}`, `v ∈ {correct, decide-early}`:
 
 ```
-$B/_tools/run-rust.sh $B/broadcast-consensus-civl spec <n> bag
-$B/_tools/run-rust.sh $B/broadcast-consensus-civl impl <n> bag <v>
+$B/_tools/run-rust.sh $B/broadcast-consensus-civl count spec --model bag -- <n>
+$B/_tools/run-rust.sh $B/broadcast-consensus-civl count impl --model bag -- <n> <v>
 $B/_tools/run-java.sh $B/broadcast-consensus-civl 'bench.broadcast_consensus_civl.Spec:<n>,bag' must 100000 600
 $B/_tools/run-java.sh $B/broadcast-consensus-civl 'bench.broadcast_consensus_civl.Impl:<n>,bag,<v>' must 100000 600
 ```

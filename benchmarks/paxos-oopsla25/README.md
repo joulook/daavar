@@ -26,7 +26,7 @@ Roles:
 - Invisible: `oracle` (specification); `p1`, `p2` (proposers, ballots 1, 2; `p{i+1}` serves `c{i}`)
   and `a0`, `a1`, `a2` (acceptors) (implementation).
 
-Messages (source names): `Propose(v)`, `Msg1a(b)`, `Msg1b(a, b, Option<(b, v)>)`, `Msg2a(b, v)`,
+Messages (source names): `Propose(v)`, `Msg1a(b)`, `Msg1b(a, b, Option<Vote(b, v)>)`, `Msg2a(b, v)`,
 `Msg2b(a, b, v)`, `Decide(v)`. A 1b/2b goes to the proposer of its ballot (the source broadcasts
 into a soup; only that proposer reads them). Ballot = proposer index (the source's `(counter,
 leader)` bounded to one ballot per leader). Parameters: 2 clients, 2 proposers, 3 acceptors,
@@ -108,9 +108,11 @@ without keeping them: 186623 (ignore-max-vote), 870911 (skip-2a-check), 168479 (
 ## 6. Files
 
 - `source/`: `ex05_paxos.rs`, copied verbatim, with provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_paxos_oopsla25`. CLI: `<spec|impl|conf> <L> [bag|fifo|causal] [variant]`
-  (defaults `bag`, `correct`); `conf` runs TraceForge's conformance check with visible threads
-  `c0, c1, l0..l{L-1}` (fifth argument `enumerator`, `all` to keep every report).
+- `rust/`: crate `bench_paxos_oopsla25`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <L> [variant]`; defaults: L 1, variant `correct`. `--model` left out means `bag`,
+  this benchmark's model, which the crate declares. `conf` runs TraceForge's conformance check with
+  visible threads `c0, c1, l0..l{L-1}` (`--engine enumerator` for the diagnosing engine; the old
+  `all` suffix, which kept every report, is gone: the shared `conf` has no flag for it).
 - `java/`: package `bench.paxos_oopsla25`: `Paxos` (args `<spec|impl>,<L>[,<bag|fifo>[,<variant>]]`)
   and `Support` (model argument and construct-first spawning). Spawn order: spec `oracle, l*, c0, c1`;
   impl `p1, p2, a0, a1, a2, l*, c0, c1`. Same visible roles on both sides and languages. Receives
@@ -149,9 +151,9 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `L ∈ {1, 2}`, `v ∈ {correct, ignore-max-vote, skip-2a-check, half-majority, 1b-none}`:
 
 ```
-$B/_tools/run-rust.sh $B/paxos-oopsla25 spec <L> bag
-$B/_tools/run-rust.sh $B/paxos-oopsla25 impl <L> bag <v>
+$B/_tools/run-rust.sh $B/paxos-oopsla25 count spec --model bag -- <L>
+$B/_tools/run-rust.sh $B/paxos-oopsla25 count impl --model bag -- <L> <v>
 $B/_tools/run-java.sh $B/paxos-oopsla25 'bench.paxos_oopsla25.Paxos:spec,<L>,bag' must 100000 600
 $B/_tools/run-java.sh $B/paxos-oopsla25 'bench.paxos_oopsla25.Paxos:impl,<L>,bag,<v>' must 100000 600
-$B/_tools/run-rust.sh $B/paxos-oopsla25 conf <L> bag <v>        # verdict check, out/conf.log
+$B/_tools/run-rust.sh $B/paxos-oopsla25 conf --model bag -- <L> <v>        # verdict check, out/conf.log
 ```

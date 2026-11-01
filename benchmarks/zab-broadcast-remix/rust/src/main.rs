@@ -20,16 +20,21 @@
 //!   `COMMITLD(lastCommitted.zxid)` (`LeaderProcessACKLD` case 2, the fix of Issue 3). A server
 //!   answers `Committed` to its own client when it commits that client's entry.
 //!
-//! Usage: `<spec|impl> <Q> [fifo|bag|causal] [variant]`; Q writes per client, 2 clients, 3
+//! Usage: `<bin> count|export|conf|online … --model M -- <Q> [variant]`; Q writes per client,
+//! 2 clients, 3
 //! servers, default model `fifo` (p2p: `Zab.tla`'s `msgs[i][j]` are FIFO queues), default
 //! variant `correct`. Variants (impl side): `correct`, `issue1-propose-to-ackld` (Issue 1:
 //! `PROPOSE` goes to `ackldRecv` instead of `ackeRecv`).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::channel::{Builder, Receiver, Sender};
 use traceforge::thread;
-use traceforge::*;
 
 const QUORUM: u32 = 2;
+
+/// One entry of a history: zxid, client, value, in that order.
+#[derive(Clone, Debug, PartialEq)]
+struct Entry(u8, u8, u8);
 
 #[derive(Clone, Debug, PartialEq)]
 enum Msg {
@@ -40,7 +45,7 @@ enum Msg {
     /// `ACKEPOCH` of the late follower.
     AckEpoch,
     /// `NEWLEADER` with the leader's history `(zxid, client, value)`.
-    NewLeader { hist: Vec<(u8, u8, u8)> },
+    NewLeader { hist: Vec<Entry> },
     /// `ACKLD` with the last zxid of the history received.
     AckLd { zxid: u8 },
     /// `COMMITLD`.
@@ -140,7 +145,7 @@ fn leader(rx: Rx, t: Vec<Tx>, propose_to_ackld: bool) {
             Msg::AckEpoch => {
                 // LeaderProcessACKEPOCH, case 1 (NEWLEADER already broadcast): reply NEWLEADER
                 ackerecv |= 1 << 2;
-                let hist = history.iter().map(|x| (x.zxid, x.c, x.v)).collect();
+                let hist = history.iter().map(|x| Entry(x.zxid, x.c, x.v)).collect();
                 t[S0 + 2].send_msg(Msg::NewLeader { hist });
             }
             Msg::AckLd { zxid } => {
@@ -160,11 +165,11 @@ fn leader(rx: Rx, t: Vec<Tx>, propose_to_ackld: bool) {
 
 /// A follower `s<sid>`; `client`: the client it serves (`c1` for `s2`), `late`: joins late.
 fn follower(sid: u8, client: Option<usize>, late: bool, rx: Rx, t: Vec<Tx>) {
-    let mut log: Vec<(u8, u8, u8)> = Vec::new(); // (zxid, client, value)
+    let mut log: Vec<Entry> = Vec::new(); // (zxid, client, value)
     let mut committed: usize = 0;
     let mut synced = !late;
     let mut waiting: Vec<Msg> = Vec::new(); // client writes before the follower is synchronised
-    let reply = |e: &(u8, u8, u8)| {
+    let reply = |e: &Entry| {
         if Some(e.1 as usize) == client {
             t[e.1 as usize].send_msg(Msg::Committed { zxid: e.0 });
         }
@@ -202,7 +207,7 @@ fn follower(sid: u8, client: Option<usize>, late: bool, rx: Rx, t: Vec<Tx>) {
                 // FollowerProcessPROPOSE: append and ACK the next zxid; otherwise discard
                 let last = log.last().map(|e| e.0).unwrap_or(0);
                 if zxid == last + 1 {
-                    log.push((zxid, c, v));
+                    log.push(Entry(zxid, c, v));
                     t[S0].send_msg(Msg::Ack { zxid, from: sid });
                 }
             }
@@ -237,25 +242,27 @@ fn imp(q: usize, propose_to_ackld: bool) {
     }
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let q: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
-    };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "correct".to_string());
-    let propose_to_ackld = match variant.as_str() {
+fn parse(a: &[String]) -> (usize, bool) {
+    let q: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(1);
+    let propose_to_ackld = match a.get(1).map(String::as_str).unwrap_or("correct") {
         "correct" => false,
         "issue1-propose-to-ackld" => true,
         v => panic!("unknown variant {v}"),
     };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(q, propose_to_ackld)),
-        _ => verify(conf, move || spec(q)),
+    (q, propose_to_ackld)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["c0".to_string(), "c1".to_string()],
+        spec: &|a| {
+            let (q, _) = parse(a);
+            std::sync::Arc::new(move || spec(q))
+        },
+        imp: &|a| {
+            let (q, propose_to_ackld) = parse(a);
+            std::sync::Arc::new(move || imp(q, propose_to_ackld))
+        },
     };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

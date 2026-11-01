@@ -2,12 +2,13 @@
 //! (`aneris/ml_sources/examples/transaction_commit/two_phase_code.ml`), whose refinement target
 //! is the Coq `TC_model` (`aneris/examples/transaction_commit/tc_model.v`, TLA+ `TCommit`).
 //!
-//! Usage: `<spec|impl|conf> <N> [fifo|bag|causal] [correct|ignore-abort-vote]`. `N` = resource
-//! managers. Default model `bag` (asyn: UDP), default variant `correct`. `spec`/`impl` print
+//! Usage: `<bin> count|export|conf|online … --model M -- <N> [correct|ignore-abort-vote]`. `N` =
+//! resource managers. Model `--model bag` (asyn: UDP; the default this program declares),
+//! default variant `correct`. `count` prints
 //! `execs=<complete> blocked=<blocked>` of plain Must; `conf` runs TraceForge's conformance check
-//! of `impl <variant>` against `spec` and prints the verdict; a fifth argument
-//! `enumerator` selects the directed enumerator (which prints diagnostics) instead of the
-//! default stateful engine; an argument `all` keeps every report (`ConfBuilder::all_reports`).
+//! of `impl <variant>` against `spec` and prints the verdict; `--engine enumerator`
+//! selects the directed enumerator (which prints diagnostics) instead of the
+//! default stateful engine.
 //!
 //! Visible threads: `obs0..obs{N-1}`: the observer of RM `i`'s final `TC_model` state, which
 //! receives one `Outcome` (the RM's `COMMITTED` / `ABORTED`). Invisible: `tc` (spec oracle), `tm`
@@ -17,7 +18,6 @@
 //! named channel `("rm", i)`, so that `tm` can reach an RM spawned after it. Each mailbox and
 //! channel carries one message type.
 use traceforge::channel::{self, Receiver, Sender};
-use traceforge::conformance::{self, ConfBuilder, Engine};
 use traceforge::thread::{self, JoinHandle, ThreadId};
 use traceforge::*;
 
@@ -184,37 +184,23 @@ fn imp(n: usize, variant: &str) {
     tm.join().unwrap();
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("bag") {
-        "fifo" => ConsType::FIFO,
-        "causal" => ConsType::Causal,
-        _ => ConsType::Bag,
+fn parse(a: &[String]) -> (usize, String) {
+    let n: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let variant = a.get(1).cloned().unwrap_or_else(|| "correct".to_string());
+    (n, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|a| (0..parse(a).0).map(|i| format!("obs{i}")).collect(),
+        spec: &|a| {
+            let (n, _) = parse(a);
+            std::sync::Arc::new(move || spec(n))
+        },
+        imp: &|a| {
+            let (n, variant) = parse(a);
+            std::sync::Arc::new(move || imp(n, &variant))
+        },
     };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "correct".to_string());
-    if side == "conf" {
-        let visible: Vec<String> = (0..n).map(|i| format!("obs{i}")).collect();
-        let cfg = ConfBuilder::new()
-            .config(Config::builder().with_cons_type(model).with_verbose(0).build())
-            .cons_type(model)
-            .visible_threads(visible)
-            .engine(match a.get(5).map(String::as_str).unwrap_or("stateful") {
-                "enumerator" => Engine::Enumerator,
-                _ => Engine::Stateful,
-            })
-            .all_reports(a.iter().any(|x| x == "all"))
-            .build()
-            .expect("conformance config");
-        let v = conformance::verify(cfg, move || imp(n, &variant), move || spec(n)).expect("conformance run");
-        println!("{v}");
-        return;
-    }
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(n, &variant)),
-        _ => verify(conf, move || spec(n)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

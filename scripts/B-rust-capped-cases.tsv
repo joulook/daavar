@@ -1,0 +1,6 @@
+BR.count.abd-register-civl.impl_3_bag_correct	README count table: not exhausted at 600 s
+BR.count.balancer-load-aware.impl_l1_3_3_3_fifo	out/runs.log: exit 124 at 600 s
+BR.count.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo	out/runs.log: exit 124 at 600 s
+BR.count.balancer-load-aware.impl_l2_3_3_3_2_fifo	out/runs.log: exit 124 at 600 s
+BR.count.balancer-load-aware.spec_l1_3_3_3_fifo	out/runs.log: exit 124 at 600 s
+BR.count.bank-grove.impl_3_fifo_ordered	out/runs.log: rc 124 at 600 s

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run one benchmark's Rust binary (built by setup-node.sh into $EVAL_OUT/bench-target).
-# usage: rust-run.sh <benchdir-name> <args...>     (args as the crate's CLI: <spec|impl|conf|export> <size> [model] [variant])
+# usage: rust-run.sh <benchdir-name> <args...>     (args as the shared main's CLI: <count|export|conf|online|row> … [--model M …] -- <args>)
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
 B="$1"; shift

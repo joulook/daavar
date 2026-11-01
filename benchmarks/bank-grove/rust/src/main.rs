@@ -5,11 +5,13 @@
 //! over a lock service (`lock`, the KV behind `LockClerk`: `Lock` = `ConditionalPut(key, "", "1")`
 //! retried until "ok", `Unlock` = `Put(key, "")`) and an account KV (`kv`: `Get`, `Put`).
 //!
-//! Usage: `<spec|impl> <K> [fifo|bag|causal] [variant]`; `K` = transfers per client; `c0` moves 1
+//! Usage: `<bin> count|export|conf|online … --model M -- <K> [variant]`; `K` = transfers per
+//! client; `c0` moves 1
 //! from account 0 to account 1, `c1` from 1 to 0; `auditor` audits once. `BAL_TOTAL` = 1, all of
 //! it in account 0 initially. Default model `fifo` (p2p), default variant `ordered`. Variants
 //! (impl side): `ordered` (`acquire_two_good`) and `unordered` (`acquire_two`, the source's).
-//! Prints `execs=<complete> blocked=<blocked>`.
+//! `count` prints `execs=<complete> blocked=<blocked>`.
+//! Declared default model, used when `--model` is left out: `fifo`.
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
 
@@ -247,20 +249,23 @@ fn imp(k: usize, variant: &str) {
     kvh.join().unwrap();
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let k: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
+fn parse(a: &[String]) -> (usize, String) {
+    let k: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(1);
+    let variant = a.get(1).cloned().unwrap_or_else(|| "ordered".to_string());
+    (k, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|_| vec!["c0".to_string(), "c1".to_string(), "auditor".to_string()],
+        spec: &|a| {
+            let (k, _) = parse(a);
+            std::sync::Arc::new(move || spec(k))
+        },
+        imp: &|a| {
+            let (k, variant) = parse(a);
+            std::sync::Arc::new(move || imp(k, &variant))
+        },
     };
-    let variant = a.get(4).cloned().unwrap_or_else(|| "ordered".to_string());
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(k, &variant)),
-        _ => verify(conf, move || spec(k)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::FIFO)
 }

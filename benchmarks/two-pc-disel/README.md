@@ -83,7 +83,7 @@ thread last.
   of 64 at N = 2, 2304 of 2304 at N = 3), since in the implementation another participant's
   round-0 ack need not precede this participant's round-1 `Prep` receive (each participant's own
   ack does precede its own next receive, by program order); the enumerator engine
-  (`conf 2 fifo skip-ack-loop enumerator`) names the first
+  (`conf --engine enumerator --model fifo -- 2 skip-ack-loop`) names the first
   failing obligation as "observation mismatch on `p0` at position 4: the specification has
   nothing, the implementation has receive Prep(1, [3, 4])" (8 reports). **DOES NOT REFINE.**
 
@@ -110,10 +110,12 @@ reachable only with F1 and untagged receives) are not built.
 
 - `source/`: the whole `TwoPhaseCommit/` directory (seven `.v` files), copied verbatim, with
   provenance in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_two_pc_disel`. CLI: `<spec|impl|conf> <N> [fifo|bag|causal]
-  [correct|skip-ack-loop]` (defaults `bag`, `correct`); `conf` runs TraceForge's conformance check
-  with visible threads `p0..p{N-1}` (fifth argument `enumerator` for the diagnosing engine, `all`
-  to keep every report). See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_two_pc_disel`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <N> [correct|skip-ack-loop]`; defaults: N 2, variant `correct`. `--model` left out
+  means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
+  conformance check with visible threads `p0..p{N-1}` (`--engine enumerator` for the diagnosing
+  engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has no flag for
+  it). See `_tools/run-rust.sh`.
 - `java/`: package `bench.two_pc_disel`: `TwoPcDisel` (args `<spec|impl>,N[,model[,variant]]`) and
   `Support`. See `_tools/run-java.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-<model>.log`.
@@ -151,8 +153,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `N ∈ {2, 3}`, `m ∈ {bag, fifo}`, `v ∈ {correct, skip-ack-loop}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-disel spec <N> <m> correct
-$B/_tools/run-rust.sh $B/two-pc-disel impl <N> <m> <v>
+$B/_tools/run-rust.sh $B/two-pc-disel count spec --model <m> -- <N> correct
+$B/_tools/run-rust.sh $B/two-pc-disel count impl --model <m> -- <N> <v>
 $B/_tools/run-java.sh $B/two-pc-disel 'bench.two_pc_disel.TwoPcDisel:spec,<N>,<m>,correct' must 100000 600
 $B/_tools/run-java.sh $B/two-pc-disel 'bench.two_pc_disel.TwoPcDisel:impl,<N>,<m>,<v>' must 100000 600
 ```
@@ -160,7 +162,7 @@ $B/_tools/run-java.sh $B/two-pc-disel 'bench.two_pc_disel.TwoPcDisel:impl,<N>,<m
 Verdict check (TraceForge conformance), `N ∈ {2, 3}`, `m ∈ {bag, fifo}`:
 
 ```
-$B/_tools/run-rust.sh $B/two-pc-disel conf <N> <m> correct         # silence (all four runs)
-$B/_tools/run-rust.sh $B/two-pc-disel conf <N> <m> skip-ack-loop   # 64 (N=2) / 2304 (N=3) uncovered, both models
-$B/_tools/run-rust.sh $B/two-pc-disel conf 2 fifo skip-ack-loop enumerator   # diagnostics quoted in §4
+$B/_tools/run-rust.sh $B/two-pc-disel conf --model <m> -- <N> correct         # silence (all four runs)
+$B/_tools/run-rust.sh $B/two-pc-disel conf --model <m> -- <N> skip-ack-loop   # 64 (N=2) / 2304 (N=3) uncovered, both models
+$B/_tools/run-rust.sh $B/two-pc-disel conf --engine enumerator --model fifo -- 2 skip-ack-loop   # diagnostics quoted in §4
 ```

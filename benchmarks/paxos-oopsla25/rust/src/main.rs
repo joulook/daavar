@@ -2,19 +2,19 @@
 //! `refinement-examples/src/bin/ex05_paxos.rs`, after Lamport's TLA+ Phase1a/1b/2a/2b) against
 //! a consensus oracle (`RELATED-BENCHMARKS.tex` §B1).
 //!
-//! Usage: `<spec|impl|conf> <L> [bag|fifo|causal] [variant]`; `L` = learners (1..=3); 2 clients,
-//! 2 proposers (ballots 1, 2), 3 acceptors. Default model `bag` (asyn: the source's message
-//! soup), default variant `correct`. Variants (impl side): `correct`, `ignore-max-vote`,
-//! `skip-2a-check`, `half-majority`, `1b-none`. `spec`/`impl` print
+//! Usage: `<bin> count|export|conf|online … --model M -- <L> [variant]`; `L` = learners (1..=3);
+//! 2 clients, 2 proposers (ballots 1, 2), 3 acceptors. Model `--model bag` (asyn: the source's
+//! message soup; the default this program declares), default variant `correct`. Variants
+//! (impl side): `correct`, `ignore-max-vote`,
+//! `skip-2a-check`, `half-majority`, `1b-none`. `count` prints
 //! `execs=<complete> blocked=<blocked>` of plain Must; `conf` runs TraceForge's conformance check
-//! of `impl <variant>` against `spec` and prints the verdict (fifth argument `enumerator` for the
-//! diagnosing engine, `all` to keep every report).
+//! of `impl <variant>` against `spec` and prints the verdict (`--engine enumerator` for the
+//! diagnosing engine).
 //!
 //! Visible threads: `c0`, `c1` (clients, one proposal each), `l0..l{L-1}` (learners, one
 //! decision each). Invisible: `oracle` (spec); `p1`, `p2`, `a0`, `a1`, `a2` (impl). Every thread
 //! receives only on its own named channel.
 use traceforge::channel::{self, Receiver, Sender};
-use traceforge::conformance::{self, ConfBuilder, Engine};
 use traceforge::thread::{self, JoinHandle};
 use traceforge::*;
 
@@ -24,14 +24,18 @@ const PROPOSERS: usize = 2; // ballots 1..=PROPOSERS; proposer b serves client b
 type Ballot = u8;
 type Value = u8;
 
+/// A vote an acceptor reports in `Msg1b`: the ballot and the value, in that order.
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Vote(Ballot, Value);
+
 #[derive(Clone, Debug, PartialEq)]
 enum Msg {
     /// client -> proposer (spec: client -> oracle)
     Propose(Value),
     /// `Msg1a(Ballot)`, proposer -> acceptor
     Msg1a(Ballot),
-    /// `Msg1b(Acceptor, Ballot, Option<(Ballot, Value)>)`, acceptor -> proposer of the ballot
-    Msg1b(u8, Ballot, Option<(Ballot, Value)>),
+    /// `Msg1b(Acceptor, Ballot, Option<Vote>)`, acceptor -> proposer of the ballot
+    Msg1b(u8, Ballot, Option<Vote>),
     /// `Msg2a(Ballot, Value)`, proposer -> acceptor
     Msg2a(Ballot, Value),
     /// `Msg2b(Acceptor, Ballot, Value)`, acceptor -> proposer of the ballot
@@ -107,7 +111,7 @@ fn proposer(b: Ballot, l: usize, f: Faults) {
         inbox("a", a).0.send_msg(Msg::Msg1a(b));
     }
     let mut q: Vec<u8> = Vec::new();
-    let mut max_vote: Option<(Ballot, Value)> = None;
+    let mut max_vote: Option<Vote> = None;
     for _ in 0..ACCEPTORS {
         if q.len() >= majority {
             break;
@@ -115,16 +119,16 @@ fn proposer(b: Ballot, l: usize, f: Faults) {
         if let Msg::Msg1b(a, mb, vote) = rx.recv_msg_block() {
             if mb == b && !q.contains(&a) {
                 q.push(a);
-                if let Some((vb, vv)) = vote {
-                    if max_vote.map_or(true, |(x, _)| vb > x) {
-                        max_vote = Some((vb, vv));
+                if let Some(Vote(vb, vv)) = vote {
+                    if max_vote.map_or(true, |Vote(x, _)| vb > x) {
+                        max_vote = Some(Vote(vb, vv));
                     }
                 }
             }
         }
     }
     let v = match max_vote {
-        Some((_, vv)) if !f.ignore_max_vote => vv,
+        Some(Vote(_, vv)) if !f.ignore_max_vote => vv,
         _ => mine,
     };
     for a in 0..ACCEPTORS {
@@ -153,7 +157,7 @@ fn proposer(b: Ballot, l: usize, f: Faults) {
 fn acceptor(me: usize, f: Faults) {
     let rx = inbox("a", me).1;
     let mut max_bal: Option<Ballot> = None;
-    let mut max_vote: Option<(Ballot, Value)> = None;
+    let mut max_vote: Option<Vote> = None;
     for _ in 0..2 * PROPOSERS {
         match rx.recv_msg_block() {
             Msg::Msg1a(b) => {
@@ -166,7 +170,7 @@ fn acceptor(me: usize, f: Faults) {
             Msg::Msg2a(b, v) => {
                 if f.skip_2a_check || max_bal.map_or(true, |mb| b >= mb) {
                     max_bal = Some(b);
-                    max_vote = Some((b, v));
+                    max_vote = Some(Vote(b, v));
                     inbox("p", b as usize).0.send_msg(Msg::Msg2b(me as u8, b, v));
                 }
             }
@@ -206,39 +210,28 @@ fn faults(variant: &str) -> Faults {
     f
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec").to_string();
-    let l: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(1);
+fn parse(a: &[String]) -> (usize, Faults) {
+    let l: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(1);
     assert!((1..=3).contains(&l), "L must be 1..=3");
-    let model = match a.get(3).map(String::as_str).unwrap_or("bag") {
-        "fifo" => ConsType::FIFO,
-        "causal" => ConsType::Causal,
-        _ => ConsType::Bag,
+    let f = faults(a.get(1).map(String::as_str).unwrap_or("correct"));
+    (l, f)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|a| {
+            let mut visible: Vec<String> = vec!["c0".into(), "c1".into()];
+            visible.extend((0..parse(a).0).map(|j| format!("l{j}")));
+            visible
+        },
+        spec: &|a| {
+            let (l, _) = parse(a);
+            std::sync::Arc::new(move || spec(l))
+        },
+        imp: &|a| {
+            let (l, f) = parse(a);
+            std::sync::Arc::new(move || imp(l, f))
+        },
     };
-    let f = faults(a.get(4).map(String::as_str).unwrap_or("correct"));
-    if side == "conf" {
-        let mut visible: Vec<String> = vec!["c0".into(), "c1".into()];
-        visible.extend((0..l).map(|j| format!("l{j}")));
-        let cfg = ConfBuilder::new()
-            .config(Config::builder().with_cons_type(model).with_verbose(0).build())
-            .cons_type(model)
-            .visible_threads(visible)
-            .engine(match a.get(5).map(String::as_str).unwrap_or("stateful") {
-                "enumerator" => Engine::Enumerator,
-                _ => Engine::Stateful,
-            })
-            .all_reports(a.iter().any(|x| x == "all"))
-            .build()
-            .expect("conformance config");
-        let v = conformance::verify(cfg, move || imp(l, f), move || spec(l)).expect("conformance run");
-        println!("{v}");
-        return;
-    }
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side.as_str() {
-        "impl" => verify(conf, move || imp(l, f)),
-        _ => verify(conf, move || spec(l)),
-    };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

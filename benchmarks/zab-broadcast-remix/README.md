@@ -128,9 +128,12 @@ reverting it lets `s2` miss the commit of a transaction it holds, after which ev
 
 - `source/`: `Zab.tla`, `issues.md`, `doc.md`, copied verbatim, with provenance in
   `source/PROVENANCE.md`.
-- `rust/`: crate `bench_zab_broadcast_remix`. CLI: `<spec|impl> <Q> [fifo|bag|causal] [variant]`,
-  default model `fifo`, default variant `correct`. Each thread has an inbox channel built by main
-  before any spawn (the servers address each other). See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_zab_broadcast_remix`. CLI, the shared main: `<bin> count|export|conf|online
+  … --model M -- <Q> [variant]`; default Q 1, default model `fifo`, default variant `correct`. The
+  `out/fault-check` crate is a separate copy, not on the shared main: it keeps the old positional
+  CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so its commands stand as run. Each thread
+  has an inbox channel built by main before any spawn (the servers address each other). See
+  `_tools/run-rust.sh`.
 - `java/`: package `bench.zab_broadcast_remix`, class `ZabBroadcast` (args
   `<spec|impl>,<Q>,<fifo|bag>,<variant>`), `Support` (the model argument and a thread registry
   that mints every id before any thread starts, as in `ironlock/`). Spawn order: spec
@@ -161,8 +164,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `Q ∈ {1, 2}`, `v ∈ {correct, issue1-propose-to-ackld}`:
 
 ```
-$B/_tools/run-rust.sh $B/zab-broadcast-remix spec <Q> fifo
-$B/_tools/run-rust.sh $B/zab-broadcast-remix impl <Q> fifo <v>
+$B/_tools/run-rust.sh $B/zab-broadcast-remix count spec --model fifo -- <Q>
+$B/_tools/run-rust.sh $B/zab-broadcast-remix count impl --model fifo -- <Q> <v>
 $B/_tools/run-java.sh $B/zab-broadcast-remix bench.zab_broadcast_remix.ZabBroadcast:spec,<Q>,fifo must 100000 600
 $B/_tools/run-java.sh $B/zab-broadcast-remix bench.zab_broadcast_remix.ZabBroadcast:impl,<Q>,fifo,<v> must 100000 600
 ```

@@ -105,9 +105,14 @@ which also removes the `Fresh` round trip, hence its smaller counts.
 - `source/`: `tutorial/kvservice/` (server, client, proto, generated marshalling, `*_gk/`,
   `cmd/`), copied verbatim, with provenance in `source/PROVENANCE.md`. The Perennial proof is
   not on disk; the specification program is the centralised one.
-- `rust/`: crate `bench_kv_exactly_once_grove`. CLI: `<spec|impl> <keys> [fifo|bag|causal]
-  [exactly-once|no-request-id]`, default model `bag`, default variant `exactly-once`. See
-  `_tools/run-rust.sh`.
+- `rust/`: crate `bench_kv_exactly_once_grove`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <keys> [exactly-once|no-request-id]`; default keys 1,
+  default variant `exactly-once`. `--model` left out means `bag`, this benchmark's model, which the
+  crate declares. `conf` is not this crate's conformance check: visible values carry a `ThreadId`,
+  the two sides spawn in different orders, and `conf` compares typed values, so it reports every
+  implementation graph; use `online` or `conf-join`, which compare role names. The `out/fault-check`
+  crate is a separate copy, not on the shared main: it keeps the old positional CLI `<spec|impl>
+  <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.kv_exactly_once_grove`, class `ExactlyOnceKv` (args
   `<spec|impl>,<keys>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `server, p0, p1, c0, c1`. Visible roles
@@ -142,8 +147,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `k ∈ {1, 2, 3}`, `v ∈ {exactly-once, no-request-id}`:
 
 ```
-$B/_tools/run-rust.sh $B/kv-exactly-once-grove spec <k> bag
-$B/_tools/run-rust.sh $B/kv-exactly-once-grove impl <k> bag <v>
+$B/_tools/run-rust.sh $B/kv-exactly-once-grove count spec --model bag -- <k>
+$B/_tools/run-rust.sh $B/kv-exactly-once-grove count impl --model bag -- <k> <v>
 $B/_tools/run-java.sh $B/kv-exactly-once-grove 'bench.kv_exactly_once_grove.ExactlyOnceKv:spec,<k>,bag' must 100000 600
 $B/_tools/run-java.sh $B/kv-exactly-once-grove 'bench.kv_exactly_once_grove.ExactlyOnceKv:impl,<k>,bag,<v>' must 100000 600
 ```

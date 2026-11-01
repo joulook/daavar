@@ -103,7 +103,7 @@ Notation: `S(m)` a send, `R(m)` a receive, per visible thread in program order.
   in every specification graph `k1` serves `c1`'s `Set(1,2)` before its `Get(1)` (program order and
   FIFO), and no command deletes, so the answer is `Some(2)` (or `Some` of a later `Set`).
   Component: **signature value**. TraceForge's stateful check: 3 of 3 implementation graphs
-  uncovered at Q = 2, 7 of 7 at Q = 3; the enumerator (`conf 2 fifo lost-set enumerator`) names the
+  uncovered at Q = 2, 7 of 7 at Q = 3; the enumerator (`conf --engine enumerator --model fifo -- 2 lost-set`) names the
   first failing obligation "observation mismatch on `c1` at position 3: … another attempt of the
   specification observed receive Res(Got { key: 1, value: Some(2) }) at this position, the
   implementation has receive Res(Got { key: 1, value: None })". At Q = 1 the scripts issue only two
@@ -126,10 +126,11 @@ implementations (only v3 is in the artefact).
 
 - `source/`: the artefact's `case-study-memcached/src/` (18 files) and `Cargo.toml`, copied verbatim,
   with provenance (artefact doi, zip md5, file md5s) in `source/PROVENANCE.md`.
-- `rust/`: crate `bench_memcached_oopsla25`. CLI: `<spec|impl|conf> <Q> [fifo|bag|causal]
-  [v3|shared-bucket|lost-set]` (defaults `fifo`, `v3`); `conf` runs TraceForge's conformance check
-  with visible threads `c0`, `c1` (fifth argument `enumerator` for the diagnosing engine, `all` to
-  keep every report). See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_memcached_oopsla25`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <Q> [v3|shared-bucket|lost-set]`; defaults: Q 1, model `fifo`, variant `v3`. `conf`
+  runs TraceForge's conformance check with visible threads `c0`, `c1` (`--engine enumerator` for the
+  diagnosing engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has
+  no flag for it). See `_tools/run-rust.sh`.
 - `java/`: package `bench.memcached_oopsla25`: `Memcached` (args `<spec|impl>,<Q>[,<fifo|bag>[,<variant>]]`)
   and `Support` (the model argument and construct-first spawning, copied from the H1 idiom). Spawn
   order: spec `k0, k1, c0, c1`; impl `b0[, b1], w0, w1, c0, c1`. Visible roles `c0`, `c1` on both
@@ -164,8 +165,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `Q ∈ {1, 2, 3}`, `v ∈ {v3, shared-bucket, lost-set}`:
 
 ```
-$B/_tools/run-rust.sh $B/memcached-oopsla25 spec <Q> fifo
-$B/_tools/run-rust.sh $B/memcached-oopsla25 impl <Q> fifo <v>
+$B/_tools/run-rust.sh $B/memcached-oopsla25 count spec --model fifo -- <Q>
+$B/_tools/run-rust.sh $B/memcached-oopsla25 count impl --model fifo -- <Q> <v>
 $B/_tools/run-java.sh $B/memcached-oopsla25 'bench.memcached_oopsla25.Memcached:spec,<Q>,fifo' must 100000 600
 $B/_tools/run-java.sh $B/memcached-oopsla25 'bench.memcached_oopsla25.Memcached:impl,<Q>,fifo,<v>' must 100000 600
 ```
@@ -173,8 +174,8 @@ $B/_tools/run-java.sh $B/memcached-oopsla25 'bench.memcached_oopsla25.Memcached:
 Verdict check (TraceForge conformance, not a count), same `Q` and `v`:
 
 ```
-$B/_tools/run-rust.sh $B/memcached-oopsla25 conf <Q> fifo <v>     # silence except lost-set Q=2 (3 uncovered), Q=3 (7)
-$B/_tools/run-rust.sh $B/memcached-oopsla25 conf 2 fifo lost-set enumerator   # diagnostics quoted in §4
+$B/_tools/run-rust.sh $B/memcached-oopsla25 conf --model fifo -- <Q> <v>     # silence except lost-set Q=2 (3 uncovered), Q=3 (7)
+$B/_tools/run-rust.sh $B/memcached-oopsla25 conf --engine enumerator --model fifo -- 2 lost-set   # diagnostics quoted in §4
 ```
 
 Every count command and its output is in `out/runs.log`; every conformance command and its output

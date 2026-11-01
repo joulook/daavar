@@ -1,8 +1,9 @@
 //! Benchmark broadcast-consensus-civl (N3): CIVL's `samples/BroadcastConsensus.bpl` (each of n
 //! processes broadcasts its value to all, self included, collects n values and decides the max)
 //! as two Must-API programs, each explored on its own under plain Must.
-//! Usage: `<spec|impl> <n> [fifo|bag|causal] [correct|decide-early]`.
-//! Prints `execs=<complete> blocked=<blocked>` so the Java side can be compared line for line.
+//! Usage: `<bin> count|export|conf|online … --model M -- <n> [correct|decide-early]`.
+//! `count` prints `execs=<complete> blocked=<blocked>` so the Java side can be compared
+//! line for line.
 //!
 //! Visible threads `c0 .. c{n-1}`, one per process: `c_i` chooses the process's value
 //! `v_i in {0, 1}` by `nondet()`, sends `Input(v_i)`, and receives `Decide(d)`.
@@ -11,6 +12,7 @@
 //!   every node (self included, the source's `Broadcast`), receives n `Val`s and sends the max to
 //!   `c_i` (the source's `Collect` + `set_decision`).
 //! * variant `decide-early`: `node_i` decides after n - 1 values.
+//! Declared default model, used when `--model` is left out: `bag`.
 use traceforge::channel::{Builder, Receiver, Sender};
 use traceforge::thread;
 use traceforge::*;
@@ -103,24 +105,27 @@ fn imp(n: usize, variant: Variant) {
     }
 }
 
-fn main() {
-    let a: Vec<String> = std::env::args().collect();
-    let side = a.get(1).map(String::as_str).unwrap_or("spec");
-    let n: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(2);
-    let model = match a.get(3).map(String::as_str).unwrap_or("fifo") {
-        "bag" => ConsType::Bag,
-        "causal" => ConsType::Causal,
-        _ => ConsType::FIFO,
-    };
-    let variant = match a.get(4).map(String::as_str).unwrap_or("correct") {
+fn parse(a: &[String]) -> (usize, Variant) {
+    let n: usize = a.first().and_then(|s| s.parse().ok()).unwrap_or(2);
+    let variant = match a.get(1).map(String::as_str).unwrap_or("correct") {
         "correct" => Variant::Correct,
         "decide-early" => Variant::DecideEarly,
         v => panic!("unknown variant {v}; one of correct, decide-early"),
     };
-    let conf = Config::builder().with_cons_type(model).with_verbose(0).build();
-    let stats = match side {
-        "impl" => verify(conf, move || imp(n, variant)),
-        _ => verify(conf, move || spec(n)),
+    (n, variant)
+}
+
+fn main() -> std::process::ExitCode {
+    let program = traceforge::program::Program {
+        visible: &|a| (0..parse(a).0).map(|i| format!("c{i}")).collect(),
+        spec: &|a| {
+            let (n, _) = parse(a);
+            std::sync::Arc::new(move || spec(n))
+        },
+        imp: &|a| {
+            let (n, variant) = parse(a);
+            std::sync::Arc::new(move || imp(n, variant))
+        },
     };
-    println!("execs={} blocked={}", stats.execs, stats.block);
+    traceforge::program::main_with_model(program, traceforge::ConsType::Bag)
 }

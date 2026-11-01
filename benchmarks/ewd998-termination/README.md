@@ -141,9 +141,12 @@ in between, so the count reaches the token at the same rounds.
 - `source/`: `AsyncTerminationDetection.tla`, `EWD998.tla`, `EWD998Chan.tla`,
   `EWD998ChanTrace.md`, `impl/src/*.java`, copied verbatim, with provenance in
   `source/PROVENANCE.md`.
-- `rust/`: crate `bench_ewd998_termination`. CLI: `<spec|impl> <N> [fifo|bag|causal] [variant]`,
-  default model `bag`, default variant `correct`. Each thread has an inbox channel built by main
-  before any spawn (detectors, stubs and apps address each other). See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_ewd998_termination`. CLI, the shared main: `<bin> count|export|conf|online …
+  --model M -- <N> [variant]`; default N 3, default variant `correct`. `--model` left out means
+  `bag`, this benchmark's model, which the crate declares. The `out/fault-check` crate is a separate
+  copy, not on the shared main: it keeps the old positional CLI `<spec|impl> <size>
+  [fifo|bag|causal] [variant]`, so its commands stand as run. Each thread has an inbox channel built
+  by main before any spawn (detectors, stubs and apps address each other). See `_tools/run-rust.sh`.
 - `java/`: package `bench.ewd998_termination`, class `Ewd998` (args
   `<spec|impl>,<N>,<fifo|bag>,<variant>`), `Support` (the model argument and a thread registry
   that mints every id before any thread starts, as in `ironlock/`). Spawn order: spec
@@ -178,8 +181,8 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `N ∈ {2, 3}`, `v ∈ {correct, no-black-on-receive}`:
 
 ```
-$B/_tools/run-rust.sh $B/ewd998-termination spec <N> bag
-$B/_tools/run-rust.sh $B/ewd998-termination impl <N> bag <v>
+$B/_tools/run-rust.sh $B/ewd998-termination count spec --model bag -- <N>
+$B/_tools/run-rust.sh $B/ewd998-termination count impl --model bag -- <N> <v>
 $B/_tools/run-java.sh $B/ewd998-termination bench.ewd998_termination.Ewd998:spec,<N>,bag must 100000 600
 $B/_tools/run-java.sh $B/ewd998-termination bench.ewd998_termination.Ewd998:impl,<N>,bag,<v> must 100000 600
 ```

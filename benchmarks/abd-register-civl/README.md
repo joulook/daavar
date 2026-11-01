@@ -34,8 +34,8 @@ Messages:
 - Client ↔ front end: `Op::Write(1)` and `Op::Read(i)` (i names the reader), answered by
   `Reply::WriteAck` and `Reply::ReadReply(v)`.
 - `Done` (`r1` → `r2`).
-- Proxy ↔ replica: `ToReplica::Query(p)` and `ToReplica::Update(p, (t, pid), v)`, where p is the
-  proxy index (0 = `wp`, 1 = `rp1`, 2 = `rp2`), answered by `QueryReply((t, pid), v)` and
+- Proxy ↔ replica: `ToReplica::Query(p)` and `ToReplica::Update(p, Ts(t, pid), v)`, where p is the
+  proxy index (0 = `wp`, 1 = `rp1`, 2 = `rp2`), answered by `QueryReply(Ts(t, pid), v)` and
   `UpdateAck`.
 
 The clients:
@@ -115,9 +115,10 @@ answers `r2`'s query, later in its own program order (`Done` puts `r2`'s query a
 return), and its stored timestamp only grows. So `r2` reads 1 too. The n = 2 runs show 0
 inversions.
 
-**Checked by running** (TraceForge, plain Must, the crate's diagnostic): with the fifth CLI
-argument `witness`, `r1` records its value in a static and `r2` counts the executions in which it
-reads 0 after `r1` read 1. The diagnostic adds no events and the counts are unchanged. Results:
+**Checked by running** (TraceForge, plain Must, the crate's diagnostic). **The `witness` diagnostic
+is removed from the crate and the new CLI has no such argument; what follows is its recorded
+result, kept as history.** With the fifth argument `witness` of the old CLI, `r1` records its value
+in a static and `r2` counts the executions in which it reads 0 after `r1` read 1. The diagnostic adds no events and the counts are unchanged. Results:
 
 | side | n | inversion executions / execs |
 |---|---|---|
@@ -143,9 +144,10 @@ catalogue's (b) (quorums of 1) and (c) (the writer reuses `ts`) are not built.
 
 - `source/`: `ABD.bpl` and its `.expect`, copied verbatim, with provenance in
   `source/PROVENANCE.md`.
-- `rust/`: the Must-API Rust crate `bench_abd_register_civl`. CLI:
-  `<spec|impl> <replicas> [fifo|bag|causal] [correct|read-no-writeback] [witness]`. One channel
-  per receiver and message type. See `_tools/run-rust.sh`.
+- `rust/`: the Must-API Rust crate `bench_abd_register_civl`. CLI, the shared main: `<bin>
+  count|export|conf|online … --model M -- <replicas> [correct|read-no-writeback]`; defaults: 3
+  replicas, model `bag`, variant `correct`. The old fifth argument `witness` is removed (§4). One
+  channel per receiver and message type. See `_tools/run-rust.sh`.
 - `java/`: package `bench.abd_register_civl`, with `Spec` (args `replicas,model`) and `Impl` (args
   `replicas,model,variant`). Shared parts are in `Abd.java`. A proxy's three Rust channels (`Op`,
   `QueryReply`, `UpdateAck`) and `r2`'s two (`Done`, `Reply`) are type guards. Spawn order: spec
@@ -178,12 +180,12 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 `n ∈ {2, 3}`, `v ∈ {correct, read-no-writeback}`:
 
 ```
-timeout 600 $B/_tools/run-rust.sh $B/abd-register-civl spec <n> bag correct witness
-timeout 600 $B/_tools/run-rust.sh $B/abd-register-civl impl <n> bag <v> witness
+timeout 600 $B/_tools/run-rust.sh $B/abd-register-civl count spec --model bag -- <n> correct
+timeout 600 $B/_tools/run-rust.sh $B/abd-register-civl count impl --model bag -- <n> <v>
 $B/_tools/run-java.sh $B/abd-register-civl 'bench.abd_register_civl.Spec:<n>,bag' must 100000 600
 $B/_tools/run-java.sh $B/abd-register-civl 'bench.abd_register_civl.Impl:<n>,bag,<v>' must 100000 600
 ```
 
-The fourth Rust argument is ignored for `spec`. Each row's logs are in `out/logs/`, named
+The variant argument is ignored by `spec`. Each row's logs are in `out/logs/`, named
 `rust-spec-<n>-bag.log`, `rust-impl-<v>-<n>-bag.log`, `java-spec-<n>-bag.log` and
 `java-impl-<v>-<n>-bag.log` for the four commands above, in that order.

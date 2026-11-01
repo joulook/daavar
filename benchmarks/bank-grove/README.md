@@ -116,8 +116,13 @@ locks, unlocking `from` before the second `Put`) are not built.
 
 - `source/`: `bank/bank.go`, `lockservice/lock_clerk.go`, `kv/interface.go` (156 lines Go),
   copied verbatim, with provenance in `source/PROVENANCE.md`. The Perennial proof is not on disk.
-- `rust/`: crate `bench_bank_grove`. CLI: `<spec|impl> <K> [fifo|bag|causal]
-  [ordered|unordered]`, default model `fifo`, default variant `ordered`. See `_tools/run-rust.sh`.
+- `rust/`: crate `bench_bank_grove`. CLI, the shared main: `<bin> count|export|conf|online … --model
+  M -- <K> [ordered|unordered]`; default K 1, default model `fifo`, default variant `ordered`.
+  `conf` is not this crate's conformance check: visible values carry a `ThreadId`, the two sides
+  spawn in different orders, and `conf` compares typed values, so it reports every implementation
+  graph; use `online` or `conf-join`, which compare role names. The `out/fault-check` crate is a
+  separate copy, not on the shared main: it keeps the old positional CLI `<spec|impl> <size>
+  [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
 - `java/`: package `bench.bank_grove`, class `Bank` (args `<spec|impl>,<K>,<fifo|bag>,<variant>`),
   `Support` (the model argument, copied from `H1Support`). Spawn order: spec `bank, c0, c1,
   auditor`; impl `lock, kv, clerk0, clerk1, aclerk, c0, c1, auditor`. Visible roles `c0`, `c1`,
@@ -146,8 +151,8 @@ No disagreement where both tools finished (K = 1 for both variants, K = 2 for `u
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `K ∈ {1, 2, 3}` (and `spec` 4), `v ∈ {ordered, unordered}`:
 
 ```
-timeout 600 $B/_tools/run-rust.sh $B/bank-grove spec <K> fifo
-timeout 600 $B/_tools/run-rust.sh $B/bank-grove impl <K> fifo <v>
+timeout 600 $B/_tools/run-rust.sh $B/bank-grove count spec --model fifo -- <K>
+timeout 600 $B/_tools/run-rust.sh $B/bank-grove count impl --model fifo -- <K> <v>
 $B/_tools/run-java.sh $B/bank-grove 'bench.bank_grove.Bank:spec,<K>,fifo' must 100000 600
 $B/_tools/run-java.sh $B/bank-grove 'bench.bank_grove.Bank:impl,<K>,fifo,<v>' must 100000 600
 ```
