@@ -1,0 +1,2 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C2.producer-consumer-civl.impl_20_fifo.f1.t16	C	producer-consumer-civl	20	fifo	impl	stateless-parallel	16	readme	frontier	c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	producer-consumer-civl		producer-consumer-civl.impl_20_fifo

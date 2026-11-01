@@ -1,0 +1,1 @@
+C2.producer-consumer-civl.impl_20_fifo.f1.t16 250 3600 needok:C2.producer-consumer-civl.impl_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateless --threads 16 --model fifo -- 20
