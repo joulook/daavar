@@ -1,0 +1,78 @@
+dir	model	variant	spec_variant	args	size_rule	verdict	note
+producer-consumer-civl	fifo	impl	-	<k>; k>=1	all	conforms	one program; conforms under fifo/p2p
+producer-consumer-civl	bag	impl	-	<k>; k>=1	all	violation	the same program under bag/asyn
+n-buyer-kragl	bag	correct	-	<n>; n>=2	all	conforms	
+n-buyer-kragl	bag	no-subtract	-	<n>; n>=2	all	violation	
+two-pc-abstain-kragl	bag	correct	-	<n>; n>=1	all	conforms	
+two-pc-abstain-kragl	bag	off-by-one	-	<n>; n>=1	all	violation	
+replicated-log-esop20	bag	correct	-	<c>; c>=1	all	conforms	
+replicated-log-esop20	fifo	correct	-	<c>; c>=1	all	conforms	
+replicated-log-esop20	bag	early-reply	-	<c>; c>=1	all	violation	
+replicated-log-esop20	fifo	early-reply	-	<c>; c>=1	all	violation	
+ring-election-igloo	bag	correct	-	<n>; n>=2	all	conforms	
+ring-election-igloo	bag	no-compare	-	<n>; n>=2	all	violation	elects the wrong node at this bound
+abd-register-civl	bag	correct	-	<n>; n>=2	all	conforms	
+abd-register-civl	bag	read-no-writeback	-	<n>; n>=2	n==2	conforms	masked at n=2
+abd-register-civl	bag	read-no-writeback	-	<n>; n>=2	n>=3	violation	
+bank-grove	fifo	ordered	-	<K>; K>=1	all	conforms	
+bank-grove	fifo	unordered	-	<K>; K>=1	all	violation	deadlock: visible clients blocked
+broadcast-consensus-civl	bag	correct	-	<n>; n>=2	all	conforms	
+broadcast-consensus-civl	bag	decide-early	-	<n>; n>=2	all	violation	
+calculator-disel	bag	batched	-	<K>; K>=1	all	conforms	
+calculator-disel	bag	memo	-	<K>; K>=1	all	conforms	
+calculator-disel	bag	delegating	-	<K>; K>=1	all	conforms	
+calculator-disel	bag	batched-swap	-	<K>; K>=1	all	violation	
+calculator-disel	bag	memo-ignore-args	-	<K>; K>=1	all	violation	
+calculator-disel	bag	delegating-prev	-	<K>; K>=1	all	violation	
+ewd998-termination	bag	correct	-	<N>; N>=2	all	conforms	
+ewd998-termination	bag	no-black-on-receive	-	<N>; N>=2	all	violation	
+fencing-grove	fifo	fenced	-	<K>; K>=1	all	conforms	
+fencing-grove	fifo	stale-frontend	-	<K>; K>=1	all	violation	
+ironlock	fifo	correct	-	<n>; n>=2	all	conforms	
+ironlock	fifo	double-hold	-	<n>; n>=2	all	violation	
+ironlock	fifo	grant-without-token	-	<n>; n>=2	n==2	conforms	masked at n=2
+ironlock	fifo	grant-without-token	-	<n>; n>=2	n>=3	violation	
+ironlock	bag	correct	-	<n>; n>=2	all	conforms	
+ironlock	bag	double-hold	-	<n>; n>=2	all	violation	
+ironlock	bag	grant-without-token	-	<n>; n>=2	n==2	conforms	masked at n=2
+ironlock	bag	grant-without-token	-	<n>; n>=2	n>=3	violation	
+kv-exactly-once-grove	bag	exactly-once	-	<k>; k>=1	all	conforms	
+kv-exactly-once-grove	bag	no-request-id	-	<k>; k>=1	all	violation	
+kv-snapshot-isolation-tla	fifo	serializable	-	<n>; n>=2	all	conforms	
+kv-snapshot-isolation-tla	fifo	si	-	<n>; n>=2	all	violation	write skew
+memcached-oopsla25	fifo	v3	-	<Q>; Q>=1	all	conforms	
+memcached-oopsla25	fifo	shared-bucket	-	<Q>; Q>=1	all	conforms	
+memcached-oopsla25	fifo	lost-set	-	<Q>; Q>=1	Q==1	conforms	control at Q=1
+memcached-oopsla25	fifo	lost-set	-	<Q>; Q>=1	Q>=2	violation	
+paxos-oopsla25	bag	correct	-	<L>; L>=1	all	conforms	
+paxos-oopsla25	bag	ignore-max-vote	-	<L>; L>=1	L==1	conforms	control at L=1
+paxos-oopsla25	bag	ignore-max-vote	-	<L>; L>=1	L>=2	violation	
+paxos-oopsla25	bag	skip-2a-check	-	<L>; L>=1	L==1	conforms	control at L=1
+paxos-oopsla25	bag	skip-2a-check	-	<L>; L>=1	L>=2	violation	
+paxos-oopsla25	bag	half-majority	-	<L>; L>=1	L==1	conforms	control at L=1
+paxos-oopsla25	bag	half-majority	-	<L>; L>=1	L>=2	violation	
+paxos-oopsla25	bag	1b-none	-	<L>; L>=1	L==1	conforms	control at L=1
+paxos-oopsla25	bag	1b-none	-	<L>; L>=1	L>=2	violation	
+reliable-channel-aneris	bag	correct	-	<K>; K>=2	all	conforms	
+reliable-channel-aneris	bag	no-seqno	-	<K>; K>=2	all	violation	
+replicated-log-aneris	fifo	correct	-	<W>; W>=2	all	conforms	
+replicated-log-aneris	bag	correct	-	<W>; W>=2	all	conforms	
+replicated-log-aneris	bag	asyn-fault	-	<W>; W>=2	all	violation	
+replicated-log-aneris	fifo	asyn-fault	-	<W>; W>=2	all	conforms	control under fifo
+rpc-at-most-once-aneris	bag	dedup	-	<K>; K>=1	all	conforms	
+rpc-at-most-once-aneris	bag	no-dedup	-	<K>; K>=1	K==1	conforms	control at K=1
+rpc-at-most-once-aneris	bag	no-dedup	-	<K>; K>=1	K>=2	violation	
+two-pc-disel	fifo	correct	-	<N>; N>=2	all	conforms	
+two-pc-disel	fifo	skip-ack-loop	-	<N>; N>=2	all	violation	
+two-pc-disel	bag	correct	-	<N>; N>=2	all	conforms	
+two-pc-disel	bag	skip-ack-loop	-	<N>; N>=2	all	violation	
+two-pc-lbinria	fifo	correct	-	<N>; N>=2	all	conforms	
+two-pc-lbinria	bag	correct	-	<N>; N>=2	all	conforms	
+two-pc-lbinria	fifo	counting-bug	-	<N>; N>=2	all	violation	
+two-pc-lbinria	bag	counting-bug	-	<N>; N>=2	all	violation	
+two-pc-trillium	fifo	correct	-	<N>; N>=2	all	conforms	
+two-pc-trillium	bag	correct	-	<N>; N>=2	all	conforms	
+two-pc-trillium	fifo	ignore-abort-vote	-	<N>; N>=2	all	violation	
+two-pc-trillium	bag	ignore-abort-vote	-	<N>; N>=2	all	violation	
+zab-broadcast-remix	fifo	correct	-	<Q>; Q>=1	all	conforms	
+zab-broadcast-remix	fifo	issue1-propose-to-ackld	-	<Q>; Q>=1	all	violation	

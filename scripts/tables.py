@@ -135,9 +135,10 @@ md.append(f"Benchmarks: {t['programs']} programs with both twins run; counts equ
 # expected verdicts of the program crates (lead's expected-verdicts.tsv: dir, model, variant, spec_variant,
 # args template, size_rule, verdict); literature crates state theirs in their READMEs (not machine-read yet)
 EXP = []
-try:
-    for r in csv.DictReader(open(DV + "/cluster/campaign/inputs/expected-verdicts.tsv"), delimiter="\t"): EXP.append(r)
-except OSError: pass
+for fn in ("expected-verdicts.tsv", "expected-verdicts-literature.tsv"):
+    try:
+        for r in csv.DictReader(open(DV + "/cluster/campaign/inputs/" + fn), delimiter="\t"): EXP.append(r)
+    except OSError: pass
 def expected_for(a):
     fam, model, var, size = a.get("family", ""), a.get("model", ""), a.get("variant", ""), a.get("size", "")
     nums = [int(x) for x in re.findall(r"\d+", size)]
@@ -169,6 +170,17 @@ def fnum(x, div=1.0, fmt="{:.0f}"):
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
+    if pre in ("C3J", "XJ1", "XJ2"):  # an offline row = spec export + impl export + join
+        for r in rs:
+            ex = re.findall(r'"\$EVAL_OUT"/([^/ ]+)/export\.jsonl', r.get("command", ""))
+            if len(ex) == 2:
+                sp, im = byid.get(ex[0]), byid.get(ex[1])
+                if sp: r["spec_complete"], r["spec_blocked"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("wall_ms")
+                if im: r["impl_complete"], r["impl_blocked"], r["impl_export_ms"] = im.get("impl_complete"), im.get("impl_blocked"), im.get("wall_ms")
+                r["join_ms"] = r.get("wall_ms")
+                parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
+                if all(x is not None for x in parts): r["wall_ms"] = sum(parts)
+                r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
         for r in rs: bycmd[r.get("command")] = r
