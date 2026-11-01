@@ -151,7 +151,7 @@ def expected_for(a):
         if spec_words and e["spec_variant"] not in ("-", ""):
             if not (re.fullmatch(re.escape(e["variant"]) + r"-[a-z0-9]+", var) and e["spec_variant"] == spec_words[-1]): continue
         elif ev != var and e["variant"] != var: continue
-        names = re.findall(r"<([a-z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec")]
+        names = re.findall(r"<([a-zA-Z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec", "v")]
         env = dict(zip(names, nums))
         # the args column's domain ("<...>; k==2" or "n>=2, r>=1") must hold, then the size rule
         dom = e["args"].split(";", 1)[1] if ";" in e["args"] else ""
@@ -205,7 +205,7 @@ for pre, fname, title in CAMP:
         verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
         verdict = {"reports": "violation", "violation (sampled)": "violation"}.get(verdict, verdict)   # JMC says "reports"; conf-join adds "(sampled)"
         r["verdict"] = verdict if st == "ok" else r.get("verdict")
-        exp = expected_for(a); r["expected"] = exp
+        exp = expected_for(a); r["expected"] = exp if exp else ("undefined" if a.get("family") in {e["dir"] for e in EXP} else None)
         if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
         if exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp: verdict += "$^{\\ast}$"
         def tot(c, b):  # graphs explored = complete + blocked
@@ -216,17 +216,23 @@ for pre, fname, title in CAMP:
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
-        w = csv.writer(fh); w.writerow(["benchmark", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected", "first miss iteration", "first miss ms", "uncovered", "run id", "node", "pin", "started"])
+        offline = pre in ("C3J", "XJ1", "XJ2"); par_tf = pre in ("C1", "C2")
+        cols = ["benchmark", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "run id", "node", "pin", "started"]
+        w = csv.writer(fh); w.writerow(cols)
         for r in rs:
             a = r["a"]; st = r["stop_reason"]
             v = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
             def t(c, b):
                 vc, vb = num(r.get(c)), num(r.get(b)); return "" if vc is None and vb is None else int((vc or 0) + (vb or 0))
-            w.writerow([a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked"), t("impl_complete", "impl_blocked"),
-                        fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or "", r.get("first_miss_iteration") or "",
-                        (r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "", r.get("uncovered_total") or r.get("uncovered_distinct") or "", r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")])
-    ok = sum(1 for r in rs if r["stop_reason"] == "ok"); mism = sum(1 for r in rs if r.get("expected") and r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() != r["expected"])
-    md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}, against expectation: {mism} mismatches of {sum(1 for r in rs if r.get('expected'))} with a rule")
+            row = [a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked"), t("impl_complete", "impl_blocked"),
+                   fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
+            if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
+            if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
+            row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
+            w.writerow(row)
+    ok = sum(1 for r in rs if r["stop_reason"] == "ok"); ruled = [r for r in rs if r.get("expected") and r["expected"] != "undefined"]
+    mism = sum(1 for r in ruled if r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() not in ("", r["expected"]))
+    md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}, against expectation: {mism} mismatches of {len(ruled)} with a rule, {sum(1 for r in rs if r.get('expected') == 'undefined')} outside the rules")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
 # ---- Excel workbook: every table's compiled rows plus the raw records behind it -----------------
 try:

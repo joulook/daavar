@@ -16,6 +16,7 @@ ap = argparse.ArgumentParser(); ap.add_argument("rust_rows"); ap.add_argument("j
 ap.add_argument("--threads", type=int, default=16); ap.add_argument("--timeout", type=int, default=3600); ap.add_argument("--mem", type=int, default=250)
 ap.add_argument("--export-threads", type=int, default=0, help="TraceForge export threads (0 = flag not passed; the pin's export is sequential)")
 ap.add_argument("--online-threads", type=int, default=0); ap.add_argument("--jmc-split", type=int, default=16); ap.add_argument("--jmc-online-split", type=int, default=0)
+ap.add_argument("--extend", type=int, default=0, help="add N further sizes beyond each ladder's largest listed size (every numeric argument +1 per step); they run only while the previous size finished within its tier")
 A = ap.parse_args(); os.makedirs(A.out, exist_ok=True)
 HDR = "id\ttable\tfamily\tsize\tmodel\tvariant\tengine\tthreads\texpected_verdict\tnote\ttier\tkind\tspec_tool\timpl_tool\tspec_lang\timpl_lang\tmode\texploration\tbenchmark\tspec_case\timpl_case"
 # ---- Rust cases from the count rows: id, dir, side, model, args ---------------------------------
@@ -30,6 +31,21 @@ for line in open(A.rust_rows):
     toks = args.split(); nums = tuple(int(t) for t in toks if t.isdigit()); words = [t for t in toks if not t.isdigit()]
     variant = "-".join(words) if words else ("spec" if side == "spec" else "impl")
     rust.append(Case(rid.replace("BR.count.", ""), d, side, mdl, args, nums, variant))
+# ladder extension: beyond the largest listed size of each (dir, side, model, variant), add sizes with
+# every numeric argument raised by 1 per step (ids carry .x<step>); the runner's needok chain stops
+# the ladder at the first size that does not finish
+if A.extend:
+    groups = collections.defaultdict(list)
+    for c in rust: groups[(c.dir, c.side, c.model, c.variant)].append(c)
+    extra = []
+    for key, cs in groups.items():
+        top = max(cs, key=lambda c: c.nums)
+        if not top.nums: continue
+        for step in range(1, A.extend + 1):
+            nums = tuple(n + step for n in top.nums); it = iter(nums)
+            args = " ".join(str(next(it)) if tok.isdigit() else tok for tok in top.args.split())
+            extra.append(Case(f"{top.dir}.{top.side}_{'_'.join(args.split())}_{top.model}.x{step}", top.dir, top.side, top.model, args, nums, top.variant))
+    rust += extra
 specs = collections.defaultdict(list)
 for c in rust:
     if c.side == "spec": specs[(c.dir, c.model, c.nums)].append(c)
