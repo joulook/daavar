@@ -1,0 +1,60 @@
+dir	model	variant	spec_variant	args	size_rule	verdict	note
+a1-commit	fifo	correct	-	<variant> <n> <r>; n>=2, r>=1	all	conforms	n=1 is refused: the program never spawns visible p1
+a1-commit	fifo	control-reverse	-	<variant> <n> <r>; n>=2, r>=1	all	conforms	n=1 is refused: the program never spawns visible p1
+a1-commit	fifo	eager	-	<variant> <n> <r>; n>=2, r>=1	all	violation	n=1 is refused: the program never spawns visible p1
+a1-commit	fifo	early-abort	-	<variant> <n> <r>; n>=2, r>=1	all	violation	n=1 is refused: the program never spawns visible p1
+a1-commit	fifo	silent	-	<variant> <n> <r>; n>=2, r>=1	all	violation	n=1 is refused: the program never spawns visible p1
+a2-store	fifo	pb	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a2-store	fifo	pb-br	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a2-store	fifo	control-early-ack-primary	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a2-store	fifo	control-early-ack-fwd	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a2-store	fifo	silent-put	-	<variant> <k> <q>; k,q>=1	all	violation	
+a2-store	fifo	early-ack	-	<variant> <k> <q>; k,q>=1	k>=2 || q>=2	violation	
+a2-store	fifo	early-ack	-	<variant> <k> <q>; k,q>=1	k==1 && q==1	conforms	one operation: nothing to reorder or read stale
+a2-store	fifo	stale-get	-	<variant> <k> <q>; k,q>=1	k>=2 || q>=2	violation	
+a2-store	fifo	stale-get	-	<variant> <k> <q>; k,q>=1	k==1 && q==1	conforms	one operation: nothing to reorder or read stale
+a2-store	fifo	sh	-	<variant> <k> <q> <s>; k,q,s>=1	all	conforms	
+a2-store	fifo	misroute	-	<variant> <k> <q> <s>; k,q,s>=1	s>=2 && (k>=2 || q>=2)	violation	
+a2-store	fifo	misroute	-	<variant> <k> <q> <s>; k,q,s>=1	s==1 || (k==1 && q==1)	conforms	one shard, or one operation
+a3-lock	fifo	fifo	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a3-lock	fifo	control-lifo	-	<variant> <k> <q>; k,q>=1	all	conforms	
+a3-lock	fifo	wrong-round	-	<variant> <k> <q>; k,q>=1	all	violation	
+a3-lock	fifo	double-grant	-	<variant> <k> <q>; k,q>=1	k>=2	violation	
+a3-lock	fifo	double-grant	-	<variant> <k> <q>; k,q>=1	k==1	conforms	one client
+a3-lock	fifo	never-grant	-	<variant> <k> <q>; k,q>=1	k>=2	violation	
+a3-lock	fifo	never-grant	-	<variant> <k> <q>; k,q>=1	k==1	conforms	one client
+a4-balancer	fifo	hash	a4a	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	conforms	
+a4-balancer	fifo	hash-drop	a4a	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	violation	
+a4-balancer	fifo	drop	a4a	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	violation	a4a is not a README row
+a4-balancer	fifo	hash	a4b	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	conforms	
+a4-balancer	fifo	hash-drop	a4b	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	violation	a4b is not a README row
+a4-balancer	fifo	drop	a4b	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	violation	
+a4-balancer	fifo	rr	a4a	<impl> <spec> <k> <q> <m>; k,q,m>=1	q>=2 && m>=2	violation	
+a4-balancer	fifo	rr	a4a	<impl> <spec> <k> <q> <m>; k,q,m>=1	q==1 || m==1	conforms	vacuous: a client's requests cannot land on two servers
+a4-balancer	fifo	rr	a4b	<impl> <spec> <k> <q> <m>; k,q,m>=1	all	conforms	
+a4-balancer	fifo	pair-swap-hash	a4a	<impl> <spec> <k> <q> <m>; k==2, q,m>=1	all	conforms	control; m=1 included. Defined for k=2 only: the balancer reads two requests a round
+a4-balancer	fifo	pair-swap-hash	a4b	<impl> <spec> <k> <q> <m>; k==2, q,m>=1	all	conforms	control; m=1 included. Defined for k=2 only: the balancer reads two requests a round
+a4-balancer	fifo	pair-swap-rr	a4b	<impl> <spec> <k> <q> <m>; k==2, q,m>=1	all	conforms	control; m=1 included. Defined for k=2 only: the balancer reads two requests a round
+a4-balancer	fifo	pair-swap-rr	a4a	<impl> <spec> <k> <q> <m>; k==2, q,m>=1	q>=2 && m>=2	violation	as rr; not a README row. Defined for k=2 only
+a4-balancer	fifo	pair-swap-rr	a4a	<impl> <spec> <k> <q> <m>; k==2, q,m>=1	q==1 || m==1	conforms	as rr; not a README row. Defined for k=2 only
+election	fifo	leader-conf	-	leader|ring <v> <n>; n>=1	all	conforms	
+election	fifo	ring-conf	-	leader|ring <v> <n>; n>=1	all	conforms	
+election	fifo	leader-silent	-	leader|ring <v> <n>; n>=1	all	violation	
+election	fifo	leader-split	-	leader|ring <v> <n>; n>=1	n>=2	violation	
+election	fifo	leader-split	-	leader|ring <v> <n>; n>=1	n==1	conforms	one participant: nothing to split
+election	fifo	ring-split	-	leader|ring <v> <n>; n>=1	n>=2	violation	
+election	fifo	ring-split	-	leader|ring <v> <n>; n>=1	n==1	conforms	one participant: nothing to split
+s1-naive	bag	naive	-	<variant> <k> <enc>; k>=1, enc in 1,2	all	violation	
+s1-naive	bag	self	-	<variant> <k> <enc>; k>=1, enc in 1,2	all	conforms	
+s2-share	fifo	share	-	<variant> <m> <c>; m>=1, 0<=c<=m	all	conforms	
+s2-share	fifo	ctl	-	<variant> <m> <c>; m>=1, 0<=c<=m	all	conforms	control
+s3-commit	fifo	-	-	<n> <j>; n>=1, 0<=j<=n	all	conforms	
+s4-chain	fifo	-	-	<d>; d>=1	all	conforms	--threshold 65536 is needed at d>=512
+s5-reset	bag	reset	-	<variant> <k> <s>; k,s>=1	all	violation	
+s5-reset	bag	ctl	-	<variant> <k> <s>; k,s>=1	all	violation	the matched control is a violating one
+s5-reset	bag	twin	-	<variant> <k> <s>; k,s>=1	all	conforms	
+s6-width	fifo	-	-	<w>; w>=1	all	conforms	
+balancer-load-aware	fifo	l1	-	l1 <k> <q> <m>; k,q,m>=1	all	conforms	README
+balancer-load-aware	fifo	l2	-	l2 <k> <q> <m> <c>; k,q,m,c>=1	all	conforms	README
+balancer-load-aware	fifo	l2-stale	-	l2-stale <k> <q> <m> <c>; k,q,m,c>=1	k>c	violation	README says violation without a size rule; a reject needs more in-flight requests than a queue holds
+balancer-load-aware	fifo	l2-stale	-	l2-stale <k> <q> <m> <c>; k,q,m,c>=1	k<=c	conforms	at most k requests in flight, so no reject

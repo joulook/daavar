@@ -132,6 +132,26 @@ md.append(f"Benchmarks: {t['programs']} programs with both twins run; counts equ
 # ---- Campaign tables (owner's plan 2026-11-01): one per mode, same columns ----------------------
 # C1 stateful parallel, C2 stateless parallel, C3J offline TF x TF; XON1 online JMC(Java impl) vs TF spec,
 # XON2 online TF(Rust impl) vs JMC spec, XJ1 offline TF spec x JMC impl, XJ2 offline JMC spec x TF impl.
+# expected verdicts of the program crates (lead's expected-verdicts.tsv: dir, model, variant, spec_variant,
+# args template, size_rule, verdict); literature crates state theirs in their READMEs (not machine-read yet)
+EXP = []
+try:
+    for r in csv.DictReader(open(DV + "/cluster/campaign/inputs/expected-verdicts.tsv"), delimiter="\t"): EXP.append(r)
+except OSError: pass
+def expected_for(a):
+    fam, model, var, size = a.get("family", ""), a.get("model", ""), a.get("variant", ""), a.get("size", "")
+    nums = [int(x) for x in re.findall(r"\d+", size)]
+    for e in EXP:
+        if e["dir"] != fam or e["model"] != model: continue
+        ev = e["variant"] + ("-" + e["spec_variant"] if e["spec_variant"] not in ("-", "") else "")
+        if ev != var and e["variant"] != var: continue
+        names = re.findall(r"<([a-z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec")]
+        env = dict(zip(names, nums))
+        rule = e["size_rule"].strip()
+        try: ok = True if rule == "all" else bool(eval(rule.replace("&&", " and ").replace("||", " or "), {}, env))
+        except Exception: ok = False
+        if ok: return e["verdict"]
+    return None
 CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C2", "campaign-stateless", "Stateless check, TraceForge, parallel"),
         ("C3J", "campaign-offline-tf", "Offline mode, TraceForge specification and implementation"),
         ("XON1", "campaign-online-java-impl", "Online: Java implementation (JMC) against Rust specification export"),
@@ -155,13 +175,17 @@ for pre, fname, title in CAMP:
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
         verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+        exp = expected_for(a); r["expected"] = exp
+        if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
+        if exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp: verdict += "$^{\\ast}$"
         def tot(c, b):  # graphs explored = complete + blocked
             vc, vb = num(r.get(c)), num(r.get(b)); return "" if vc is None and vb is None else str(int((vc or 0) + (vb or 0)))
         sg = tot("spec_complete", "spec_blocked"); ig = tot("impl_complete", "impl_blocked")
         L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {fnum(r.get('first_miss_wall_ms'), 1000, '{:.1f}') if r.get('first_miss_wall_ms') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
     L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
-    ok = sum(1 for r in rs if r["stop_reason"] == "ok"); md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}")
+    ok = sum(1 for r in rs if r["stop_reason"] == "ok"); mism = sum(1 for r in rs if r.get("expected") and r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() != r["expected"])
+    md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}, against expectation: {mism} mismatches of {sum(1 for r in rs if r.get('expected'))} with a rule")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
 # ---- Excel workbook: every table's compiled rows plus the raw records behind it -----------------
 try:
