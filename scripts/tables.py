@@ -208,11 +208,11 @@ for pre, fname, title in CAMP:
         exp = expected_for(a); r["expected"] = exp if exp else ("undefined" if a.get("family") in {e["dir"] for e in EXP} else None)
         if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
         if exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp: verdict += "$^{\\ast}$"
-        def tot(c, b, t):  # graphs explored = complete + blocked; a run that reports only the total (blocked included) shows that
+        def tot(c, b, t, e=None):  # graphs explored = complete + blocked; else the run's own total (blocked included); else the block's explored count
             vc, vb = num(r.get(c)), num(r.get(b))
-            if vc is None and vb is None: return r.get(t) or ""
+            if vc is None and vb is None: return r.get(t) or (r.get(e) if e else "") or ""
             return str(int((vc or 0) + (vb or 0)))
-        sg = tot("spec_complete", "spec_blocked", "spec_graphs_total"); ig = tot("impl_complete", "impl_blocked", "impl_graphs_total")
+        sg = tot("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"); ig = tot("impl_complete", "impl_blocked", "impl_graphs_total")
         L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {(r.get('first_miss_wall_ms') or '') if verdict.startswith('violation') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
     L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
@@ -224,11 +224,12 @@ for pre, fname, title in CAMP:
         for r in rs:
             a = r["a"]; st = r["stop_reason"]
             v = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
-            def t(c, b, tt):  # complete + blocked, or the run's own total (blocked included) when it reports no split
+            def t(c, b, tt, e=None):  # complete + blocked; else the run's own total (blocked included); else the block's explored count
                 vc, vb = num(r.get(c)), num(r.get(b))
-                if vc is None and vb is None: return int(r[tt]) if (r.get(tt) or "").isdigit() else ""
+                if vc is None and vb is None:
+                    v = r.get(tt) or (r.get(e) if e else "") or ""; return int(v) if v.isdigit() else ""
                 return int((vc or 0) + (vb or 0))
-            row = [a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
+            row = [a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
                    fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
@@ -242,7 +243,7 @@ open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
 try:
     import openpyxl
     wb = openpyxl.Workbook(); wb.remove(wb.active)
-    RAW = ["run_id","node","traceforge_commit","jmc_commit","table","family","sizes","comm_model","variant","engine","impl_threads","expected_verdict","verdict","stop_reason","spec_complete","spec_blocked","spec_graphs_total","impl_complete","impl_blocked","impl_graphs_total","spec_summaries","impl_summaries","uncovered_total","uncovered_distinct","first_miss_iteration","first_miss_wall_ms","wall_ms","cpu_user_s","cpu_sys_s","peak_rss_kb","spec_phase_ms","impl_phase_ms","explore_ms","summarise_ms","index_ms","lookup_ms","export_ms","join_ms","started_at","command"]
+    RAW = ["run_id","node","traceforge_commit","jmc_commit","table","family","sizes","comm_model","variant","engine","impl_threads","expected_verdict","verdict","stop_reason","spec_complete","spec_blocked","spec_graphs_total","impl_complete","impl_blocked","impl_graphs_total","spec_graphs_explored","sweeps","cache_tests","cache_hits","spec_summaries","impl_summaries","uncovered_total","uncovered_distinct","first_miss_iteration","first_miss_wall_ms","wall_ms","cpu_user_s","cpu_sys_s","peak_rss_kb","spec_phase_ms","impl_phase_ms","explore_ms","summarise_ms","index_ms","lookup_ms","export_ms","join_ms","started_at","command"]
     def sheet(name, rs):
         ws = wb.create_sheet(name[:31]); ws.append(RAW)
         for r in rs:
