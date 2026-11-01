@@ -10,7 +10,26 @@ TF_PIN=$pin
 dest="$BRAIN_DATA/runs/$node/$TF_PIN/$id"; mkdir -p "$dest"
 # copy the row; in the copy, compress summaries above 1 MB (the originals stay in $EVAL_OUT: later join
 # and online rows read them from there)
-rsync -a --exclude 'done' "$d/" "$dest/"
+# Logs can be enormous (parallel engines print per-graph progress: 100+ GB seen). The repository
+# gets: every small file as is; stdout/stderr compressed when they are above 1 MB; and when even the
+# compressed log exceeds BULK_MB, only its first and last 2000 lines plus the EVALROW record and the
+# measurement block, the full log staying on the node (recorded in bulk.txt).
+: "${BULK_MB:=50}"
+rsync -a --exclude 'done' --exclude 'stdout.log' --exclude 'stderr.log' "$d/" "$dest/"
+for f in stdout.log stderr.log; do
+  src="$d/$f"; [ -f "$src" ] || continue
+  sz=$(stat -c %s "$src")
+  if [ "$sz" -le 1048576 ]; then cp "$src" "$dest/$f"; continue; fi
+  zstd -q -19 -T4 -o "$dest/$f.zst" "$src" 2>/dev/null
+  csz=$(stat -c %s "$dest/$f.zst" 2>/dev/null || echo 0)
+  if [ "$csz" -gt $((BULK_MB*1048576)) ]; then
+    rm -f "$dest/$f.zst"
+    { head -n 2000 "$src"; echo "... [$sz bytes; full log kept on $(hostname):$src] ..."; tail -n 2000 "$src"; } > "$dest/$f.headtail"
+    grep -a -m1 "EVALROW" "$src" > "$dest/evalrow.txt" 2>/dev/null || true
+    grep -a -A40 -- "--- measurements" "$src" | head -60 > "$dest/measurements.txt" 2>/dev/null || true
+    printf '%s\t%s\t%s\n' "$f" "$sz" "$(hostname):$src" >> "$dest/bulk.txt"
+  fi
+done
 find "$dest" -maxdepth 3 -name '*.jsonl' -size +1M -exec zstd -q -19 --rm {} \; 2>/dev/null
 (
   flock -w 120 9 || { echo "publish: lock timeout for $id"; exit 1; }
