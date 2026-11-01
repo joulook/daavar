@@ -8,10 +8,9 @@ have been seen. `t` bounds the election timeouts each candidate node may fire (a
 time out. Model: `fifo` (per-pair order; raft-rs assumes an ordered transport per peer).
 
 **Expected verdict:** `correct`: **CONFORMS** (certified by the spike of 2026-10-31 at
-`e=1 t=1 cand=1`, in-process stateful, sequential; `source/spike-runs.log`). `reorder`: **DOES NOT REFINE at
-`e = 257, t = 1, cand = 1`** by a hand-derived schedule (§2, from the pinned raft-rs source:
-a follower whose inflight window is full misses a commit broadcast and later commits two entries
-in one append); no verdict is derived for smaller sizes, where the campaign rows decide.
+`e=1 t=1 cand=1`, in-process stateful, sequential; `source/spike-runs.log`). `reorder`: **no hand-derived
+verdict** (§2: the fault acts only when one `apply` call receives two persisted data entries, and
+no schedule establishing that in raft-rs is known; the campaign rows decide).
 
 **No Java side.** This directory has no Java twin; the Java side of the case study is
 `benchmarks/microraft` (a real Java Raft core under JMC's Must API, in preparation), with the same
@@ -39,35 +38,22 @@ same program on both sides.
 
 - `correct`: raft-rs as is.
 - `reorder`: a fault of this harness's delivery layer, not of raft-rs: `apply` hands a batch of
-  committed entries to the client in reverse log order. A violation needs the two clients to observe
-  incompatible orders of the same values; compatibility is a joint property of both words, so a
-  single client's stopping rule says nothing by itself. A batch forms where a node's commit index
-  jumps over two data entries in one `Ready`. In this harness (raft-rs defaults inherited by the
-  `Config`: `max_size_per_msg = 0`, at most one entry per `AppendEntries`; `batch_append = false`;
-  `max_inflight_msgs = 256`) the leader commits data entries one at a time, and a follower's
-  commit-index jumps repeat the leader's commit steps as long as every commit broadcast reaches
-  it: `bcast_append` skips a peer whose progress is paused (probe state after one send, replicate
-  state with a full inflight window), so a paused follower misses intermediate commit
-  notifications and later receives one append whose commit index covers two entries it holds.
-  Realizable schedule under per-pair FIFO (derived from the pinned raft-rs source, not measured):
-  `reorder 257 1 1`. `n0` is elected with `n2`'s vote; the initial empty entry is replicated and
-  acknowledged by both followers (both in replicate state, empty inflight windows). `c0`'s 257
-  values `1, 3, ..., 513` are proposed one at a time and each is committed through `n2`'s
-  acknowledgement before the next; `n1`'s handling of `c1`'s proposals is delayed, and all of
-  `n1`'s acknowledgements after the first are withheld. The appends to `n1` arrive in FIFO order,
-  each with the preceding commit index, so for the first 255 values both clients receive the
-  values one by one. The append carrying the 256th data entry (`511`) fills `n1`'s inflight
-  window; when `n2`'s acknowledgement commits `511`, the broadcast to `n1` is skipped (paused);
-  `513` is then appended and committed through `n2` while sends to `n1` stay paused. Delivering
-  one withheld acknowledgement from `n1` frees a slot: the leader sends the missing entry `513`
-  with the current commit index, `n1` holds `511` already, so this one append commits `511` and
-  `513` together, and `apply` reverses the pair. `c0` observed `..., 511, 513`; `c1` observed
-  `..., 513, 511` while waiting for its own values. No single specification log order produces
-  both words. 257 is a sufficient size, not a smallest one; whether a smaller size separates the
-  two clients' batchings is not established, so the expectation file carries no verdict for
-  `reorder` at the campaign sizes and the runs decide there. raft-rs requires an ordered
-  transport, so the variant is not run under `bag`. Component, when observed: **signature word
-  order**.
+  committed entries to the client in reverse log order. It carries **no hand-derived verdict**. A
+  violation needs the two clients to observe incompatible orders of the same values (a joint
+  property of both words); the fault acts only when one `apply` call receives two data entries,
+  which in this harness requires a commit-index jump over two entries that are already persisted
+  at that node: raft-rs (inherited defaults `max_size_per_msg = 0`, one entry per append;
+  `max_inflight_msgs = 256`; `max_apply_unpersisted_log_limit = 0`, so `ready()` applies at most
+  up to the persisted index and the following `LightReady` applies the rest separately) commits
+  data entries one at a time at the leader, and a follower that misses commit broadcasts while
+  its progress is paused receives the missing entry together with the higher commit index, so the
+  entry just received is applied in a later call than the entries it holds already. Whether some
+  schedule still places two persisted data entries in one `apply` call is not established (review
+  rounds 2 to 4 of this directory tried and rejected three candidate schedules); the campaign rows
+  decide, and the expectation file carries no verdict for `reorder`. raft-rs requires an ordered
+  transport, so the variant is not run under `bag`. The Java side of the case study (MicroRaft,
+  §7) batches differently and measures a violation for its `reorder` at `1 1 1`. Component, when
+  observed: **signature word order**.
 
 ## 3. Counts (plain Must, `count`)
 
