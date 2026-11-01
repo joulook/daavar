@@ -2,12 +2,13 @@
 
 **Family:** real software (case study, second after `raft-rs`)  **Source:** OmniPaxos
 (https://github.com/haraldng/omnipaxos, commit 9c772dc, Apache-2.0; `source/PROVENANCE.md`)
-**Expected verdict:** `correct`: **CONFORMS** as an expectation (one decided sequence applied in
-order; not an established derivation, and no run finished at `1 1 1` in 600 s, see §7; the
-campaign rows at 16 threads and the 48 h tier measure it); `reorder`: **DOES NOT REFINE** at
-`2 1 1` (measured: both conformance engines report an uncovered implementation execution, §4: a
-client's own values delivered out of its proposal order); at `e = 1` no verdict is derived (one
-value per client, the fault's batch cannot form; not measured).
+**Expected verdict:** `correct`: **no derived verdict** (§4: one decided sequence, but the library
+may forward a client's buffered and later proposals out of arrival order, which the specification
+forbids; measured conformance at `1 0 1` only, where nothing is decided; every run at `t >= 1`
+reached the 600 s cap on the workstation; the campaign rows at 16 threads and the 48 h tier
+decide); `reorder`: **DOES NOT REFINE** at `2 1 1` (measured: both conformance engines report an
+uncovered implementation execution, §4: a client's own values delivered out of its proposal order);
+at `e = 1` unresolved (not measured, no verdict derived).
 
 **Program:** `omnipaxos`$(e,t)$: three OmniPaxos servers (crate `omnipaxos` 0.2.4, sans-I/O
 `OmniPaxos<Val, MemoryStorage<Val>>`, unmodified), two visible clients `c0 c1`, client `c_i`
@@ -59,12 +60,14 @@ of raft-rs's `ELECTION_TICK` ticks), message resend (default 100) and batch flus
 (hand-derived from `util.rs::LogicalClock`); with a reliable FIFO transport no resend is needed.
 No reconfiguration, no snapshots or trimming, no crashes.
 
-**Who can lead.** A candidate's first timeout makes it leader (its own initial ballot `(n=1, pid)`)
-only if it has received no HbReply of the current round; otherwise it adopts the highest replied
-ballot, i.e. a higher pid (hand-derived from `ballot_leader_election.rs::hb_timeout`). With
-`cand = 1` only `n0` (pid 1, the lowest ballot) ticks, so a leader exists exactly in the executions
-where `n0` times out before reading an HbReply; in all others nothing is ever decided (allowed by
-the spec: proposals may be lost).
+**Who can lead.** On a heartbeat timeout the Ballot Leader Election compares the ballots replied
+in the current round with its own and takes the highest as leader; a candidate becomes leader
+itself only if no replied ballot is higher than its own (hand-derived from
+`ballot_leader_election.rs::hb_timeout`). Under `cand = 1, t = 1` only `n0` (pid 1, the lowest
+initial ballot) ticks, so every replied ballot is higher than its own: `n0` leads exactly in the
+executions where it times out before reading any HbReply, and in all others nothing is ever
+decided (allowed by the spec: proposals may be lost). With more candidates a higher-pid candidate
+can lead after reading lower ballots; that case is not analysed here.
 
 Every execution ends blocked (the node threads loop on `recv_msg_block`), so every graph counts as
 blocked, as in `raft-rs` and `a4-balancer`.
@@ -87,14 +90,24 @@ rendering (OmniPaxos's `Message` derives `Clone + Debug`, not `PartialEq`), and 
 
 ## 4. Where they differ, and why the verdict is what it is
 
-`correct` (hand-derived): Sequence Paxos keeps one decided log (every server's decided prefix is a
-prefix of one sequence); `read_decided_suffix` returns decided entries only, each node serves its
-client the suffix after what it already served, in log order; so every client sees a prefix of one
-sequence. Per-client order: `c_i`'s values reach `n_i` in order, `append` at the leader appends them
-in arrival order, a follower forwards its buffered/arriving proposals in order on its FIFO link to the
-single leader (at `cand = 1` there is one ballot, so no leader change can reorder). A value that is
-never decided is the spec's "lost". So every visible behaviour is the spec's. Not certified: no run at
-`t ≥ 1` finished (§7).
+`correct`: **no derived verdict.** What holds: Sequence Paxos keeps one decided log (every
+server's decided prefix is a prefix of one sequence); `read_decided_suffix` returns decided entries
+only, and each node serves its client the suffix after what it already served, in log order; so
+every client sees a prefix of one sequence, and a value that is never decided is the spec's
+"lost". What does not hold in general: the specification also preserves each client's own
+proposal order, and OmniPaxos does not promise it. A follower buffers proposals while it knows no
+leader, forwards proposals that arrive after a Promise identified the leader at once, and forwards
+the buffered ones only on the AcceptSync (pinned source: `sequence_paxos/mod.rs:359–383`,
+`sequence_paxos/follower.rs:53–84`); so at `2 1 1` the schedule "`n1` buffers `c1`'s value 2
+before the Prepare, promises, receives and forwards value 4, then receives the AcceptSync and
+forwards value 2" puts `ProposalForward(4)` before `ProposalForward(2)` on the FIFO link, and the
+leader may decide 4 before 2: `c1` would observe its own values out of its proposal order, which
+no specification execution produces. This schedule is derived from the source, not reproduced by
+a run. The harness keeps no proposal queue, so it exposes the library's behaviour as is (raft-rs's
+harness queues proposals until a leader is known, a different submission discipline). Measured:
+conformance at `1 0 1` only (no timeouts, nothing decided, §7); every run at `t >= 1` reached the
+600 s cap on the workstation. The campaign rows decide `correct` at `t >= 1`; the expectation file
+carries no verdict for it.
 
 `reorder` at `2 1 1` (**measured**, `out/runs.log`, both engines, `--stop-at-first --threads 4`):
 the reported implementation graph has `c0: Propose(1) Propose(3) Committed(3) Committed(1)` and
@@ -104,29 +117,24 @@ reported graph): `n0` times out before any HbReply and leads; `n1` promises; `n0
 makes `n0` decide both at once, and the Decide makes `n1` decide both at once; the fault reverses
 that batch at both nodes. Uncovered: in the spec `c0`'s `Propose(1)` precedes `Propose(3)` on the
 FIFO channel to `log`, so `Committed(1)` precedes `Committed(3)` at every client; component:
-**order** (same received values, reversed). The graph above is the stateless engine's report, at its
+**visible-word signature** (`c0`'s word has `Committed(3)` before `Committed(1)`; the comparison of
+ordered observations in `conformance/sig.rs` fails, before any causal-order comparison). The graph above is the stateless engine's report, at its
 first implementation execution. The stateful engine reported one uncovered summary, also at its first
 implementation execution (`spec_blocked: 480`, `impl_blocked: 1`); it attaches no graph, so that it is
 the same graph is not shown. Both say "candidate violation" (single-graph cover); a
 union of spec graphs cannot cover it either, since no spec graph delivers 3 before 1 (hand-derived).
 
-`reorder` at `1 1 1` (hand-derived, not measured: both conf runs hit the 600 s cap): each client has
-one value, so a reversed batch can only be `[a, b]` → `b, a`, an order the spec allows (`log` may
-receive `c1`'s proposal first) as long as both clients see the same order. They do: `n1`'s value
-enters the log only after `n1` has promised (it learns the leader from the Prepare, so its Promise
-precedes the forwarded entry on the FIFO link `n1→n0`, and `n0` makes `n1` a promised follower and
-sends it an AcceptSync before appending that entry), the leader sends every new decided index to
-every promised follower, and on the FIFO link the AcceptDecide of an entry precedes
-any Decide covering it; so `n1`'s decided-index updates are exactly `n0`'s (`0→1→2` at both, or
-`0→2` at both), and the batches agree. Unlike `raft-rs` (two clients observing different orders),
-this fault therefore needs `e ≥ 2` here.
+`reorder` at `1 1 1`: **unresolved** (both conformance runs reached the 600 s cap; no verdict is
+derived; the campaign rows decide).
 
 ## 5. Variants and faults
 
-- `correct`: OmniPaxos as is. Expected CONFORMS (hand-derived).
+- `correct`: OmniPaxos as is. No derived verdict (§4: the library may forward a client's buffered
+  and later proposals out of arrival order, which the specification forbids); measured conformance
+  at `1 0 1` only; the campaign rows decide at `t >= 1`.
 - `reorder`: a fault of this harness's delivery layer, not of OmniPaxos: each `read_decided_suffix`
   batch is handed to the client in reverse log order. DOES NOT REFINE at `2 1 1` (measured);
-  conforms at `1 1 1` (hand-derived).
+  unresolved at `1 1 1`.
 
 ## 6. Files
 
