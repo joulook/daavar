@@ -221,12 +221,14 @@ for pre, fname, title in CAMP:
         bycmd = {}
         for r in sorted(rs, key=pin_rank): bycmd[r.get("command")] = r   # the newest pin, then the latest start, wins
         rs = list(bycmd.values())
+    # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
+    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2")
     hdr = "program(size) & variant & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
     spec = "@{}lllrrrrl" + ("" if offline else "r") + "r@{}"
-    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached; skipped = the smaller size did not finish" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + f"; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
+    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached (larger sizes of that ladder are not run)" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + f"; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
          hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
