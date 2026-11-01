@@ -1,0 +1,9 @@
+C3E.omnipaxos.spec_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos export spec --out export.jsonl --threads 16 --model fifo -- correct 1 1 1
+C1.omnipaxos.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos conf --engine stateful --threads 16 --model fifo -- correct 1 1 1
+C2.omnipaxos.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos conf --engine stateless --threads 16 --model fifo -- correct 1 1 1
+C3E.omnipaxos.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos export impl --out export.jsonl --threads 16 --model fifo -- correct 1 1 1
+C3J.omnipaxos.impl_correct_1_1_1_fifo 16 600 needok:C3E.omnipaxos.impl_correct_1_1_1_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.omnipaxos.spec_correct_1_1_1_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.omnipaxos.impl_correct_1_1_1_fifo.t16/export.jsonl
+C1.omnipaxos.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos conf --engine stateful --threads 16 --model fifo -- reorder 1 1 1
+C2.omnipaxos.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos conf --engine stateless --threads 16 --model fifo -- reorder 1 1 1
+C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh omnipaxos export impl --out export.jsonl --threads 16 --model fifo -- reorder 1 1 1
+C3J.omnipaxos.impl_reorder_1_1_1_fifo 16 600 needok:C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.omnipaxos.spec_correct_1_1_1_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16/export.jsonl

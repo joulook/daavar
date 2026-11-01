@@ -53,3 +53,4 @@ s3	.*	commit	.
 s4	.*	chain	.
 s5	.*	reset	.
 s6	.*	width	.
+omnipaxos	.*	omnipaxos	.

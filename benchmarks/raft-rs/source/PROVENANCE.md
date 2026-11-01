@@ -46,7 +46,7 @@
 - `java/bench/microraft/Wire.java`: the transport's value encoding of MicroRaft messages.
 - `java/harness/io/microraft/impl/MustRaftNodes.java`: harness code placed in the core's package
   only to call the package-private `RaftNodeImpl` constructor exactly as `RaftNodeBuilderImpl.build()`
-  does (README §3 says why the builder is bypassed).
+  does (README §7.3 says why the builder is bypassed).
 
 ## The Rust side and the specification
 

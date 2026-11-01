@@ -1,0 +1,12 @@
+[package]
+name = "tf_omnipaxos"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+# haraldng/omnipaxos, unmodified, at the commit read on 2026-11-01 (committed 2026-10-24)
+omnipaxos = { git = "https://github.com/haraldng/omnipaxos", rev = "9c772dcce5a9652192f45f67d9d2208b306f3bc9", default-features = false }
+omnipaxos_storage = { git = "https://github.com/haraldng/omnipaxos", rev = "9c772dcce5a9652192f45f67d9d2208b306f3bc9", default-features = false }
+
+[workspace]

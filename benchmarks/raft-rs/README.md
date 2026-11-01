@@ -115,9 +115,9 @@ this crate on the workstation, commands and full output).
 
 **Family:** real software (case study; the Java side of this directory)  **Source:** MicroRaft
 core, https://github.com/MicroRaft/MicroRaft commit `929dae9`, Apache 2.0, vendored unmodified in
-`java/vendor/` (`source/PROVENANCE.md`)  **Expected verdict:** `correct`: **CONFORMS**
-(hand-derived; JMC's enumeration does not finish at the smallest size in 600 s, so measured only as
-*conforms (partial)*); `reorder`: **DOES NOT REFINE** (measured: JMC online finds an uncovered
+`java/vendor/` (`source/PROVENANCE.md`)  **Expected verdict:** `correct`: **CONFORMS** as an
+expectation scoped to `e=1 t=1 cand=1` (see §7.4; JMC's enumeration does not finish at that size
+in 600 s, so measured only as *conforms (partial)*); `reorder`: **DOES NOT REFINE** (measured: JMC online finds an uncovered
 summary against a complete specification, both against the JMC and the TraceForge export of it).
 
 ### 7.1 The protocol

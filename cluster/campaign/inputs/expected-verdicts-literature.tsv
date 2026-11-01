@@ -101,3 +101,5 @@ s5-reset	bag	reset	-	<variant> <k> <s>; k>=1	all	violation	the fault
 s5-reset	bag	ctl	-	<variant> <k> <s>; k>=1	all	violation	control violating by construction
 s5-reset	bag	twin	-	<variant> <k> <s>; k>=1	all	conforms	the conforming twin
 s6-width	fifo	impl	-	<w>; w>=1	all	conforms	
+omnipaxos	fifo	correct	-	<variant> <e> <t> [<cand>]; e>=1, t>=1	all	conforms	expectation (README): one decided sequence applied in order; not derived; no run finished at 1 1 1 on the workstation
+omnipaxos	fifo	reorder	-	<variant> <e> <t> [<cand>]; e>=2, t>=1	all	violation	measured at 2 1 1 (stop-at-first, both engines): a client's own values out of proposal order
