@@ -190,6 +190,17 @@ for pre, fname, title in CAMP:
         L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {fnum(r.get('first_miss_wall_ms'), 1000, '{:.1f}') if r.get('first_miss_wall_ms') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
     L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
+    # the same compiled table as CSV (for the owner's Google Sheet)
+    with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
+        w = csv.writer(fh); w.writerow(["benchmark", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected", "first miss iteration", "first miss s", "uncovered", "run id", "node", "pin", "started"])
+        for r in rs:
+            a = r["a"]; st = r["stop_reason"]
+            v = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+            def t(c, b):
+                vc, vb = num(r.get(c)), num(r.get(b)); return "" if vc is None and vb is None else int((vc or 0) + (vb or 0))
+            w.writerow([a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked"), t("impl_complete", "impl_blocked"),
+                        fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or "", r.get("first_miss_iteration") or "",
+                        fnum(r.get("first_miss_wall_ms"), 1000, "{:.1f}") if r.get("first_miss_wall_ms") else "", r.get("uncovered_total") or r.get("uncovered_distinct") or "", r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")])
     ok = sum(1 for r in rs if r["stop_reason"] == "ok"); mism = sum(1 for r in rs if r.get("expected") and r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() != r["expected"])
     md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}, against expectation: {mism} mismatches of {sum(1 for r in rs if r.get('expected'))} with a rule")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
