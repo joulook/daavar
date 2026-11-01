@@ -149,7 +149,7 @@ def expected_for(a):
         if e["dir"] != fam or e["model"] != model: continue
         ev = e["variant"] + ("-" + e["spec_variant"] if e["spec_variant"] not in ("-", "") else "")
         if spec_words and e["spec_variant"] not in ("-", ""):
-            if not (var.startswith(e["variant"]) and e["spec_variant"] == spec_words[-1]): continue
+            if not (re.fullmatch(re.escape(e["variant"]) + r"-[a-z0-9]+", var) and e["spec_variant"] == spec_words[-1]): continue
         elif ev != var and e["variant"] != var: continue
         names = re.findall(r"<([a-z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec")]
         env = dict(zip(names, nums))
