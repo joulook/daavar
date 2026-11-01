@@ -130,3 +130,18 @@ lines += ["\\midrule", f"all & {t['programs']} & {t['equal']} & {t['differ']} & 
 open(OUT + "/bench-counts.tex", "w").write("\n".join(lines) + "\n")
 md.append(f"Benchmarks: {t['programs']} programs with both twins run; counts equal {t['equal']}, differ {t['differ']}, unfinished {t['unfinished']}")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
+# ---- Excel workbook: every table's compiled rows plus the raw records behind it -----------------
+try:
+    import openpyxl
+    wb = openpyxl.Workbook(); wb.remove(wb.active)
+    RAW = ["run_id","node","traceforge_commit","jmc_commit","table","family","sizes","comm_model","variant","engine","impl_threads","expected_verdict","verdict","stop_reason","spec_complete","spec_blocked","impl_complete","impl_blocked","spec_summaries","impl_summaries","uncovered_total","uncovered_distinct","first_miss_iteration","first_miss_wall_ms","wall_ms","cpu_user_s","cpu_sys_s","peak_rss_kb","spec_phase_ms","impl_phase_ms","explore_ms","summarise_ms","index_ms","lookup_ms","export_ms","join_ms","started_at","command"]
+    def sheet(name, rs):
+        ws = wb.create_sheet(name[:31]); ws.append(RAW)
+        for r in rs:
+            a = r.get("a", {})
+            ws.append([r.get(c) if r.get(c) not in (None, "") else a.get(c, "") for c in RAW])
+    sheet("T1 detection raw", T1); sheet("T2 joins raw", J + R); sheet("T3a scaling raw", T3); sheet("bench counts raw", B)
+    ws = wb.create_sheet("README"); ws.append(["Each sheet holds the raw records (one per cluster run) behind the paper table of the same name; the LaTeX tables are compiled from these rows by tables.py. Columns: see brain-data/SCHEMA.md."])
+    wb.save(OUT + "/tables-raw.xlsx"); print("xlsx written")
+except ImportError:
+    print("openpyxl missing: no xlsx")

@@ -81,6 +81,20 @@ while IFS= read -r line || [ -n "$line" ]; do
   [ -z "$line" ] && continue; case "$line" in \#*) continue;; esac
   read -r id mem to cmd <<< "$line"
   [ -e "$EVAL_OUT/$id/done" ] && continue
+  # size ladder: a command may start with needok:<row-id>; the row runs only if that earlier row
+  # finished with reason=ok (it waits for it), otherwise it is recorded as skipped
+  dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
+  if [ -n "$dep" ]; then
+    while [ ! -e "$EVAL_OUT/$dep/done" ]; do sleep 30; done
+    if ! grep -q '^reason=ok' "$EVAL_OUT/$dep/status" 2>/dev/null; then
+      d="$EVAL_OUT/$id"; mkdir -p "$d"; printf '%s\n' "$cmd" > "$d/cmd.txt"
+      { echo "state=done"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "pin=$TF_PIN"; echo "start=$(date -Is)"; echo "end=$(date -Is)"; echo "exit=0"; echo "reason=skipped: $dep $(sed -n 's/^reason=//p' "$EVAL_OUT/$dep/status" | head -1)"; echo "mem_gb=$mem"; echo "timeout_s=$to"; } > "$d/status"
+      : > "$d/stdout.log"; : > "$d/stderr.log"
+      python3 -I "$S/mkrecord.py" "$d" >> "$EVAL_OUT/results.tsv" 2>>"$d/mkrecord.err"; touch "$d/done"
+      [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
+      echo "row $id skipped ($dep not ok) $(date -Is)" >> "$QDIR/queue.log"; continue
+    fi
+  fi
   w=$(width_of "$id")
   while :; do
     free_finished
