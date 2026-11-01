@@ -21,14 +21,15 @@ def mispaired(r):  # an id ".vs-<spec variant>" whose command loads another spec
 _n = len(rows); rows = [r for r in rows if not mispaired(r)]; print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
-def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
+def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (r["run_id"].endswith(".c48h"), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
 byid = {}
-for r in rows:  # an id run on several pins: the newest pin wins
-    cur = byid.get(r["run_id"])
-    if cur is None or pin_rank(r) >= pin_rank(cur): byid[r["run_id"]] = r
+for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
+    cur = byid.get(base_id(r["run_id"]))
+    if cur is None or pin_rank(r) >= pin_rank(cur): byid[base_id(r["run_id"])] = r
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
-for r in rows: r["a"] = attrs.get(r["run_id"]) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", r["run_id"]), {})
+def base_id(i): return re.sub(r"\.c48h$", "", i)   # a 48 h tier rerun of the same row (id + .c48h) is the same case
+for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
 def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None

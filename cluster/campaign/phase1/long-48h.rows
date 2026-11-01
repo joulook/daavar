@@ -1,0 +1,55 @@
+C1.election.impl_leader_conf_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- leader conf 5
+C1.election.impl_leader_silent_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- leader silent 5
+C1.election.impl_leader_split_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- leader split 5
+C2.election.impl_leader_conf_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- leader conf 5
+C2.election.impl_leader_silent_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- leader silent 5
+C2.election.impl_leader_split_5_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- leader split 5
+C2.n-buyer-kragl.impl_5_no-subtract_bag.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl conf --engine stateless --threads 16 --model bag -- 5 no-subtract
+C2.replicated-log-esop20.impl_5_correct_bag.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateless --threads 16 --model bag -- 5 correct
+C1.n-buyer-kragl.impl_6_no-subtract_bag.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl conf --engine stateful --threads 16 --model bag -- 6 no-subtract
+C1.replicated-log-esop20.impl_6_correct_bag.x3.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 6 correct
+C1.replicated-log-esop20.impl_6_correct_fifo.x3.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model fifo -- 6 correct
+C1.replicated-log-esop20.impl_6_early-reply_bag.x3.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 6 early-reply
+C1.replicated-log-esop20.impl_6_early-reply_fifo.x3.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model fifo -- 6 early-reply
+C1.ring-election-igloo.impl_6_correct_bag.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 6 correct
+C1.ring-election-igloo.impl_6_no-compare_bag.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 6 no-compare
+C2.n-buyer-kragl.impl_6_correct_bag.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl conf --engine stateless --threads 16 --model bag -- 6 correct
+C1.n-buyer-kragl.impl_7_correct_bag.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh n-buyer-kragl conf --engine stateful --threads 16 --model bag -- 7 correct
+C2.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateless --threads 16 --model fifo -- l2-stale 2 2 2 1
+C2.election.impl_ring_split_7_fifo.x3.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- ring split 7
+XJE.balancer-load-aware.impl_l2-stale_2_2_2_1_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh balancer-load-aware 'bench.balancer_load_aware.Balancer:impl,l2-stale,2,2,2,1' must 0 1 export.jsonl 3600 --split 16 --k 1
+C1.a1-commit.impl_control-reverse_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- control-reverse 5 3
+C1.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- correct 5 3
+C1.a1-commit.impl_eager_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- eager 5 3
+C1.a1-commit.impl_early-abort_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- early-abort 5 3
+C1.a1-commit.impl_silent_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- silent 5 3
+C2.a1-commit.impl_control-reverse_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- control-reverse 5 3
+C2.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- correct 5 3
+C2.a1-commit.impl_eager_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- eager 5 3
+C2.a1-commit.impl_early-abort_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- early-abort 5 3
+C2.a1-commit.impl_silent_5_3_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- silent 5 3
+C2.election.impl_ring_conf_8_fifo.x4.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- ring conf 8
+C1.balancer-load-aware.impl_l1_3_3_3_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateful --threads 16 --model fifo -- l1 3 3 3
+C1.producer-consumer-civl.impl_9_bag.x5.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateful --threads 16 --model bag -- 9
+C1.two-pc-abstain-kragl.impl_9_correct_bag.x4.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateful --threads 16 --model bag -- 9 correct
+C2.a4-balancer.impl_drop_a4a_3_3_3_fifo.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- drop a4a 3 3 3
+C2.a4-balancer.impl_hash-drop_a4a_3_3_3_fifo.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- hash-drop a4a 3 3 3
+C2.a4-balancer.impl_rr_a4a_3_3_3_fifo.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- rr a4a 3 3 3
+C2.balancer-load-aware.impl_l1_3_3_3_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateless --threads 16 --model fifo -- l1 3 3 3
+C2.producer-consumer-civl.impl_9_bag.x5.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateless --threads 16 --model bag -- 9
+XJE.balancer-load-aware.impl_l1_3_3_3_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh balancer-load-aware 'bench.balancer_load_aware.Balancer:impl,l1,3,3,3' must 0 1 export.jsonl 3600 --split 16 --k 1
+XJE.balancer-load-aware.spec_l1_3_3_3_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh balancer-load-aware 'bench.balancer_load_aware.Balancer:spec,l1,3,3,3' must 0 1 export.jsonl 3600 --split 16 --k 1
+C1.election.impl_ring_conf_10_fifo.x6.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 10
+C1.balancer-load-aware.impl_l2-stale_3_3_3_2_fifo.x1.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateful --threads 16 --model fifo -- l2-stale 3 3 3 2
+C1.balancer-load-aware.impl_l2_3_3_3_2_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateful --threads 16 --model fifo -- l2 3 3 3 2
+C2.balancer-load-aware.impl_l2_3_3_3_2_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh balancer-load-aware conf --engine stateless --threads 16 --model fifo -- l2 3 3 3 2
+XJE.balancer-load-aware.impl_l2_3_3_3_2_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh balancer-load-aware 'bench.balancer_load_aware.Balancer:impl,l2,3,3,3,2' must 0 1 export.jsonl 3600 --split 16 --k 1
+C1.a4-balancer.impl_drop_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- drop a4a 4 4 4
+C1.a4-balancer.impl_hash-drop_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- hash-drop a4a 4 4 4
+C1.a4-balancer.impl_hash_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- hash a4a 4 4 4
+C1.a4-balancer.impl_pair-swap-hash_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- pair-swap-hash a4a 4 4 4
+C1.a4-balancer.impl_pair-swap-rr_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- pair-swap-rr a4a 4 4 4
+C1.a4-balancer.impl_rr_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateful --threads 16 --model fifo -- rr a4a 4 4 4
+C2.a4-balancer.impl_hash_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- hash a4a 4 4 4
+C2.a4-balancer.impl_pair-swap-hash_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- pair-swap-hash a4a 4 4 4
+C2.a4-balancer.impl_pair-swap-rr_a4a_4_4_4_fifo.x2.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- pair-swap-rr a4a 4 4 4
