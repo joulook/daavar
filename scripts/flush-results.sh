@@ -20,7 +20,7 @@ while [ ! -e .stop-flusher ]; do
     if [ -n "$(git log origin/main..HEAD --oneline 2>/dev/null)" ]; then
       for i in 1 2 3; do
         git push -q origin main 2>/dev/null && break
-        git fetch -q origin && { git rebase -q origin/main >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1; }
+        git fetch -q origin && { git rebase -q --autostash origin/main >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1; }
         sleep $((i*15))
       done
     fi

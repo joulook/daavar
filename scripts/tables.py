@@ -5,7 +5,8 @@ import csv, glob, sys, collections, os, re, statistics
 BD, DV, OUT = sys.argv[1:4]; os.makedirs(OUT, exist_ok=True)
 rows = []
 for f in [BD + "/results.tsv"] + sorted(glob.glob(BD + "/results/*.tsv")):
-    rows += list(csv.DictReader(open(f), delimiter="\t"))
+    _perpin = 1 if re.search(r"/results/[^/]+\.[0-9a-f]{7}\.tsv$", f) else 0   # results/<node>.<pin>.tsv
+    for _r in csv.DictReader(open(f), delimiter="\t"): _r["_perpin"] = _perpin; rows.append(_r)
 attrs = {}
 for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv") + glob.glob(DV + "/cluster/campaign/*/*.rows.tsv"):
     for r in csv.DictReader(open(f), delimiter="\t"): attrs[r["id"].replace("'", "")] = {k: (v or "").replace("'", "") for k, v in r.items()}  # early row files carried stray quotes (the runner strips them from the id)
@@ -32,7 +33,7 @@ def paper_name(a):  # (program, variant) as the paper names them; unknown direct
 def base_id(i): return re.sub(r"\.c48h$", "", i)   # a 48 h tier rerun of the same row (id + .c48h) is the same case
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
-def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (r["run_id"].endswith(".c48h"), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
+def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (r["run_id"].endswith(".c48h"), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
 byid = {}
 for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
