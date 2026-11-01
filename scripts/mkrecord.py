@@ -119,6 +119,8 @@ if "org.mpi_sws.jmc" in rec["command"] or re.search(r"^graphs:\s", out, re.M):
     rec.setdefault("mode", "online" if "--spec" in rec["command"] else "n/a")
     rec.setdefault("engine", "stateful-online" if "--spec" in rec["command"] else "must")
     rec.setdefault("exploration", "stop-at-first" if "--spec" in rec["command"] and "full" not in rec["command"] else "full")
+# in-process conf / online of the shared main: exit 1 = violation reported
+if re.search(r" conf | online |--spec", rec["command"]) and rec.get("exit_code") == "1" and rec.get("stop_reason") == "exit-1": rec["stop_reason"] = "ok"
 # conf-join
 if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, re.M):
     rec.setdefault("kind", "cross-language"); rec.setdefault("mode", "offline-batch"); rec.setdefault("engine", "join")

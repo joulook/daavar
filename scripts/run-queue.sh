@@ -58,9 +58,11 @@ run_row() {  # id memGB timeoutS numa-list width cmd...
   sampler "$d" "$rp" & local sp=$!
   wait "$rp"; local st=$?; kill "$sp" 2>/dev/null; wait "$sp" 2>/dev/null
   local reason=ok
+  # the conformance tools exit 1 to report a violation (conf, conf-join, online, --spec): that is a result, not a failure
+  if [ $st -eq 1 ]; then case "$*" in *" conf "*|*conf-join*|*" online "*|*--spec*) reason=ok;; *) reason="exit-1";; esac; fi
   [ $st -eq 137 ] && reason=timeout
   [ -f "$d/killed" ] && reason="invalid: foreign load"
-  { [ $st -ne 0 ] && [ "$reason" = ok ]; } && reason="exit-$st"
+  { [ $st -ne 0 ] && [ $st -ne 1 ] && [ "$reason" = ok ]; } && reason="exit-$st"
   grep -qi "out of memory\|memory allocation of\|Cannot allocate\|OutOfMemoryError" "$d/stderr.log" "$d/stdout.log" 2>/dev/null && reason=memory
   { echo "state=done"; echo "end=$(date -Is)"; echo "exit=$st"; echo "reason=$reason"; echo "wall_s=$(( $(date +%s) - start ))"; } >> "$d/status"
   sed -i 's/^state=running/state=finished/' "$d/status"
