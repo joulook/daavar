@@ -64,11 +64,17 @@ def ladder(items, keyf):  # yield (item, previous item of the same ladder) order
         g.sort(key=lambda it: it.nums if hasattr(it, "nums") else it[0].nums); prev = None
         for it in g: yield it, prev; prev = it
 T = A.threads
-for (c, s), prev in ladder(pairs, lambda p: (p[0].dir, p[0].model, p[0].variant, p[1].variant)):
+# in-process conf decides its specification from the implementation's arguments: one row per impl
+# case, whichever spec cases share its numbers (joins keep one row per spec case below)
+seen_impl = set(); conf_pairs = []
+for c, s in pairs:
+    if c.id in seen_impl: continue
+    seen_impl.add(c.id); conf_pairs.append((c, s))
+for (c, s), prev in ladder(conf_pairs, lambda p: (p[0].dir, p[0].model, p[0].variant)):
     base = dict(table="C", family=c.dir, size=size_of(c.nums), model=c.model, variant=c.variant, threads=T, expected_verdict="readme",
                 kind="conf-traceforge", spec_tool="traceforge", impl_tool="traceforge", spec_lang="rust", impl_lang="rust", exploration="full", benchmark=c.dir, spec_case=s.id, impl_case=c.id, tier="c1h")
-    cid = f"{c.dir}.{c.id.split('.',1)[1]}" + (f".vs-{s.variant}" if s.variant not in ("spec", "correct") else "")
-    pid = (f"{prev[0].dir}.{prev[0].id.split('.',1)[1]}" + (f".vs-{prev[1].variant}" if prev[1].variant not in ("spec", "correct") else "")) if prev else None
+    cid = f"{c.dir}.{c.id.split('.',1)[1]}"
+    pid = f"{prev[0].dir}.{prev[0].id.split('.',1)[1]}" if prev else None
     for mode, eng in (("C1", "stateful"), ("C2", "stateless")):
         emit(mode, f"{mode}.{cid}.t{T}", f'"$DAAVAR"/scripts/rust-run.sh {c.dir} conf --engine {eng} --threads {T} --model {c.model} -- {c.args}',
              dict(base, engine=f"{eng}-parallel", mode="in-process"), dep=f"{mode}.{pid}.t{T}" if pid else None)
