@@ -3,10 +3,14 @@
 //! impl: three invisible node threads `n0 n1 n2`, each owning a `raft::RawNode<MemStorage>`;
 //!       mailbox -> `step`/`propose`, `ready()` -> sends; election timeouts by bounded `nondet()`.
 //! spec: Raft's TLA+ (ongardie raft.tla) abstracted to its client-visible safety content: one
-//!       invisible `log` thread holding the (single, totally ordered) committed log; a proposal
-//!       is either appended or lost; every node front-end delivers the committed log in order.
-//! Visible: clients `c0 c1`, `c_i` attached to `n_i`; each proposes `e` values, then receives
-//! `Committed(v)` from its node until all its own values have been seen.
+//!       invisible `log` thread holding the (single, totally ordered) committed log; the clients
+//!       send their proposals to it directly; a proposal is either appended, and then delivered
+//!       as `Committed(v)` to every client in log order, or lost. There are no node threads on
+//!       the spec side: which invisible thread a client talks to is not part of the observation
+//!       (a client's word records its sends and receives, not their destinations or sources).
+//! Visible: clients `c0 c1`; on the impl side `c_i` is attached to node `n_i`; each proposes `e`
+//! values, then receives `Committed(v)` until all its own values have been seen. Values are
+//! carried as one little-endian `u64` per entry, so any `e` is representable.
 //!
 //! ARGS: `<variant> <e> <t> [<cand>]`: variant = `correct` (raft-rs as is) or `reorder` (a fault of
 //! this harness's delivery layer, not of raft-rs: a node hands a batch of committed entries to its
@@ -48,12 +52,12 @@ impl std::fmt::Debug for Wire {
 #[derive(Clone, Debug, PartialEq)]
 struct Setup {
     me: usize,
-    /// impl: the nodes, by raft id - 1; spec: `[log]`.
+    /// impl: the nodes, by raft id - 1; spec: the clients (the `log` delivers to all of them).
     nodes: Vec<ThreadId>,
     client: Option<ThreadId>,
 }
 
-/// Everything a node (impl) or node front-end (spec) receives.
+/// Everything a node (impl) or the `log` (spec) receives.
 #[derive(Clone, Debug, PartialEq)]
 enum NIn {
     Setup(Setup),
@@ -88,8 +92,8 @@ fn client(i: usize, e: usize, node: ThreadId) {
 
 // ------------------------------------------------------------ impl ----
 
-/// A client's Propose may overtake main's Setup (different senders): buffer it.
-/// Likewise a peer's raft message or (spec) a Commit.
+/// A client's Propose may overtake `init`'s Setup (different senders): buffer it.
+/// Likewise a peer's raft message.
 fn wait_setup() -> (Setup, VecDeque<NIn>) {
     let mut early = VecDeque::new();
     loop {
@@ -146,7 +150,7 @@ fn raft_node(timeouts: usize) {
             if rn.raft.leader_id == INVALID_ID {
                 break;
             }
-            match rn.propose(vec![], vec![v as u8]) {
+            match rn.propose(vec![], v.to_le_bytes().to_vec()) {
                 Ok(()) => {
                     pending.pop_front();
                 }
@@ -173,7 +177,8 @@ fn apply(mut entries: Vec<raft::eraftpb::Entry>, s: &Setup) {
             continue;
         }
         if let Some(c) = s.client {
-            send_msg(c, CIn::Committed(e.data[0] as u64));
+            let v = u64::from_le_bytes(e.data[..8].try_into().expect("an entry carries one u64 value"));
+            send_msg(c, CIn::Committed(v));
         }
     }
 }
@@ -205,7 +210,7 @@ fn spawn_nodes_clients<F: Fn(usize) -> Box<dyn FnOnce() + Send>>(
     e: usize,
     node: F,
 ) -> (Vec<ThreadId>, Vec<ThreadId>) {
-    // Nodes first, then clients: the ids agree between spec and impl.
+    // Nodes first, then clients (impl side only; the spec spawns `log`, the clients and `init`).
     let nodes: Vec<ThreadId> = (0..NODES).map(|i| named(&format!("n{i}"), node(i)).thread().id()).collect();
     let clients: Vec<ThreadId> = (0..CLIENTS)
         .map(|i| {
