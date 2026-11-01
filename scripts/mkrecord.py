@@ -59,7 +59,14 @@ for k in ("table", "family", "size", "model", "variant", "engine", "threads", "e
     if attrs.get(k): rec[k] = attrs[k]
 rec.setdefault("sizes", rec.get("size")); rec.setdefault("comm_model", rec.get("model"))
 if "threads" in rec: rec.setdefault("impl_threads", rec["threads"]); rec.setdefault("spec_threads", rec["threads"])
-out = read(d / "stdout.log")
+def read_tail(p, n=64*1024*1024):  # logs can be >100 GB; everything we parse is printed at the end
+    try:
+        sz = os.path.getsize(p)
+        with open(p, "rb") as f:
+            if sz > n: f.seek(sz - n)
+            return f.read().decode(errors="replace")
+    except OSError: return ""
+out = read_tail(d / "stdout.log")
 # TraceForge EVALROW record
 m = re.search(r"EVALROW\t(.*)", out)
 if m and dv:
