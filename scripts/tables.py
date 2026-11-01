@@ -213,6 +213,10 @@ for pre, fname, title in CAMP:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = byid.get(ex[0]) if ex else None
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
+    if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
+        # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)
+        Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris"}
+        _n = len(rs); rs = [r for r in rs if r["a"].get("family") not in Q27]; print(f"{pre}: {_n - len(rs)} in-process rows of the Q27 programs left out")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
         for r in sorted(rs, key=pin_rank): bycmd[r.get("command")] = r   # the newest pin, then the latest start, wins
@@ -222,7 +226,7 @@ for pre, fname, title in CAMP:
     offline = pre in ("C3J", "XJ1", "XJ2")
     hdr = "program & variant & size & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
     spec = "@{}llllrrrrl" + ("" if offline else "r") + "r@{}"
-    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached; skipped = the smaller size did not finish" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + "; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
+    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached; skipped = the smaller size did not finish" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + f"; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
          hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
