@@ -226,27 +226,50 @@ for pre, fname, title in CAMP:
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2")
-    hdr = "program(size) & variant & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
-    spec = "@{}lllrrrrl" + ("" if offline else "r") + "r@{}"
-    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached (larger sizes of that ladder are not run)" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + f"; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
-         hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
+    # one file, two longtables: the conforming pairs (no verdict, no miss, no uncovered columns) and the violating pairs
+    # (first-miss time and uncovered graphs); a row goes by its verdict, a row without one (time tier reached) by its
+    # expectation; a verdict against the README is marked *; the clock marks a row that reached its time tier
+    conf_rows, viol_rows = [], []
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
-        verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+        verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else st))
         verdict = {"reports": "violation", "violation (sampled)": "violation"}.get(verdict, verdict)   # JMC says "reports"; conf-join adds "(sampled)"
         r["verdict"] = verdict if st == "ok" else r.get("verdict")
         exp = expected_for(a); r["expected"] = exp if exp else ("undefined" if a.get("family") in {e["dir"] for e in EXP} else None)
         if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
-        if exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp: verdict += "$^{\\ast}$"
-        def tot(c, b, t, e=None):  # graphs explored = complete + blocked; else the run's own total (blocked included); else the block's explored count
-            vc, vb = num(r.get(c)), num(r.get(b))
-            if vc is None and vb is None: return r.get(t) or (r.get(e) if e else "") or ""
-            return str(int((vc or 0) + (vb or 0)))
-        sg = tot("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"); ig = tot("impl_complete", "impl_blocked", "impl_graphs_total")
-        prog, var = paper_name(a)
-        miss = "" if offline else f" & {(r.get('first_miss_wall_ms') or '') if verdict.startswith('violation') else ''}"
-        L.append(f"\\textsf{{{esc(prog)}}}$({esc(a.get('size',''))})$ & {esc(var)} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict}{miss} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
-    L += ["\\bottomrule", "\\end{longtable}"]
+        r["_mark"] = "$^{\\ast}$" if (exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp) else ""
+        r["_v"] = verdict
+        side = verdict if verdict in ("conforms", "violation") else (exp or "conforms")
+        (viol_rows if side == "violation" else conf_rows).append(r)
+    def tot(r, c, b, t, e=None):  # graphs explored = complete + blocked; else the run's own total (blocked included); else the block's explored count
+        vc, vb = num(r.get(c)), num(r.get(b))
+        if vc is None and vb is None: return r.get(t) or (r.get(e) if e else "") or ""
+        return str(int((vc or 0) + (vb or 0)))
+    def cell_time(r):
+        v = r["_v"]
+        if v == "t/o": return "\\faClock"
+        if v == "oom": return "oom"
+        if v not in ("conforms", "violation"): return esc(v)
+        return fnum(r.get("wall_ms"), 1000, "{:.1f}")
+    L = []
+    for kind, rows_k in (("conforming", conf_rows), ("violating", viol_rows)):
+        viol = kind == "violating"
+        hdr = "program(size) & variant & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
+        spec = "@{}lllrrrr" + (("r" if not offline else "") + "r" if viol else "") + "@{}"
+        cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time (\\faClock\\ = the time tier was reached, larger sizes of that ladder are not run); MB = peak resident memory"
+               + ("; miss ms = wall time to the first uncovered graph" if (viol and not offline) else "")
+               + ("; $G_{\\faGhost}$ = uncovered implementation graphs" if viol else "")
+               + "; a verdict against the directory's README is marked $^{\\ast}$.")
+        L += [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{cap}}}\\label{{tab:{fname}-{'viol' if viol else 'conf'}}}\\\\", "\\toprule", hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
+        for r in rows_k:
+            a = r["a"]; prog, var = paper_name(a)
+            sg = tot(r, "spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"); ig = tot(r, "impl_complete", "impl_blocked", "impl_graphs_total")
+            extra = ""
+            if viol:
+                if not offline: extra += f" & {(r.get('first_miss_wall_ms') or '') if r['_v'] == 'violation' else ''}"
+                extra += f" & {(r.get('uncovered_total') or r.get('uncovered_distinct') or '') if r['_v'] == 'violation' else ''}"
+            L.append(f"\\textsf{{{esc(prog)}}}$({esc(a.get('size',''))})${r['_mark']} & {esc(var)} & {a.get('model','')} & {sg} & {ig} & {cell_time(r)} & {fnum(r.get('peak_rss_kb'), 1024)}{extra} \\\\")
+        L += ["\\bottomrule", "\\end{longtable}", ""]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
