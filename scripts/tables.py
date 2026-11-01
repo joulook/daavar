@@ -19,6 +19,17 @@ def mispaired(r):  # an id ".vs-<spec variant>" whose command loads another spec
     spec = ex[0] if ex else ""
     return spec != "" and ("spec_" + m.group(1).replace("-", "_") + "_") not in spec
 _n = len(rows); rows = [r for r in rows if not mispaired(r)]; print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
+# the paper's Table 1 names for the benchmark directories (cluster/campaign/inputs/paper-names.tsv)
+NAMES = []
+for _l in open(DV + "/cluster/campaign/inputs/paper-names.tsv"):
+    if _l.startswith("#") or not _l.strip(): continue
+    _d, _rx, _prog, _lab = _l.rstrip("\n").split("\t")[:4]; NAMES.append((_d, re.compile(_rx), _prog, _lab))
+def paper_name(a):  # (program, variant) as the paper names them; unknown directories keep their own names
+    fam, var = a.get("family", ""), a.get("variant", "")
+    for d, rx, prog, lab in NAMES:
+        if d == fam and rx.search(var): return prog, (var if lab == "." else lab)
+    return fam, var
+def base_id(i): return re.sub(r"\.c48h$", "", i)   # a 48 h tier rerun of the same row (id + .c48h) is the same case
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
 def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (r["run_id"].endswith(".c48h"), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
@@ -28,7 +39,6 @@ for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin,
     if cur is None or pin_rank(r) >= pin_rank(cur): byid[base_id(r["run_id"])] = r
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
-def base_id(i): return re.sub(r"\.c48h$", "", i)   # a 48 h tier rerun of the same row (id + .c48h) is the same case
 for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
 def num(x):
     try: return float(x)
@@ -209,9 +219,11 @@ for pre, fname, title in CAMP:
         rs = list(bycmd.values())
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
-    L = ["\\begin{longtable}{@{}llllrrrrlrrr@{}}", f"\\caption{{{title} (one cluster run per row; t/o = tier reached; skipped = the smaller size did not finish).}}\\label{{tab:{fname}}}\\\\", "\\toprule",
-         "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss ms & uncovered \\\\", "\\midrule", "\\endfirsthead",
-         "\\toprule", "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss ms & uncovered \\\\", "\\midrule", "\\endhead"]
+    offline = pre in ("C3J", "XJ1", "XJ2")
+    hdr = "program & variant & size & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB & verdict" + ("" if offline else " & miss ms") + " & unc. \\\\"
+    spec = "@{}llllrrrrl" + ("" if offline else "r") + "r@{}"
+    L = [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{title}. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory; verdict as expected from the directory's README unless marked $^{{\\ast}}$; t/o = time tier reached; skipped = the smaller size did not finish" + ("" if offline else "; miss ms = wall time to the first uncovered graph on a violation") + "; unc. = uncovered graphs.}}\\label{{tab:{fname}}}\\\\", "\\toprule",
+         hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
         verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
@@ -225,13 +237,15 @@ for pre, fname, title in CAMP:
             if vc is None and vb is None: return r.get(t) or (r.get(e) if e else "") or ""
             return str(int((vc or 0) + (vb or 0)))
         sg = tot("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"); ig = tot("impl_complete", "impl_blocked", "impl_graphs_total")
-        L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {(r.get('first_miss_wall_ms') or '') if verdict.startswith('violation') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
+        prog, var = paper_name(a)
+        miss = "" if offline else f" & {(r.get('first_miss_wall_ms') or '') if verdict.startswith('violation') else ''}"
+        L.append(f"\\textsf{{{esc(prog)}}} & {esc(var)} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict}{miss} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
     L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
         offline = pre in ("C3J", "XJ1", "XJ2"); par_tf = pre in ("C1", "C2")
-        cols = ["benchmark", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "run id", "node", "pin", "started"]
+        cols = ["program", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"]
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
             a = r["a"]; st = r["stop_reason"]
@@ -241,11 +255,12 @@ for pre, fname, title in CAMP:
                 if vc is None and vb is None:
                     v = r.get(tt) or (r.get(e) if e else "") or ""; return int(v) if v.isdigit() else ""
                 return int((vc or 0) + (vb or 0))
-            row = [a.get("family", ""), a.get("variant", ""), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
+            prog, var = paper_name(a)
+            row = [prog, var, a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
                    fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
-            row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
+            row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", a.get("family", ""), r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
             w.writerow(row)
     ok = sum(1 for r in rs if r["stop_reason"] == "ok"); ruled = [r for r in rs if r.get("expected") and r["expected"] != "undefined"]
     mism = sum(1 for r in ruled if r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() not in ("", r["expected"]))
@@ -255,12 +270,12 @@ open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
 try:
     import openpyxl
     wb = openpyxl.Workbook(); wb.remove(wb.active)
-    RAW = ["run_id","node","traceforge_commit","jmc_commit","table","family","sizes","comm_model","variant","engine","impl_threads","expected_verdict","verdict","stop_reason","spec_complete","spec_blocked","spec_graphs_total","impl_complete","impl_blocked","impl_graphs_total","spec_graphs_explored","sweeps","cache_tests","cache_hits","spec_summaries","impl_summaries","uncovered_total","uncovered_distinct","first_miss_iteration","first_miss_wall_ms","wall_ms","cpu_user_s","cpu_sys_s","peak_rss_kb","spec_phase_ms","impl_phase_ms","explore_ms","summarise_ms","index_ms","lookup_ms","export_ms","join_ms","started_at","command"]
+    RAW = ["run_id","program","node","traceforge_commit","jmc_commit","table","family","sizes","comm_model","variant","engine","impl_threads","expected_verdict","verdict","stop_reason","spec_complete","spec_blocked","spec_graphs_total","impl_complete","impl_blocked","impl_graphs_total","spec_graphs_explored","sweeps","cache_tests","cache_hits","spec_summaries","impl_summaries","uncovered_total","uncovered_distinct","first_miss_iteration","first_miss_wall_ms","wall_ms","cpu_user_s","cpu_sys_s","peak_rss_kb","spec_phase_ms","impl_phase_ms","explore_ms","summarise_ms","index_ms","lookup_ms","export_ms","join_ms","started_at","command"]
     def sheet(name, rs):
         ws = wb.create_sheet(name[:31]); ws.append(RAW)
         for r in rs:
             a = r.get("a", {})
-            ws.append([r.get(c) if r.get(c) not in (None, "") else a.get(c, "") for c in RAW])
+            ws.append([(paper_name(a)[0] if c == "program" else (r.get(c) if r.get(c) not in (None, "") else a.get(c, ""))) for c in RAW])
     sheet("T1 detection raw", T1); sheet("T2 joins raw", J + R); sheet("T3a scaling raw", T3); sheet("bench counts raw", B)
     for pre, fname, title in CAMP: sheet(fname.replace("campaign-", "camp "), camp_rows[pre])
     ws = wb.create_sheet("README"); ws.append(["Each sheet holds the raw records (one per cluster run) behind the paper table of the same name; the LaTeX tables are compiled from these rows by tables.py. Columns: see brain-data/SCHEMA.md."])

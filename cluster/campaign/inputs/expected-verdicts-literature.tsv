@@ -76,3 +76,29 @@ two-pc-trillium	fifo	ignore-abort-vote	-	<N>; N>=2	all	violation
 two-pc-trillium	bag	ignore-abort-vote	-	<N>; N>=2	all	violation	
 zab-broadcast-remix	fifo	correct	-	<Q>; Q>=1	all	conforms	
 zab-broadcast-remix	fifo	issue1-propose-to-ackld	-	<Q>; Q>=1	all	violation	
+raft-rs	fifo	correct	-	<variant> <e> <t> [<cand>]; e>=1, t>=1	all	conforms	raft-rs ad13f3d unmodified; spike 2026-10-31 certified e=1 t=1 cand=1
+raft-rs	fifo	reorder	-	<variant> <e> <t> [<cand>]; e>=1, t>=1	all	violation	hand-derived: a committed batch of two entries delivered in reverse gives two clients different orders; a run where no two entries commit in one batch conforms
+a2-store	fifo	pb	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	T1 attrs (lead), README
+a2-store	fifo	pb-br	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	T1 attrs (lead), README
+a2-store	fifo	control-early-ack-fwd	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	control
+a2-store	fifo	control-early-ack-primary	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	control
+a2-store	fifo	early-ack	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+a2-store	fifo	silent-put	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+a2-store	fifo	stale-get	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+a2-store	fifo	sh	-	<variant> <k> <q> <s>; k>=1, q>=1, s>=1	all	conforms	sharded store
+a2-store	fifo	misroute	-	<variant> <k> <q> <s>; k>=1, q>=1, s>=2	all	violation	needs two shards
+a3-lock	fifo	fifo	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	the correct lock
+a3-lock	fifo	control-lifo	-	<variant> <k> <q>; k>=1, q>=1	all	conforms	control
+a3-lock	fifo	double-grant	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+a3-lock	fifo	never-grant	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+a3-lock	fifo	wrong-round	-	<variant> <k> <q>; k>=1, q>=1	all	violation	T1 attrs (lead)
+s1-naive	bag	naive	-	<variant> <k> <enc>; k>=1	all	violation	the paper's ex:naive
+s1-naive	bag	self	-	<variant> <k> <enc>; k>=1	all	conforms	the conforming twin
+s2-share	fifo	share	-	<variant> <m> <c>; m>=1	all	conforms	
+s2-share	fifo	ctl	-	<variant> <m> <c>; m>=1	all	conforms	control
+s3-commit	fifo	impl	-	<n> <j>; n>=1	all	conforms	
+s4-chain	fifo	impl	-	<d>; d>=1	all	conforms	
+s5-reset	bag	reset	-	<variant> <k> <s>; k>=1	all	violation	the fault
+s5-reset	bag	ctl	-	<variant> <k> <s>; k>=1	all	violation	control violating by construction
+s5-reset	bag	twin	-	<variant> <k> <s>; k>=1	all	conforms	the conforming twin
+s6-width	fifo	impl	-	<w>; w>=1	all	conforms	

@@ -1,0 +1,9 @@
+C3E.raft-rs.spec_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs export spec --out export.jsonl --threads 16 --model fifo -- correct 1 1 1
+C1.raft-rs.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateful --threads 16 --model fifo -- correct 1 1 1
+C2.raft-rs.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateless --threads 16 --model fifo -- correct 1 1 1
+C3E.raft-rs.impl_correct_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs export impl --out export.jsonl --threads 16 --model fifo -- correct 1 1 1
+C3J.raft-rs.impl_correct_1_1_1_fifo 16 600 needok:C3E.raft-rs.impl_correct_1_1_1_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.raft-rs.spec_correct_1_1_1_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.raft-rs.impl_correct_1_1_1_fifo.t16/export.jsonl
+C1.raft-rs.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateful --threads 16 --model fifo -- reorder 1 1 1
+C2.raft-rs.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateless --threads 16 --model fifo -- reorder 1 1 1
+C3E.raft-rs.impl_reorder_1_1_1_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs export impl --out export.jsonl --threads 16 --model fifo -- reorder 1 1 1
+C3J.raft-rs.impl_reorder_1_1_1_fifo 16 600 needok:C3E.raft-rs.impl_reorder_1_1_1_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.raft-rs.spec_correct_1_1_1_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.raft-rs.impl_reorder_1_1_1_fifo.t16/export.jsonl
