@@ -152,6 +152,10 @@ if "rust-run.sh" in rec["command"] and "--- measurements" in out:
     elif re.search(r"^conformance: \d+ candidate violation", out, re.M) or re.search(r"^\d+ uncovered implementation execution", out, re.M): rec["verdict"] = "violation"
     mm = re.search(r"^(\d+) uncovered implementation execution\(s\), (\d+) distinct summar", out, re.M)
     if mm: rec.setdefault("uncovered_total", mm.group(1)); rec["uncovered_distinct"] = mm.group(2)
+    # a run with millions of uncovered summaries prints them after the conformance line, beyond the 64 MB tail this
+    # reader keeps: the measurement block at the very end still carries uncovered_total, which decides the verdict
+    if not rec.get("verdict") and rec.get("stop_reason") == "ok" and str(meas.get("uncovered_total", "")).isdigit() and meas.get("stop_reason") == "exhausted":
+        rec["verdict"] = "violation" if int(meas["uncovered_total"]) > 0 else "conforms"
     mm = re.search(r"--threads (\d+)", rec["command"])
     if mm: rec["impl_threads"] = mm.group(1); rec["spec_threads"] = mm.group(1)
     if " conf " in rec["command"]:
