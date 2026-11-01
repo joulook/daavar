@@ -77,37 +77,37 @@ allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; d
 find_free() {  # $1 width -> a comma list of width free allowed numa nodes (not necessarily consecutive), or empty
   local w=$1 k out="" c=0; for ((k=0; k<SLOTS; k++)); do { [ -z "${BUSY[$k]:-}" ] && allowed $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
 }
-while IFS= read -r line || [ -n "$line" ]; do
-  [ -z "$line" ] && continue; case "$line" in \#*) continue;; esac
-  read -r id mem to cmd <<< "$line"
-  [ -e "$EVAL_OUT/$id/done" ] && continue
-  # size ladder: a command may start with needok:<row-id>; the row runs only if that earlier row
-  # finished with reason=ok (it waits for it), otherwise it is recorded as skipped
-  dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
-  if [ -n "$dep" ]; then
-    while [ ! -e "$EVAL_OUT/$dep/done" ]; do sleep 30; done
-    if ! grep -q '^reason=ok' "$EVAL_OUT/$dep/status" 2>/dev/null; then
-      d="$EVAL_OUT/$id"; mkdir -p "$d"; printf '%s\n' "$cmd" > "$d/cmd.txt"
-      { echo "state=done"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "pin=$TF_PIN"; echo "start=$(date -Is)"; echo "end=$(date -Is)"; echo "exit=0"; echo "reason=skipped: $dep $(sed -n 's/^reason=//p' "$EVAL_OUT/$dep/status" | head -1)"; echo "mem_gb=$mem"; echo "timeout_s=$to"; } > "$d/status"
-      : > "$d/stdout.log"; : > "$d/stderr.log"
-      python3 -I "$S/mkrecord.py" "$d" >> "$EVAL_OUT/results.tsv" 2>>"$d/mkrecord.err"; touch "$d/done"
-      [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
-      echo "row $id skipped ($dep not ok) $(date -Is)" >> "$QDIR/queue.log"; continue
+# dispatch: rows are launched in file order as slots free up; a row whose needok dependency has not
+# finished is deferred (not blocking the rows behind it) and re-checked on every pass
+mapfile -t PENDING < <(grep -v '^[[:space:]]*#' "$ROWS" | grep -v '^[[:space:]]*$')
+skip_row() {  # id mem to cmd dep
+  local id="$1" mem="$2" to="$3" cmd="$4" dep="$5" d="$EVAL_OUT/$1"; mkdir -p "$d"; printf '%s\n' "$cmd" > "$d/cmd.txt"
+  { echo "state=done"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "pin=$TF_PIN"; echo "start=$(date -Is)"; echo "end=$(date -Is)"; echo "exit=0"; echo "reason=skipped: $dep $(sed -n 's/^reason=//p' "$EVAL_OUT/$dep/status" | head -1)"; echo "mem_gb=$mem"; echo "timeout_s=$to"; } > "$d/status"
+  : > "$d/stdout.log"; : > "$d/stderr.log"
+  python3 -I "$S/mkrecord.py" "$d" >> "$EVAL_OUT/results.tsv" 2>>"$d/mkrecord.err"; touch "$d/done"
+  [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
+  echo "row $id skipped ($dep not ok) $(date -Is)" >> "$QDIR/queue.log"
+}
+while [ ${#PENDING[@]} -gt 0 ]; do
+  free_finished
+  NEXT=(); launched_any=0
+  for line in "${PENDING[@]}"; do
+    read -r id mem to cmd <<< "$line"
+    [ -e "$EVAL_OUT/$id/done" ] && continue
+    dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
+    if [ -n "$dep" ]; then
+      if [ ! -e "$EVAL_OUT/$dep/done" ]; then NEXT+=("$line"); continue; fi
+      if ! grep -q '^reason=ok' "$EVAL_OUT/$dep/status" 2>/dev/null; then skip_row "$id" "$mem" "$to" "$cmd" "$dep"; continue; fi
     fi
-  fi
-  w=$(width_of "$id")
-  while :; do
-    free_finished
-    first=$(find_free "$w")
-    if [ -n "$first" ]; then
-      if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; sleep 60; continue; fi
-      break
-    fi
-    sleep 5
+    w=$(width_of "$id"); first=$(find_free "$w")
+    if [ -z "$first" ]; then NEXT+=("$line"); continue; fi
+    if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
+    ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
+    ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done; launched_any=1
+    echo "$(date -Is) launched $id on numa $first (w=$w) pid $p" >> "$QDIR/queue.log"
   done
-  ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
-  ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done
-  echo "$(date -Is) launched $id on numa $first (w=$w) pid $p" >> "$QDIR/queue.log"
-done < "$ROWS"
+  PENDING=("${NEXT[@]}")
+  [ ${#PENDING[@]} -gt 0 ] && [ $launched_any -eq 0 ] && sleep 10
+done
 wait
 echo "queue $QNAME finished $(date -Is): $(wc -l < "$EVAL_OUT/results.tsv" 2>/dev/null) results so far on $(hostname)" >> "$QDIR/queue.log"
