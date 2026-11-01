@@ -12,6 +12,13 @@ for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"
 # latest record per id wins (reruns append)
 import subprocess
 PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
+def mispaired(r):  # an id ".vs-<spec variant>" whose command loads another specification's export
+    m = re.search(r"\.vs-([a-z0-9-]+)\.", r["run_id"] + ".")
+    if not m or not r["run_id"].startswith(("XON2.", "XJ2.")): return False
+    ex = re.findall(r"/([A-Za-z0-9._-]+)/export\.jsonl", r.get("command", ""))
+    spec = ex[0] if ex else ""
+    return spec != "" and ("spec_" + m.group(1).replace("-", "_") + "_") not in spec
+_n = len(rows); rows = [r for r in rows if not mispaired(r)]; print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131"]
 def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
@@ -148,7 +155,7 @@ def expected_for(a):
     nums = [int(x) for x in re.findall(r"\d+", size)]
     # a join or online row names its specification case: its variant words (e.g. "spec hash a4b 2 2 2" -> a4b)
     # replace the implementation's own spec word when the two differ
-    sc = a.get("spec_case", ""); spec_words = [w for w in re.sub(r"^[^.]*\.spec_?", "", sc).replace("_", " ").split() if not w.isdigit() and w not in ("fifo", "bag", "p2p", "asyn", "causal")] if sc else []
+    sc = re.sub(r"\.x\d+$", "", a.get("spec_case", "")); spec_words = [w for w in re.sub(r"^[^.]*\.spec_?", "", sc).replace("_", " ").split() if not w.isdigit() and w not in ("fifo", "bag", "p2p", "asyn", "causal")] if sc else []
     for e in EXP:
         if e["dir"] != fam or e["model"] != model: continue
         ev = e["variant"] + ("-" + e["spec_variant"] if e["spec_variant"] not in ("-", "") else "")

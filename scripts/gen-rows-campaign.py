@@ -63,8 +63,11 @@ for r in csv.reader(open(A.java_cases), delimiter="\t"):
     d, cid, side, size, mdl, var, cls = r[:7]
     nums = tuple(int(x) for x in re.findall(r"\d+", size))
     java.append(JCase(d, cid, side, size, mdl, var.replace("spec-", ""), cls, nums))
-def jkey(j): return (j.dir, j.side, j.model, j.nums, j.variant if j.side == "impl" else "spec")
-def rkey(c): return (c.dir, c.side, c.model, c.nums, c.variant if c.side == "impl" else "spec")
+# a benchmark with several specification cases (a4-balancer: hash-a4a / hash-a4b; load-aware: l2 / l2-stale) keys them
+# by variant too; the single-spec names "spec" and "correct" are one key on both sides
+def _sv(v): return "spec" if v in ("spec", "correct") else v
+def jkey(j): return (j.dir, j.side, j.model, j.nums, j.variant if j.side == "impl" else _sv(j.variant))
+def rkey(c): return (c.dir, c.side, c.model, c.nums, c.variant if c.side == "impl" else _sv(c.variant))
 jmap = {jkey(j): j for j in java}; rmap = {rkey(c): c for c in rust}
 # ---- emit --------------------------------------------------------------------------------------
 files = {}
