@@ -12,12 +12,16 @@ for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"
 # latest record per id wins (reruns append)
 import subprocess
 PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
+# pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
+PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131"]
+def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
 byid = {}
-for r in rows:  # an id run on several pins: the current pin wins, else the last seen
+for r in rows:  # an id run on several pins: the newest pin wins
     cur = byid.get(r["run_id"])
-    if cur is None or (r.get("traceforge_commit") or "")[:7] == PIN or (cur.get("traceforge_commit") or "")[:7] != PIN: byid[r["run_id"]] = r
+    if cur is None or pin_rank(r) >= pin_rank(cur): byid[r["run_id"]] = r
 rows = list(byid.values())
-for r in rows: r["a"] = attrs.get(r["run_id"], {})
+# an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
+for r in rows: r["a"] = attrs.get(r["run_id"]) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", r["run_id"]), {})
 def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None
@@ -193,7 +197,7 @@ for pre, fname, title in CAMP:
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
-        for r in rs: bycmd[r.get("command")] = r
+        for r in sorted(rs, key=pin_rank): bycmd[r.get("command")] = r   # the newest pin, then the latest start, wins
         rs = list(bycmd.values())
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
