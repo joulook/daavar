@@ -224,6 +224,10 @@ for pre, fname, title in CAMP:
         rs = list(bycmd.values())
     # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
+    # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
+    _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
+    if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))
+    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2")

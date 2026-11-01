@@ -35,6 +35,12 @@ for line in open(A.rust_rows):
 # ladder extension: beyond the largest listed size of each (dir, side, model, variant), add sizes with
 # every numeric argument raised by 1 per step (ids carry .x<step>); the runner's needok chain stops
 # the ladder at the first size that does not finish
+EXT_MAX = {}
+try:
+    for _l in open(os.path.join(os.path.dirname(A.rust_rows), "grid-axes.tsv")):
+        _f = _l.rstrip("\n").split("\t")
+        if not _l.startswith("#") and len(_f) > 2 and _f[2].strip(): EXT_MAX[_f[0]] = [int(x) if x.isdigit() else None for x in _f[2].split()]
+except FileNotFoundError: pass
 if A.extend:
     groups = collections.defaultdict(list)
     for c in rust: groups[(c.dir, c.side, c.model, c.variant)].append(c)
@@ -44,16 +50,18 @@ if A.extend:
         if not top.nums: continue
         for step in range(1, A.extend + 1):
             nums = tuple(n + step for n in top.nums); it = iter(nums)
+            if any(m is not None and nums[i] > m for i, m in enumerate((EXT_MAX.get(top.dir, []) + [None] * len(nums))[:len(nums)])): break
             args = " ".join(str(next(it)) if tok.isdigit() else tok for tok in top.args.split())
             extra.append(Case(f"{top.dir}.{top.side}_{'_'.join(args.split())}_{top.model}.x{step}", top.dir, top.side, top.model, args, nums, top.variant))
     rust += extra
 if A.grid:
     # which numeric arguments are size axes (cluster/campaign/inputs/grid-axes.tsv); a group with more than two axes
     # extends each by at most 2 steps, else by --grid steps (a 3- or 4-dimensional box grows fast)
-    axes_of = {}
+    axes_of = {}; axes_max = {}
     for _l in open(os.path.join(os.path.dirname(A.rust_rows), "grid-axes.tsv")):
         if _l.startswith("#") or not _l.strip(): continue
-        _d, _m = _l.rstrip("\n").split("\t")[:2]; axes_of[_d] = [x == "1" for x in _m.split()]
+        _f = _l.rstrip("\n").split("\t"); _d, _m = _f[0], _f[1]; axes_of[_d] = [x == "1" for x in _m.split()]
+        if len(_f) > 2 and _f[2].strip(): axes_max[_d] = [int(x) if x.isdigit() else None for x in _f[2].split()]
     groups = collections.defaultdict(list)
     for c in rust: groups[(c.dir, c.side, c.model, c.variant)].append(c)
     extra = []
@@ -66,6 +74,7 @@ if A.grid:
         step = A.grid if sum(ax) <= 2 else min(A.grid, 2)
         base = [c for c in cs if not re.search(r"\.x\d+$", c.id)] or cs   # the box grows from the listed sizes, not from an --extend ladder
         lo = [min(c.nums[i] for c in base) for i in range(k)]; hi = [max(c.nums[i] for c in base) + (step if ax[i] else 0) for i in range(k)]
+        mx = (axes_max.get(top.dir, []) + [None] * k)[:k]; hi = [min(hi[i], mx[i]) if mx[i] is not None else hi[i] for i in range(k)]   # the program's own bound
         for nums in itertools.product(*[(range(lo[i], hi[i] + 1) if ax[i] else sorted({c.nums[i] for c in cs})) for i in range(k)]):
             if nums in have: continue
             it = iter(nums); args = " ".join(str(next(it)) if tok.isdigit() else tok for tok in top.args.split())
