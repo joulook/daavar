@@ -142,10 +142,15 @@ for fn in ("expected-verdicts.tsv", "expected-verdicts-literature.tsv"):
 def expected_for(a):
     fam, model, var, size = a.get("family", ""), a.get("model", ""), a.get("variant", ""), a.get("size", "")
     nums = [int(x) for x in re.findall(r"\d+", size)]
+    # a join or online row names its specification case: its variant words (e.g. "spec hash a4b 2 2 2" -> a4b)
+    # replace the implementation's own spec word when the two differ
+    sc = a.get("spec_case", ""); spec_words = [w for w in re.sub(r"^[^.]*\.spec_?", "", sc).replace("_", " ").split() if not w.isdigit() and w not in ("fifo", "bag", "p2p", "asyn", "causal")] if sc else []
     for e in EXP:
         if e["dir"] != fam or e["model"] != model: continue
         ev = e["variant"] + ("-" + e["spec_variant"] if e["spec_variant"] not in ("-", "") else "")
-        if ev != var and e["variant"] != var: continue
+        if spec_words and e["spec_variant"] not in ("-", ""):
+            if not (var.startswith(e["variant"]) and e["spec_variant"] == spec_words[-1]): continue
+        elif ev != var and e["variant"] != var: continue
         names = re.findall(r"<([a-z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec")]
         env = dict(zip(names, nums))
         # the args column's domain ("<...>; k==2" or "n>=2, r>=1") must hold, then the size rule
