@@ -177,7 +177,7 @@ for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
     if pre in ("C3J", "XJ1", "XJ2"):  # an offline row = spec export + impl export + join
         for r in rs:
-            ex = re.findall(r'"\$EVAL_OUT"/([^/ ]+)/export\.jsonl', r.get("command", ""))
+            ex = re.findall(r'/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))   # the runner stores the expanded paths
             if len(ex) == 2:
                 sp, im = byid.get(ex[0]), byid.get(ex[1])
                 if sp: r["spec_complete"], r["spec_blocked"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("wall_ms")
