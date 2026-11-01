@@ -145,14 +145,15 @@ for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
-    L = ["\\begin{tabular}{@{}llllrrrrlrrr@{}}", "\\toprule",
-         "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss s & uncovered \\\\", "\\midrule"]
+    L = ["\\begin{longtable}{@{}llllrrrrlrrr@{}}", f"\\caption{{{title} (one cluster run per row; t/o = tier reached; skipped = the smaller size did not finish).}}\\label{{tab:{fname}}}\\\\", "\\toprule",
+         "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss s & uncovered \\\\", "\\midrule", "\\endfirsthead",
+         "\\toprule", "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss s & uncovered \\\\", "\\midrule", "\\endhead"]
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
         verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
         sg = r.get("spec_complete") or ""; ig = r.get("impl_complete") or ""
         L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {fnum(r.get('first_miss_wall_ms'), 1000, '{:.1f}') if r.get('first_miss_wall_ms') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
-    L += ["\\bottomrule", "\\end{tabular}"]
+    L += ["\\bottomrule", "\\end{longtable}"]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     ok = sum(1 for r in rs if r["stop_reason"] == "ok"); md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
