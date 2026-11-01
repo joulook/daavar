@@ -348,3 +348,6 @@ zab-broadcast-remix	impl_2_fifo_correct	impl	2	fifo	correct	bench.zab_broadcast_
 zab-broadcast-remix	impl_2_fifo_issue1-propose-to-ackld	impl	2	fifo	issue1-propose-to-ackld	bench.zab_broadcast_remix.ZabBroadcast:impl,2,fifo,issue1-propose-to-ackld	log
 zab-broadcast-remix	spec_1_fifo	spec	1	fifo	spec	bench.zab_broadcast_remix.ZabBroadcast:spec,1,fifo	log
 zab-broadcast-remix	spec_2_fifo	spec	2	fifo	spec	bench.zab_broadcast_remix.ZabBroadcast:spec,2,fifo	log
+raft-rs	spec_correct_1_1_1_fifo	spec	1,1,1	fifo	spec-correct	bench.microraft.MicroRaft:spec,correct,1,1,1	readme
+raft-rs	impl_correct_1_1_1_fifo	impl	1,1,1	fifo	correct	bench.microraft.MicroRaft:impl,correct,1,1,1	readme
+raft-rs	impl_reorder_1_1_1_fifo	impl	1,1,1	fifo	reorder	bench.microraft.MicroRaft:impl,reorder,1,1,1	readme
