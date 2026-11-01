@@ -147,6 +147,12 @@ def expected_for(a):
         if ev != var and e["variant"] != var: continue
         names = re.findall(r"<([a-z]+)>", e["args"].split(";")[0]); names = [n for n in names if n not in ("variant", "impl", "spec")]
         env = dict(zip(names, nums))
+        # the args column's domain ("<...>; k==2" or "n>=2, r>=1") must hold, then the size rule
+        dom = e["args"].split(";", 1)[1] if ";" in e["args"] else ""
+        try:
+            indom = all(eval(c.strip().replace("&&", " and ").replace("||", " or "), {}, env) for c in re.split(r",", dom) if c.strip()) if dom.strip() else True
+        except Exception: indom = False
+        if not indom: continue
         rule = e["size_rule"].strip()
         try: ok = True if rule == "all" else bool(eval(rule.replace("&&", " and ").replace("||", " or "), {}, env))
         except Exception: ok = False
