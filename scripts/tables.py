@@ -129,6 +129,32 @@ t = collections.Counter(); [t.update(c) for c in bag.values()]
 lines += ["\\midrule", f"all & {t['programs']} & {t['equal']} & {t['differ']} & {t['unfinished']} & & & & \\\\", "\\bottomrule", "\\end{tabular}"]
 open(OUT + "/bench-counts.tex", "w").write("\n".join(lines) + "\n")
 md.append(f"Benchmarks: {t['programs']} programs with both twins run; counts equal {t['equal']}, differ {t['differ']}, unfinished {t['unfinished']}")
+# ---- Campaign tables (owner's plan 2026-11-01): one per mode, same columns ----------------------
+# C1 stateful parallel, C2 stateless parallel, C3J offline TF x TF; XON1 online JMC(Java impl) vs TF spec,
+# XON2 online TF(Rust impl) vs JMC spec, XJ1 offline TF spec x JMC impl, XJ2 offline JMC spec x TF impl.
+CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C2", "campaign-stateless", "Stateless check, TraceForge, parallel"),
+        ("C3J", "campaign-offline-tf", "Offline mode, TraceForge specification and implementation"),
+        ("XON1", "campaign-online-java-impl", "Online: Java implementation (JMC) against Rust specification export"),
+        ("XON2", "campaign-online-rust-impl", "Online: Rust implementation (TraceForge) against Java specification export"),
+        ("XJ1", "campaign-offline-rust-spec", "Offline: Rust specification, Java implementation"),
+        ("XJ2", "campaign-offline-java-spec", "Offline: Java specification, Rust implementation")]
+def fnum(x, div=1.0, fmt="{:.0f}"):
+    v = num(x); return "--" if v is None else fmt.format(v / div)
+camp_rows = {}
+for pre, fname, title in CAMP:
+    rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
+    camp_rows[pre] = rs
+    rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
+    L = ["\\begin{tabular}{@{}llllrrrrlrrr@{}}", "\\toprule",
+         "benchmark & variant & size & model & spec graphs & impl graphs & wall s & peak MB & verdict & 1st miss it. & 1st miss s & uncovered \\\\", "\\midrule"]
+    for r in rs:
+        a = r["a"]; st = r["stop_reason"]
+        verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+        sg = r.get("spec_complete") or ""; ig = r.get("impl_complete") or ""
+        L.append(f"{esc(a.get('family',''))} & {esc(a.get('variant',''))} & {esc(a.get('size',''))} & {a.get('model','')} & {sg} & {ig} & {fnum(r.get('wall_ms'), 1000, '{:.1f}')} & {fnum(r.get('peak_rss_kb'), 1024)} & {verdict} & {r.get('first_miss_iteration') or ''} & {fnum(r.get('first_miss_wall_ms'), 1000, '{:.1f}') if r.get('first_miss_wall_ms') else ''} & {r.get('uncovered_total') or r.get('uncovered_distinct') or ''} \\\\")
+    L += ["\\bottomrule", "\\end{tabular}"]
+    open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
+    ok = sum(1 for r in rs if r["stop_reason"] == "ok"); md.append(f"{pre} {title}: {len(rs)} rows, {ok} finished, verdicts {dict(collections.Counter((r.get('verdict') or '-').lower() for r in rs if r['stop_reason']=='ok'))}")
 open(OUT + "/SUMMARY.md", "w").write("\n".join(md) + "\n"); print("\n".join(md))
 # ---- Excel workbook: every table's compiled rows plus the raw records behind it -----------------
 try:
@@ -141,6 +167,7 @@ try:
             a = r.get("a", {})
             ws.append([r.get(c) if r.get(c) not in (None, "") else a.get(c, "") for c in RAW])
     sheet("T1 detection raw", T1); sheet("T2 joins raw", J + R); sheet("T3a scaling raw", T3); sheet("bench counts raw", B)
+    for pre, fname, title in CAMP: sheet(fname.replace("campaign-", "camp "), camp_rows[pre])
     ws = wb.create_sheet("README"); ws.append(["Each sheet holds the raw records (one per cluster run) behind the paper table of the same name; the LaTeX tables are compiled from these rows by tables.py. Columns: see brain-data/SCHEMA.md."])
     wb.save(OUT + "/tables-raw.xlsx"); print("xlsx written")
 except ImportError:
