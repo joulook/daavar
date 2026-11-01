@@ -7,7 +7,7 @@ rows = []
 for f in [BD + "/results.tsv"] + sorted(glob.glob(BD + "/results/*.tsv")):
     rows += list(csv.DictReader(open(f), delimiter="\t"))
 attrs = {}
-for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"):
+for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv") + glob.glob(DV + "/cluster/campaign/*/*.rows.tsv"):
     for r in csv.DictReader(open(f), delimiter="\t"): attrs[r["id"].replace("'", "")] = {k: (v or "").replace("'", "") for k, v in r.items()}  # early row files carried stray quotes (the runner strips them from the id)
 # latest record per id wins (reruns append)
 import subprocess
