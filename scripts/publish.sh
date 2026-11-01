@@ -50,8 +50,12 @@ for l in lines[1:]:
     cells=l.split("\t"); out.append("\t".join(cells[pos[c]] if c in pos and pos[c]<len(cells) else "" for c in hdr))
 open(f,"w").write("\n".join(out)+"\n")' "$hdr" "results/$node.$TF_PIN.tsv"
   fi
-  if ! grep -q -P "^$(printf '%s' "$id" | sed 's/[.[\*^$]/\\&/g')\t" "results/$node.$TF_PIN.tsv" 2>/dev/null; then
-    line=$(python3 -I "$DAAVAR/scripts/mkrecord.py" "$d" 2>/dev/null) && printf '%s\n' "$line" >> "results/$node.$TF_PIN.tsv"
+  # one line per id: a re-record replaces the earlier line
+  line=$(python3 -I "$DAAVAR/scripts/mkrecord.py" "$d" 2>/dev/null) || line=""
+  if [ -n "$line" ]; then
+    f="results/$node.$TF_PIN.tsv"; pat="^$(printf '%s' "$id" | sed 's/[.[\*^$]/\\&/g')\t"
+    if grep -q -P "$pat" "$f" 2>/dev/null; then grep -v -P "$pat" "$f" > "$f.tmp" && mv "$f.tmp" "$f"; fi
+    printf '%s\n' "$line" >> "$f"
   fi
   # no git here: flush-results.sh commits and pushes every few minutes (one commit per batch)
 ) 9>"$BRAIN_DATA/.publish.lock"
