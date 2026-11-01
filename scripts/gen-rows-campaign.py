@@ -11,11 +11,12 @@ Size ladder: within (dir, model, variant, mode) rows are ordered by size and eac
 needok:<previous-size row>, so a size runs only if the smaller one finished within its tier.
 usage: gen-rows-campaign.py <B-count-rust.rows> <B-java-cases.tsv> <outdir> [--threads 16] [--timeout 3600]
        [--mem 250] [--export-threads 0] [--online-threads 0] [--jmc-split 16] [--jmc-online-split 0]"""
-import sys, re, os, csv, collections, argparse
+import itertools, sys, re, os, csv, collections, argparse
 ap = argparse.ArgumentParser(); ap.add_argument("rust_rows"); ap.add_argument("java_cases"); ap.add_argument("out")
 ap.add_argument("--threads", type=int, default=16); ap.add_argument("--timeout", type=int, default=3600); ap.add_argument("--mem", type=int, default=250)
 ap.add_argument("--export-threads", type=int, default=0, help="TraceForge export threads (0 = flag not passed; the pin's export is sequential)")
 ap.add_argument("--online-threads", type=int, default=0); ap.add_argument("--jmc-split", type=int, default=16); ap.add_argument("--jmc-online-split", type=int, default=0)
+ap.add_argument("--grid", type=int, default=0, help="fill the size grid: every combination of each numeric argument from its smallest listed value to its largest listed value + N (ids carry .g); a grid point depends on its neighbour with one coordinate lower, so each axis stops at the first size that does not finish")
 ap.add_argument("--extend", type=int, default=0, help="add N further sizes beyond each ladder's largest listed size (every numeric argument +1 per step); they run only while the previous size finished within its tier")
 A = ap.parse_args(); os.makedirs(A.out, exist_ok=True)
 HDR = "id\ttable\tfamily\tsize\tmodel\tvariant\tengine\tthreads\texpected_verdict\tnote\ttier\tkind\tspec_tool\timpl_tool\tspec_lang\timpl_lang\tmode\texploration\tbenchmark\tspec_case\timpl_case"
@@ -45,6 +46,30 @@ if A.extend:
             nums = tuple(n + step for n in top.nums); it = iter(nums)
             args = " ".join(str(next(it)) if tok.isdigit() else tok for tok in top.args.split())
             extra.append(Case(f"{top.dir}.{top.side}_{'_'.join(args.split())}_{top.model}.x{step}", top.dir, top.side, top.model, args, nums, top.variant))
+    rust += extra
+if A.grid:
+    # which numeric arguments are size axes (cluster/campaign/inputs/grid-axes.tsv); a group with more than two axes
+    # extends each by at most 2 steps, else by --grid steps (a 3- or 4-dimensional box grows fast)
+    axes_of = {}
+    for _l in open(os.path.join(os.path.dirname(A.rust_rows), "grid-axes.tsv")):
+        if _l.startswith("#") or not _l.strip(): continue
+        _d, _m = _l.rstrip("\n").split("\t")[:2]; axes_of[_d] = [x == "1" for x in _m.split()]
+    groups = collections.defaultdict(list)
+    for c in rust: groups[(c.dir, c.side, c.model, c.variant)].append(c)
+    extra = []
+    for key, cs in groups.items():
+        dims = {len(c.nums) for c in cs}
+        if len(dims) != 1 or 0 in dims: continue
+        k = dims.pop(); have = {c.nums for c in cs}; top = max(cs, key=lambda c: c.nums)
+        ax = axes_of.get(top.dir, [True] * k); ax = (ax + [True] * k)[:k]
+        if not any(ax): continue
+        step = A.grid if sum(ax) <= 2 else min(A.grid, 2)
+        base = [c for c in cs if not re.search(r"\.x\d+$", c.id)] or cs   # the box grows from the listed sizes, not from an --extend ladder
+        lo = [min(c.nums[i] for c in base) for i in range(k)]; hi = [max(c.nums[i] for c in base) + (step if ax[i] else 0) for i in range(k)]
+        for nums in itertools.product(*[(range(lo[i], hi[i] + 1) if ax[i] else sorted({c.nums[i] for c in cs})) for i in range(k)]):
+            if nums in have: continue
+            it = iter(nums); args = " ".join(str(next(it)) if tok.isdigit() else tok for tok in top.args.split())
+            extra.append(Case(f"{top.dir}.{top.side}_{'_'.join(args.split())}_{top.model}.g", top.dir, top.side, top.model, args, nums, top.variant))
     rust += extra
 specs = collections.defaultdict(list)
 for c in rust:
@@ -76,12 +101,19 @@ def emit(name, rid, cmd, attrs, dep=None, mem=None, to=None):
     f[0].append(f"{rid} {mem or A.mem} {to or A.timeout} {('needok:'+dep+' ') if dep else ''}{cmd}")
     f[1].append("\t".join([rid] + [str(attrs.get(k, "")) for k in HDR.split("\t")[1:]]))
 def size_of(nums): return ",".join(map(str, nums))
-def ladder(items, keyf):  # yield (item, previous item of the same ladder) ordered by size
+def ladder(items, keyf):  # yield (item, its predecessor in the same ladder): the neighbour with one coordinate lower
+    # (the last coordinate above its minimum first), else the previous item in size order
     groups = collections.defaultdict(list)
     for it in items: groups[keyf(it)].append(it)
+    nums_of = lambda it: it.nums if hasattr(it, "nums") else it[0].nums
     for g in groups.values():
-        g.sort(key=lambda it: it.nums if hasattr(it, "nums") else it[0].nums); prev = None
-        for it in g: yield it, prev; prev = it
+        g.sort(key=nums_of); by = {nums_of(it): it for it in g}; prev = None
+        lo = [min(nums_of(it)[i] for it in g) for i in range(len(nums_of(g[0])))] if nums_of(g[0]) else []
+        for it in g:
+            n = nums_of(it); pred = None
+            for i in reversed(range(len(n))):
+                if n[i] > lo[i] and tuple(n[:i] + (n[i] - 1,) + n[i + 1:]) in by: pred = by[tuple(n[:i] + (n[i] - 1,) + n[i + 1:])]; break
+            yield it, (pred if pred is not None else prev); prev = it
 T = A.threads
 # in-process conf decides its specification from the implementation's arguments: one row per impl
 # case, whichever spec cases share its numbers (joins keep one row per spec case below)
