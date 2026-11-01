@@ -193,6 +193,8 @@ for pre, fname, title in CAMP:
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
         verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+        verdict = {"reports": "violation", "violation (sampled)": "violation"}.get(verdict, verdict)   # JMC says "reports"; conf-join adds "(sampled)"
+        r["verdict"] = verdict if st == "ok" else r.get("verdict")
         exp = expected_for(a); r["expected"] = exp
         if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
         if exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp: verdict += "$^{\\ast}$"
