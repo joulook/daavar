@@ -100,7 +100,7 @@ for key in sorted(pts, key=lambda k: (k[0], sz(k[1]))):
         r = pts[key].get(col)
         if r is None: cells.append("")
         elif r["stop_reason"] == "ok": cells.append(fmt_s(r["wall_ms"])); peak = max(peak or 0, num(r["peak_rss_kb"]) or 0)
-        else: cells.append("\\timeout" if r["stop_reason"] == "timeout" else ("\\oom" if r["stop_reason"] == "memory" else "run."))
+        else: cells.append("t/o" if r["stop_reason"] == "timeout" else ("oom" if r["stop_reason"] == "memory" else "run."))
     lines.append(f"{FAM.get(key[0], key[0])} & {esc(key[1])} & " + " & ".join(cells) + f" & {fmt_gb(peak*1 if peak else None)} \\\\")
 lines += ["\\bottomrule", "\\end{tabular}"]
 open(OUT + "/rq3-scaling.tex", "w").write("\n".join(lines) + "\n")
