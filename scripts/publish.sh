@@ -20,9 +20,12 @@ for f in stdout.log stderr.log; do
   src="$d/$f"; [ -f "$src" ] || continue
   sz=$(stat -c %s "$src")
   if [ "$sz" -le 1048576 ]; then cp "$src" "$dest/$f"; continue; fi
-  zstd -q -19 -T4 -o "$dest/$f.zst" "$src" 2>/dev/null
-  csz=$(stat -c %s "$dest/$f.zst" 2>/dev/null || echo 0)
-  if [ "$csz" -gt $((BULK_MB*1048576)) ]; then
+  csz=0
+  if [ "$sz" -le $((2*1024*1048576)) ]; then   # above 2 GiB raw: straight to head/tail, no compression attempt
+    zstd -q -9 -T4 -o "$dest/$f.zst" "$src" 2>/dev/null
+    csz=$(stat -c %s "$dest/$f.zst" 2>/dev/null || echo 0)
+  fi
+  if [ "$sz" -gt $((2*1024*1048576)) ] || [ "$csz" -gt $((BULK_MB*1048576)) ]; then
     rm -f "$dest/$f.zst"
     { head -n 2000 "$src"; echo "... [$sz bytes; full log kept on $(hostname):$src] ..."; tail -n 2000 "$src"; } > "$dest/$f.headtail"
     grep -a -m1 "EVALROW" "$src" > "$dest/evalrow.txt" 2>/dev/null || true
