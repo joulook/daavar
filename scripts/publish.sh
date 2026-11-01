@@ -16,7 +16,11 @@ dest="$BRAIN_DATA/runs/$node/$TF_PIN/$id"; mkdir -p "$dest"
 # measurement block, the full log staying on the node (recorded in bulk.txt).
 : "${BULK_MB:=50}"
 # JMC's split runs leave per-item result files of 100+ MB under report/split-*: they stay on the node
-rsync -a --exclude 'done' --exclude 'stdout.log' --exclude 'stderr.log' --exclude 'report/split-*/item-*.json' --exclude 'report/split-*/worker-*' "$d/" "$dest/"
+# files above BULK_MB (exports of large runs reach tens of GB) are never copied: listed in bulk.txt, kept on the node
+rsync -a --max-size="${BULK_MB}m" --exclude 'done' --exclude 'stdout.log' --exclude 'stderr.log' --exclude 'report/split-*/item-*.json' --exclude 'report/split-*/worker-*' "$d/" "$dest/"
+find "$d" -type f -size +"${BULK_MB}"M ! -name stdout.log ! -name stderr.log | while read -r big; do
+  printf '%s\t%s\t%s\n' "${big#$d/}" "$(stat -c %s "$big")" "$(hostname):$big" >> "$dest/bulk.txt"
+done
 for f in stdout.log stderr.log; do
   src="$d/$f"; [ -f "$src" ] || continue
   sz=$(stat -c %s "$src")
