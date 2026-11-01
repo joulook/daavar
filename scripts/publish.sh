@@ -35,6 +35,10 @@ for f in stdout.log stderr.log; do
   fi
 done
 find "$dest" -maxdepth 3 -name '*.jsonl' -size +1M -exec zstd -q -19 --rm {} \; 2>/dev/null
+# GitHub refuses files above 100 MB: anything above 50 MB stays on the node (listed in bulk.txt)
+find "$dest" -type f -size +50M | while read -r big; do
+  printf '%s\t%s\t%s\n' "${big#$dest/}" "$(stat -c %s "$big")" "$(hostname):$d/$(basename "${big%.zst}")" >> "$dest/bulk.txt"; rm -f "$big"
+done
 (
   flock -w 120 9 || { echo "publish: lock timeout for $id"; exit 1; }
   cd "$BRAIN_DATA"
