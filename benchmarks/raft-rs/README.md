@@ -140,8 +140,8 @@ init` in that spawn order; the clients send their proposals to `log`; `init` sen
 clients' ids (`Setup`, invisible); `log` buffers proposals until `Setup`, then for each proposal in
 arrival order makes one invisible choice: deliver `Committed(v)` to `c0` then `c1`, or lose it.
 This is the client-visible content of Raft's TLA+ (one committed log, delivered in log order,
-proposals may be lost). Spec counts are equal on both tools (§7), and the two spec exports are the
-same set (`conf-join` conforms in both directions, §8).
+proposals may be lost). Spec counts are equal on both tools (§7.7), and the two spec exports are the
+same set (`conf-join` conforms in both directions, §7.8).
 
 ### 7.3 The implementation program
 
@@ -212,32 +212,36 @@ only after its spawn); `init` is invisible, so the visible interface is unchange
 
 ### 7.4 Where they differ, and why the verdict is what it is
 
-`correct` (hand-derived): MicroRaft's committed log is one sequence (Raft's State Machine Safety)
-and every node applies it in index order, so each client receives, from its node, a prefix of that
-one sequence; a value whose replication fails or whose entry is overwritten is never applied
-anywhere, which the spec models as lost. Each client's sends come first and its receives send
-nothing, so the only causal edges between visible events are from a client's `Propose` to the other
-client's `Committed` of that value, and the spec's `log` can produce both causal counts (the
-proposal received before or after the other one). At `e=1` the per-client order of own values is
-trivial; at `e >= 2` with leader changes a client's own values could reach the log in a different
-order than sent (forwarding to different leaders), which the spec does not allow; not explored here
-(no size `e >= 2` is reachable by JMC).
+`correct`: CONFORMS is an **expectation**, not an established derivation, and it is scoped to
+`e=1 t=1 cand=1`. What is argued: MicroRaft's committed log is one sequence (Raft's State Machine
+Safety) and every node applies it in index order, so the values a client receives are a prefix of
+that one sequence, and a value whose replication fails or whose entry is overwritten is never
+applied anywhere, which the specification models as lost. What is not argued and is left to the
+measurement: (i) status coverage, i.e. that a client left blocked by the bounded timers and the
+transport (a prefix shorter than the other client's) always has a specification execution with
+the same statuses and words; (ii) the causal order: besides a client's `Propose` preceding the
+other client's `Committed` of that value, incidental dependencies exist (the complete export of
+the Rust `correct` side already contains the order count `[0,1,0,1,1]` for log order `[1,2]`,
+where `c1`'s proposal precedes `c0`'s receipt of 1), and whether every count the implementation
+produces is covered is decided by the join, not by this text. At `e >= 2`, leader changes could
+let a client's own values reach the log out of proposal order (forwarding to different leaders),
+which the specification forbids; no size `e >= 2` was run, so nothing is claimed there.
 
 `reorder` (measured): the fault reverses a batch of applied values. Witness found by JMC (both
-against its own spec export and the TraceForge one; §8): `c0: S(Propose(1)) R(Committed(1))`,
+against its own spec export and the TraceForge one; §7.8): `c0: S(Propose(1)) R(Committed(1))`,
 `c1: S(Propose(2)) R(Committed(2))`, both done. The spec delivers one log order to both clients: if
 1 is first, `c1` receives `Committed(1)` before `Committed(2)`; if 2 is first, `c0` receives
 `Committed(2)` first. Schedule (hand-derived reading of the witness): the log is `[2, 1]`; `n0`
 applies both in one batch, reversed to `1, 2`, so `c0` sees 1 first; `n1` applies 2 alone first.
 Component: signature (no specification summary has this pair of words: `NoSig`). The 600 s
-export of `reorder` has two more uncovered summaries (§8): the same words with the other causal
-count, and raft-rs README's witness `c0: R(Committed(2)) R(Committed(1))`,
-`c1: R(Committed(1)) R(Committed(2))` (log `[1, 2]`, `n0` applies both in one reversed batch, `n1`
-applies them one at a time).
+export of `reorder` has two more uncovered summaries (§7.8): the same words with the other causal
+count, and the opposite-orders pattern of §2, `c0: R(Committed(2)) R(Committed(1))`,
+`c1: R(Committed(1)) R(Committed(2))` (reading: log `[1, 2]`, `n0` applies both in one reversed
+batch, `n1` applies them one at a time).
 
 ### 7.5 Variants and faults
 
-- `correct`: MicroRaft as is. Expected CONFORMS (hand-derived; measured partial, §8).
+- `correct`: MicroRaft as is. Expected CONFORMS (an expectation scoped to `1 1 1`, §7.4; measured partial, §7.8).
 - `reorder`: harness delivery fault (not MicroRaft's): each batch of applied values (the values
   applied in one core task, i.e. one `applyLogEntries` call) is sent to the client in reverse log
   order, as raft-rs's `reorder` reverses one `Ready`'s committed entries. Expected and measured
@@ -248,15 +252,17 @@ applies them one at a time).
 - `java/bench/microraft/`: `MicroRaft.java` (the `MpProgram`, spec twin, clients), `Node.java`
   (node harness), `Wire.java` (transport encoding).
 - `java/vendor/`: the MicroRaft core, unmodified, with upstream `LICENSE` and `NOTICE`.
-- `java/harness/io/microraft/impl/MustRaftNodes.java`: the builder replacement (§3).
+- `java/harness/io/microraft/impl/MustRaftNodes.java`: the builder replacement (§7.3).
 - `java/shim/org/slf4j/`: a minimal SLF4J API for the core's logging (JMC's classpath has none).
 - `source/PROVENANCE.md`; `out/java/runs.log` (every command and its full output); `out/java/export/`
-  (the summary files joined in §8).
-- No `rust/`: the Rust side is this directory (a different Raft core with the same visible
-  interface and the same specification).
+  (the summary files joined in §7.8).
+- `rust/`: the Rust side (tikv/raft-rs, §1–§6), a different Raft core with the same visible
+  interface and the same specification.
 
 Compile as `scripts/setup-node.sh` does: `javac -d <out> -cp "$(cat jmc/cp.txt)" $(find
-benchmarks/microraft/java -name '*.java' -not -path '*/out/*')`.
+benchmarks/raft-rs/java -name '*.java' -not -path '*/out/*')`. The Java side was built as
+`benchmarks/microraft/` and moved here on 2026-11-02; the commands in `out/java/runs.log` carry
+the old paths.
 
 ### 7.7 Plain-Must exploration counts
 
@@ -292,7 +298,7 @@ smallest size (spec `e=1`, impl `e=1 t=1 cand=1`), in `out/java/export/`.
 | JMC spec | TraceForge raft-rs impl `correct` (complete, 1,323,550 graphs) | **conforms**, 0 uncovered |
 | TraceForge spec | JMC MicroRaft impl `correct` (aborted at 600 s, 39,927 graphs, 4 summaries) | conforms (partial), 0 uncovered |
 | TraceForge spec | JMC MicroRaft impl `reorder` (aborted at 600 s, 42,202 graphs, 7 summaries) | **violation (partial)**, 3 uncovered (no-bucket) |
-| JMC online, `--spec` JMC spec, `--stop-at-first` | MicroRaft `reorder` | **reports**: uncovered at iteration 72 (witness §4) |
+| JMC online, `--spec` JMC spec, `--stop-at-first` | MicroRaft `reorder` | **reports**: uncovered at iteration 72 (witness §7.4) |
 | JMC online, `--spec` TraceForge spec, `--stop-at-first` | MicroRaft `reorder` | **reports**: uncovered at iteration 72, same witness |
 
 An uncovered summary against a complete specification is a violation whatever the
