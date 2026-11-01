@@ -13,6 +13,13 @@ One file per enumeration of one program, JSON Lines. Both tools write it; `conf-
  "encoding":1}
 ```
 
+An `online --out` file's header also carries `first_miss_iteration`, `first_miss_wall_ms` and
+`uncovered_total`, after the enumeration fields, in both tools (TraceForge `online.rs`, JMC
+`SummaryExporter.OnlineFields`). Readers ignore all three. `first_miss_iteration` is 1-based and 0
+means none. TraceForge's `online --threads N` with N > 1 (from the PAR-ONLINE commit) measures no
+iteration and always writes 0, even when a miss occurred; `uncovered_total` above 0 shows the miss
+(ruling Q29, 2026-11-01).
+
 `conf-join` requires the two files' `visible` lists to be equal and prints both files' `program`
 and `size` without requiring them to agree (ruling of 2026-10-27).
 
