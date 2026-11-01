@@ -30,6 +30,9 @@ def paper_name(a):  # (program, variant) as the paper names them; unknown direct
     for d, rx, prog, lab in NAMES:
         if d == fam and rx.search(var): return prog, (var if lab == "." else lab)
     return fam, var
+EXPLORATORY = set()
+for _l in open(DV + "/cluster/campaign/inputs/exploratory-variants.tsv"):
+    if not _l.startswith("#") and _l.strip(): EXPLORATORY.add(tuple(_l.rstrip("\n").split("\t")[:2]))
 def base_id(i): return re.sub(r"\.c48h$", "", i)   # a 48 h tier rerun of the same row (id + .c48h) is the same case
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
@@ -224,6 +227,9 @@ for pre, fname, title in CAMP:
         rs = list(bycmd.values())
     # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
+    _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
+    if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
+    rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
     # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
     _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
     if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))

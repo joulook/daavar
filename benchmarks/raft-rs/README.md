@@ -8,9 +8,9 @@ have been seen. `t` bounds the election timeouts each candidate node may fire (a
 time out. Model: `fifo` (per-pair order; raft-rs assumes an ordered transport per peer).
 
 **Expected verdict:** `correct`: **CONFORMS** (certified by the spike of 2026-10-31 at
-`e=1 t=1 cand=1`, in-process stateful, sequential; `source/spike-runs.log`). `reorder`: **no hand-derived
-verdict** (§2: the fault acts only when one `apply` call receives two persisted data entries, and
-no schedule establishing that in raft-rs is known; the campaign rows decide).
+`e=1 t=1 cand=1`, in-process stateful, sequential; `source/spike-runs.log`). `reorder`: **exploratory,
+outside the approved variants** (§2: no verdict, no established schedule; its rows run as an
+experiment and are not reported as a benchmark verdict).
 
 **Java side: MicroRaft.** `java/` holds the Java side of the case study: the unmodified core of
 MicroRaft (https://github.com/MicroRaft/MicroRaft, commit 929dae9, Apache 2.0, vendored under
@@ -38,23 +38,24 @@ same program on both sides.
 ## 2. Variants
 
 - `correct`: raft-rs as is.
-- `reorder`: a fault of this harness's delivery layer, not of raft-rs: `apply` hands a batch of
-  committed entries to the client in reverse log order. It carries **no hand-derived verdict**. A
-  violation needs the two clients to observe incompatible orders of the same values (a joint
-  property of both words); the fault acts only when one `apply` call receives two data entries,
-  which in this harness requires a commit-index jump over two entries that are already persisted
-  at that node: raft-rs (inherited defaults `max_size_per_msg = 0`, one entry per append;
-  `max_inflight_msgs = 256`; `max_apply_unpersisted_log_limit = 0`, so `ready()` applies at most
-  up to the persisted index and the following `LightReady` applies the rest separately) commits
-  data entries one at a time at the leader, and a follower that misses commit broadcasts while
-  its progress is paused receives the missing entry together with the higher commit index, so the
-  entry just received is applied in a later call than the entries it holds already. Whether some
-  schedule still places two persisted data entries in one `apply` call is not established (review
-  rounds 2 to 4 of this directory tried and rejected three candidate schedules); the campaign rows
-  decide, and the expectation file carries no verdict for `reorder`. raft-rs requires an ordered
-  transport, so the variant is not run under `bag`. The Java side of the case study (MicroRaft,
-  §7) batches differently and measures a violation for its `reorder` at `1 1 1`. Component, when
-  observed: **signature word order**.
+- `reorder` (**exploratory, outside the charter-approved variants of this directory**): a fault of
+  this harness's delivery layer, not of raft-rs: `apply` hands a batch of committed entries to the
+  client in reverse log order. It carries no verdict and no reachability argument: no schedule is
+  known in which one `apply` call of this harness receives two data entries, and no argument shows
+  the fault inert. Review rounds 2–4 rejected three candidate schedules; the last one (a follower
+  whose inflight window is full, receiving the missing entry together with a higher commit index)
+  fails because, with raft-rs's inherited `max_apply_unpersisted_log_limit = 0`, `ready()` applies
+  only up to the persisted index and the entry just received is applied by the following
+  `LightReady` in a separate call; that explanation is scoped to that schedule, other batching
+  schedules are unresolved. A violation, when one is observed, is a set of client words that no
+  execution of the specification produces: the specification delivers one total order of the
+  appended values to every client, and that order respects each client's own proposal order, so a
+  client observing its own values out of proposal order, or two clients observing the same values
+  in opposite orders, are two such patterns (the Java side's measured witness, §7, is a third:
+  each client sees only its own value, which no single log order with both values appended
+  allows). The rows of this variant run as an experiment; their result is not a benchmark verdict
+  of this directory and the tables of the paper do not report it as one. raft-rs requires an
+  ordered transport, so the variant is not run under `bag`.
 
 ## 3. Counts (plain Must, `count`)
 
