@@ -56,5 +56,5 @@ s5-reset	bag	twin	-	<variant> <k> <s>; k,s>=1	all	conforms
 s6-width	fifo	-	-	<w>; w>=1	all	conforms	
 balancer-load-aware	fifo	l1	-	l1 <k> <q> <m>; k,q,m>=1	all	conforms	README
 balancer-load-aware	fifo	l2	-	l2 <k> <q> <m> <c>; k,q,m,c>=1	all	conforms	README
-balancer-load-aware	fifo	l2-stale	-	l2-stale <k> <q> <m> <c>; k,q,m,c>=1	k>c	violation	README says violation without a size rule; a reject needs more in-flight requests than a queue holds
+balancer-load-aware	fifo	l2-stale	-	l2-stale <k> <q> <m> <c>; k,q,m,c>=1	k>c && (c==1 || m==1)	violation	README says violation without a size rule. No verdict is given for k>c && c>=2 && m>=2: a Reject there depends on k, q and m, and a model finds none at 3 1 2 2, 3 1 3 2, 4 1 2 3
 balancer-load-aware	fifo	l2-stale	-	l2-stale <k> <q> <m> <c>; k,q,m,c>=1	k<=c	conforms	at most k requests in flight, so no reject
