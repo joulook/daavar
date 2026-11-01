@@ -20,7 +20,7 @@ def mispaired(r):  # an id ".vs-<spec variant>" whose command loads another spec
     return spec != "" and ("spec_" + m.group(1).replace("-", "_") + "_") not in spec
 _n = len(rows); rows = [r for r in rows if not mispaired(r)]; print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
-PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131"]
+PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
 def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "")
 byid = {}
 for r in rows:  # an id run on several pins: the newest pin wins
