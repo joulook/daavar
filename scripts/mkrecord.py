@@ -43,7 +43,14 @@ def hms(s):
     return int(1000 * (p[0]*3600 + p[1]*60 + p[2] if len(p) == 3 else p[0]*60 + p[1] if len(p) == 2 else p[0]))
 rec["wall_ms"] = hms(tvf("Elapsed (wall clock) time"))
 rec["cpu_user_s"] = tvf("User time (seconds)"); rec["cpu_sys_s"] = tvf("System time (seconds)")
-rec["peak_rss_kb"] = tvf("Maximum resident set size")
+# peak memory: /usr/bin/time's maximum resident set size when the tool exited by itself; for a killed child (timeout,
+# foreign load) time reports 0, so the row's 10 s memory samples (mem.log, process tree) give the peak, a lower bound
+_t = tvf("Maximum resident set size"); _t = int(_t) if _t and _t.isdigit() else 0
+_samples = [int(l.split()[1]) for l in read(d / "mem.log").splitlines() if len(l.split()) > 1 and l.split()[1].isdigit()]
+_s = max(_samples) if _samples else 0
+if _t > 0 and _t >= _s: rec["peak_rss_kb"], rec["peak_rss_source"] = str(_t), "time"
+elif _s > 0: rec["peak_rss_kb"], rec["peak_rss_source"] = str(_s), "sampled-10s"
+else: rec["peak_rss_kb"], rec["peak_rss_source"] = None, None   # a killed row without samples: unknown, not 0
 # load samples
 loads = [float(l.split()[1]) for l in read(d / "load.log").splitlines() if len(l.split()) > 1]
 rec["load_max_during"] = max(loads) if loads else None

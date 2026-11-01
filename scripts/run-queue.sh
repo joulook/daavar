@@ -34,10 +34,17 @@ busy_threads() {  # physical cores held by every running row on this node, acros
 foreign_load() {  # 1 if the node's 1-min load exceeds our own busy cores by the margin
   local la; la=$(cut -d' ' -f1 /proc/loadavg); awk -v la="$la" -v ours="$(busy_threads)" -v m="$FOREIGN_LOAD_MARGIN" 'BEGIN{exit !(la > ours+m)}'
 }
-sampler() {  # $1 rowdir $2 pid-of-row: every 60 s append loadavg and our busy count; kill on foreign load if asked
-  local d="$1" rp="$2" strikes=0
+tree_rss_kb() {  # resident memory (kB) of a process and all its descendants, summed
+  ps -e -o pid=,ppid=,rss= | awk -v root="$1" '{pp[$1]=$2; rss[$1]=$3} END {for (p in pp) {q=p; while (q && q!=root && (q in pp)) q=pp[q]; if (q==root) s+=rss[p]} print s+0}'
+}
+sampler() {  # $1 rowdir $2 pid-of-row: every 10 s append the process tree's resident memory (mem.log: epoch kB), every
+  # 60 s the loadavg and our busy count (load.log); kill on foreign load if asked. The memory samples give a timed-out
+  # or killed row its peak (a lower bound at 10 s granularity), which /usr/bin/time cannot report for a killed child.
+  local d="$1" rp="$2" strikes=0 i=0
   while kill -0 "$rp" 2>/dev/null; do
-    sleep 60; kill -0 "$rp" 2>/dev/null || break
+    sleep 10; kill -0 "$rp" 2>/dev/null || break
+    echo "$(date +%s) $(tree_rss_kb "$rp")" >> "$d/mem.log"
+    i=$((i+1)); [ $((i % 6)) -eq 0 ] || continue
     echo "$(date +%s) $(cut -d' ' -f1-3 /proc/loadavg) ours=$(busy_threads)" >> "$d/load.log"
     if foreign_load; then strikes=$((strikes+1)); else strikes=0; fi
     if [ "$FOREIGN_LOAD_POLICY" = kill ] && [ $strikes -ge 3 ]; then echo "foreign-load" > "$d/killed"; pkill -KILL -P "$rp" 2>/dev/null; kill -KILL "$rp" 2>/dev/null; break; fi
