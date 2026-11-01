@@ -137,6 +137,15 @@ if "rust-run.sh" in rec["command"] and "--- measurements" in out:
     elif blocks: rec["impl_complete"], rec["impl_blocked"] = blocks[-1][1], blocks[-1][2]
     mm = re.search(r"^exported: (\d+) lines from (\d+) graphs", out, re.M)   # the exporter's own count
     if mm: rec["impl_summaries"] = mm.group(1); rec.setdefault("impl_complete", mm.group(2)); rec["impl_complete"] = rec.get("impl_complete") or mm.group(2)
+    # the online check's own lines
+    mm = re.search(r"^verdict:\s*(\S+)", out, re.M)
+    if mm: rec["verdict"] = {"reports": "violation"}.get(mm.group(1), mm.group(1))
+    mm = re.search(r"^uncovered:\s*(\d+) graphs \((\d+) distinct", out, re.M)
+    if mm: rec["uncovered_total"] = mm.group(1); rec["uncovered_distinct"] = mm.group(2)
+    mm = re.search(r"^first miss: iteration (\d+), (\d+) ms", out, re.M)
+    if mm: rec["first_miss_iteration"] = mm.group(1); rec["first_miss_wall_ms"] = mm.group(2)
+    mm = re.search(r"^spec:\s+\S+ \(program (\S+), size (\S+), model (\S+), tool (\S+);", out, re.M)
+    if mm: rec["spec_program"] = mm.group(1); rec["spec_tool"] = mm.group(4); rec["spec_lang"] = "java" if mm.group(4) == "jmc" else "rust"
     if re.search(r"^conformance: silence", out, re.M): rec["verdict"] = "conforms"
     elif re.search(r"^conformance: \d+ candidate violation", out, re.M) or re.search(r"^\d+ uncovered implementation execution", out, re.M): rec["verdict"] = "violation"
     mm = re.search(r"^(\d+) uncovered implementation execution\(s\), (\d+) distinct summar", out, re.M)

@@ -186,6 +186,11 @@ for pre, fname, title in CAMP:
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = sum(parts)
                 r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
+    if pre in ("XON1", "XON2"):  # an online row's specification side is the export it loaded
+        for r in rs:
+            ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
+            sp = byid.get(ex[0]) if ex else None
+            if sp: r["spec_complete"], r["spec_blocked"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("wall_ms")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
         for r in rs: bycmd[r.get("command")] = r
