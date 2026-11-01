@@ -119,6 +119,35 @@ if "org.mpi_sws.jmc" in rec["command"] or re.search(r"^graphs:\s", out, re.M):
     rec.setdefault("mode", "online" if "--spec" in rec["command"] else "n/a")
     rec.setdefault("engine", "stateful-online" if "--spec" in rec["command"] else "must")
     rec.setdefault("exploration", "stop-at-first" if "--spec" in rec["command"] and "full" not in rec["command"] else "full")
+# TraceForge shared main (conf / online / export / count): two "Rayon Exploration Results" blocks (spec
+# then impl) for conf, the conformance lines, and the --- measurements block
+if "rust-run.sh" in rec["command"] and "--- measurements" in out:
+    meas = {}
+    for line in out.split("--- measurements", 1)[1].splitlines():
+        mm = re.match(r"^\s*([a-z_]+):\s*(.*)$", line)
+        if mm: meas[mm.group(1)] = mm.group(2).strip()
+    rec["measurements"] = meas
+    for k, v in meas.items():
+        if v == "": continue
+        tgt = {"graphs_complete": "impl_complete", "graphs_blocked": "impl_blocked", "summaries_distinct": "impl_summaries", "stop_reason": "tool_stop", "peak_rss_kb": "tool_peak_kb", "wall_ms": "tool_wall_ms", "explore_ms": "explore_impl_ms"}.get(k, k)
+        rec[tgt] = v
+    blocks = re.findall(r"Total executions: (\d+) \((\d+) complete, (\d+) blocked\)", out)
+    if " conf " in rec["command"] and len(blocks) >= 2:
+        rec["spec_complete"], rec["spec_blocked"] = blocks[0][1], blocks[0][2]; rec["impl_complete"], rec["impl_blocked"] = blocks[1][1], blocks[1][2]
+    elif blocks: rec["impl_complete"], rec["impl_blocked"] = blocks[-1][1], blocks[-1][2]
+    if re.search(r"^conformance: silence", out, re.M): rec["verdict"] = "conforms"
+    elif re.search(r"^conformance: \d+ candidate violation", out, re.M) or re.search(r"^\d+ uncovered implementation execution", out, re.M): rec["verdict"] = "violation"
+    mm = re.search(r"^(\d+) uncovered implementation execution\(s\), (\d+) distinct summar", out, re.M)
+    if mm: rec.setdefault("uncovered_total", mm.group(1)); rec["uncovered_distinct"] = mm.group(2)
+    mm = re.search(r"--threads (\d+)", rec["command"])
+    if mm: rec["impl_threads"] = mm.group(1); rec["spec_threads"] = mm.group(1)
+    if " conf " in rec["command"]:
+        rec.setdefault("kind", "conf-traceforge"); rec.setdefault("spec_tool", "traceforge"); rec.setdefault("impl_tool", "traceforge"); rec.setdefault("spec_lang", "rust"); rec.setdefault("impl_lang", "rust"); rec.setdefault("mode", "in-process")
+        eng = re.search(r"--engine (\S+)", rec["command"]); rec.setdefault("engine", (eng.group(1) if eng else "stateful") + ("-parallel" if mm else ""))
+    elif " online " in rec["command"]:
+        rec.setdefault("kind", "cross-language"); rec.setdefault("impl_tool", "traceforge"); rec.setdefault("impl_lang", "rust"); rec.setdefault("mode", "online"); rec.setdefault("engine", "stateful-online")
+    elif " export " in rec["command"]:
+        rec.setdefault("kind", "export"); rec.setdefault("impl_tool", "traceforge"); rec.setdefault("impl_lang", "rust"); rec.setdefault("mode", "offline-batch"); rec.setdefault("engine", "export")
 # in-process conf / online of the shared main: exit 1 = violation reported
 if re.search(r" conf | online |--spec", rec["command"]) and rec.get("exit_code") == "1" and rec.get("stop_reason") == "exit-1": rec["stop_reason"] = "ok"
 # conf-join
