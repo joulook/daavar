@@ -86,10 +86,12 @@ if m and dv:
     if not rec.get("verdict") and g("reports") is not None:
         rec["verdict"] = "violation" if g("reports") != "0" else ("conforms" if ends and all(e == "StateSpaceExhausted" for e in ends) else "partial")
     rec["reports"] = g("reports")
-    if not rec.get("spec_complete") and g("spec_graphs"): rec["spec_complete"] = g("spec_graphs")
-    if not rec.get("impl_complete") and g("impl_graphs"): rec["impl_complete"] = g("impl_graphs")
-    if not rec.get("impl_complete") and g("outer_graphs(execs+block)"):
-        mm = re.search(r"\d+", g("outer_graphs(execs+block)")); rec["impl_complete"] = mm.group(0) if mm else None
+    # `spec_graphs`, `impl_graphs` and `outer_graphs(execs+block)` count every ending, blocked included
+    # (MEAS-KEYS review, 2026-11-01): they are totals, never `*_complete`. A `row` without the split keeps the split empty.
+    if g("spec_graphs"): rec["spec_graphs_total"] = g("spec_graphs")
+    if g("impl_graphs"): rec["impl_graphs_total"] = g("impl_graphs")
+    elif g("outer_graphs(execs+block)"):
+        mm = re.search(r"\d+", g("outer_graphs(execs+block)")); rec["impl_graphs_total"] = mm.group(0) if mm else None
     if not rec.get("tool_stop"): rec["tool_stop"] = "/".join(dict.fromkeys(ends)) or g("end_class")
     rec.setdefault("kind", "conf-traceforge"); rec.setdefault("spec_tool", "traceforge"); rec.setdefault("impl_tool", "traceforge")
     rec.setdefault("spec_lang", "rust"); rec.setdefault("impl_lang", "rust"); rec.setdefault("mode", "in-process")
