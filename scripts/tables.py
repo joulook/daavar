@@ -215,7 +215,7 @@ for pre, fname, title in CAMP:
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
     if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
         # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)
-        Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris"}
+        Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris", "calculator-disel"}
         _n = len(rs); rs = [r for r in rs if r["a"].get("family") not in Q27]; print(f"{pre}: {_n - len(rs)} in-process rows of the Q27 programs left out")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
