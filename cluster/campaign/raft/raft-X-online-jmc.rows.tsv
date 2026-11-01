@@ -1,0 +1,3 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XON1.raft-rs.impl_correct_1_1_1_fifo.w1	X	raft-rs	1,1,1	fifo	correct	stateful-online	1	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_correct_1_1_1_fifo
+XON1.raft-rs.impl_reorder_1_1_1_fifo.w1	X	raft-rs	1,1,1	fifo	reorder	stateful-online	1	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_reorder_1_1_1_fifo

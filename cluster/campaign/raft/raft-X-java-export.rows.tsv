@@ -1,0 +1,4 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XJE.raft-rs.spec_correct_1_1_1_fifo.w16	X	raft-rs	1,1,1	fifo	correct	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	raft-rs		
+XJE.raft-rs.impl_correct_1_1_1_fifo.w16	X	raft-rs	1,1,1	fifo	correct	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	raft-rs		
+XJE.raft-rs.impl_reorder_1_1_1_fifo.w16	X	raft-rs	1,1,1	fifo	reorder	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	raft-rs		

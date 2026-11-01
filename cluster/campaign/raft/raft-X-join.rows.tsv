@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XJ1.raft-rs.impl_correct_1_1_1_fifo.tfspec-jmcimpl	X	raft-rs	1,1,1	fifo	correct	join	1	readme		c600	cross-language	traceforge	jmc	rust	java	offline-batch	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_correct_1_1_1_fifo
+XJ2.raft-rs.impl_correct_1_1_1_fifo.jmcspec-tfimpl	X	raft-rs	1,1,1	fifo	correct	join	1	readme		c600	cross-language	jmc	traceforge	java	rust	offline-batch	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_correct_1_1_1_fifo
+XJ1.raft-rs.impl_reorder_1_1_1_fifo.tfspec-jmcimpl	X	raft-rs	1,1,1	fifo	reorder	join	1	readme		c600	cross-language	traceforge	jmc	rust	java	offline-batch	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_reorder_1_1_1_fifo
+XJ2.raft-rs.impl_reorder_1_1_1_fifo.jmcspec-tfimpl	X	raft-rs	1,1,1	fifo	reorder	join	1	readme		c600	cross-language	jmc	traceforge	java	rust	offline-batch	full	raft-rs	raft-rs.spec_correct_1_1_1_fifo	raft-rs.impl_reorder_1_1_1_fifo

@@ -1,0 +1,3 @@
+BR.count.raft-rs.spec_correct_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs count spec --model fifo --seed 0 -- correct 1 1 1
+BR.count.raft-rs.impl_correct_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs count impl --model fifo --seed 0 -- correct 1 1 1
+BR.count.raft-rs.impl_reorder_1_1_1_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh raft-rs count impl --model fifo --seed 0 -- reorder 1 1 1
