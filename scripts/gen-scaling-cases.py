@@ -20,8 +20,7 @@ PLAN = [
  ("two-pc-lbinria", "bag", {"correct": ["5", "6"], "counting-bug": ["6", "7"]}, "", ["5", "6", "7"]),
  ("zab-broadcast-remix", "fifo", {"correct": ["3", "4"], "issue1-propose-to-ackld": ["3", "4"]}, "", ["3", "4"]),
  ("broadcast-consensus-civl", "bag", {"correct": ["4", "5"], "decide-early": ["4", "5"]}, "", ["4", "5"]),
- ("a2-store", "fifo", {"pb": ["6 2", "7 2"], "early-ack": ["6 2", "7 2"]}, "pb", ["6 2", "7 2"]),
- ("a3-lock", "fifo", {"fifo": ["3 3", "3 4"], "double-grant": ["3 3", "3 4"]}, "fifo", ["3 3", "3 4"]),
+# a2-store (pbkv) and a3-lock (lock) left out on 2026-11-02 (owner: the eleven families with twins)
 ]
 # templates: Rust count rows keyed by (dir, side, model, variant)
 rt = {}

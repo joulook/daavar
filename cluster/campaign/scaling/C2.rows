@@ -39,11 +39,3 @@ C2.broadcast-consensus-civl.impl_4_bag_correct.t16 250 172800 "$DAAVAR"/scripts/
 C2.broadcast-consensus-civl.impl_5_bag_correct.t16 250 172800 needok:C2.broadcast-consensus-civl.impl_4_bag_correct.t16 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateless --threads 16 --model bag -- 5 correct
 C2.broadcast-consensus-civl.impl_4_bag_decide-early.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateless --threads 16 --model bag -- 4 decide-early
 C2.broadcast-consensus-civl.impl_5_bag_decide-early.t16 250 172800 needok:C2.broadcast-consensus-civl.impl_4_bag_decide-early.t16 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateless --threads 16 --model bag -- 5 decide-early
-C2.a2-store.impl_pb_6_2_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- pb 6 2
-C2.a2-store.impl_pb_7_2_fifo.t16 250 172800 needok:C2.a2-store.impl_pb_6_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- pb 7 2
-C2.a2-store.impl_early-ack_6_2_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 6 2
-C2.a2-store.impl_early-ack_7_2_fifo.t16 250 172800 needok:C2.a2-store.impl_early-ack_6_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 7 2
-C2.a3-lock.impl_fifo_3_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateless --threads 16 --model fifo -- fifo 3 3
-C2.a3-lock.impl_fifo_3_4_fifo.t16 250 172800 needok:C2.a3-lock.impl_fifo_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateless --threads 16 --model fifo -- fifo 3 4
-C2.a3-lock.impl_double-grant_3_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateless --threads 16 --model fifo -- double-grant 3 3
-C2.a3-lock.impl_double-grant_3_4_fifo.t16 250 172800 needok:C2.a3-lock.impl_double-grant_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateless --threads 16 --model fifo -- double-grant 3 4

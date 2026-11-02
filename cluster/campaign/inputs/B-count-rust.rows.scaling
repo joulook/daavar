@@ -61,15 +61,3 @@ BR.count.broadcast-consensus-civl.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/
 BR.count.broadcast-consensus-civl.impl_5_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 5 correct
 BR.count.broadcast-consensus-civl.impl_4_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 4 decide-early
 BR.count.broadcast-consensus-civl.impl_5_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 5 decide-early
-BR.count.a2-store.spec_pb_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count spec --model fifo --seed 0 -- pb 6 2
-BR.count.a2-store.spec_pb_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count spec --model fifo --seed 0 -- pb 7 2
-BR.count.a2-store.impl_pb_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- pb 6 2
-BR.count.a2-store.impl_pb_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- pb 7 2
-BR.count.a2-store.impl_early-ack_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- early-ack 6 2
-BR.count.a2-store.impl_early-ack_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- early-ack 7 2
-BR.count.a3-lock.spec_fifo_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count spec --model fifo --seed 0 -- fifo 3 3
-BR.count.a3-lock.spec_fifo_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count spec --model fifo --seed 0 -- fifo 3 4
-BR.count.a3-lock.impl_fifo_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- fifo 3 3
-BR.count.a3-lock.impl_fifo_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- fifo 3 4
-BR.count.a3-lock.impl_double-grant_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- double-grant 3 3
-BR.count.a3-lock.impl_double-grant_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- double-grant 3 4
