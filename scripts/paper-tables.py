@@ -23,8 +23,9 @@ def load(name):
     try: return list(csv.DictReader(open(f"{T}/{name}.csv")))
     except OSError: return []
 SYN = {"naive", "share", "commit", "chain", "reset", "width"}; REAL = {"raft", "omnipaxos"}
-def group(p): return "synthetic" if p in SYN else ("realsw" if p in REAL else "application")
-GROUP_TXT = {"synthetic": "the synthetic families", "application": "the application benchmarks", "realsw": "the real-software case studies"}
+P2T = {"caspaxos", "chain-replication", "hermes"}   # the paper-to-twin experiment (both ports written by context-free agents from the paper)
+def group(p): return "synthetic" if p in SYN else ("realsw" if p in REAL else ("paper2twin" if p in P2T else "application"))
+GROUP_TXT = {"synthetic": "the synthetic families", "application": "the application benchmarks", "realsw": "the real-software case studies", "paper2twin": "the protocols implemented from their papers by context-free agents (CASPaxos, chain replication, Hermes)"}
 FAM = {  # family -> (title, [(mode key, csv, column header pair)], primary mode)
  "standalone": ("TraceForge standalone", [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")], "stateful"),
  "cross-validity": ("Cross-language refinement, specification and implementation in different languages",
@@ -76,7 +77,7 @@ for fam, (title, modes, primary) in FAM.items():
         gs = {md: r["spec graphs"] for md, r in m.items() if decided(r) and r["spec graphs"] and md != "stateless"}
         if len(set(gi.values())) > 1: incons.append((k, "impl", gi))
         if len(set(gs.values())) > 1: incons.append((k, "spec", gs))
-    for g in ("synthetic", "application", "realsw"):
+    for g in ("synthetic", "application", "realsw", "paper2twin"):
         for kind in ("conf", "viol"):
             keys = [k for k, m in inst.items() if kept(k) and group(k[0]) == g and side(m) == ("violation" if kind == "viol" else "conforms")]
             keys.sort(key=lambda k: (k[0], k[1], k[2], k[3], sz(k[4])))
