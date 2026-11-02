@@ -51,6 +51,9 @@ _s = max(_samples) if _samples else 0
 if _t > 0 and _t >= _s: rec["peak_rss_kb"], rec["peak_rss_source"] = str(_t), "time"
 elif _s > 0: rec["peak_rss_kb"], rec["peak_rss_source"] = str(_s), "sampled-10s"
 else: rec["peak_rss_kb"], rec["peak_rss_source"] = None, None   # a killed row without samples: unknown, not 0
+# an export row: the size of the summary file it wrote (the memory an offline check keeps for that side)
+_e = d / "export.jsonl"
+if _e.exists(): rec["export_bytes"] = str(_e.stat().st_size)
 # load samples
 loads = [float(l.split()[1]) for l in read(d / "load.log").splitlines() if len(l.split()) > 1]
 rec["load_max_during"] = max(loads) if loads else None
