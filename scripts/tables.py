@@ -31,6 +31,11 @@ def paper_name(a):  # (program, variant) as the paper names them; unknown direct
         if d == fam and rx.search(var): return prog, (var if lab == "." else lab)
     return fam, var
 UNDECIDABLE = {}   # dir -> set of table prefixes whose rows are not verdicts yet (a twin defect under investigation)
+SELF_PAIRED = set()   # (dir, variant) whose specification is the same program (inputs/self-paired.tsv): a join against another spec case is no measurement
+try:
+    for _l in open(DV + "/cluster/campaign/inputs/self-paired.tsv"):
+        if _l.strip() and not _l.startswith("#"): SELF_PAIRED.add(tuple(_l.split()[:2]))
+except OSError: pass
 ONE_SPEC = set()   # directories whose several specification cases are one and the same program (inputs/one-spec.tsv): one spec word, one instance key
 try:
     for _l in open(DV + "/cluster/campaign/inputs/one-spec.tsv"):
@@ -246,6 +251,14 @@ for pre, fname, title in CAMP:
         bycmd = {}
         for r in sorted(rs, key=pin_rank): bycmd[r.get("command")] = r   # the newest pin, then the latest start, wins
         rs = list(bycmd.values())
+    # a self-paired variant joined against another variant's specification export (the generator's size-keyed pairing before 2026-11-02) is no measurement
+    def _selfbad(r):
+        a = r["a"]; sc = a.get("spec_case", "") or ""
+        if (a.get("family"), a.get("variant")) not in SELF_PAIRED or not sc or a.get("mode") != "offline-batch": return False   # in-process conf picks its own spec
+        return re.sub(r"\.[xgf]\d*$", "", sc).split(".spec_")[-1].split("_")[0] != a.get("variant")
+    _x = [r for r in rs if _selfbad(r)]
+    if _x: print(f"{pre}: {len(_x)} rows of a self-paired variant joined against another specification left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
+    rs = [r for r in rs if not _selfbad(r)]
     # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
     # a refused join (an input file missing or rejected at run time) is no measurement: left out, counted; it is rerun

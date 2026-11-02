@@ -86,11 +86,16 @@ if A.grid:
 specs = collections.defaultdict(list)
 for c in rust:
     if c.side == "spec": specs[(c.dir, c.model, c.nums)].append(c)
+SELF = set()   # self-paired implementation variants (inputs/self-paired.tsv): paired only with the spec case of their own variant
+for _l in open(os.path.join(os.path.dirname(A.rust_rows), "self-paired.tsv")):
+    if _l.strip() and not _l.startswith("#"): SELF.add(tuple(_l.split()[:2]))
 pairs = []  # (impl case, spec case)
 for c in rust:
     if c.side != "impl": continue
     ss = specs.get((c.dir, c.model, c.nums), [])
     if not ss: ss = specs.get((c.dir, c.model, c.nums[:1]), [])  # fallback: spec keyed by the first number
+    if (c.dir, c.variant) in SELF: ss = [s for s in ss if s.variant == c.variant]
+    else: ss = [s for s in ss if (c.dir, s.variant) not in SELF]
     for s in ss: pairs.append((c, s))
 # ---- Java cases: dir, case id, side, size, model, variant, class:args --------------------------
 JCase = collections.namedtuple("JCase", "dir cid side size model variant cls nums")

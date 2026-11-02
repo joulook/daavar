@@ -1,0 +1,38 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.s2-share.spec_ctl_2_0_fifo.t16	C	s2-share	2,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_2_1_fifo.t16	C	s2-share	2,1	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_2_2_fifo.t16	C	s2-share	2,2	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_4_0_fifo.t16	C	s2-share	4,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_4_2_fifo.t16	C	s2-share	4,2	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_4_4_fifo.t16	C	s2-share	4,4	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_8_0_fifo.t16	C	s2-share	8,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_8_4_fifo.t16	C	s2-share	8,4	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_8_8_fifo.t16	C	s2-share	8,8	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_12_0_fifo.t16	C	s2-share	12,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_12_6_fifo.t16	C	s2-share	12,6	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_12_12_fifo.t16	C	s2-share	12,12	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_16_0_fifo.t16	C	s2-share	16,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_16_8_fifo.t16	C	s2-share	16,8	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_16_16_fifo.t16	C	s2-share	16,16	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_24_0_fifo.t16	C	s2-share	24,0	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_24_12_fifo.t16	C	s2-share	24,12	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+C3E.s2-share.spec_ctl_24_24_fifo.t16	C	s2-share	24,24	fifo	ctl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	s2-share		
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.s2-share.impl_ctl_2_0_fifo.vs-ctl	C	s2-share	2,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_2_0_fifo	s2-share.impl_ctl_2_0_fifo
+C3J.s2-share.impl_ctl_2_1_fifo.vs-ctl	C	s2-share	2,1	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_2_1_fifo	s2-share.impl_ctl_2_1_fifo
+C3J.s2-share.impl_ctl_2_2_fifo.vs-ctl	C	s2-share	2,2	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_2_2_fifo	s2-share.impl_ctl_2_2_fifo
+C3J.s2-share.impl_ctl_4_0_fifo.vs-ctl	C	s2-share	4,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_4_0_fifo	s2-share.impl_ctl_4_0_fifo
+C3J.s2-share.impl_ctl_4_2_fifo.vs-ctl	C	s2-share	4,2	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_4_2_fifo	s2-share.impl_ctl_4_2_fifo
+C3J.s2-share.impl_ctl_4_4_fifo.vs-ctl	C	s2-share	4,4	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_4_4_fifo	s2-share.impl_ctl_4_4_fifo
+C3J.s2-share.impl_ctl_8_0_fifo.vs-ctl	C	s2-share	8,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_8_0_fifo	s2-share.impl_ctl_8_0_fifo
+C3J.s2-share.impl_ctl_8_4_fifo.vs-ctl	C	s2-share	8,4	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_8_4_fifo	s2-share.impl_ctl_8_4_fifo
+C3J.s2-share.impl_ctl_8_8_fifo.vs-ctl	C	s2-share	8,8	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_8_8_fifo	s2-share.impl_ctl_8_8_fifo
+C3J.s2-share.impl_ctl_12_0_fifo.vs-ctl	C	s2-share	12,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_12_0_fifo	s2-share.impl_ctl_12_0_fifo
+C3J.s2-share.impl_ctl_12_6_fifo.vs-ctl	C	s2-share	12,6	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_12_6_fifo	s2-share.impl_ctl_12_6_fifo
+C3J.s2-share.impl_ctl_12_12_fifo.vs-ctl	C	s2-share	12,12	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_12_12_fifo	s2-share.impl_ctl_12_12_fifo
+C3J.s2-share.impl_ctl_16_0_fifo.vs-ctl	C	s2-share	16,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_16_0_fifo	s2-share.impl_ctl_16_0_fifo
+C3J.s2-share.impl_ctl_16_8_fifo.vs-ctl	C	s2-share	16,8	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_16_8_fifo	s2-share.impl_ctl_16_8_fifo
+C3J.s2-share.impl_ctl_16_16_fifo.vs-ctl	C	s2-share	16,16	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_16_16_fifo	s2-share.impl_ctl_16_16_fifo
+C3J.s2-share.impl_ctl_24_0_fifo.vs-ctl	C	s2-share	24,0	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_24_0_fifo	s2-share.impl_ctl_24_0_fifo
+C3J.s2-share.impl_ctl_24_12_fifo.vs-ctl	C	s2-share	24,12	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_24_12_fifo	s2-share.impl_ctl_24_12_fifo
+C3J.s2-share.impl_ctl_24_24_fifo.vs-ctl	C	s2-share	24,24	fifo	ctl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s2-share	s2-share.spec_ctl_24_24_fifo	s2-share.impl_ctl_24_24_fifo

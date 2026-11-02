@@ -1,2 +1,2 @@
 # dir	tables (space-separated prefixes)	reason
-ewd998-termination	XON1 XON2 XJ1 XJ2	the Java export renders the Idle message with -1 for an absent value while the Rust side renders it otherwise: every graph uncovered online (2026-11-02, issue Q30 for the builders); pending
+ewd998-termination	XON1 XON2 XJ1 XJ2 XT1 XT2 XTON1 XTON2	the Java export renders the Idle message with -1 for an absent value while the Rust side renders it otherwise: every graph uncovered online (2026-11-02, issue Q30 for the builders); pending

@@ -1,0 +1,2 @@
+# dir	variant: implementation variants whose specification is the same program (self-paired); their offline joins must use the spec export of the same variant
+s2-share	ctl
