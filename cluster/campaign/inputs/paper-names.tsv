@@ -1,8 +1,11 @@
 # dir	variant_regex	program	variant_label   (the paper's Table 1 names; first matching line wins; '.' keeps the row's variant)
+s1-naive	^self$	naive	correct
 s1-naive	.*	naive	.
+s2-share	^share$	share	correct
 s2-share	.*	share	.
 s3-commit	.*	commit	.
 s4-chain	.*	chain	.
+s5-reset	^twin$	reset	correct
 s5-reset	.*	reset	.
 s6-width	.*	width	.
 a1-commit	.*	2pc	.

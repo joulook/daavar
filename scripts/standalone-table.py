@@ -37,15 +37,15 @@ def cell(r, col, div=1.0, fmt="{:.1f}"):
     v = num(r.get(col)); return "" if v is None else fmt.format(v / div)
 def name(k):
     prog, var, spec, model, _ = k
-    sub = var if var not in ("", "spec", "impl") else ""
+    sub = var if var not in ("", "spec", "impl", "correct") else ""   # the family's correct program needs no subscript
     if spec and spec not in var: sub = (sub + "/" if sub else "") + spec
     return f"\\textsf{{{prog}}}" + (f"$_{{\\mathit{{{sub.replace('_','-')}}}}}^{{\\mathit{{{model}}}}}$" if sub else f"$^{{\\mathit{{{model}}}}}$")
 L = ["\\begin{longtable}{@{}lrrrrrrrrrrr@{}}",
-     "\\caption{TraceForge standalone conformance checking: the synthetic families' conforming pairs. Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$; $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the cache, specification graphs explored in total (repeats counted), time, peak memory. Stateful: time, peak memory. Offline: time of both exports and the join, memory = the size of the two summary files kept. 16 threads; \\faClock\\ = the 1 h tier reached.}\\label{tab:standalone}\\\\",
+     "\\caption{TraceForge standalone conformance checking on the synthetic families' conforming pairs. Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the family's correct program; ctl = the control). $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the witness cache, $G_{\\mathit{spec}}^{\\mathit{expl}}$ = specification graphs explored in total (repeats counted). T = wall time in seconds, M = peak resident memory in MB (offline: the size of the two summary files kept). Every run at 16 threads with a time limit of 3600 s (\\faClock\\ = reached) and a memory limit of 250 GB.}"\\label{tab:standalone}\\\\",
      "\\toprule", "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & \\multicolumn{4}{c}{stateless} & \\multicolumn{2}{c}{stateful} & \\multicolumn{2}{c}{offline} \\\\",
      "\\cmidrule(lr){5-8}\\cmidrule(lr){9-10}\\cmidrule(lr){11-12}",
-     " & & & & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & s & MB & s & MB & s & MB \\\\", "\\midrule", "\\endfirsthead",
-     "\\toprule", "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & s & MB & s & MB & s & MB \\\\", "\\midrule", "\\endhead"]
+     " & & & & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", "\\midrule", "\\endfirsthead",
+     "\\toprule", "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", "\\midrule", "\\endhead"]
 csvrows = [["program", "variant", "spec", "model", "size", "G impl", "G spec", "stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB (both export files)"]]
 prev = None
 for k in order:
