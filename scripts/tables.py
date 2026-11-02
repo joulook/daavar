@@ -30,6 +30,9 @@ def paper_name(a):  # (program, variant) as the paper names them; unknown direct
     for d, rx, prog, lab in NAMES:
         if d == fam and rx.search(var): return prog, (var if lab == "." else lab)
     return fam, var
+UNDECIDABLE = {}   # dir -> set of table prefixes whose rows are not verdicts yet (a twin defect under investigation)
+for _l in open(DV + "/cluster/campaign/inputs/undecidable.tsv"):
+    if not _l.startswith("#") and _l.strip(): _f = _l.rstrip("\n").split("\t"); UNDECIDABLE[_f[0]] = set(_f[1].split())
 EXPLORATORY = set()
 for _l in open(DV + "/cluster/campaign/inputs/exploratory-variants.tsv"):
     if not _l.startswith("#") and _l.strip(): EXPLORATORY.add(tuple(_l.rstrip("\n").split("\t")[:2]))
@@ -227,6 +230,26 @@ for pre, fname, title in CAMP:
         rs = list(bycmd.values())
     # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
+    # a refused join (an input file missing or rejected at run time) is no measurement: left out, counted; it is rerun
+    _x = [r for r in rs if r.get("stop_reason") == "refused"]
+    if _x: print(f"{pre}: {len(_x)} refused rows left out")
+    rs = [r for r in rs if r.get("stop_reason") != "refused"]
+    # one row per instance: the same case run at several thread counts (ids .t1, .t16, ...) keeps the highest
+    _by = {}
+    for r in rs:
+        _m = re.match(r"^(.*)\.t(\d+)$", r["run_id"]); _k = _m.group(1) if _m else r["run_id"]; _n = int(_m.group(2)) if _m else 0
+        if _k not in _by or _n > _by[_k][0] or (_n == _by[_k][0] and pin_rank(r) >= pin_rank(_by[_k][1])): _by[_k] = (_n, r)
+    if len(_by) < len(rs): print(f"{pre}: {len(rs) - len(_by)} lower-thread-count rows of the same instance left out")
+    rs = [v[1] for v in _by.values()]
+    _inst = {}
+    for r in rs:
+        _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), (r["a"].get("spec_case", "") or "").split(".spec_")[-1], r["a"].get("size", ""), r["a"].get("model", ""))
+        if _k not in _inst or pin_rank(r) >= pin_rank(_inst[_k]): _inst[_k] = r
+    if len(_inst) < len(rs): print(f"{pre}: {len(rs) - len(_inst)} older runs of the same instance left out")
+    rs = list(_inst.values())
+    _u = [r for r in rs if r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")]]
+    if _u: print(f"{pre}: {len(_u)} rows of a program whose cross-language twins disagree on a value rendering left out (inputs/undecidable.tsv): " + ", ".join(sorted({r['a'].get('family','') for r in _u})))
+    rs = [r for r in rs if not (r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")])]
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
     rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
@@ -265,12 +288,19 @@ for pre, fname, title in CAMP:
     L = []
     for kind, rows_k in (("conforming", conf_rows), ("violating", viol_rows)):
         viol = kind == "violating"
-        hdr = "program(size) & variant & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
-        spec = "@{}lllrrrr" + (("r" if not offline else "") + "r" if viol else "") + "@{}"
-        cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time (\\faClock\\ = the time tier was reached, larger sizes of that ladder are not run); MB = peak resident memory"
+        def spec_word(a):  # the specification case's variant words: its id after "spec_", without the size numbers, the model and ladder tags
+            if not a.get("spec_case"): return ""
+            toks = re.sub(r"\.[xgf]\d*$", "", (a.get("spec_case", "") or "").split(".spec_")[-1]).split("_")
+            return "-".join(t for t in toks if not t.isdigit() and t not in ("fifo", "bag", "p2p", "asyn", "causal", "cd")) or "spec"
+        multi = {pn for pn in {paper_name(r["a"])[0] for r in rs} if len({spec_word(r["a"]) for r in rs if paper_name(r["a"])[0] == pn}) > 1}
+        def spec_of(r):  # the specification's variant word, shown only for a program (paper name) that has several specifications
+            return esc(spec_word(r["a"])) if paper_name(r["a"])[0] in multi else ""
+        hdr = "program(size) & variant & spec & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
+        spec = "@{}llllrrrr" + (("r" if not offline else "") + "r" if viol else "") + "@{}"
+        cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory (for a run that reached its tier, the largest 10-second sample)"
                + ("; miss ms = wall time to the first uncovered graph" if (viol and not offline) else "")
                + ("; $G_{\\faGhost}$ = uncovered implementation graphs" if viol else "")
-               + "; a verdict against the directory's README is marked $^{\\ast}$.")
+               + "; a program marked $^{\\ast}$ gave a verdict other than its expected one; \\faClock\\ = the time tier was reached, larger sizes of that ladder are not run.")
         L += [f"\\begin{{longtable}}{{{spec}}}", f"\\caption{{{cap}}}\\label{{tab:{fname}-{'viol' if viol else 'conf'}}}\\\\", "\\toprule", hdr, "\\midrule", "\\endfirsthead", "\\toprule", hdr, "\\midrule", "\\endhead"]
         for r in rows_k:
             a = r["a"]; prog, var = paper_name(a)
@@ -279,13 +309,13 @@ for pre, fname, title in CAMP:
             if viol:
                 if not offline: extra += f" & {(r.get('first_miss_wall_ms') or '') if r['_v'] == 'violation' else ''}"
                 extra += f" & {(r.get('uncovered_total') or r.get('uncovered_distinct') or '') if r['_v'] == 'violation' else ''}"
-            L.append(f"\\textsf{{{esc(prog)}}}$({esc(a.get('size',''))})${r['_mark']} & {esc(var)} & {a.get('model','')} & {sg} & {ig} & {cell_time(r)} & {fnum(r.get('peak_rss_kb'), 1024)}{extra} \\\\")
+            L.append(f"\\textsf{{{esc(prog)}}}$({esc(a.get('size',''))})${r['_mark']} & {esc(var)} & {spec_of(r)} & {a.get('model','')} & {sg} & {ig} & {cell_time(r)} & {fnum(r.get('peak_rss_kb'), 1024)}{extra} \\\\")
         L += ["\\bottomrule", "\\end{longtable}", ""]
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
         offline = pre in ("C3J", "XJ1", "XJ2"); par_tf = pre in ("C1", "C2")
-        cols = ["program", "variant", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"]
+        cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"]
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
             a = r["a"]; st = r["stop_reason"]
@@ -296,7 +326,7 @@ for pre, fname, title in CAMP:
                     v = r.get(tt) or (r.get(e) if e else "") or ""; return int(v) if v.isdigit() else ""
                 return int((vc or 0) + (vb or 0))
             prog, var = paper_name(a)
-            row = [prog, var, a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
+            row = [prog, var, spec_of(r), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
                    fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
