@@ -3,7 +3,7 @@
 # and push are done in batches by flush-results.sh. usage: publish.sh <rowdir>
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
-d="$1"; id=$(basename "$d"); node=$(hostname); : "${PUBLISH_PUSH:=1}"
+d=$(readlink -f "$1"); id=$(basename "$d"); node=$(hostname); : "${PUBLISH_PUSH:=1}"
 pin=$(sed -n 's/^pin=//p' "$d/status" | head -1); pin=${pin:-a3a7e1b}   # the pin the row ran on (rows launched before the field existed: a3a7e1b)
 TF_PIN=$pin
 [ -d "$BRAIN_DATA/.git" ] || { echo "no brain-data clone at $BRAIN_DATA"; exit 1; }
