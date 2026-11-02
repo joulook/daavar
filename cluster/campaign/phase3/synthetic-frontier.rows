@@ -1,0 +1,221 @@
+C3E.s5-reset.spec_reset_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 5
+C1.s5-reset.impl_reset_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 5
+C2.s5-reset.impl_reset_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 5
+C3E.s5-reset.impl_reset_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 5
+C3J.s5-reset.impl_reset_10_5_bag 16 600 needok:C3E.s5-reset.impl_reset_10_5_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_5_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_5_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 5
+C2.s5-reset.impl_ctl_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 5
+C3E.s5-reset.impl_ctl_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 5
+C3J.s5-reset.impl_ctl_10_5_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_5_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_5_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_5_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 5
+C2.s5-reset.impl_twin_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 5
+C3E.s5-reset.impl_twin_10_5_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 5
+C3J.s5-reset.impl_twin_10_5_bag 16 600 needok:C3E.s5-reset.impl_twin_10_5_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_5_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_5_bag.t16/export.jsonl
+C3E.s5-reset.spec_reset_10_6_bag.t16 250 3600 needok:C3E.s5-reset.spec_reset_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 6
+C1.s5-reset.impl_reset_10_6_bag.t16 250 3600 needok:C1.s5-reset.impl_reset_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 6
+C2.s5-reset.impl_reset_10_6_bag.t16 250 3600 needok:C2.s5-reset.impl_reset_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 6
+C3E.s5-reset.impl_reset_10_6_bag.t16 250 3600 needok:C3E.s5-reset.impl_reset_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 6
+C3J.s5-reset.impl_reset_10_6_bag 16 600 needok:C3E.s5-reset.impl_reset_10_6_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_6_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_6_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_6_bag.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 6
+C2.s5-reset.impl_ctl_10_6_bag.t16 250 3600 needok:C2.s5-reset.impl_ctl_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 6
+C3E.s5-reset.impl_ctl_10_6_bag.t16 250 3600 needok:C3E.s5-reset.impl_ctl_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 6
+C3J.s5-reset.impl_ctl_10_6_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_6_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_6_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_6_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_6_bag.t16 250 3600 needok:C1.s5-reset.impl_twin_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 6
+C2.s5-reset.impl_twin_10_6_bag.t16 250 3600 needok:C2.s5-reset.impl_twin_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 6
+C3E.s5-reset.impl_twin_10_6_bag.t16 250 3600 needok:C3E.s5-reset.impl_twin_10_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 6
+C3J.s5-reset.impl_twin_10_6_bag 16 600 needok:C3E.s5-reset.impl_twin_10_6_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_6_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_6_bag.t16/export.jsonl
+C3E.s5-reset.spec_reset_10_7_bag.t16 250 3600 needok:C3E.s5-reset.spec_reset_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 7
+C1.s5-reset.impl_reset_10_7_bag.t16 250 3600 needok:C1.s5-reset.impl_reset_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 7
+C2.s5-reset.impl_reset_10_7_bag.t16 250 3600 needok:C2.s5-reset.impl_reset_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 7
+C3E.s5-reset.impl_reset_10_7_bag.t16 250 3600 needok:C3E.s5-reset.impl_reset_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 7
+C3J.s5-reset.impl_reset_10_7_bag 16 600 needok:C3E.s5-reset.impl_reset_10_7_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_7_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_7_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_7_bag.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 7
+C2.s5-reset.impl_ctl_10_7_bag.t16 250 3600 needok:C2.s5-reset.impl_ctl_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 7
+C3E.s5-reset.impl_ctl_10_7_bag.t16 250 3600 needok:C3E.s5-reset.impl_ctl_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 7
+C3J.s5-reset.impl_ctl_10_7_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_7_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_7_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_7_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_7_bag.t16 250 3600 needok:C1.s5-reset.impl_twin_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 7
+C2.s5-reset.impl_twin_10_7_bag.t16 250 3600 needok:C2.s5-reset.impl_twin_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 7
+C3E.s5-reset.impl_twin_10_7_bag.t16 250 3600 needok:C3E.s5-reset.impl_twin_10_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 7
+C3J.s5-reset.impl_twin_10_7_bag 16 600 needok:C3E.s5-reset.impl_twin_10_7_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_7_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_7_bag.t16/export.jsonl
+C3E.s5-reset.spec_reset_10_8_bag.t16 250 3600 needok:C3E.s5-reset.spec_reset_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 8
+C1.s5-reset.impl_reset_10_8_bag.t16 250 3600 needok:C1.s5-reset.impl_reset_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 8
+C2.s5-reset.impl_reset_10_8_bag.t16 250 3600 needok:C2.s5-reset.impl_reset_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 8
+C3E.s5-reset.impl_reset_10_8_bag.t16 250 3600 needok:C3E.s5-reset.impl_reset_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 8
+C3J.s5-reset.impl_reset_10_8_bag 16 600 needok:C3E.s5-reset.impl_reset_10_8_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_8_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_8_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_8_bag.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 8
+C2.s5-reset.impl_ctl_10_8_bag.t16 250 3600 needok:C2.s5-reset.impl_ctl_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 8
+C3E.s5-reset.impl_ctl_10_8_bag.t16 250 3600 needok:C3E.s5-reset.impl_ctl_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 8
+C3J.s5-reset.impl_ctl_10_8_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_8_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_8_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_8_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_8_bag.t16 250 3600 needok:C1.s5-reset.impl_twin_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 8
+C2.s5-reset.impl_twin_10_8_bag.t16 250 3600 needok:C2.s5-reset.impl_twin_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 8
+C3E.s5-reset.impl_twin_10_8_bag.t16 250 3600 needok:C3E.s5-reset.impl_twin_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 8
+C3J.s5-reset.impl_twin_10_8_bag 16 600 needok:C3E.s5-reset.impl_twin_10_8_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_8_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_8_bag.t16/export.jsonl
+C3E.s5-reset.spec_reset_10_9_bag.t16 250 3600 needok:C3E.s5-reset.spec_reset_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 9
+C1.s5-reset.impl_reset_10_9_bag.t16 250 3600 needok:C1.s5-reset.impl_reset_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 9
+C2.s5-reset.impl_reset_10_9_bag.t16 250 3600 needok:C2.s5-reset.impl_reset_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 9
+C3E.s5-reset.impl_reset_10_9_bag.t16 250 3600 needok:C3E.s5-reset.impl_reset_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 9
+C3J.s5-reset.impl_reset_10_9_bag 16 600 needok:C3E.s5-reset.impl_reset_10_9_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_9_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_9_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_9_bag.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 9
+C2.s5-reset.impl_ctl_10_9_bag.t16 250 3600 needok:C2.s5-reset.impl_ctl_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 9
+C3E.s5-reset.impl_ctl_10_9_bag.t16 250 3600 needok:C3E.s5-reset.impl_ctl_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 9
+C3J.s5-reset.impl_ctl_10_9_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_9_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_9_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_9_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_9_bag.t16 250 3600 needok:C1.s5-reset.impl_twin_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 9
+C2.s5-reset.impl_twin_10_9_bag.t16 250 3600 needok:C2.s5-reset.impl_twin_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 9
+C3E.s5-reset.impl_twin_10_9_bag.t16 250 3600 needok:C3E.s5-reset.impl_twin_10_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 9
+C3J.s5-reset.impl_twin_10_9_bag 16 600 needok:C3E.s5-reset.impl_twin_10_9_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_9_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_9_bag.t16/export.jsonl
+C3E.s5-reset.spec_reset_10_10_bag.t16 250 3600 needok:C3E.s5-reset.spec_reset_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export spec --out export.jsonl --threads 16 --model bag -- reset 10 10
+C1.s5-reset.impl_reset_10_10_bag.t16 250 3600 needok:C1.s5-reset.impl_reset_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 10 10
+C2.s5-reset.impl_reset_10_10_bag.t16 250 3600 needok:C2.s5-reset.impl_reset_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 10
+C3E.s5-reset.impl_reset_10_10_bag.t16 250 3600 needok:C3E.s5-reset.impl_reset_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- reset 10 10
+C3J.s5-reset.impl_reset_10_10_bag 16 600 needok:C3E.s5-reset.impl_reset_10_10_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_10_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_reset_10_10_bag.t16/export.jsonl
+C1.s5-reset.impl_ctl_10_10_bag.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 10 10
+C2.s5-reset.impl_ctl_10_10_bag.t16 250 3600 needok:C2.s5-reset.impl_ctl_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 10
+C3E.s5-reset.impl_ctl_10_10_bag.t16 250 3600 needok:C3E.s5-reset.impl_ctl_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- ctl 10 10
+C3J.s5-reset.impl_ctl_10_10_bag 16 600 needok:C3E.s5-reset.impl_ctl_10_10_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_10_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_ctl_10_10_bag.t16/export.jsonl
+C1.s5-reset.impl_twin_10_10_bag.t16 250 3600 needok:C1.s5-reset.impl_twin_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 10 10
+C2.s5-reset.impl_twin_10_10_bag.t16 250 3600 needok:C2.s5-reset.impl_twin_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- twin 10 10
+C3E.s5-reset.impl_twin_10_10_bag.t16 250 3600 needok:C3E.s5-reset.impl_twin_10_9_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset export impl --out export.jsonl --threads 16 --model bag -- twin 10 10
+C3J.s5-reset.impl_twin_10_10_bag 16 600 needok:C3E.s5-reset.impl_twin_10_10_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s5-reset.spec_reset_10_10_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s5-reset.impl_twin_10_10_bag.t16/export.jsonl
+C3E.s2-share.spec_share_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 0
+C1.s2-share.impl_share_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 0
+C2.s2-share.impl_share_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 0
+C3E.s2-share.impl_share_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 0
+C3J.s2-share.impl_share_28_0_fifo 16 600 needok:C3E.s2-share.impl_share_28_0_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_0_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_28_0_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 28 0
+C2.s2-share.impl_ctl_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 28 0
+C3E.s2-share.impl_ctl_28_0_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 28 0
+C3J.s2-share.impl_ctl_28_0_fifo 16 600 needok:C3E.s2-share.impl_ctl_28_0_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_0_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_28_0_fifo.t16/export.jsonl
+C3E.s2-share.spec_share_28_14_fifo.t16 250 3600 needok:C3E.s2-share.spec_share_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 14
+C1.s2-share.impl_share_28_14_fifo.t16 250 3600 needok:C1.s2-share.impl_share_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 14
+C2.s2-share.impl_share_28_14_fifo.t16 250 3600 needok:C2.s2-share.impl_share_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 14
+C3E.s2-share.impl_share_28_14_fifo.t16 250 3600 needok:C3E.s2-share.impl_share_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 14
+C3J.s2-share.impl_share_28_14_fifo 16 600 needok:C3E.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_14_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_28_14_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_28_14_fifo.t16 250 3600 needok:C1.s2-share.impl_ctl_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 28 14
+C2.s2-share.impl_ctl_28_14_fifo.t16 250 3600 needok:C2.s2-share.impl_ctl_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 28 14
+C3E.s2-share.impl_ctl_28_14_fifo.t16 250 3600 needok:C3E.s2-share.impl_ctl_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 28 14
+C3J.s2-share.impl_ctl_28_14_fifo 16 600 needok:C3E.s2-share.impl_ctl_28_14_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_14_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_28_14_fifo.t16/export.jsonl
+C3E.s2-share.spec_share_28_28_fifo.t16 250 3600 needok:C3E.s2-share.spec_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 28
+C1.s2-share.impl_share_28_28_fifo.t16 250 3600 needok:C1.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
+C2.s2-share.impl_share_28_28_fifo.t16 250 3600 needok:C2.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
+C3E.s2-share.impl_share_28_28_fifo.t16 250 3600 needok:C3E.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 28
+C3J.s2-share.impl_share_28_28_fifo 16 600 needok:C3E.s2-share.impl_share_28_28_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_28_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_28_28_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_28_28_fifo.t16 250 3600 needok:C1.s2-share.impl_ctl_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 28 28
+C2.s2-share.impl_ctl_28_28_fifo.t16 250 3600 needok:C2.s2-share.impl_ctl_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 28 28
+C3E.s2-share.impl_ctl_28_28_fifo.t16 250 3600 needok:C3E.s2-share.impl_ctl_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 28 28
+C3J.s2-share.impl_ctl_28_28_fifo 16 600 needok:C3E.s2-share.impl_ctl_28_28_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_28_28_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_28_28_fifo.t16/export.jsonl
+C3E.s2-share.spec_share_32_0_fifo.t16 250 3600 needok:C3E.s2-share.spec_share_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 32 0
+C1.s2-share.impl_share_32_0_fifo.t16 250 3600 needok:C1.s2-share.impl_share_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 32 0
+C2.s2-share.impl_share_32_0_fifo.t16 250 3600 needok:C2.s2-share.impl_share_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 32 0
+C3E.s2-share.impl_share_32_0_fifo.t16 250 3600 needok:C3E.s2-share.impl_share_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 32 0
+C3J.s2-share.impl_share_32_0_fifo 16 600 needok:C3E.s2-share.impl_share_32_0_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_0_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_32_0_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_32_0_fifo.t16 250 3600 needok:C1.s2-share.impl_ctl_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 32 0
+C2.s2-share.impl_ctl_32_0_fifo.t16 250 3600 needok:C2.s2-share.impl_ctl_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 32 0
+C3E.s2-share.impl_ctl_32_0_fifo.t16 250 3600 needok:C3E.s2-share.impl_ctl_28_28_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 32 0
+C3J.s2-share.impl_ctl_32_0_fifo 16 600 needok:C3E.s2-share.impl_ctl_32_0_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_0_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_32_0_fifo.t16/export.jsonl
+C3E.s2-share.spec_share_32_16_fifo.t16 250 3600 needok:C3E.s2-share.spec_share_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 32 16
+C1.s2-share.impl_share_32_16_fifo.t16 250 3600 needok:C1.s2-share.impl_share_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 32 16
+C2.s2-share.impl_share_32_16_fifo.t16 250 3600 needok:C2.s2-share.impl_share_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 32 16
+C3E.s2-share.impl_share_32_16_fifo.t16 250 3600 needok:C3E.s2-share.impl_share_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 32 16
+C3J.s2-share.impl_share_32_16_fifo 16 600 needok:C3E.s2-share.impl_share_32_16_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_16_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_32_16_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_32_16_fifo.t16 250 3600 needok:C1.s2-share.impl_ctl_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 32 16
+C2.s2-share.impl_ctl_32_16_fifo.t16 250 3600 needok:C2.s2-share.impl_ctl_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 32 16
+C3E.s2-share.impl_ctl_32_16_fifo.t16 250 3600 needok:C3E.s2-share.impl_ctl_32_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 32 16
+C3J.s2-share.impl_ctl_32_16_fifo 16 600 needok:C3E.s2-share.impl_ctl_32_16_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_16_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_32_16_fifo.t16/export.jsonl
+C3E.s2-share.spec_share_32_32_fifo.t16 250 3600 needok:C3E.s2-share.spec_share_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 32 32
+C1.s2-share.impl_share_32_32_fifo.t16 250 3600 needok:C1.s2-share.impl_share_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 32 32
+C2.s2-share.impl_share_32_32_fifo.t16 250 3600 needok:C2.s2-share.impl_share_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 32 32
+C3E.s2-share.impl_share_32_32_fifo.t16 250 3600 needok:C3E.s2-share.impl_share_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 32 32
+C3J.s2-share.impl_share_32_32_fifo 16 600 needok:C3E.s2-share.impl_share_32_32_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_32_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_32_32_fifo.t16/export.jsonl
+C1.s2-share.impl_ctl_32_32_fifo.t16 250 3600 needok:C1.s2-share.impl_ctl_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 32 32
+C2.s2-share.impl_ctl_32_32_fifo.t16 250 3600 needok:C2.s2-share.impl_ctl_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 32 32
+C3E.s2-share.impl_ctl_32_32_fifo.t16 250 3600 needok:C3E.s2-share.impl_ctl_32_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 32 32
+C3J.s2-share.impl_ctl_32_32_fifo 16 600 needok:C3E.s2-share.impl_ctl_32_32_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s2-share.spec_share_32_32_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_ctl_32_32_fifo.t16/export.jsonl
+C3E.s1-naive.spec_naive_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 8 1
+C1.s1-naive.impl_naive_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 8 1
+C2.s1-naive.impl_naive_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 8 1
+C3E.s1-naive.impl_naive_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 8 1
+C3J.s1-naive.impl_naive_8_1_bag 16 600 needok:C3E.s1-naive.impl_naive_8_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_8_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_8_1_bag.t16/export.jsonl
+C1.s1-naive.impl_self_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 8 1
+C2.s1-naive.impl_self_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 8 1
+C3E.s1-naive.impl_self_8_1_bag.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 8 1
+C3J.s1-naive.impl_self_8_1_bag 16 600 needok:C3E.s1-naive.impl_self_8_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_8_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_8_1_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_8_2_bag.t16 250 3600 needok:C3E.s1-naive.spec_naive_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 8 2
+C1.s1-naive.impl_naive_8_2_bag.t16 250 3600 needok:C1.s1-naive.impl_naive_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 8 2
+C2.s1-naive.impl_naive_8_2_bag.t16 250 3600 needok:C2.s1-naive.impl_naive_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 8 2
+C3E.s1-naive.impl_naive_8_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_naive_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 8 2
+C3J.s1-naive.impl_naive_8_2_bag 16 600 needok:C3E.s1-naive.impl_naive_8_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_8_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_8_2_bag.t16/export.jsonl
+C1.s1-naive.impl_self_8_2_bag.t16 250 3600 needok:C1.s1-naive.impl_self_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 8 2
+C2.s1-naive.impl_self_8_2_bag.t16 250 3600 needok:C2.s1-naive.impl_self_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 8 2
+C3E.s1-naive.impl_self_8_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_self_8_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 8 2
+C3J.s1-naive.impl_self_8_2_bag 16 600 needok:C3E.s1-naive.impl_self_8_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_8_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_8_2_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_9_1_bag.t16 250 3600 needok:C3E.s1-naive.spec_naive_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 9 1
+C1.s1-naive.impl_naive_9_1_bag.t16 250 3600 needok:C1.s1-naive.impl_naive_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 9 1
+C2.s1-naive.impl_naive_9_1_bag.t16 250 3600 needok:C2.s1-naive.impl_naive_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 9 1
+C3E.s1-naive.impl_naive_9_1_bag.t16 250 3600 needok:C3E.s1-naive.impl_naive_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 9 1
+C3J.s1-naive.impl_naive_9_1_bag 16 600 needok:C3E.s1-naive.impl_naive_9_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_9_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_9_1_bag.t16/export.jsonl
+C1.s1-naive.impl_self_9_1_bag.t16 250 3600 needok:C1.s1-naive.impl_self_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 9 1
+C2.s1-naive.impl_self_9_1_bag.t16 250 3600 needok:C2.s1-naive.impl_self_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 9 1
+C3E.s1-naive.impl_self_9_1_bag.t16 250 3600 needok:C3E.s1-naive.impl_self_8_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 9 1
+C3J.s1-naive.impl_self_9_1_bag 16 600 needok:C3E.s1-naive.impl_self_9_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_9_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_9_1_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_9_2_bag.t16 250 3600 needok:C3E.s1-naive.spec_naive_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 9 2
+C1.s1-naive.impl_naive_9_2_bag.t16 250 3600 needok:C1.s1-naive.impl_naive_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 9 2
+C2.s1-naive.impl_naive_9_2_bag.t16 250 3600 needok:C2.s1-naive.impl_naive_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 9 2
+C3E.s1-naive.impl_naive_9_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_naive_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 9 2
+C3J.s1-naive.impl_naive_9_2_bag 16 600 needok:C3E.s1-naive.impl_naive_9_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_9_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_9_2_bag.t16/export.jsonl
+C1.s1-naive.impl_self_9_2_bag.t16 250 3600 needok:C1.s1-naive.impl_self_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 9 2
+C2.s1-naive.impl_self_9_2_bag.t16 250 3600 needok:C2.s1-naive.impl_self_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 9 2
+C3E.s1-naive.impl_self_9_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_self_9_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 9 2
+C3J.s1-naive.impl_self_9_2_bag 16 600 needok:C3E.s1-naive.impl_self_9_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_9_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_9_2_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_10_1_bag.t16 250 3600 needok:C3E.s1-naive.spec_naive_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 10 1
+C1.s1-naive.impl_naive_10_1_bag.t16 250 3600 needok:C1.s1-naive.impl_naive_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 10 1
+C2.s1-naive.impl_naive_10_1_bag.t16 250 3600 needok:C2.s1-naive.impl_naive_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 10 1
+C3E.s1-naive.impl_naive_10_1_bag.t16 250 3600 needok:C3E.s1-naive.impl_naive_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 10 1
+C3J.s1-naive.impl_naive_10_1_bag 16 600 needok:C3E.s1-naive.impl_naive_10_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_10_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_10_1_bag.t16/export.jsonl
+C1.s1-naive.impl_self_10_1_bag.t16 250 3600 needok:C1.s1-naive.impl_self_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 10 1
+C2.s1-naive.impl_self_10_1_bag.t16 250 3600 needok:C2.s1-naive.impl_self_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 10 1
+C3E.s1-naive.impl_self_10_1_bag.t16 250 3600 needok:C3E.s1-naive.impl_self_9_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 10 1
+C3J.s1-naive.impl_self_10_1_bag 16 600 needok:C3E.s1-naive.impl_self_10_1_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_10_1_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_10_1_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_10_2_bag.t16 250 3600 needok:C3E.s1-naive.spec_naive_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 10 2
+C1.s1-naive.impl_naive_10_2_bag.t16 250 3600 needok:C1.s1-naive.impl_naive_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 10 2
+C2.s1-naive.impl_naive_10_2_bag.t16 250 3600 needok:C2.s1-naive.impl_naive_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 10 2
+C3E.s1-naive.impl_naive_10_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_naive_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 10 2
+C3J.s1-naive.impl_naive_10_2_bag 16 600 needok:C3E.s1-naive.impl_naive_10_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_10_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_10_2_bag.t16/export.jsonl
+C1.s1-naive.impl_self_10_2_bag.t16 250 3600 needok:C1.s1-naive.impl_self_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 10 2
+C2.s1-naive.impl_self_10_2_bag.t16 250 3600 needok:C2.s1-naive.impl_self_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- self 10 2
+C3E.s1-naive.impl_self_10_2_bag.t16 250 3600 needok:C3E.s1-naive.impl_self_10_1_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- self 10 2
+C3J.s1-naive.impl_self_10_2_bag 16 600 needok:C3E.s1-naive.impl_self_10_2_bag.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s1-naive.spec_naive_10_2_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_self_10_2_bag.t16/export.jsonl
+C3E.s6-width.spec_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s6-width export spec --out export.jsonl --threads 16 --model fifo -- 4096
+C1.s6-width.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateful --threads 16 --model fifo -- 4096
+C2.s6-width.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateless --threads 16 --model fifo -- 4096
+C3E.s6-width.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s6-width export impl --out export.jsonl --threads 16 --model fifo -- 4096
+C3J.s6-width.impl_4096_fifo 16 600 needok:C3E.s6-width.impl_4096_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s6-width.spec_4096_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s6-width.impl_4096_fifo.t16/export.jsonl
+C3E.s6-width.spec_8192_fifo.t16 250 3600 needok:C3E.s6-width.spec_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export spec --out export.jsonl --threads 16 --model fifo -- 8192
+C1.s6-width.impl_8192_fifo.t16 250 3600 needok:C1.s6-width.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateful --threads 16 --model fifo -- 8192
+C2.s6-width.impl_8192_fifo.t16 250 3600 needok:C2.s6-width.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateless --threads 16 --model fifo -- 8192
+C3E.s6-width.impl_8192_fifo.t16 250 3600 needok:C3E.s6-width.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export impl --out export.jsonl --threads 16 --model fifo -- 8192
+C3J.s6-width.impl_8192_fifo 16 600 needok:C3E.s6-width.impl_8192_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s6-width.spec_8192_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s6-width.impl_8192_fifo.t16/export.jsonl
+C3E.s6-width.spec_16384_fifo.t16 250 3600 needok:C3E.s6-width.spec_8192_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export spec --out export.jsonl --threads 16 --model fifo -- 16384
+C1.s6-width.impl_16384_fifo.t16 250 3600 needok:C1.s6-width.impl_8192_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateful --threads 16 --model fifo -- 16384
+C2.s6-width.impl_16384_fifo.t16 250 3600 needok:C2.s6-width.impl_8192_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateless --threads 16 --model fifo -- 16384
+C3E.s6-width.impl_16384_fifo.t16 250 3600 needok:C3E.s6-width.impl_8192_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export impl --out export.jsonl --threads 16 --model fifo -- 16384
+C3J.s6-width.impl_16384_fifo 16 600 needok:C3E.s6-width.impl_16384_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s6-width.spec_16384_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s6-width.impl_16384_fifo.t16/export.jsonl
+C3E.s6-width.spec_32768_fifo.t16 250 3600 needok:C3E.s6-width.spec_16384_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export spec --out export.jsonl --threads 16 --model fifo -- 32768
+C1.s6-width.impl_32768_fifo.t16 250 3600 needok:C1.s6-width.impl_16384_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateful --threads 16 --model fifo -- 32768
+C2.s6-width.impl_32768_fifo.t16 250 3600 needok:C2.s6-width.impl_16384_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateless --threads 16 --model fifo -- 32768
+C3E.s6-width.impl_32768_fifo.t16 250 3600 needok:C3E.s6-width.impl_16384_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export impl --out export.jsonl --threads 16 --model fifo -- 32768
+C3J.s6-width.impl_32768_fifo 16 600 needok:C3E.s6-width.impl_32768_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s6-width.spec_32768_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s6-width.impl_32768_fifo.t16/export.jsonl
+C3E.s6-width.spec_65536_fifo.t16 250 3600 needok:C3E.s6-width.spec_32768_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export spec --out export.jsonl --threads 16 --model fifo -- 65536
+C1.s6-width.impl_65536_fifo.t16 250 3600 needok:C1.s6-width.impl_32768_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateful --threads 16 --model fifo -- 65536
+C2.s6-width.impl_65536_fifo.t16 250 3600 needok:C2.s6-width.impl_32768_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width conf --engine stateless --threads 16 --model fifo -- 65536
+C3E.s6-width.impl_65536_fifo.t16 250 3600 needok:C3E.s6-width.impl_32768_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s6-width export impl --out export.jsonl --threads 16 --model fifo -- 65536
+C3J.s6-width.impl_65536_fifo 16 600 needok:C3E.s6-width.impl_65536_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s6-width.spec_65536_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s6-width.impl_65536_fifo.t16/export.jsonl
+C3E.s4-chain.spec_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo -- 4096
+C1.s4-chain.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo -- 4096
+C2.s4-chain.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo -- 4096
+C3E.s4-chain.impl_4096_fifo.t16 250 3600 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo -- 4096
+C3J.s4-chain.impl_4096_fifo 16 600 needok:C3E.s4-chain.impl_4096_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s4-chain.spec_4096_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_4096_fifo.t16/export.jsonl
+C3E.s4-chain.spec_8192_fifo.t16 250 3600 needok:C3E.s4-chain.spec_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo -- 8192
+C1.s4-chain.impl_8192_fifo.t16 250 3600 needok:C1.s4-chain.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo -- 8192
+C2.s4-chain.impl_8192_fifo.t16 250 3600 needok:C2.s4-chain.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo -- 8192
+C3E.s4-chain.impl_8192_fifo.t16 250 3600 needok:C3E.s4-chain.impl_4096_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo -- 8192
+C3J.s4-chain.impl_8192_fifo 16 600 needok:C3E.s4-chain.impl_8192_fifo.t16 "$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/C3E.s4-chain.spec_8192_fifo.t16/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_8192_fifo.t16/export.jsonl
