@@ -13,5 +13,12 @@ while :; do
   "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
   "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full >> "$PL/tex/tables/REFRESH.log" 2>&1
   (cd "$PL" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && echo "$(date -Is) tables refreshed, pdf built" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
+  # the dropped-benchmarks review document (owner, 2026-11-02 21:25): same records, the kept families of dropped.keep
+  DT="$PL/../plan/dropped-tables"
+  if [ -f "$DT/dropped.keep" ]; then
+    "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --keep "$DT/dropped.keep" --out "$DT/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
+    "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full --keep "$DT/dropped.keep" --out "$DT/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
+    (cd "$DT" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && latexmk -c >/dev/null 2>&1 && echo "$(date -Is) dropped tables refreshed" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) DROPPED LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
+  fi
   sleep "$IV"
 done
