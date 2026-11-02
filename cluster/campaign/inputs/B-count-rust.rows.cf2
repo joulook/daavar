@@ -16,3 +16,13 @@ BR.count.flexible-paxos.spec_4_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flex
 BR.count.flexible-paxos.impl_4_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count impl --model bag --seed 0 -- 4 2
 BR.count.flexible-paxos.spec_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count spec --model bag --seed 0 -- 5 2
 BR.count.flexible-paxos.impl_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count impl --model bag --seed 0 -- 5 2
+BR.count.ricart-agrawala.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ricart-agrawala count spec --model bag --seed 0 -- 3
+BR.count.ricart-agrawala.impl_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ricart-agrawala count impl --model bag --seed 0 -- 3
+BR.count.ricart-agrawala.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ricart-agrawala count spec --model bag --seed 0 -- 4
+BR.count.ricart-agrawala.impl_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ricart-agrawala count impl --model bag --seed 0 -- 4
+BR.count.vrr.spec_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh vrr count spec --model bag --seed 0 -- 3 2
+BR.count.vrr.impl_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh vrr count impl --model bag --seed 0 -- 3 2
+BR.count.vrr.spec_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh vrr count spec --model bag --seed 0 -- 3 3
+BR.count.vrr.impl_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh vrr count impl --model bag --seed 0 -- 3 3
+BR.count.ben-or.spec_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ben-or count spec --model bag --seed 0 -- 3
+BR.count.ben-or.impl_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ben-or count impl --model bag --seed 0 -- 3

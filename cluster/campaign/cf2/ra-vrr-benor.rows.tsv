@@ -1,0 +1,61 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.ricart-agrawala.spec_3_bag.t16	C	ricart-agrawala	3	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala		
+C3E.ricart-agrawala.spec_4_bag.t16	C	ricart-agrawala	4	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala		
+C3E.ricart-agrawala.impl_3_bag.t16	C	ricart-agrawala	3	bag	impl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala		
+C3E.ricart-agrawala.impl_4_bag.t16	C	ricart-agrawala	4	bag	impl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala		
+XCE.ricart-agrawala.impl_3_bag.w16	X	ricart-agrawala	3	bag	impl	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	ricart-agrawala		
+XCE.ricart-agrawala.impl_4_bag.w16	X	ricart-agrawala	4	bag	impl	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	ricart-agrawala		
+C1.ricart-agrawala.impl_3_bag.t16	C	ricart-agrawala	3	bag	impl	stateful-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ricart-agrawala	ricart-agrawala.spec_3_bag	ricart-agrawala.impl_3_bag
+C1.ricart-agrawala.impl_4_bag.t16	C	ricart-agrawala	4	bag	impl	stateful-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ricart-agrawala	ricart-agrawala.spec_4_bag	ricart-agrawala.impl_4_bag
+C2.ricart-agrawala.impl_3_bag.t16	C	ricart-agrawala	3	bag	impl	stateless-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ricart-agrawala	ricart-agrawala.spec_3_bag	ricart-agrawala.impl_3_bag
+C2.ricart-agrawala.impl_4_bag.t16	C	ricart-agrawala	4	bag	impl	stateless-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ricart-agrawala	ricart-agrawala.spec_4_bag	ricart-agrawala.impl_4_bag
+C3J.ricart-agrawala.impl_3_bag	C	ricart-agrawala	3	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala	ricart-agrawala.spec_3_bag	ricart-agrawala.impl_3_bag
+C3J.ricart-agrawala.impl_4_bag	C	ricart-agrawala	4	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	ricart-agrawala	ricart-agrawala.spec_4_bag	ricart-agrawala.impl_4_bag
+XC1.ricart-agrawala.impl_3_bag.jimpl-tfimpl	X	ricart-agrawala	3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	ricart-agrawala	ricart-agrawala.impl_3_bag	ricart-agrawala.impl_3_bag
+XC2.ricart-agrawala.impl_3_bag.tfimpl-jimpl	X	ricart-agrawala	3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	ricart-agrawala	ricart-agrawala.impl_3_bag	ricart-agrawala.impl_3_bag
+XC1.ricart-agrawala.impl_4_bag.jimpl-tfimpl	X	ricart-agrawala	4	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	ricart-agrawala	ricart-agrawala.impl_4_bag	ricart-agrawala.impl_4_bag
+XC2.ricart-agrawala.impl_4_bag.tfimpl-jimpl	X	ricart-agrawala	4	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	ricart-agrawala	ricart-agrawala.impl_4_bag	ricart-agrawala.impl_4_bag
+XCON1.ricart-agrawala.impl_3_bag.w16	X	ricart-agrawala	3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	traceforge	jmc	rust	java	online	full	ricart-agrawala	ricart-agrawala.impl_3_bag	ricart-agrawala.impl_3_bag
+XCON2.ricart-agrawala.impl_3_bag.t16	X	ricart-agrawala	3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	jmc	traceforge	java	rust	online	full	ricart-agrawala	ricart-agrawala.impl_3_bag	ricart-agrawala.impl_3_bag
+XCON1.ricart-agrawala.impl_4_bag.w16	X	ricart-agrawala	4	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	traceforge	jmc	rust	java	online	full	ricart-agrawala	ricart-agrawala.impl_4_bag	ricart-agrawala.impl_4_bag
+XCON2.ricart-agrawala.impl_4_bag.t16	X	ricart-agrawala	4	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	jmc	traceforge	java	rust	online	full	ricart-agrawala	ricart-agrawala.impl_4_bag	ricart-agrawala.impl_4_bag
+XJ1.ricart-agrawala.impl_3_bag.tfspec-jmcimpl	X	ricart-agrawala	3	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	ricart-agrawala	ricart-agrawala.spec_3_bag	ricart-agrawala.impl_3_bag
+XON1.ricart-agrawala.impl_3_bag.w16	X	ricart-agrawala	3	bag	impl	stateful-online	16	readme		c4h	cross-language	traceforge	jmc	rust	java	online	full	ricart-agrawala	ricart-agrawala.spec_3_bag	ricart-agrawala.impl_3_bag
+XJ1.ricart-agrawala.impl_4_bag.tfspec-jmcimpl	X	ricart-agrawala	4	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	ricart-agrawala	ricart-agrawala.spec_4_bag	ricart-agrawala.impl_4_bag
+XON1.ricart-agrawala.impl_4_bag.w16	X	ricart-agrawala	4	bag	impl	stateful-online	16	readme		c4h	cross-language	traceforge	jmc	rust	java	online	full	ricart-agrawala	ricart-agrawala.spec_4_bag	ricart-agrawala.impl_4_bag
+C3E.vrr.spec_3_2_bag.t16	C	vrr	3,2	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	vrr		
+C3E.vrr.spec_3_3_bag.t16	C	vrr	3,3	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	vrr		
+C3E.vrr.impl_3_2_bag.t16	C	vrr	3,2	bag	impl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	vrr		
+C3E.vrr.impl_3_3_bag.t16	C	vrr	3,3	bag	impl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	vrr		
+XCE.vrr.impl_3_2_bag.w16	X	vrr	3,2	bag	impl	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	vrr		
+XCE.vrr.impl_3_3_bag.w16	X	vrr	3,3	bag	impl	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	vrr		
+C1.vrr.impl_3_2_bag.t16	C	vrr	3,2	bag	impl	stateful-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	vrr	vrr.spec_3_2_bag	vrr.impl_3_2_bag
+C1.vrr.impl_3_3_bag.t16	C	vrr	3,3	bag	impl	stateful-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	vrr	vrr.spec_3_3_bag	vrr.impl_3_3_bag
+C2.vrr.impl_3_2_bag.t16	C	vrr	3,2	bag	impl	stateless-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	vrr	vrr.spec_3_2_bag	vrr.impl_3_2_bag
+C2.vrr.impl_3_3_bag.t16	C	vrr	3,3	bag	impl	stateless-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	vrr	vrr.spec_3_3_bag	vrr.impl_3_3_bag
+C3J.vrr.impl_3_2_bag	C	vrr	3,2	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	vrr	vrr.spec_3_2_bag	vrr.impl_3_2_bag
+C3J.vrr.impl_3_3_bag	C	vrr	3,3	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	vrr	vrr.spec_3_3_bag	vrr.impl_3_3_bag
+XC1.vrr.impl_3_2_bag.jimpl-tfimpl	X	vrr	3,2	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	vrr	vrr.impl_3_2_bag	vrr.impl_3_2_bag
+XC2.vrr.impl_3_2_bag.tfimpl-jimpl	X	vrr	3,2	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	vrr	vrr.impl_3_2_bag	vrr.impl_3_2_bag
+XC1.vrr.impl_3_3_bag.jimpl-tfimpl	X	vrr	3,3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	vrr	vrr.impl_3_3_bag	vrr.impl_3_3_bag
+XC2.vrr.impl_3_3_bag.tfimpl-jimpl	X	vrr	3,3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	vrr	vrr.impl_3_3_bag	vrr.impl_3_3_bag
+XCON1.vrr.impl_3_2_bag.w16	X	vrr	3,2	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	traceforge	jmc	rust	java	online	full	vrr	vrr.impl_3_2_bag	vrr.impl_3_2_bag
+XCON2.vrr.impl_3_2_bag.t16	X	vrr	3,2	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	jmc	traceforge	java	rust	online	full	vrr	vrr.impl_3_2_bag	vrr.impl_3_2_bag
+XCON1.vrr.impl_3_3_bag.w16	X	vrr	3,3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	traceforge	jmc	rust	java	online	full	vrr	vrr.impl_3_3_bag	vrr.impl_3_3_bag
+XCON2.vrr.impl_3_3_bag.t16	X	vrr	3,3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	jmc	traceforge	java	rust	online	full	vrr	vrr.impl_3_3_bag	vrr.impl_3_3_bag
+XJ1.vrr.impl_3_2_bag.tfspec-jmcimpl	X	vrr	3,2	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	vrr	vrr.spec_3_2_bag	vrr.impl_3_2_bag
+XON1.vrr.impl_3_2_bag.w16	X	vrr	3,2	bag	impl	stateful-online	16	readme		c4h	cross-language	traceforge	jmc	rust	java	online	full	vrr	vrr.spec_3_2_bag	vrr.impl_3_2_bag
+XJ1.vrr.impl_3_3_bag.tfspec-jmcimpl	X	vrr	3,3	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	vrr	vrr.spec_3_3_bag	vrr.impl_3_3_bag
+XON1.vrr.impl_3_3_bag.w16	X	vrr	3,3	bag	impl	stateful-online	16	readme		c4h	cross-language	traceforge	jmc	rust	java	online	full	vrr	vrr.spec_3_3_bag	vrr.impl_3_3_bag
+C3E.ben-or.spec_3_bag.t16	C	ben-or	3	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ben-or		
+C3E.ben-or.impl_3_bag.t16	C	ben-or	3	bag	impl	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	ben-or		
+XCE.ben-or.impl_3_bag.w16	X	ben-or	3	bag	impl	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	ben-or		
+C1.ben-or.impl_3_bag.t16	C	ben-or	3	bag	impl	stateful-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ben-or	ben-or.spec_3_bag	ben-or.impl_3_bag
+C2.ben-or.impl_3_bag.t16	C	ben-or	3	bag	impl	stateless-parallel	16	readme		c1h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ben-or	ben-or.spec_3_bag	ben-or.impl_3_bag
+C3J.ben-or.impl_3_bag	C	ben-or	3	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	ben-or	ben-or.spec_3_bag	ben-or.impl_3_bag
+XC1.ben-or.impl_3_bag.jimpl-tfimpl	X	ben-or	3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	ben-or	ben-or.impl_3_bag	ben-or.impl_3_bag
+XC2.ben-or.impl_3_bag.tfimpl-jimpl	X	ben-or	3	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	ben-or	ben-or.impl_3_bag	ben-or.impl_3_bag
+XCON1.ben-or.impl_3_bag.w16	X	ben-or	3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	traceforge	jmc	rust	java	online	full	ben-or	ben-or.impl_3_bag	ben-or.impl_3_bag
+XCON2.ben-or.impl_3_bag.t16	X	ben-or	3	bag	impl	stateful-online	16	twin	twin-spec=impl	c1h	twin-cf	jmc	traceforge	java	rust	online	full	ben-or	ben-or.impl_3_bag	ben-or.impl_3_bag
+XJ1.ben-or.impl_3_bag.tfspec-jmcimpl	X	ben-or	3	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	ben-or	ben-or.spec_3_bag	ben-or.impl_3_bag
+XON1.ben-or.impl_3_bag.w16	X	ben-or	3	bag	impl	stateful-online	16	readme		c4h	cross-language	traceforge	jmc	rust	java	online	full	ben-or	ben-or.spec_3_bag	ben-or.impl_3_bag
