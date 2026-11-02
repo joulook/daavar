@@ -4,6 +4,8 @@
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
 d=$(readlink -f "$1"); id=$(basename "$d"); node=$(hostname); : "${PUBLISH_PUSH:=1}"
+# the results file is the row's own pin (status pin=), not the checkout's: a re-record after a pin move stays in its file
+_rp=$(sed -n 's/^pin=//p' "$d/status" 2>/dev/null | head -1); [ -n "$_rp" ] && TF_PIN="$_rp"
 pin=$(sed -n 's/^pin=//p' "$d/status" | head -1); pin=${pin:-a3a7e1b}   # the pin the row ran on (rows launched before the field existed: a3a7e1b)
 TF_PIN=$pin
 [ -d "$BRAIN_DATA/.git" ] || { echo "no brain-data clone at $BRAIN_DATA"; exit 1; }
