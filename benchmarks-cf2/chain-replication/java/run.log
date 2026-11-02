@@ -1,0 +1,43 @@
+2026-11-02T17:07:40.760945376Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.chainrep.ChainRep
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+2026-11-02 18:07:40,783 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-02 18:07:40,797 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-02 18:07:40,797 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-02 18:07:40,874 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-02 18:07:41,015 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 18 iterations
+2026-11-02 18:07:41,015 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 18 completed iterations
+2026-11-02 18:07:41,015 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-02 18:07:41,015 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-02 18:07:41,015 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        18 iterations
+blocked:    0 (counted by the strategy)
+completed:  18
+rate:       75.2 iterations/s
+elapsed:    0.239 s
+observed:   ChainRep(impl,3,2,fifo)
+graphs:     18 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 525
+explore_ms: 239
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 18
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 18
+stop_reason: exhausted
+peak_rss_kb: 136208
+max_message_events: 32
+max_porf_pairs: 0
+max_graph_events: 32
+mean_graph_events: 32.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0

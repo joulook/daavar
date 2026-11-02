@@ -1,0 +1,43 @@
+2026-11-02T17:07:58.700594030Z main ERROR Console contains an invalid element or attribute "level"
+program:    bench.hermes.Hermes
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+2026-11-02 18:07:58,716 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-02 18:07:58,723 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-02 18:07:58,723 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-02 18:07:58,787 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-02 18:08:15,343 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4652 iterations
+2026-11-02 18:08:15,344 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4652 completed iterations
+2026-11-02 18:08:15,344 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-02 18:08:15,344 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-02 18:08:15,344 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4652 iterations
+blocked:    0 (counted by the strategy)
+completed:  4652
+rate:       279.7 iterations/s
+elapsed:    16.632 s
+observed:   Hermes(impl, N=3, K=2, bag)
+graphs:     4652 distinct complete, 0 distinct blocked; stack exhausted
+--- measurements
+wall_ms: 16861
+explore_ms: 16632
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4652
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 4652
+stop_reason: exhausted
+peak_rss_kb: 378176
+max_message_events: 40
+max_porf_pairs: 0
+max_graph_events: 40
+mean_graph_events: 40.000
+max_visible_events: 0
+mean_visible_events: 0.000
+max_summary_bytes: 0
+max_porf_count: 0

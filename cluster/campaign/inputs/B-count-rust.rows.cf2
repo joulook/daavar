@@ -4,3 +4,11 @@ BR.count.caspaxos.spec_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos c
 BR.count.caspaxos.impl_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count impl --model bag --seed 0 -- 3 3
 BR.count.caspaxos.spec_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count spec --model bag --seed 0 -- 5 2
 BR.count.caspaxos.impl_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count impl --model bag --seed 0 -- 5 2
+BR.count.chain-replication.spec_3_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh chain-replication count spec --model fifo --seed 0 -- 3 2
+BR.count.hermes.spec_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count spec --model bag --seed 0 -- 3 2
+BR.count.chain-replication.impl_3_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh chain-replication count impl --model fifo --seed 0 -- 3 2
+BR.count.hermes.impl_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count impl --model bag --seed 0 -- 3 2
+BR.count.chain-replication.spec_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh chain-replication count spec --model fifo --seed 0 -- 3 3
+BR.count.hermes.spec_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count spec --model bag --seed 0 -- 3 3
+BR.count.chain-replication.impl_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh chain-replication count impl --model fifo --seed 0 -- 3 3
+BR.count.hermes.impl_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count impl --model bag --seed 0 -- 3 3
