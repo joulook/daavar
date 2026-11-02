@@ -12,7 +12,6 @@ import org.mpi_sws.jmc.mp.summary.Tag;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * MicroRaft (unmodified core, {@code java/vendor}) under JMC's Must API: the Java side of the
@@ -43,7 +42,8 @@ public final class MicroRaft implements MpProgram {
 
     /** spec only, invisible: init -> log (raft-rs {@code NIn::Setup(Setup)}). */
     @Tag("Setup")
-    public record Setup(long me, List<Tid> nodes, Optional<Tid> client) implements MpMessage {}
+    /** invisible; {@code client} is empty or one Tid: JMC's split mode carries List, not Optional, payloads. */
+    public record Setup(long me, List<Tid> nodes, List<Tid> client) implements MpMessage {}
 
     /**
      * impl only, invisible: a proposal forwarded by a follower to the node it believes leader;
@@ -198,7 +198,7 @@ public final class MicroRaft implements MpProgram {
                 clients[i] = Tid.of(th.getTaskId());
             }
             all.add(new MpThread(() -> Channel.send(M, log,
-                    new Setup(0, List.of(clients), Optional.empty())), "init"));
+                    new Setup(0, List.of(clients), List.of())), "init"));
         }
         for (MpThread th : all) {
             th.start();

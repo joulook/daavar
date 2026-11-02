@@ -254,6 +254,9 @@ batch, `n1` applies them one at a time).
 - `java/vendor/`: the MicroRaft core, unmodified, with upstream `LICENSE` and `NOTICE`.
 - `java/harness/io/microraft/impl/MustRaftNodes.java`: the builder replacement (§7.3).
 - `java/shim/org/slf4j/`: a minimal SLF4J API for the core's logging (JMC's classpath has none).
+- `Setup.client` is a `List<Tid>` (empty on the specification side): JMC's split mode carries
+  `List` payloads but refuses `Optional` (the first cluster export of the specification failed on
+  it, 2026-11-02); the field is invisible, so the visible interface is unchanged.
 - `source/PROVENANCE.md`; `out/java/runs.log` (every command and its full output); `out/java/export/`
   (the summary files joined in §7.8).
 - `rust/`: the Rust side (tikv/raft-rs, §1–§6), a different Raft core with the same visible
