@@ -1,0 +1,6 @@
+BR.count.caspaxos.spec_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count spec --model bag --seed 0 -- 3 2
+BR.count.caspaxos.impl_3_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count impl --model bag --seed 0 -- 3 2
+BR.count.caspaxos.spec_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count spec --model bag --seed 0 -- 3 3
+BR.count.caspaxos.impl_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count impl --model bag --seed 0 -- 3 3
+BR.count.caspaxos.spec_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count spec --model bag --seed 0 -- 5 2
+BR.count.caspaxos.impl_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh caspaxos count impl --model bag --seed 0 -- 5 2

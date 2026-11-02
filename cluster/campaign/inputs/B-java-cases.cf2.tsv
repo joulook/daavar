@@ -1,0 +1,3 @@
+caspaxos	impl_3_2_bag	impl	3,2	bag	impl	bench.caspaxos.CasPaxos:impl,3,2,bag	log
+caspaxos	impl_3_3_bag	impl	3,3	bag	impl	bench.caspaxos.CasPaxos:impl,3,3,bag	log
+caspaxos	impl_5_2_bag	impl	5,2	bag	impl	bench.caspaxos.CasPaxos:impl,5,2,bag	log
