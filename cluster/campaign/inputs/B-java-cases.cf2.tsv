@@ -5,3 +5,5 @@ chain-replication	impl_3_2_fifo	impl	3,2	fifo	impl	bench.chainrep.ChainRep:impl,
 hermes	impl_3_2_bag	impl	3,2	bag	impl	bench.hermes.Hermes:impl,3,2,bag	log
 chain-replication	impl_3_3_fifo	impl	3,3	fifo	impl	bench.chainrep.ChainRep:impl,3,3,fifo	log
 hermes	impl_3_3_bag	impl	3,3	bag	impl	bench.hermes.Hermes:impl,3,3,bag	log
+flexible-paxos	impl_4_2_bag	impl	4,2	bag	impl	bench.fpaxos.FPaxos:impl,4,2,bag	log
+flexible-paxos	impl_5_2_bag	impl	5,2	bag	impl	bench.fpaxos.FPaxos:impl,5,2,bag	log

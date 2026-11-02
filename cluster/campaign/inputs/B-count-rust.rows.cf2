@@ -12,3 +12,7 @@ BR.count.chain-replication.spec_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh 
 BR.count.hermes.spec_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count spec --model bag --seed 0 -- 3 3
 BR.count.chain-replication.impl_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh chain-replication count impl --model fifo --seed 0 -- 3 3
 BR.count.hermes.impl_3_3_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh hermes count impl --model bag --seed 0 -- 3 3
+BR.count.flexible-paxos.spec_4_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count spec --model bag --seed 0 -- 4 2
+BR.count.flexible-paxos.impl_4_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count impl --model bag --seed 0 -- 4 2
+BR.count.flexible-paxos.spec_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count spec --model bag --seed 0 -- 5 2
+BR.count.flexible-paxos.impl_5_2_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh flexible-paxos count impl --model bag --seed 0 -- 5 2
