@@ -30,7 +30,9 @@ FAM = {  # family -> (title, [(mode key, csv, column header pair)], primary mode
  "cross-validity": ("Cross-language refinement, specification and implementation in different languages",
                     [("offJR", "campaign-offline-java-spec"), ("offRJ", "campaign-offline-rust-spec"), ("onR", "campaign-online-rust-impl"), ("onJ", "campaign-online-java-impl")], None),
  "cross-twins": ("Cross-language refinement between twin implementations",
-                 [("offJR", "campaign-twin-offline-java-spec"), ("offRJ", "campaign-twin-offline-rust-spec"), ("onJ", "campaign-twin-online-java-impl"), ("onR", "campaign-twin-online-rust-impl")], None)}
+                 [("offJR", "campaign-twin-offline-java-spec"), ("offRJ", "campaign-twin-offline-rust-spec"), ("onJ", "campaign-twin-online-java-impl"), ("onR", "campaign-twin-online-rust-impl")], None),
+ "cross-cftwins": ("Cross-language refinement between a Rust implementation and its context-free Java port",
+                 [("offJR", "campaign-cftwin-offline-java-spec"), ("offRJ", "campaign-cftwin-offline-rust-spec"), ("onJ", "campaign-cftwin-online-java-impl"), ("onR", "campaign-cftwin-online-rust-impl")], None)}
 def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None
@@ -104,6 +106,7 @@ for fam, (title, modes, primary) in FAM.items():
             label = f"tab:{fam}-{g}-{kind}{SUF}"
             if fam == "standalone": engtxt = "Stateless: sweeps kept in the witness cache, $G_{\\mathit{spec}}^{\\mathit{expl}}$ = specification graphs explored in total (repeats counted). Offline: T = the two exports and the join, M = the size of the two summary files kept."
             elif fam == "cross-validity": engtxt = "Offline J$\\to$R: Java specification export, Rust implementation export, join (T = all three, M = the two summary files); R$\\to$J: the reverse. Online R: TraceForge explores the Rust implementation against the Java specification export; online J: JMC explores the Java implementation against the Rust specification export."
+            elif fam == "cross-cftwins": engtxt = "The Rust implementation and a Java port of it written by an agent given only the Rust program and the Java API (no review), checked against each other; the spec subscript names the twin used as the specification when it is another variant. Columns as in the twin table."
             else: engtxt = "The two implementations of one program, one in Java and one in Rust, checked against each other; the spec subscript names the twin used as the specification when it is another variant. Offline J$\\to$R: the Java twin's export as the specification, the Rust twin's export as the implementation (T = the two exports and the join, M = the two summary files); R$\\to$J: the reverse. Online J: JMC explores the Java twin against the Rust twin's export; online R: TraceForge explores the Rust twin against the Java twin's export."
             cap = (f"{title}: the {'violating' if viol else 'conforming'} pairs of {GROUP_TXT[g]}" + (", every size run" if FULL else ", the two largest sizes that finished and the sizes that reached a limit") +
                    ". Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the family's correct program). $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the engines)" +

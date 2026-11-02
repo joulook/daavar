@@ -39,4 +39,16 @@ for b in "$DAAVAR"/benchmarks/*/; do
       && echo "cargo ok: $(basename "$b")" || echo "cargo FAILED: $(basename "$b")"
   fi
 done
+# context-free Java twins (owner's experiment 2026-11-02): compiled into javaout/cf-<dir>
+for b in "$DAAVAR"/benchmarks-cf/*/; do
+  if [ -d "$b/java" ]; then
+    mkdir -p "$EVAL_OUT/javaout/cf-$(basename "$b")"
+    javac -d "$EVAL_OUT/javaout/cf-$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
+      && echo "javac ok: cf-$(basename "$b")" || echo "javac FAILED: cf-$(basename "$b")"
+  fi
+  if [ -f "$b/rust/Cargo.toml" ]; then
+    (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
+      && echo "cargo ok: $(basename "$b")" || echo "cargo FAILED: $(basename "$b")"
+  fi
+done
 echo "== setup done $(date -Is)"

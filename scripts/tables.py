@@ -219,13 +219,17 @@ CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C
         ("XT1", "campaign-twin-offline-java-spec", "Twin implementations, offline: Java implementation as specification, Rust implementation"),
         ("XT2", "campaign-twin-offline-rust-spec", "Twin implementations, offline: Rust implementation as specification, Java implementation"),
         ("XTON1", "campaign-twin-online-java-impl", "Twin implementations, online: Java implementation (JMC) against Rust implementation export"),
-        ("XTON2", "campaign-twin-online-rust-impl", "Twin implementations, online: Rust implementation (TraceForge) against Java implementation export")]
+        ("XTON2", "campaign-twin-online-rust-impl", "Twin implementations, online: Rust implementation (TraceForge) against Java implementation export"),
+        ("XC1", "campaign-cftwin-offline-java-spec", "Context-free twins, offline: Java port as specification, Rust implementation"),
+        ("XC2", "campaign-cftwin-offline-rust-spec", "Context-free twins, offline: Rust implementation as specification, Java port"),
+        ("XCON1", "campaign-cftwin-online-java-impl", "Context-free twins, online: Java port (JMC) against Rust implementation export"),
+        ("XCON2", "campaign-cftwin-online-rust-impl", "Context-free twins, online: Rust implementation (TraceForge) against Java port export")]
 def fnum(x, div=1.0, fmt="{:.0f}"):
     v = num(x); return "--" if v is None else fmt.format(v / div)
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
-    if pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2"):  # an offline row = spec export + impl export + join
+    if pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"):  # an offline row = spec export + impl export + join
         for r in rs:
             ex = re.findall(r'/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))   # the runner stores the expanded paths
             if len(ex) == 2:
@@ -238,7 +242,7 @@ for pre, fname, title in CAMP:
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = sum(parts)
                 r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
-    if pre in ("XON1", "XON2", "XTON1", "XTON2"):  # an online row's specification side is the export it loaded
+    if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = byid.get(ex[0]) if ex else None
@@ -290,7 +294,7 @@ for pre, fname, title in CAMP:
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
-    offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2")
+    offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2")
     # one file, two longtables: the conforming pairs (no verdict, no miss, no uncovered columns) and the violating pairs
     # (first-miss time and uncovered graphs); a row goes by its verdict, a row without one (time tier reached) by its
     # expectation; a verdict against the README is marked *; the clock marks a row that reached its time tier
@@ -320,7 +324,7 @@ for pre, fname, title in CAMP:
     for kind, rows_k in (("conforming", conf_rows), ("violating", viol_rows)):
         viol = kind == "violating"
         def spec_word(a):  # the specification case's variant words: its id after "spec_", without the size numbers, the model and ladder tags
-            if a.get("kind") == "twin": return twin_spec(a) or ""
+            if a.get("kind") in ("twin", "twin-cf"): return twin_spec(a) or ""
             if a.get("family") in ONE_SPEC: return ""
             if not a.get("spec_case"): return ""
             toks = re.sub(r"\.[xgf]\d*$", "", (a.get("spec_case", "") or "").split(".spec_")[-1]).split("_")
@@ -347,7 +351,7 @@ for pre, fname, title in CAMP:
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
-        offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2"); par_tf = pre in ("C1", "C2")
+        offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"); par_tf = pre in ("C1", "C2")
         EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked"]
         cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"] + EXTRA
         w = csv.writer(fh); w.writerow(cols)
