@@ -2,8 +2,7 @@
 """TraceForge standalone conformance table (owner's design, 2026-11-02): one block per instance (program, variant,
 model), one row per size; the implementation's and specification's graph counts; then per mode the measurements:
 stateless (sweeps kept, specification graphs explored in total, time, peak memory), stateful (time, peak memory),
-offline (time of both exports plus the join, memory = the two summary files kept). Conforming pairs and the synthetic
-families only. Reads the campaign CSVs written by tables.py; checks that the graph counts agree across the modes.
+offline (time of both exports plus the join, memory = the two summary files kept). The synthetic families' conforming pairs only. Reads the campaign CSVs written by tables.py; checks that the graph counts agree across the modes.
 usage: standalone-table.py <tables-dir>"""
 import sys, csv, re, collections
 T = sys.argv[1]
@@ -19,7 +18,7 @@ def graphs(r): return r.get("impl graphs") or "", r.get("spec graphs") or ""
 inst = collections.OrderedDict(); notes = []
 for mode, rs in (("stateful", C1), ("stateless", C2), ("offline", C3)):
     for r in rs:
-        conf = (r["expected"] == "conforms" and r["verdict"] in ("conforms", "t/o", "oom")) or (r["program"] in SYN and r["verdict"] in ("conforms", "t/o", "oom"))
+        conf = r["program"] in SYN and r["verdict"] in ("conforms", "t/o", "oom") and r["expected"] != "violation"   # the synthetic families' conforming pairs only
         if not conf: continue
         inst.setdefault(key(r), {})[mode] = r
 def sz(s): return [int(x) for x in re.findall(r"\d+", s)]
@@ -42,7 +41,7 @@ def name(k):
     if spec and spec not in var: sub = (sub + "/" if sub else "") + spec
     return f"\\textsf{{{prog}}}" + (f"$_{{\\mathit{{{sub.replace('_','-')}}}}}^{{\\mathit{{{model}}}}}$" if sub else f"$^{{\\mathit{{{model}}}}}$")
 L = ["\\begin{longtable}{@{}lrrrrrrrrrrr@{}}",
-     "\\caption{TraceForge standalone conformance checking: conforming pairs and the synthetic families. Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$; $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the cache, specification graphs explored in total (repeats counted), time, peak memory. Stateful: time, peak memory. Offline: time of both exports and the join, memory = the size of the two summary files kept. 16 threads; \\faClock\\ = the 1 h tier reached.}\\label{tab:standalone}\\\\",
+     "\\caption{TraceForge standalone conformance checking: the synthetic families' conforming pairs. Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$; $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the cache, specification graphs explored in total (repeats counted), time, peak memory. Stateful: time, peak memory. Offline: time of both exports and the join, memory = the size of the two summary files kept. 16 threads; \\faClock\\ = the 1 h tier reached.}\\label{tab:standalone}\\\\",
      "\\toprule", "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & \\multicolumn{4}{c}{stateless} & \\multicolumn{2}{c}{stateful} & \\multicolumn{2}{c}{offline} \\\\",
      "\\cmidrule(lr){5-8}\\cmidrule(lr){9-10}\\cmidrule(lr){11-12}",
      " & & & & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & s & MB & s & MB & s & MB \\\\", "\\midrule", "\\endfirsthead",
