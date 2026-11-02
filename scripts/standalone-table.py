@@ -38,7 +38,7 @@ def cell(r, col, div=1.0, fmt="{:.1f}"):
     v = num(r.get(col)); return "" if v is None else fmt.format(v / div)
 def name(k):
     prog, var, spec, model, _ = k
-    sub = var if var not in ("", "spec") else ""
+    sub = var if var not in ("", "spec", "impl") else ""
     if spec and spec not in var: sub = (sub + "/" if sub else "") + spec
     return f"\\textsf{{{prog}}}" + (f"$_{{\\mathit{{{sub.replace('_','-')}}}}}^{{\\mathit{{{model}}}}}$" if sub else f"$^{{\\mathit{{{model}}}}}$")
 L = ["\\begin{longtable}{@{}lrrrrrrrrrrr@{}}",
@@ -58,7 +58,7 @@ for k in order:
         if all(x is not None for x in b): off_mb = "{:.1f}".format(sum(b) / 1048576)
     nm = name(k) if k[:4] != prev else ""; prev = k[:4]
     if nm and L[-1] != "\\endhead" and not L[-1].startswith("\\midrule"): L.append("\\midrule")
-    L.append(f"{nm} & {k[4]} & {gi} & {gs} & {(c2 or {}).get('sweeps','') if c2 and c2['verdict']=='conforms' else ''} & {(c2 or {}).get('spec graphs explored','') if c2 and c2['verdict']=='conforms' else ''} & {cell(c2,'wall s')} & {cell(c2,'peak MB','1','{:.0f}')} & {cell(c1,'wall s')} & {cell(c1,'peak MB',1,'{:.0f}')} & {cell(c3,'wall s')} & {off_mb} \\\\")
+    L.append(f"{nm} & {k[4]} & {gi} & {gs} & {(c2 or {}).get('sweeps','') if c2 and c2['verdict']=='conforms' else ''} & {(c2 or {}).get('spec graphs explored','') if c2 and c2['verdict']=='conforms' else ''} & {cell(c2,'wall s')} & {cell(c2,'peak MB',1,'{:.0f}')} & {cell(c1,'wall s')} & {cell(c1,'peak MB',1,'{:.0f}')} & {cell(c3,'wall s')} & {off_mb} \\\\")
     csvrows.append([k[0], k[1], k[2], k[3], k[4], gi, gs, (c2 or {}).get("sweeps", ""), (c2 or {}).get("spec graphs explored", ""), (c2 or {}).get("wall s", "") if c2 else "", (c2 or {}).get("peak MB", "") if c2 else "", (c1 or {}).get("wall s", "") if c1 else "", (c1 or {}).get("peak MB", "") if c1 else "", (c3 or {}).get("wall s", "") if c3 else "", off_mb])
 L += ["\\bottomrule", "\\end{longtable}"]
 open(f"{T}/standalone-conformance.tex", "w").write("\n".join(L) + "\n")
