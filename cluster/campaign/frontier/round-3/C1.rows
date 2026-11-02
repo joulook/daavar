@@ -1,0 +1,9 @@
+C1.election.impl_ring_split_11_fifo.f3.t16 250 3600 needok:C1.election.impl_ring_split_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring split 11
+C1.ironlock.impl_20_correct_bag.f3.t16 250 3600 needok:C1.ironlock.impl_10_correct_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 correct
+C1.ironlock.impl_20_correct_fifo.f3.t16 250 3600 needok:C1.ironlock.impl_10_correct_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 correct
+C1.ironlock.impl_20_double-hold_bag.f3.t16 250 3600 needok:C1.ironlock.impl_10_double-hold_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 double-hold
+C1.ironlock.impl_20_double-hold_fifo.f3.t16 250 3600 needok:C1.ironlock.impl_10_double-hold_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 double-hold
+C1.ironlock.impl_20_grant-without-token_bag.f3.t16 250 3600 needok:C1.ironlock.impl_10_grant-without-token_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 grant-without-token
+C1.ironlock.impl_20_grant-without-token_fifo.f3.t16 250 3600 needok:C1.ironlock.impl_10_grant-without-token_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 grant-without-token
+C1.producer-consumer-civl.impl_20_fifo.f3.t16 250 3600 needok:C1.producer-consumer-civl.impl_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateful --threads 16 --model fifo -- 20
+C1.raft-rs.impl_correct_2_2_1_fifo.f3.t16 250 3600 needok:C1.raft-rs.impl_correct_1_1_1_fifo.t16 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateful --threads 16 --model fifo -- correct 2 2 1
