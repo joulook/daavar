@@ -5,7 +5,11 @@ stateless (sweeps kept, specification graphs explored in total, time, peak memor
 offline (time of both exports plus the join, memory = the two summary files kept). The synthetic families' conforming pairs only. Reads the campaign CSVs written by tables.py; checks that the graph counts agree across the modes.
 usage: standalone-table.py <tables-dir>"""
 import sys, csv, re, collections
-T = sys.argv[1]
+T = sys.argv[1]; PAPER = "--paper" in sys.argv
+import os
+MINSZ = {}
+for _l in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "cluster", "campaign", "inputs", "paper-sizes.tsv")):
+    if not _l.startswith("#") and _l.strip(): _f = _l.rstrip("\n").split("\t"); MINSZ[_f[0]] = [int(x) for x in _f[1].split(",")]
 def load(name):
     return list(csv.DictReader(open(f"{T}/{name}.csv")))
 C1, C2, C3 = load("campaign-stateful"), load("campaign-stateless"), load("campaign-offline-tf")
@@ -23,6 +27,17 @@ for mode, rs in (("stateful", C1), ("stateless", C2), ("offline", C3)):
         inst.setdefault(key(r), {})[mode] = r
 def sz(s): return [int(x) for x in re.findall(r"\d+", s)]
 order = sorted(inst.keys(), key=lambda k: (k[0] not in SYN, k[0], k[1], k[2], k[3], sz(k[4])))
+if PAPER:  # the paper's table: per instance the sizes from the family's threshold, or the two largest finished sizes, and every size that reached the tier
+    keep = []
+    byinst = collections.OrderedDict()
+    for k in order: byinst.setdefault(k[:4], []).append(k)
+    for ik, ks in byinst.items():
+        tout = [k for k in ks if any(r["verdict"] in ("t/o", "oom") for r in inst[k].values())]
+        fin = [k for k in ks if k not in tout]
+        sel = [k for k in fin if sz(k[4]) >= MINSZ[ik[0]]] if ik[0] in MINSZ else []
+        if not sel: sel = fin[-2:]   # no finished size above the family's threshold: the two largest finished sizes
+        keep += [k for k in ks if k in sel or k in tout]
+    order = keep
 # consistency of the graph counts across the modes
 incons = []
 for k in order:
@@ -41,7 +56,7 @@ def name(k):
     if spec and spec not in var: sub = (sub + "/" if sub else "") + spec
     return f"\\textsf{{{prog}}}" + (f"$_{{\\mathit{{{sub.replace('_','-')}}}}}^{{\\mathit{{{model}}}}}$" if sub else f"$^{{\\mathit{{{model}}}}}$")
 L = ["\\begin{longtable}{@{}lrrrrrrrrrrr@{}}",
-     "\\caption{TraceForge standalone conformance checking on the synthetic families' conforming pairs. Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the family's correct program; ctl = the control). $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the witness cache, $G_{\\mathit{spec}}^{\\mathit{expl}}$ = specification graphs explored in total (repeats counted). T = wall time in seconds, M = peak resident memory in MB (offline: the size of the two summary files kept). Every run at 16 threads with a time limit of 3600 s (\\faClock\\ = reached) and a memory limit of 250 GB.}\\label{tab:standalone}\\\\",
+     "\\caption{TraceForge standalone conformance checking on the synthetic families' conforming pairs" + ('' if PAPER else ' (every size run)') + ". Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the family's correct program; ctl = the control). $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (plain Must counts, equal across the modes). Stateless: sweeps kept in the witness cache, $G_{\\mathit{spec}}^{\\mathit{expl}}$ = specification graphs explored in total (repeats counted). T = wall time in seconds, M = peak resident memory in MB (offline: the size of the two summary files kept). Every run at 16 threads with a time limit of 3600 s (\\faClock\\ = reached; a blank cell = not run, because a smaller size had reached the limit) and a memory limit of 250 GB.}\\label{tab:standalone" + ('' if PAPER else '-full') + "}\\\\",
      "\\toprule", "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & \\multicolumn{4}{c}{stateless} & \\multicolumn{2}{c}{stateful} & \\multicolumn{2}{c}{offline} \\\\",
      "\\cmidrule(lr){5-8}\\cmidrule(lr){9-10}\\cmidrule(lr){11-12}",
      " & & & & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", "\\midrule", "\\endfirsthead",
@@ -60,13 +75,13 @@ for k in order:
     L.append(f"{nm} & {k[4]} & {gi} & {gs} & {(c2 or {}).get('sweeps','') if c2 and c2['verdict']=='conforms' else ''} & {(c2 or {}).get('spec graphs explored','') if c2 and c2['verdict']=='conforms' else ''} & {cell(c2,'wall s')} & {cell(c2,'peak MB',1,'{:.0f}')} & {cell(c1,'wall s')} & {cell(c1,'peak MB',1,'{:.0f}')} & {cell(c3,'wall s')} & {off_mb} \\\\")
     csvrows.append([k[0], k[1], k[2], k[3], k[4], gi, gs, (c2 or {}).get("sweeps", ""), (c2 or {}).get("spec graphs explored", ""), (c2 or {}).get("wall s", "") if c2 else "", (c2 or {}).get("peak MB", "") if c2 else "", (c1 or {}).get("wall s", "") if c1 else "", (c1 or {}).get("peak MB", "") if c1 else "", (c3 or {}).get("wall s", "") if c3 else "", off_mb])
 L += ["\\bottomrule", "\\end{longtable}"]
-open(f"{T}/standalone-conformance.tex", "w").write("\n".join(L) + "\n")
-with open(f"{T}/standalone-conformance.csv", "w", newline="") as fh: csv.writer(fh).writerows(csvrows)
+open(f"{T}/standalone-conformance{'' if PAPER else '-full'}.tex", "w").write("\n".join(L) + "\n")
+with open(f"{T}/standalone-conformance{'' if PAPER else '-full'}.csv", "w", newline="") as fh: csv.writer(fh).writerows(csvrows)
 try:
     import openpyxl
     wb = openpyxl.Workbook(); ws = wb.active; ws.title = "standalone"
     for row in csvrows: ws.append([(int(c) if isinstance(c, str) and c.isdigit() else (float(c) if isinstance(c, str) and re.fullmatch(r"-?\d+\.\d+", c) else c)) for c in row])
-    ws.freeze_panes = "A2"; wb.save(f"{T}/standalone-conformance.xlsx")
+    ws.freeze_panes = "A2"; wb.save(f"{T}/standalone-conformance{'' if PAPER else '-full'}.xlsx")
 except ImportError: pass
 print(f"instances {len({k[:4] for k in order})}, rows {len(order)}; graph-count inconsistencies: {len(incons)}")
 for k, what, d in incons[:12]: print("  ", k, what, d)

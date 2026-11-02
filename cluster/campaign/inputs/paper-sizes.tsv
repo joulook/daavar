@@ -1,0 +1,6 @@
+# program	smallest size shown in the paper table (components compared in order); families without a line show their two largest finished sizes and every size that reached the tier
+commit	12,6
+reset	10,1
+share	24,0
+naive	7,1
+chain	32
