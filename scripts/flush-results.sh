@@ -17,7 +17,8 @@ while [ ! -e .stop-flusher ]; do
       git add -A runs/"$node" results/"$node".*tsv >/dev/null 2>&1
       git commit -q -m "$node: $n row dir(s) updated, $(date -Is)" >/dev/null 2>&1 || true
     fi
-    if [ -n "$(git log origin/main..HEAD --oneline 2>/dev/null)" ]; then
+    if [ -e "$BRAIN_DATA/.no-push" ]; then :   # the coordinator's collector (scripts/collect-results.sh) fetches this clone and pushes
+    elif [ -n "$(git log origin/main..HEAD --oneline 2>/dev/null)" ]; then
       # one node pushes at a time (owner, 2026-11-02): a cluster-wide lock in the shared home; a node holds it
       # only for its fetch, rebase and push, so a large push is never rejected by a small one from another node
       (
