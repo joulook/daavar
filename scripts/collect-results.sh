@@ -11,7 +11,7 @@ while true; do
   git pull -q --rebase origin main 2>/dev/null
   for n in "${NODES[@]}"; do
     if timeout 900 git fetch -q "ssh://$n/local/mkhoshechin/eval/brain-data" main 2>/dev/null; then
-      git merge -q --no-edit FETCH_HEAD >/dev/null 2>&1 && echo "$(date '+%m-%d %H:%M') $n: merged $(git log --oneline -1 FETCH_HEAD | cut -c1-60)" || { git merge --abort 2>/dev/null; echo "$(date '+%m-%d %H:%M') $n: merge failed"; }
+      git merge -q --no-edit -X theirs FETCH_HEAD >/dev/null 2>&1 && echo "$(date '+%m-%d %H:%M') $n: merged $(git log --oneline -1 FETCH_HEAD | cut -c1-60)" || { git merge --abort 2>/dev/null; echo "$(date '+%m-%d %H:%M') $n: merge failed"; }
     else echo "$(date '+%m-%d %H:%M') $n: fetch failed (node not reachable)"; fi
   done
   for i in 1 2 3; do timeout 1200 git push -q origin main 2>/dev/null && break; git pull -q --rebase origin main 2>/dev/null; done
