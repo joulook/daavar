@@ -31,6 +31,11 @@ def paper_name(a):  # (program, variant) as the paper names them; unknown direct
         if d == fam and rx.search(var): return prog, (var if lab == "." else lab)
     return fam, var
 UNDECIDABLE = {}   # dir -> set of table prefixes whose rows are not verdicts yet (a twin defect under investigation)
+ONE_SPEC = set()   # directories whose several specification cases are one and the same program (inputs/one-spec.tsv): one spec word, one instance key
+try:
+    for _l in open(DV + "/cluster/campaign/inputs/one-spec.tsv"):
+        if _l.strip() and not _l.startswith("#"): ONE_SPEC.add(_l.split()[0])
+except OSError: pass
 for _l in open(DV + "/cluster/campaign/inputs/undecidable.tsv"):
     if not _l.startswith("#") and _l.strip(): _f = _l.rstrip("\n").split("\t"); UNDECIDABLE[_f[0]] = set(_f[1].split())
 EXPLORATORY = set()
@@ -256,7 +261,7 @@ for pre, fname, title in CAMP:
     rs = [v[1] for v in _by.values()]
     _inst = {}
     for r in rs:
-        _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), (r["a"].get("spec_case", "") or "").split(".spec_")[-1], r["a"].get("size", ""), r["a"].get("model", ""))
+        _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), "" if r["a"].get("family") in ONE_SPEC else (r["a"].get("spec_case", "") or "").split(".spec_")[-1], r["a"].get("size", ""), r["a"].get("model", ""))
         if _k not in _inst or pin_rank(r) >= pin_rank(_inst[_k]): _inst[_k] = r
     if len(_inst) < len(rs): print(f"{pre}: {len(rs) - len(_inst)} older runs of the same instance left out")
     rs = list(_inst.values())
@@ -303,6 +308,7 @@ for pre, fname, title in CAMP:
         viol = kind == "violating"
         def spec_word(a):  # the specification case's variant words: its id after "spec_", without the size numbers, the model and ladder tags
             if a.get("kind") == "twin": return twin_spec(a) or ""
+            if a.get("family") in ONE_SPEC: return ""
             if not a.get("spec_case"): return ""
             toks = re.sub(r"\.[xgf]\d*$", "", (a.get("spec_case", "") or "").split(".spec_")[-1]).split("_")
             return "-".join(t for t in toks if not t.isdigit() and t not in ("fifo", "bag", "p2p", "asyn", "causal", "cd")) or "spec"

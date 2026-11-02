@@ -187,6 +187,10 @@ if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, 
             rec[f"{side}_program"] = mm.group(2); rec.setdefault("sizes", mm.group(3)); rec.setdefault("comm_model", mm.group(4)); rec[f"{side}_enumeration"] = mm.group(5)
     mm = re.search(r"^verdict:\s*(.+)$", out, re.M); rec["verdict"] = mm.group(1).strip() if mm else None
     mm = re.search(r"^uncovered:\s*(\d+)", out, re.M); rec["uncovered_distinct"] = mm.group(1) if mm else None  # conf-join counts distinct lines, not graphs
+    # an older pin's conf-join (2a3f8fd) prints uncovered_distinct in its measurement block and no verdict line: the count decides (owner's F1, 2026-11-02)
+    if not rec.get("verdict") and rec.get("stop_reason") == "ok":
+        mu = re.search(r"^uncovered_distinct:\s*(\d+)", out, re.M)
+        if mu: rec["verdict"] = "violation" if int(mu.group(1)) > 0 else "conforms"; rec.setdefault("uncovered_distinct", mu.group(1))
     mm = re.search(r"refused", out); 
     if mm: rec["verdict"] = "refused"
     rec["join_ms"] = rec.get("wall_ms")
