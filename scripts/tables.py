@@ -168,7 +168,14 @@ for fn in ("expected-verdicts.tsv", "expected-verdicts-literature.tsv"):
     try:
         for r in csv.DictReader(open(DV + "/cluster/campaign/inputs/" + fn), delimiter="\t"): EXP.append(r)
     except OSError: pass
+def twin_spec(a):  # a twin row's specification side is an implementation twin; its variant is in the note (twin-spec=...)
+    m = re.search(r"twin-spec=([A-Za-z0-9-]+)", a.get("note", "") or ""); return m.group(1) if m else None
 def expected_for(a):
+    if a.get("expected_verdict") == "twin":   # twins of one variant: equivalent (conforms); the correct twin as specification: the variant's own verdict against the README specification, if that is a violation
+        ts = twin_spec(a)
+        if ts == a.get("variant"): return "conforms"
+        e = expected_for(dict(a, expected_verdict="readme", spec_case=""))
+        return "violation" if e == "violation" else None
     fam, model, var, size = a.get("family", ""), a.get("model", ""), a.get("variant", ""), a.get("size", "")
     nums = [int(x) for x in re.findall(r"\d+", size)]
     # a join or online row names its specification case: its variant words (e.g. "spec hash a4b 2 2 2" -> a4b)
@@ -198,13 +205,17 @@ CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C
         ("XON1", "campaign-online-java-impl", "Online: Java implementation (JMC) against Rust specification export"),
         ("XON2", "campaign-online-rust-impl", "Online: Rust implementation (TraceForge) against Java specification export"),
         ("XJ1", "campaign-offline-rust-spec", "Offline: Rust specification, Java implementation"),
-        ("XJ2", "campaign-offline-java-spec", "Offline: Java specification, Rust implementation")]
+        ("XJ2", "campaign-offline-java-spec", "Offline: Java specification, Rust implementation"),
+        ("XT1", "campaign-twin-offline-java-spec", "Twin implementations, offline: Java implementation as specification, Rust implementation"),
+        ("XT2", "campaign-twin-offline-rust-spec", "Twin implementations, offline: Rust implementation as specification, Java implementation"),
+        ("XTON1", "campaign-twin-online-java-impl", "Twin implementations, online: Java implementation (JMC) against Rust implementation export"),
+        ("XTON2", "campaign-twin-online-rust-impl", "Twin implementations, online: Rust implementation (TraceForge) against Java implementation export")]
 def fnum(x, div=1.0, fmt="{:.0f}"):
     v = num(x); return "--" if v is None else fmt.format(v / div)
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
-    if pre in ("C3J", "XJ1", "XJ2"):  # an offline row = spec export + impl export + join
+    if pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2"):  # an offline row = spec export + impl export + join
         for r in rs:
             ex = re.findall(r'/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))   # the runner stores the expanded paths
             if len(ex) == 2:
@@ -217,7 +228,7 @@ for pre, fname, title in CAMP:
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = sum(parts)
                 r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
-    if pre in ("XON1", "XON2"):  # an online row's specification side is the export it loaded
+    if pre in ("XON1", "XON2", "XTON1", "XTON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = byid.get(ex[0]) if ex else None
@@ -261,7 +272,7 @@ for pre, fname, title in CAMP:
     rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
-    offline = pre in ("C3J", "XJ1", "XJ2")
+    offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2")
     # one file, two longtables: the conforming pairs (no verdict, no miss, no uncovered columns) and the violating pairs
     # (first-miss time and uncovered graphs); a row goes by its verdict, a row without one (time tier reached) by its
     # expectation; a verdict against the README is marked *; the clock marks a row that reached its time tier
@@ -291,6 +302,7 @@ for pre, fname, title in CAMP:
     for kind, rows_k in (("conforming", conf_rows), ("violating", viol_rows)):
         viol = kind == "violating"
         def spec_word(a):  # the specification case's variant words: its id after "spec_", without the size numbers, the model and ladder tags
+            if a.get("kind") == "twin": return twin_spec(a) or ""
             if not a.get("spec_case"): return ""
             toks = re.sub(r"\.[xgf]\d*$", "", (a.get("spec_case", "") or "").split(".spec_")[-1]).split("_")
             return "-".join(t for t in toks if not t.isdigit() and t not in ("fifo", "bag", "p2p", "asyn", "causal", "cd")) or "spec"
@@ -316,9 +328,9 @@ for pre, fname, title in CAMP:
     open(OUT + f"/{fname}.tex", "w").write("\n".join(L) + "\n")
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
-        offline = pre in ("C3J", "XJ1", "XJ2"); par_tf = pre in ("C1", "C2")
-        cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"]
-        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"] + EXTRA
+        offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2"); par_tf = pre in ("C1", "C2")
+        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked"]
+        cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"] + EXTRA
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
             a = r["a"]; st = r["stop_reason"]

@@ -68,6 +68,6 @@ open(f,"w").write("\n".join(out)+"\n")' "$hdr" "results/$node.$TF_PIN.tsv"
     if grep -q -P "$pat" "$f" 2>/dev/null; then grep -v -P "$pat" "$f" > "$f.tmp" && mv "$f.tmp" "$f"; fi
     printf '%s\n' "$line" >> "$f"
   fi
-  # no git here: flush-results.sh commits and pushes every few minutes (one commit per batch)
+  # no git here: flush-results.sh commits and pushes every 30 min (one commit per batch)
 ) 9>"$BRAIN_DATA/.publish.lock"
 echo "published $id $(date -Is)"
