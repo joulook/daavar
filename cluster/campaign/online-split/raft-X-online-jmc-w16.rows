@@ -1,0 +1,2 @@
+XON1.raft-rs.impl_correct_1_1_1_fifo.w16 250 3600 needok:C3E.raft-rs.spec_correct_1_1_1_fifo.t16 "$DAAVAR"/scripts/jmc-run.sh raft-rs 'bench.microraft.MicroRaft:impl,correct,1,1,1' must 0 1 - 3600 --split 16 --k 1 --spec "$EVAL_OUT"/C3E.raft-rs.spec_correct_1_1_1_fifo.t16/export.jsonl
+XON1.raft-rs.impl_reorder_1_1_1_fifo.w16 250 3600 needok:C3E.raft-rs.spec_correct_1_1_1_fifo.t16 "$DAAVAR"/scripts/jmc-run.sh raft-rs 'bench.microraft.MicroRaft:impl,reorder,1,1,1' must 0 1 - 3600 --split 16 --k 1 --spec "$EVAL_OUT"/C3E.raft-rs.spec_correct_1_1_1_fifo.t16/export.jsonl
