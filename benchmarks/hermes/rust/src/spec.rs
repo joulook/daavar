@@ -49,7 +49,7 @@ pub fn spec(replicas: usize, clients: usize) {
                         value = v;
                         send_msg(to, Rep::WriteAck {});
                     }
-                    Req::Read { .. } => send_msg(to, Rep::QueryReply { value }),
+                    Req::Read { .. } => send_msg(to, Rep::ReadReply { value }),
                 }
             }
             for h in hs {
