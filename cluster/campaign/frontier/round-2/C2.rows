@@ -1,0 +1,7 @@
+C2.ironlock.impl_20_correct_bag.f2.t16 250 3600 needok:C2.ironlock.impl_10_correct_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model bag -- 20 correct
+C2.ironlock.impl_20_correct_fifo.f2.t16 250 3600 needok:C2.ironlock.impl_10_correct_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model fifo -- 20 correct
+C2.ironlock.impl_12_double-hold_bag.f2.t16 250 3600 needok:C2.ironlock.impl_10_double-hold_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model bag -- 12 double-hold
+C2.ironlock.impl_12_double-hold_fifo.f2.t16 250 3600 needok:C2.ironlock.impl_10_double-hold_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model fifo -- 12 double-hold
+C2.ironlock.impl_11_grant-without-token_bag.f2.t16 250 3600 needok:C2.ironlock.impl_10_grant-without-token_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model bag -- 11 grant-without-token
+C2.ironlock.impl_12_grant-without-token_fifo.f2.t16 250 3600 needok:C2.ironlock.impl_10_grant-without-token_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateless --threads 16 --model fifo -- 12 grant-without-token
+C2.producer-consumer-civl.impl_20_fifo.f2.t16 250 3600 needok:C2.producer-consumer-civl.impl_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateless --threads 16 --model fifo -- 20
