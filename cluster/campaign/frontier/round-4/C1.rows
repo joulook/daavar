@@ -1,0 +1,24 @@
+C1.a2-store.impl_misroute_6_6_4_fifo.f4.t16 250 3600 needok:C1.a2-store.impl_misroute_3_3_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- misroute 6 6 4
+C1.a2-store.impl_sh_6_6_4_fifo.f4.t16 250 3600 needok:C1.a2-store.impl_sh_3_3_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- sh 6 6 4
+C1.a3-lock.impl_control-lifo_6_6_fifo.f4.t16 250 3600 needok:C1.a3-lock.impl_control-lifo_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- control-lifo 6 6
+C1.a3-lock.impl_double-grant_4_4_fifo.f4.t16 250 3600 needok:C1.a3-lock.impl_double-grant_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- double-grant 4 4
+C1.a3-lock.impl_fifo_6_6_fifo.f4.t16 250 3600 needok:C1.a3-lock.impl_fifo_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- fifo 6 6
+C1.a3-lock.impl_never-grant_6_6_fifo.f4.t16 250 3600 needok:C1.a3-lock.impl_never-grant_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- never-grant 6 6
+C1.a3-lock.impl_wrong-round_6_6_fifo.f4.t16 250 3600 needok:C1.a3-lock.impl_wrong-round_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- wrong-round 6 6
+C1.election.impl_ring_split_11_fifo.f4.t16 250 3600 needok:C1.election.impl_ring_split_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring split 11
+C1.ironlock.impl_20_correct_bag.f4.t16 250 3600 needok:C1.ironlock.impl_10_correct_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 correct
+C1.ironlock.impl_20_correct_fifo.f4.t16 250 3600 needok:C1.ironlock.impl_10_correct_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 correct
+C1.ironlock.impl_20_double-hold_bag.f4.t16 250 3600 needok:C1.ironlock.impl_10_double-hold_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 double-hold
+C1.ironlock.impl_20_double-hold_fifo.f4.t16 250 3600 needok:C1.ironlock.impl_10_double-hold_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 double-hold
+C1.ironlock.impl_20_grant-without-token_bag.f4.t16 250 3600 needok:C1.ironlock.impl_10_grant-without-token_bag.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model bag -- 20 grant-without-token
+C1.ironlock.impl_20_grant-without-token_fifo.f4.t16 250 3600 needok:C1.ironlock.impl_10_grant-without-token_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh ironlock conf --engine stateful --threads 16 --model fifo -- 20 grant-without-token
+C1.producer-consumer-civl.impl_20_fifo.f4.t16 250 3600 needok:C1.producer-consumer-civl.impl_10_fifo.x6.t16 "$DAAVAR"/scripts/rust-run.sh producer-consumer-civl conf --engine stateful --threads 16 --model fifo -- 20
+C1.raft-rs.impl_correct_2_2_1_fifo.f4.t16 250 3600 needok:C1.raft-rs.impl_correct_1_1_1_fifo.t16 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateful --threads 16 --model fifo -- correct 2 2 1
+C1.s1-naive.impl_naive_14_2_bag.f4.t16 250 3600 needok:C1.s1-naive.impl_naive_7_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 14 2
+C1.s1-naive.impl_self_14_2_bag.f4.t16 250 3600 needok:C1.s1-naive.impl_self_7_2_bag.t16 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- self 14 2
+C1.s2-share.impl_ctl_32_8_fifo.f4.t16 250 3600 needok:C1.s2-share.impl_ctl_16_8_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 32 8
+C1.s2-share.impl_share_25_24_fifo.f4.t16 250 3600 needok:C1.s2-share.impl_share_24_24_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 25 24
+C1.s3-commit.impl_17_0_fifo.f4.t16 250 3600 needok:C1.s3-commit.impl_16_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 17 0
+C1.s5-reset.impl_ctl_20_4_bag.f4.t16 250 3600 needok:C1.s5-reset.impl_ctl_10_4_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- ctl 20 4
+C1.s5-reset.impl_reset_20_4_bag.f4.t16 250 3600 needok:C1.s5-reset.impl_reset_10_4_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- reset 20 4
+C1.s5-reset.impl_twin_20_4_bag.f4.t16 250 3600 needok:C1.s5-reset.impl_twin_10_4_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateful --threads 16 --model bag -- twin 20 4
