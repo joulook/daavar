@@ -6,19 +6,9 @@
 //! their arrival order (the API's blocking receive picks any pending one) and replies at once. The
 //! register spawns the clients so that it knows their ids (the interface's spawn order is for the
 //! implementations; the specification's spawn edges are invisible).
+use super::Msg; // the port's own message type: the in-process check compares typed values
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Req {
-    Cas { expected: i32, value: i32 },
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Rep {
-    Done { value: i32 },
-    Fail {},
-}
 
 pub fn spec(acceptors: usize, clients: usize) {
     let _ = acceptors; // the specification has no acceptors
@@ -33,8 +23,8 @@ pub fn spec(acceptors: usize, clients: usize) {
                 let h = thread::Builder::new()
                     .name(format!("c{i}"))
                     .spawn(move || {
-                        send_msg(me, Req::Cas { expected: idx, value: idx + 1 });
-                        let _r: Rep = recv_msg_block::<Rep>();
+                        send_msg(me, Msg::Cas { expected: idx, value: idx + 1 });
+                        let _r: Msg = recv_msg_block::<Msg>();
                     })
                     .unwrap();
                 ids.push(h.thread().id());
@@ -42,17 +32,17 @@ pub fn spec(acceptors: usize, clients: usize) {
             }
             let mut state: i32 = 0;
             for _ in 0..clients {
-                let Req::Cas { expected, value } = recv_msg_block::<Req>();
+                let Msg::Cas { expected, value } = recv_msg_block::<Msg>() else { unreachable!("a client request") };
                 let from = ids[expected as usize]; // client i asks "if i then i + 1" (INTERFACE.md)
                 let applied = if state == expected { value } else { state };
                 if nondet() {
                     state = applied;
-                    send_msg(from, Rep::Done { value: state });
+                    send_msg(from, Msg::Done { value: state });
                 } else {
                     if nondet() {
                         state = applied;
                     }
-                    send_msg(from, Rep::Fail {});
+                    send_msg(from, Msg::Fail {});
                 }
             }
             for h in hs {

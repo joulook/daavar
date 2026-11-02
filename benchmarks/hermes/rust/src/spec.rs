@@ -2,20 +2,9 @@
 //! linearizable object served by one invisible thread `key` in arrival order. Visible: the clients
 //! `c0..c{K-1}` with the interface's messages (Write/WriteAck, Read/ReadReply). The object
 //! thread spawns the clients so that it knows their ids (spawn edges are invisible).
+use super::Msg; // the port's own message type: the in-process check compares typed values
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Req {
-    Write { from: i32, value: i32 },
-    Read { from: i32 },
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Rep {
-    WriteAck {},
-    ReadReply { value: i32 },
-}
 
 pub fn spec(replicas: usize, clients: usize) {
     let _ = replicas;
@@ -30,10 +19,10 @@ pub fn spec(replicas: usize, clients: usize) {
                 let h = thread::Builder::new()
                     .name(format!("c{i}"))
                     .spawn(move || {
-                        send_msg(me, Req::Write { from: idx, value: idx + 1 });
-                        let _r: Rep = recv_msg_block::<Rep>();
-                        send_msg(me, Req::Read { from: idx });
-                        let _r: Rep = recv_msg_block::<Rep>();
+                        send_msg(me, Msg::Write { from: idx, value: idx + 1 });
+                        let _r: Msg = recv_msg_block::<Msg>();
+                        send_msg(me, Msg::Read { from: idx });
+                        let _r: Msg = recv_msg_block::<Msg>();
                     })
                     .unwrap();
                 ids.push(h.thread().id());
@@ -41,15 +30,16 @@ pub fn spec(replicas: usize, clients: usize) {
             }
             let mut value: i32 = 0;
             for _ in 0..(2 * clients) {
-                let req = recv_msg_block::<Req>();
-                let from = match &req { Req::Write { from, .. } | Req::Read { from } => *from };
+                let req = recv_msg_block::<Msg>();
+                let from = match &req { Msg::Write { from, .. } | Msg::Read { from } => *from, _ => unreachable!("a client request") };
                 let to = ids[from as usize];
                 match req {
-                    Req::Write { value: v, .. } => {
+                    Msg::Write { value: v, .. } => {
                         value = v;
-                        send_msg(to, Rep::WriteAck {});
+                        send_msg(to, Msg::WriteAck {});
                     }
-                    Req::Read { .. } => send_msg(to, Rep::ReadReply { value }),
+                    Msg::Read { .. } => send_msg(to, Msg::ReadReply { value }),
+                    _ => unreachable!("a client request"),
                 }
             }
             for h in hs {

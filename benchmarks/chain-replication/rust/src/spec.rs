@@ -2,20 +2,9 @@
 //! linearizable object served by one invisible thread `obj` in arrival order. Visible: the clients
 //! `c0..c{K-1}` with the interface's messages (Update/UpdateReply, Query/QueryReply). The object
 //! thread spawns the clients so that it knows their ids (spawn edges are invisible).
+use super::Msg; // the port's own message type: the in-process check compares typed values
 use traceforge::thread::{self, ThreadId};
 use traceforge::*;
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Req {
-    Update { from: i32, value: i32 },
-    Query { from: i32 },
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Rep {
-    UpdateReply { value: i32 },
-    QueryReply { value: i32 },
-}
 
 pub fn spec(servers: usize, clients: usize) {
     let _ = servers;
@@ -26,14 +15,14 @@ pub fn spec(servers: usize, clients: usize) {
             let mut hs = Vec::new();
             let mut ids: Vec<ThreadId> = Vec::new();
             for i in 0..clients {
-                let idx = i as i32;
+                let idx = i as u32;
                 let h = thread::Builder::new()
                     .name(format!("c{i}"))
                     .spawn(move || {
-                        send_msg(me, Req::Update { from: idx, value: idx + 1 });
-                        let _r: Rep = recv_msg_block::<Rep>();
-                        send_msg(me, Req::Query { from: idx });
-                        let _r: Rep = recv_msg_block::<Rep>();
+                        send_msg(me, Msg::Update { from: idx, value: idx as i32 + 1 });
+                        let _r: Msg = recv_msg_block::<Msg>();
+                        send_msg(me, Msg::Query { from: idx });
+                        let _r: Msg = recv_msg_block::<Msg>();
                     })
                     .unwrap();
                 ids.push(h.thread().id());
@@ -41,15 +30,16 @@ pub fn spec(servers: usize, clients: usize) {
             }
             let mut value: i32 = 0;
             for _ in 0..(2 * clients) {
-                let req = recv_msg_block::<Req>();
-                let from = match &req { Req::Update { from, .. } | Req::Query { from } => *from };
+                let req = recv_msg_block::<Msg>();
+                let from = match &req { Msg::Update { from, .. } | Msg::Query { from } => *from, _ => unreachable!("a client request") };
                 let to = ids[from as usize];
                 match req {
-                    Req::Update { value: v, .. } => {
+                    Msg::Update { value: v, .. } => {
                         value = v;
-                        send_msg(to, Rep::UpdateReply { value });
+                        send_msg(to, Msg::UpdateReply { value });
                     }
-                    Req::Query { .. } => send_msg(to, Rep::QueryReply { value }),
+                    Msg::Query { .. } => send_msg(to, Msg::QueryReply { value }),
+                    _ => unreachable!("a client request"),
                 }
             }
             for h in hs {
