@@ -13,6 +13,12 @@ Paper mode keeps per instance the two largest sizes the primary engine finished 
 --full keeps every size. Reads the campaign CSVs written by tables.py. usage: paper-tables.py <tables-dir> [--full]"""
 import sys, csv, re, collections, os
 T = sys.argv[1]; FULL = "--full" in sys.argv; SUF = "-full" if FULL else ""
+# --keep <file>: only the listed "program" or "program variant" lines (one per line, # comments); --out <dir>: write there instead of the tables dir
+KEEP = None; OUT = T
+if "--keep" in sys.argv:
+    KEEP = {tuple(l.split()) for l in open(sys.argv[sys.argv.index("--keep") + 1]) if l.strip() and not l.startswith("#")}
+if "--out" in sys.argv: OUT = sys.argv[sys.argv.index("--out") + 1]
+def kept(k): return KEEP is None or (k[0],) in KEEP or (k[0], k[1]) in KEEP
 def load(name):
     try: return list(csv.DictReader(open(f"{T}/{name}.csv")))
     except OSError: return []
@@ -70,7 +76,7 @@ for fam, (title, modes, primary) in FAM.items():
         if len(set(gs.values())) > 1: incons.append((k, "spec", gs))
     for g in ("synthetic", "application", "realsw"):
         for kind in ("conf", "viol"):
-            keys = [k for k, m in inst.items() if group(k[0]) == g and side(m) == ("violation" if kind == "viol" else "conforms")]
+            keys = [k for k, m in inst.items() if kept(k) and group(k[0]) == g and side(m) == ("violation" if kind == "viol" else "conforms")]
             keys.sort(key=lambda k: (k[0], k[1], k[2], k[3], sz(k[4])))
             if not FULL:
                 keep = []; byinst = collections.OrderedDict()
@@ -123,8 +129,8 @@ for fam, (title, modes, primary) in FAM.items():
                 csvrows.append(list(k[:4]) + [k[4], gi, gs] + ([gxv] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
             L += ["\\bottomrule", "\\end{longtable}"]
             fn = f"{fam}-{g}-{kind}{SUF}"
-            open(f"{T}/{fn}.tex", "w").write("\n".join(L) + "\n")
-            with open(f"{T}/{fn}.csv", "w", newline="") as fh: csv.writer(fh).writerows(csvrows)
+            open(f"{OUT}/{fn}.tex", "w").write("\n".join(L) + "\n")
+            with open(f"{OUT}/{fn}.csv", "w", newline="") as fh: csv.writer(fh).writerows(csvrows)
             ws = wb.create_sheet(fn[:31])
             for row in csvrows: ws.append([(int(c) if isinstance(c, str) and c.isdigit() else (float(c) if isinstance(c, str) and re.fullmatch(r"-?\d+\.\d+", c) else c)) for c in row])
             ws.freeze_panes = "A2"
@@ -132,5 +138,5 @@ for fam, (title, modes, primary) in FAM.items():
     if incons:
         print(f"{fam}: {len(incons)} graph-count inconsistencies across the engines:")
         for k, what, d in incons[:20]: print("  ", k, what, d)
-wb.save(f"{T}/paper-tables{SUF}.xlsx")
+wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 print("\n".join(summary))
