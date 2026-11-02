@@ -1,0 +1,17 @@
+C1.replicated-log-esop20.impl_8_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 8 correct
+C1.two-pc-disel.impl_6_bag_skip-ack-loop.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateful --threads 16 --model bag -- 6 skip-ack-loop
+C1.election.impl_ring_conf_12_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 12
+C1.zab-broadcast-remix.impl_6_fifo_issue1-propose-to-ackld.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 6 issue1-propose-to-ackld
+C2.replicated-log-aneris.impl_11_fifo_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateless --threads 16 --model fifo -- 11 correct
+C2.two-pc-abstain-kragl.impl_11_off-by-one_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateless --threads 16 --model bag -- 11 off-by-one
+C2.ring-election-igloo.impl_8_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateless --threads 16 --model bag -- 8 correct
+C2.two-pc-lbinria.impl_9_bag_counting-bug.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateless --threads 16 --model bag -- 9 counting-bug
+C1.reliable-channel-aneris.impl_9_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris conf --engine stateful --threads 16 --model bag -- 9 correct
+C1.replicated-log-esop20.impl_8_early-reply_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 8 early-reply
+C1.two-pc-trillium.impl_11_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 11 correct
+C1.election.impl_ring_split_13_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring split 13
+C1.broadcast-consensus-civl.impl_8_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateful --threads 16 --model bag -- 8 correct
+C2.replicated-log-aneris.impl_12_fifo_asyn-fault.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateless --threads 16 --model fifo -- 12 asyn-fault
+C2.two-pc-disel.impl_7_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateless --threads 16 --model bag -- 7 correct
+C2.ring-election-igloo.impl_9_no-compare_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateless --threads 16 --model bag -- 9 no-compare
+C2.zab-broadcast-remix.impl_7_fifo_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateless --threads 16 --model fifo -- 7 correct

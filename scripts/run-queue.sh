@@ -103,6 +103,8 @@ while [ ${#PENDING[@]} -gt 0 ]; do
   for line in "${PENDING[@]}"; do
     read -r id mem to cmd <<< "$line"
     [ -e "$EVAL_OUT/$id/done" ] && continue
+    # a row another queue on this node is running right now (state=running, live pid): not ours to launch again (filler queues share a rows file, 2026-11-03)
+    if [ -f "$EVAL_OUT/$id/status" ] && grep -q '^state=running' "$EVAL_OUT/$id/status" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$EVAL_OUT/$id/status" | head -1)" 2>/dev/null; then NEXT+=("$line"); continue; fi
     dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
     if [ -n "$dep" ]; then
       if [ ! -e "$EVAL_OUT/$dep/done" ]; then NEXT+=("$line"); continue; fi
