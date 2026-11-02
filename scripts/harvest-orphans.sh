@@ -5,7 +5,7 @@
 . "$(dirname "$0")/env.sh"; S="$(cd "$(dirname "$0")" && pwd)"; O="$1"; n=0; left=0
 for f in "$O"/*/status; do
   d=$(dirname "$f"); id=$(basename "$d")
-  grep -q "^state=running" "$f" || continue; [ -e "$d/done" ] && continue
+  grep -q "^state=running\|^state=paused" "$f" || continue; [ -e "$d/done" ] && continue   # paused = the 09:20 pause's survivors that kept running
   p=$(sed -n 's/^pid=//p' "$f" | head -1); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && { left=$((left+1)); continue; }
   [ -s "$d/time-v.txt" ] || { left=$((left+1)); continue; }   # the row's process is gone but time's report is not there yet
   st=$(sed -n 's/.*Exit status: \([0-9]*\).*/\1/p' "$d/time-v.txt" | tail -1)
@@ -17,7 +17,7 @@ for f in "$O"/*/status; do
   { [ "$st" -ne 0 ] && [ "$st" -ne 1 ] && [ "$reason" = ok ]; } && reason="exit-$st"
   grep -qi "out of memory\|memory allocation of\|Cannot allocate\|OutOfMemoryError" "$d/stderr.log" "$d/stdout.log" 2>/dev/null && reason=memory
   { echo "state=done"; echo "end=$(date -Is -d @$end)"; echo "exit=$st"; echo "reason=$reason"; echo "wall_s=$(( end - ${start:-end} ))"; echo "harvested=orphan $(date -Is)"; } >> "$f"
-  sed -i 's/^state=running/state=finished/' "$f"
+  sed -i 's/^state=running/state=finished/; s/^state=paused/state=finished/' "$f"
   python3 -I "$S/mkrecord.py" "$d" >> "$O/results.tsv" 2>>"$d/mkrecord.err" || echo "mkrecord failed for $id" >&2
   touch "$d/done"; "$S/publish.sh" "$d" >/dev/null 2>&1; n=$((n+1)); echo "harvested $id exit=$st reason=$reason"
 done
