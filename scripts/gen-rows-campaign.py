@@ -16,6 +16,8 @@ ap = argparse.ArgumentParser(); ap.add_argument("rust_rows"); ap.add_argument("j
 ap.add_argument("--threads", type=int, default=16); ap.add_argument("--timeout", type=int, default=3600); ap.add_argument("--mem", type=int, default=250)
 ap.add_argument("--export-threads", type=int, default=0, help="TraceForge export threads (0 = flag not passed; the pin's export is sequential)")
 ap.add_argument("--online-threads", type=int, default=0); ap.add_argument("--jmc-split", type=int, default=16); ap.add_argument("--jmc-online-split", type=int, default=0)
+ap.add_argument("--join-mem", type=int, default=16, help="GB for conf-join rows (the campaign's 16 GB cap hit oom at 2pc-le 9, prodcons 10, nbuyer 8)")
+ap.add_argument("--join-timeout", type=int, default=600, help="seconds for conf-join rows")
 ap.add_argument("--twins", action="store_true", help="Part 3: twin-implementation pairs (owner, 2026-11-02): the Java implementation against the Rust implementation of the same program, same variant (expected conforms, both directions) and the correct twin as specification against each other variant (expected the variant's own verdict); files X-twin-join, X-twin-online")
 ap.add_argument("--grid", type=int, default=0, help="fill the size grid: every combination of each numeric argument from its smallest listed value to its largest listed value + N (ids carry .g); a grid point depends on its neighbour with one coordinate lower, so each axis stops at the first size that does not finish")
 ap.add_argument("--extend", type=int, default=0, help="add N further sizes beyond each ladder's largest listed size (every numeric argument +1 per step); they run only while the previous size finished within its tier")
@@ -150,7 +152,7 @@ for c, prev in ladder(rust, lambda c: (c.dir, c.side, c.model, c.variant)):
 for c, s in pairs:
     rid = f"C3J.{c.dir}.{c.id.split('.',1)[1]}" + (f".vs-{s.variant}" if s.variant not in ("spec", "correct") else "")
     emit("C3-join", rid, f'"$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/{exp_id[s.id]}/export.jsonl "$EVAL_OUT"/{exp_id[c.id]}/export.jsonl',
-         dict(table="C", family=c.dir, size=size_of(c.nums), model=c.model, variant=c.variant, engine="join", threads=1, kind="cross-language", spec_tool="traceforge", impl_tool="traceforge", spec_lang="rust", impl_lang="rust", mode="offline-batch", exploration="full", benchmark=c.dir, spec_case=s.id, impl_case=c.id, tier="c600"), dep=exp_id[c.id], mem=16, to=600)
+         dict(table="C", family=c.dir, size=size_of(c.nums), model=c.model, variant=c.variant, engine="join", threads=1, kind="cross-language", spec_tool="traceforge", impl_tool="traceforge", spec_lang="rust", impl_lang="rust", mode="offline-batch", exploration="full", benchmark=c.dir, spec_case=s.id, impl_case=c.id, tier="c600"), dep=exp_id[c.id], mem=A.join_mem, to=A.join_timeout)
 # Part 2: Java exports for every Java case that has a Rust twin; online and joins per twin pair
 split = f" --split {A.jmc_split} --k 1" if A.jmc_split else ""
 jexp = {}
@@ -171,9 +173,9 @@ for c, s in pairs:
     emit("X-online-tf", f"XON2.{c.dir}.{c.id.split('.',1)[1]}{tag}.t{A.online_threads or 1}", f'"$DAAVAR"/scripts/rust-run.sh {c.dir} online{ot} --model {c.model} --spec "$EVAL_OUT"/{jexp[jkey(js)]}/export.jsonl -- {c.args}',
          dict(common, engine="stateful-online", threads=A.online_threads or 1, kind="cross-language", spec_tool="jmc", impl_tool="traceforge", spec_lang="java", impl_lang="rust", mode="online", tier="c1h"), dep=jexp[jkey(js)])
     emit("X-join", f"XJ1.{c.dir}.{c.id.split('.',1)[1]}{tag}.tfspec-jmcimpl", f'"$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/{exp_id[s.id]}/export.jsonl "$EVAL_OUT"/{jexp[jkey(jc)]}/export.jsonl',
-         dict(common, engine="join", threads=1, kind="cross-language", spec_tool="traceforge", impl_tool="jmc", spec_lang="rust", impl_lang="java", mode="offline-batch", tier="c600"), dep=jexp[jkey(jc)], mem=16, to=600)
+         dict(common, engine="join", threads=1, kind="cross-language", spec_tool="traceforge", impl_tool="jmc", spec_lang="rust", impl_lang="java", mode="offline-batch", tier="c600"), dep=jexp[jkey(jc)], mem=A.join_mem, to=A.join_timeout)
     emit("X-join", f"XJ2.{c.dir}.{c.id.split('.',1)[1]}{tag}.jmcspec-tfimpl", f'"$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/{jexp[jkey(js)]}/export.jsonl "$EVAL_OUT"/{exp_id[c.id]}/export.jsonl',
-         dict(common, engine="join", threads=1, kind="cross-language", spec_tool="jmc", impl_tool="traceforge", spec_lang="java", impl_lang="rust", mode="offline-batch", tier="c600"), dep=exp_id[c.id], mem=16, to=600)
+         dict(common, engine="join", threads=1, kind="cross-language", spec_tool="jmc", impl_tool="traceforge", spec_lang="java", impl_lang="rust", mode="offline-batch", tier="c600"), dep=exp_id[c.id], mem=A.join_mem, to=A.join_timeout)
 # Part 3: twin implementations. Spec side = an implementation case in one language, impl side = an implementation case in the
 # other language. Same variant: XT1 (Java spec side, Rust impl side), XT2 (the reverse), XTON1 (JMC online, Rust impl export as spec),
 # XTON2 (TF online, Java impl export as spec). Correct-vs-variant: the twin named "correct" (or the family's single variant) on the
@@ -193,9 +195,9 @@ if A.twins:
                           exploration="full", benchmark=c.dir, kind="twin", spec_case=sc.id, impl_case=c.id)
             cid = c.id.split('.',1)[1]
             emit("X-twin-join", f"XT1.{c.dir}.{cid}{tag}.jimpl-tfimpl", f'"$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/{jexp[jkey(jsc)]}/export.jsonl "$EVAL_OUT"/{exp_id[c.id]}/export.jsonl',
-                 dict(common, engine="join", threads=1, spec_tool="jmc", impl_tool="traceforge", spec_lang="java", impl_lang="rust", mode="offline-batch", tier="c600"), dep=exp_id[c.id], mem=16, to=600)
+                 dict(common, engine="join", threads=1, spec_tool="jmc", impl_tool="traceforge", spec_lang="java", impl_lang="rust", mode="offline-batch", tier="c600"), dep=exp_id[c.id], mem=A.join_mem, to=A.join_timeout)
             emit("X-twin-join", f"XT2.{c.dir}.{cid}{tag}.tfimpl-jimpl", f'"$DAAVAR"/traceforge/target/release/conf-join "$EVAL_OUT"/{exp_id[sc.id]}/export.jsonl "$EVAL_OUT"/{jexp[jkey(jc)]}/export.jsonl',
-                 dict(common, engine="join", threads=1, spec_tool="traceforge", impl_tool="jmc", spec_lang="rust", impl_lang="java", mode="offline-batch", tier="c600"), dep=jexp[jkey(jc)], mem=16, to=600)
+                 dict(common, engine="join", threads=1, spec_tool="traceforge", impl_tool="jmc", spec_lang="rust", impl_lang="java", mode="offline-batch", tier="c600"), dep=jexp[jkey(jc)], mem=A.join_mem, to=A.join_timeout)
             emit("X-twin-online", f"XTON1.{c.dir}.{jc.cid}{tag}.w{A.jmc_online_split or 1}", f'"$DAAVAR"/scripts/jmc-run.sh {c.dir} \'{jc.cls}\' must 0 1 - {A.timeout}{osplit} --spec "$EVAL_OUT"/{exp_id[sc.id]}/export.jsonl',
                  dict(common, engine="stateful-online", threads=A.jmc_online_split or 1, spec_tool="traceforge", impl_tool="jmc", spec_lang="rust", impl_lang="java", mode="online", tier="c1h"), dep=exp_id[sc.id])
             emit("X-twin-online", f"XTON2.{c.dir}.{cid}{tag}.t{A.online_threads or 1}", f'"$DAAVAR"/scripts/rust-run.sh {c.dir} online{ot} --model {c.model} --spec "$EVAL_OUT"/{jexp[jkey(jsc)]}/export.jsonl -- {c.args}',

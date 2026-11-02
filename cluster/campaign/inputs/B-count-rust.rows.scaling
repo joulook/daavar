@@ -1,0 +1,75 @@
+BR.count.reliable-channel-aneris.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count spec --model bag --seed 0 -- 5
+BR.count.reliable-channel-aneris.spec_6_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count spec --model bag --seed 0 -- 6
+BR.count.reliable-channel-aneris.impl_5_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count impl --model bag --seed 0 -- 5 correct
+BR.count.reliable-channel-aneris.impl_6_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count impl --model bag --seed 0 -- 6 correct
+BR.count.reliable-channel-aneris.impl_5_bag_no-seqno 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count impl --model bag --seed 0 -- 5 no-seqno
+BR.count.reliable-channel-aneris.impl_6_bag_no-seqno 250 3600 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris count impl --model bag --seed 0 -- 6 no-seqno
+BR.count.replicated-log-aneris.spec_8_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count spec --model fifo --seed 0 -- 8
+BR.count.replicated-log-aneris.spec_9_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count spec --model fifo --seed 0 -- 9
+BR.count.replicated-log-aneris.impl_8_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count impl --model fifo --seed 0 -- 8 correct
+BR.count.replicated-log-aneris.impl_9_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count impl --model fifo --seed 0 -- 9 correct
+BR.count.replicated-log-aneris.impl_8_fifo_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count impl --model fifo --seed 0 -- 8 asyn-fault
+BR.count.replicated-log-aneris.impl_9_fifo_asyn-fault 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris count impl --model fifo --seed 0 -- 9 asyn-fault
+BR.count.replicated-log-esop20.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 count spec --model bag --seed 0 -- 5
+BR.count.replicated-log-esop20.spec_6_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 count spec --model bag --seed 0 -- 6
+BR.count.replicated-log-esop20.impl_5_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 count impl --model bag --seed 0 -- 5 correct
+BR.count.replicated-log-esop20.impl_6_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 count impl --model bag --seed 0 -- 6 correct
+BR.count.replicated-log-esop20.impl_5_early-reply_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 count impl --model bag --seed 0 -- 5 early-reply
+BR.count.two-pc-abstain-kragl.spec_8_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count spec --model bag --seed 0 -- 8
+BR.count.two-pc-abstain-kragl.spec_9_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count spec --model bag --seed 0 -- 9
+BR.count.two-pc-abstain-kragl.impl_8_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count impl --model bag --seed 0 -- 8 correct
+BR.count.two-pc-abstain-kragl.impl_9_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count impl --model bag --seed 0 -- 9 correct
+BR.count.two-pc-abstain-kragl.impl_8_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count impl --model bag --seed 0 -- 8 off-by-one
+BR.count.two-pc-abstain-kragl.impl_9_off-by-one_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl count impl --model bag --seed 0 -- 9 off-by-one
+BR.count.two-pc-disel.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel count spec --model bag --seed 0 -- 4
+BR.count.two-pc-disel.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel count impl --model bag --seed 0 -- 4 correct
+BR.count.two-pc-disel.impl_4_bag_skip-ack-loop 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-disel count impl --model bag --seed 0 -- 4 skip-ack-loop
+BR.count.two-pc-trillium.spec_7_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count spec --model bag --seed 0 -- 7
+BR.count.two-pc-trillium.spec_8_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count spec --model bag --seed 0 -- 8
+BR.count.two-pc-trillium.impl_7_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count impl --model bag --seed 0 -- 7 correct
+BR.count.two-pc-trillium.impl_8_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count impl --model bag --seed 0 -- 8 correct
+BR.count.two-pc-trillium.impl_7_bag_ignore-abort-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count impl --model bag --seed 0 -- 7 ignore-abort-vote
+BR.count.two-pc-trillium.impl_8_bag_ignore-abort-vote 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium count impl --model bag --seed 0 -- 8 ignore-abort-vote
+BR.count.ring-election-igloo.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count spec --model bag --seed 0 -- 5
+BR.count.ring-election-igloo.spec_6_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count spec --model bag --seed 0 -- 6
+BR.count.ring-election-igloo.impl_5_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count impl --model bag --seed 0 -- 5 correct
+BR.count.ring-election-igloo.impl_6_correct_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count impl --model bag --seed 0 -- 6 correct
+BR.count.ring-election-igloo.impl_5_no-compare_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count impl --model bag --seed 0 -- 5 no-compare
+BR.count.ring-election-igloo.impl_6_no-compare_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo count impl --model bag --seed 0 -- 6 no-compare
+BR.count.election.spec_ring_conf_9_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count spec --model fifo --seed 13733943097982699720 --threshold 65536 -- ring conf 9
+BR.count.election.spec_ring_conf_10_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count spec --model fifo --seed 13733943097982699720 --threshold 65536 -- ring conf 10
+BR.count.election.impl_ring_conf_9_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count impl --model fifo --seed 8694399807746060002 --threshold 65536 -- ring conf 9
+BR.count.election.impl_ring_conf_10_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count impl --model fifo --seed 8694399807746060002 --threshold 65536 -- ring conf 10
+BR.count.election.impl_ring_split_9_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count impl --model fifo --seed 0 --threshold 65536 -- ring split 9
+BR.count.election.impl_ring_split_10_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh election count impl --model fifo --seed 0 --threshold 65536 -- ring split 10
+BR.count.two-pc-lbinria.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count spec --model bag --seed 0 -- 5
+BR.count.two-pc-lbinria.spec_6_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count spec --model bag --seed 0 -- 6
+BR.count.two-pc-lbinria.spec_7_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count spec --model bag --seed 0 -- 7
+BR.count.two-pc-lbinria.impl_5_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count impl --model bag --seed 0 -- 5 correct
+BR.count.two-pc-lbinria.impl_6_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count impl --model bag --seed 0 -- 6 correct
+BR.count.two-pc-lbinria.impl_6_bag_counting-bug 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count impl --model bag --seed 0 -- 6 counting-bug
+BR.count.two-pc-lbinria.impl_7_bag_counting-bug 250 3600 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria count impl --model bag --seed 0 -- 7 counting-bug
+BR.count.zab-broadcast-remix.spec_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count spec --model fifo --seed 0 -- 3
+BR.count.zab-broadcast-remix.spec_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count spec --model fifo --seed 0 -- 4
+BR.count.zab-broadcast-remix.impl_3_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count impl --model fifo --seed 0 -- 3 correct
+BR.count.zab-broadcast-remix.impl_4_fifo_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count impl --model fifo --seed 0 -- 4 correct
+BR.count.zab-broadcast-remix.impl_3_fifo_issue1-propose-to-ackld 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count impl --model fifo --seed 0 -- 3 issue1-propose-to-ackld
+BR.count.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld 250 3600 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix count impl --model fifo --seed 0 -- 4 issue1-propose-to-ackld
+BR.count.broadcast-consensus-civl.spec_4_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count spec --model bag --seed 0 -- 4
+BR.count.broadcast-consensus-civl.spec_5_bag 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count spec --model bag --seed 0 -- 5
+BR.count.broadcast-consensus-civl.impl_4_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 4 correct
+BR.count.broadcast-consensus-civl.impl_5_bag_correct 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 5 correct
+BR.count.broadcast-consensus-civl.impl_4_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 4 decide-early
+BR.count.broadcast-consensus-civl.impl_5_bag_decide-early 250 3600 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl count impl --model bag --seed 0 -- 5 decide-early
+BR.count.a2-store.spec_pb_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count spec --model fifo --seed 0 -- pb 6 2
+BR.count.a2-store.spec_pb_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count spec --model fifo --seed 0 -- pb 7 2
+BR.count.a2-store.impl_pb_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- pb 6 2
+BR.count.a2-store.impl_pb_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- pb 7 2
+BR.count.a2-store.impl_early-ack_6_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- early-ack 6 2
+BR.count.a2-store.impl_early-ack_7_2_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a2-store count impl --model fifo --seed 0 -- early-ack 7 2
+BR.count.a3-lock.spec_fifo_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count spec --model fifo --seed 0 -- fifo 3 3
+BR.count.a3-lock.spec_fifo_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count spec --model fifo --seed 0 -- fifo 3 4
+BR.count.a3-lock.impl_fifo_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- fifo 3 3
+BR.count.a3-lock.impl_fifo_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- fifo 3 4
+BR.count.a3-lock.impl_double-grant_3_3_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- double-grant 3 3
+BR.count.a3-lock.impl_double-grant_3_4_fifo 250 3600 "$DAAVAR"/scripts/rust-run.sh a3-lock count impl --model fifo --seed 0 -- double-grant 3 4

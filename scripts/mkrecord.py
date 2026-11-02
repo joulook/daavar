@@ -190,7 +190,7 @@ if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, 
     # an older pin's conf-join (2a3f8fd) prints uncovered_distinct in its measurement block and no verdict line: the count decides (owner's F1, 2026-11-02)
     if not rec.get("verdict") and rec.get("stop_reason") == "ok":
         mu = re.search(r"^uncovered_distinct:\s*(\d+)", out, re.M)
-        if mu: rec["verdict"] = "violation" if int(mu.group(1)) > 0 else "conforms"; rec.setdefault("uncovered_distinct", mu.group(1))
+        if mu: rec["verdict"] = "violation" if int(mu.group(1)) > 0 else "conforms"; rec["uncovered_distinct"] = rec.get("uncovered_distinct") or mu.group(1); rec["uncovered_total"] = rec.get("uncovered_total") or mu.group(1)
     mm = re.search(r"refused", out); 
     if mm: rec["verdict"] = "refused"
     rec["join_ms"] = rec.get("wall_ms")

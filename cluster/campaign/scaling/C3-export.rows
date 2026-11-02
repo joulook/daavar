@@ -1,0 +1,75 @@
+C3E.reliable-channel-aneris.spec_5_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export spec --out export.jsonl --threads 16 --model bag -- 5
+C3E.reliable-channel-aneris.spec_6_bag.t16 250 172800 needok:C3E.reliable-channel-aneris.spec_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export spec --out export.jsonl --threads 16 --model bag -- 6
+C3E.reliable-channel-aneris.impl_5_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --threads 16 --model bag -- 5 correct
+C3E.reliable-channel-aneris.impl_6_bag_correct.t16 250 172800 needok:C3E.reliable-channel-aneris.impl_5_bag_correct.t16 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --threads 16 --model bag -- 6 correct
+C3E.reliable-channel-aneris.impl_5_bag_no-seqno.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --threads 16 --model bag -- 5 no-seqno
+C3E.reliable-channel-aneris.impl_6_bag_no-seqno.t16 250 172800 needok:C3E.reliable-channel-aneris.impl_5_bag_no-seqno.t16 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --threads 16 --model bag -- 6 no-seqno
+C3E.replicated-log-aneris.spec_8_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --threads 16 --model fifo -- 8
+C3E.replicated-log-aneris.spec_9_fifo.t16 250 172800 needok:C3E.replicated-log-aneris.spec_8_fifo.t16 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export spec --out export.jsonl --threads 16 --model fifo -- 9
+C3E.replicated-log-aneris.impl_8_fifo_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --threads 16 --model fifo -- 8 correct
+C3E.replicated-log-aneris.impl_9_fifo_correct.t16 250 172800 needok:C3E.replicated-log-aneris.impl_8_fifo_correct.t16 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --threads 16 --model fifo -- 9 correct
+C3E.replicated-log-aneris.impl_8_fifo_asyn-fault.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --threads 16 --model fifo -- 8 asyn-fault
+C3E.replicated-log-aneris.impl_9_fifo_asyn-fault.t16 250 172800 needok:C3E.replicated-log-aneris.impl_8_fifo_asyn-fault.t16 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris export impl --out export.jsonl --threads 16 --model fifo -- 9 asyn-fault
+C3E.replicated-log-esop20.spec_5_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --threads 16 --model bag -- 5
+C3E.replicated-log-esop20.spec_6_bag.t16 250 172800 needok:C3E.replicated-log-esop20.spec_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export spec --out export.jsonl --threads 16 --model bag -- 6
+C3E.replicated-log-esop20.impl_5_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --threads 16 --model bag -- 5 correct
+C3E.replicated-log-esop20.impl_6_correct_bag.t16 250 172800 needok:C3E.replicated-log-esop20.impl_5_correct_bag.t16 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --threads 16 --model bag -- 6 correct
+C3E.replicated-log-esop20.impl_5_early-reply_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 export impl --out export.jsonl --threads 16 --model bag -- 5 early-reply
+C3E.two-pc-abstain-kragl.spec_8_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --threads 16 --model bag -- 8
+C3E.two-pc-abstain-kragl.spec_9_bag.t16 250 172800 needok:C3E.two-pc-abstain-kragl.spec_8_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --threads 16 --model bag -- 9
+C3E.two-pc-abstain-kragl.impl_8_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --threads 16 --model bag -- 8 correct
+C3E.two-pc-abstain-kragl.impl_9_correct_bag.t16 250 172800 needok:C3E.two-pc-abstain-kragl.impl_8_correct_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --threads 16 --model bag -- 9 correct
+C3E.two-pc-abstain-kragl.impl_8_off-by-one_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --threads 16 --model bag -- 8 off-by-one
+C3E.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16 250 172800 needok:C3E.two-pc-abstain-kragl.impl_8_off-by-one_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --threads 16 --model bag -- 9 off-by-one
+C3E.two-pc-disel.spec_4_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --threads 16 --model bag -- 4
+C3E.two-pc-disel.impl_4_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --threads 16 --model bag -- 4 correct
+C3E.two-pc-disel.impl_4_bag_skip-ack-loop.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --threads 16 --model bag -- 4 skip-ack-loop
+C3E.two-pc-trillium.spec_7_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export spec --out export.jsonl --threads 16 --model bag -- 7
+C3E.two-pc-trillium.spec_8_bag.t16 250 172800 needok:C3E.two-pc-trillium.spec_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export spec --out export.jsonl --threads 16 --model bag -- 8
+C3E.two-pc-trillium.impl_7_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --threads 16 --model bag -- 7 correct
+C3E.two-pc-trillium.impl_8_bag_correct.t16 250 172800 needok:C3E.two-pc-trillium.impl_7_bag_correct.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --threads 16 --model bag -- 8 correct
+C3E.two-pc-trillium.impl_7_bag_ignore-abort-vote.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --threads 16 --model bag -- 7 ignore-abort-vote
+C3E.two-pc-trillium.impl_8_bag_ignore-abort-vote.t16 250 172800 needok:C3E.two-pc-trillium.impl_7_bag_ignore-abort-vote.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --threads 16 --model bag -- 8 ignore-abort-vote
+C3E.ring-election-igloo.spec_5_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --threads 16 --model bag -- 5
+C3E.ring-election-igloo.spec_6_bag.t16 250 172800 needok:C3E.ring-election-igloo.spec_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --threads 16 --model bag -- 6
+C3E.ring-election-igloo.impl_5_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --threads 16 --model bag -- 5 correct
+C3E.ring-election-igloo.impl_6_correct_bag.t16 250 172800 needok:C3E.ring-election-igloo.impl_5_correct_bag.t16 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --threads 16 --model bag -- 6 correct
+C3E.ring-election-igloo.impl_5_no-compare_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --threads 16 --model bag -- 5 no-compare
+C3E.ring-election-igloo.impl_6_no-compare_bag.t16 250 172800 needok:C3E.ring-election-igloo.impl_5_no-compare_bag.t16 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export impl --out export.jsonl --threads 16 --model bag -- 6 no-compare
+C3E.election.spec_ring_conf_9_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 9
+C3E.election.spec_ring_conf_10_fifo.t16 250 172800 needok:C3E.election.spec_ring_conf_9_fifo.t16 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 10
+C3E.election.impl_ring_conf_9_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring conf 9
+C3E.election.impl_ring_conf_10_fifo.t16 250 172800 needok:C3E.election.impl_ring_conf_9_fifo.t16 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring conf 10
+C3E.election.impl_ring_split_9_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring split 9
+C3E.election.impl_ring_split_10_fifo.t16 250 172800 needok:C3E.election.impl_ring_split_9_fifo.t16 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring split 10
+C3E.two-pc-lbinria.spec_5_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --threads 16 --model bag -- 5
+C3E.two-pc-lbinria.spec_6_bag.t16 250 172800 needok:C3E.two-pc-lbinria.spec_5_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --threads 16 --model bag -- 6
+C3E.two-pc-lbinria.spec_7_bag.t16 250 172800 needok:C3E.two-pc-lbinria.spec_6_bag.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --threads 16 --model bag -- 7
+C3E.two-pc-lbinria.impl_5_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 5 correct
+C3E.two-pc-lbinria.impl_6_bag_correct.t16 250 172800 needok:C3E.two-pc-lbinria.impl_5_bag_correct.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 6 correct
+C3E.two-pc-lbinria.impl_6_bag_counting-bug.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 6 counting-bug
+C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16 250 172800 needok:C3E.two-pc-lbinria.impl_6_bag_counting-bug.t16 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 7 counting-bug
+C3E.zab-broadcast-remix.spec_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export spec --out export.jsonl --threads 16 --model fifo -- 3
+C3E.zab-broadcast-remix.spec_4_fifo.t16 250 172800 needok:C3E.zab-broadcast-remix.spec_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export spec --out export.jsonl --threads 16 --model fifo -- 4
+C3E.zab-broadcast-remix.impl_3_fifo_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 3 correct
+C3E.zab-broadcast-remix.impl_4_fifo_correct.t16 250 172800 needok:C3E.zab-broadcast-remix.impl_3_fifo_correct.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 4 correct
+C3E.zab-broadcast-remix.impl_3_fifo_issue1-propose-to-ackld.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 3 issue1-propose-to-ackld
+C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16 250 172800 needok:C3E.zab-broadcast-remix.impl_3_fifo_issue1-propose-to-ackld.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 4 issue1-propose-to-ackld
+C3E.broadcast-consensus-civl.spec_4_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export spec --out export.jsonl --threads 16 --model bag -- 4
+C3E.broadcast-consensus-civl.spec_5_bag.t16 250 172800 needok:C3E.broadcast-consensus-civl.spec_4_bag.t16 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export spec --out export.jsonl --threads 16 --model bag -- 5
+C3E.broadcast-consensus-civl.impl_4_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --threads 16 --model bag -- 4 correct
+C3E.broadcast-consensus-civl.impl_5_bag_correct.t16 250 172800 needok:C3E.broadcast-consensus-civl.impl_4_bag_correct.t16 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --threads 16 --model bag -- 5 correct
+C3E.broadcast-consensus-civl.impl_4_bag_decide-early.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --threads 16 --model bag -- 4 decide-early
+C3E.broadcast-consensus-civl.impl_5_bag_decide-early.t16 250 172800 needok:C3E.broadcast-consensus-civl.impl_4_bag_decide-early.t16 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl export impl --out export.jsonl --threads 16 --model bag -- 5 decide-early
+C3E.a2-store.spec_pb_6_2_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 6 2
+C3E.a2-store.spec_pb_7_2_fifo.t16 250 172800 needok:C3E.a2-store.spec_pb_6_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 7 2
+C3E.a2-store.impl_pb_6_2_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- pb 6 2
+C3E.a2-store.impl_pb_7_2_fifo.t16 250 172800 needok:C3E.a2-store.impl_pb_6_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- pb 7 2
+C3E.a2-store.impl_early-ack_6_2_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 6 2
+C3E.a2-store.impl_early-ack_7_2_fifo.t16 250 172800 needok:C3E.a2-store.impl_early-ack_6_2_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 7 2
+C3E.a3-lock.spec_fifo_3_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock export spec --out export.jsonl --threads 16 --model fifo -- fifo 3 3
+C3E.a3-lock.spec_fifo_3_4_fifo.t16 250 172800 needok:C3E.a3-lock.spec_fifo_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock export spec --out export.jsonl --threads 16 --model fifo -- fifo 3 4
+C3E.a3-lock.impl_fifo_3_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- fifo 3 3
+C3E.a3-lock.impl_fifo_3_4_fifo.t16 250 172800 needok:C3E.a3-lock.impl_fifo_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- fifo 3 4
+C3E.a3-lock.impl_double-grant_3_3_fifo.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- double-grant 3 3
+C3E.a3-lock.impl_double-grant_3_4_fifo.t16 250 172800 needok:C3E.a3-lock.impl_double-grant_3_3_fifo.t16 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- double-grant 3 4
