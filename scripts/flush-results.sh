@@ -18,11 +18,13 @@ while [ ! -e .stop-flusher ]; do
       git commit -q -m "$node: $n row dir(s) updated, $(date -Is)" >/dev/null 2>&1 || true
     fi
     if [ -n "$(git log origin/main..HEAD --oneline 2>/dev/null)" ]; then
-      for i in 1 2 3; do
-        git push -q origin main 2>/dev/null && break
+      # one node pushes at a time (owner, 2026-11-02): a cluster-wide lock in the shared home; a node holds it
+      # only for its fetch, rebase and push, so a large push is never rejected by a small one from another node
+      (
+        flock -w 3600 8 || exit 0
         git fetch -q origin && { git rebase -q --autostash origin/main >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1; }
-        sleep $((i*15))
-      done
+        for i in 1 2 3; do git push -q origin main 2>/dev/null && break; git fetch -q origin && git rebase -q --autostash origin/main >/dev/null 2>&1; sleep 10; done
+      ) 8>"$HOME/.brain-data-push.lock"
     fi
   ) 9>"$BRAIN_DATA/.publish.lock"
   sleep "$INTERVAL"
