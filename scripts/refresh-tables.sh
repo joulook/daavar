@@ -8,6 +8,10 @@ PY=/local/home/mkhoshechin/tmp/venv-tables/bin/python; [ -x "$PY" ] || PY=python
 while :; do
   (cd "$BD" && git pull -q --rebase >/dev/null 2>&1)
   "$PY" -I "$DV/scripts/tables.py" "$BD" "$DV" "$PL/tex/tables" > "$PL/tex/tables/REFRESH.log" 2>&1
+  "$PY" -I "$DV/scripts/standalone-table.py" "$PL/tex/tables" --paper >> "$PL/tex/tables/REFRESH.log" 2>&1
+  "$PY" -I "$DV/scripts/standalone-table.py" "$PL/tex/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
+  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
+  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full >> "$PL/tex/tables/REFRESH.log" 2>&1
   (cd "$PL" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && echo "$(date -Is) tables refreshed, pdf built" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
   sleep "$IV"
 done
