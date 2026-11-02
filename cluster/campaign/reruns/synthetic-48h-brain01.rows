@@ -1,0 +1,147 @@
+C1.s2-share.impl_ctl_16_16_fifo.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_16_8_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 16 16
+C1.s2-share.impl_ctl_17_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 17 16
+C1.s2-share.impl_ctl_18_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_17_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 18 16
+C1.s2-share.impl_ctl_19_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_18_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 19 16
+C1.s2-share.impl_ctl_20_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_19_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 20 16
+C1.s2-share.impl_ctl_21_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_20_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 21 16
+C1.s2-share.impl_ctl_22_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_21_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 22 16
+C1.s2-share.impl_ctl_23_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_22_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 23 16
+C1.s2-share.impl_ctl_24_0_fifo.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 0
+C1.s2-share.impl_ctl_24_1_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 1
+C1.s2-share.impl_ctl_24_2_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 2
+C1.s2-share.impl_ctl_24_12_fifo.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 12
+C1.s2-share.impl_ctl_24_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_23_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 16
+C1.s2-share.impl_ctl_24_24_fifo.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_12_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 24 24
+C1.s2-share.impl_ctl_25_0_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 0
+C1.s2-share.impl_ctl_25_1_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 1
+C1.s2-share.impl_ctl_25_2_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 2
+C1.s2-share.impl_ctl_25_12_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_12_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 12
+C1.s2-share.impl_ctl_25_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 16
+C1.s2-share.impl_ctl_25_24_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_24_24_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 25 24
+C1.s2-share.impl_ctl_26_0_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 0
+C1.s2-share.impl_ctl_26_1_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 1
+C1.s2-share.impl_ctl_26_2_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 2
+C1.s2-share.impl_ctl_26_12_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_12_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 12
+C1.s2-share.impl_ctl_26_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 16
+C1.s2-share.impl_ctl_26_24_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_25_24_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 26 24
+C1.s2-share.impl_ctl_27_0_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 0
+C1.s2-share.impl_ctl_27_1_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_27_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 1
+C1.s2-share.impl_ctl_27_2_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_27_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 2
+C1.s2-share.impl_ctl_27_12_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_12_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 12
+C1.s2-share.impl_ctl_27_16_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 16
+C1.s2-share.impl_ctl_27_24_fifo.g.t16.c48h 250 172800 needok:C1.s2-share.impl_ctl_26_24_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- ctl 27 24
+C1.s2-share.impl_share_28_28_fifo.t16.c48h 250 172800 needok:C1.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
+C2.s2-share.impl_ctl_16_16_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_16_8_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 16 16
+C2.s2-share.impl_ctl_17_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 17 16
+C2.s2-share.impl_ctl_18_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_17_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 18 16
+C2.s2-share.impl_ctl_19_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_18_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 19 16
+C2.s2-share.impl_ctl_20_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_19_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 20 16
+C2.s2-share.impl_ctl_21_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_20_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 21 16
+C2.s2-share.impl_ctl_22_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_21_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 22 16
+C2.s2-share.impl_ctl_23_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_22_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 23 16
+C2.s2-share.impl_ctl_24_0_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 0
+C2.s2-share.impl_ctl_24_1_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 1
+C2.s2-share.impl_ctl_24_2_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 2
+C2.s2-share.impl_ctl_24_12_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 12
+C2.s2-share.impl_ctl_24_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_23_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 16
+C2.s2-share.impl_ctl_24_24_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_12_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 24 24
+C2.s2-share.impl_ctl_25_0_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 0
+C2.s2-share.impl_ctl_25_1_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 1
+C2.s2-share.impl_ctl_25_2_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 2
+C2.s2-share.impl_ctl_25_12_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_12_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 12
+C2.s2-share.impl_ctl_25_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 16
+C2.s2-share.impl_ctl_25_24_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_24_24_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 25 24
+C2.s2-share.impl_ctl_26_0_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 0
+C2.s2-share.impl_ctl_26_1_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 1
+C2.s2-share.impl_ctl_26_2_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 2
+C2.s2-share.impl_ctl_26_12_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_12_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 12
+C2.s2-share.impl_ctl_26_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 16
+C2.s2-share.impl_ctl_26_24_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_25_24_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 26 24
+C2.s2-share.impl_ctl_27_0_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 0
+C2.s2-share.impl_ctl_27_1_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_27_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 1
+C2.s2-share.impl_ctl_27_2_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_27_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 2
+C2.s2-share.impl_ctl_27_12_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_12_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 12
+C2.s2-share.impl_ctl_27_16_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 16
+C2.s2-share.impl_ctl_27_24_fifo.g.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_26_24_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 27 24
+C2.s2-share.impl_ctl_28_14_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_ctl_28_0_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- ctl 28 14
+C2.s2-share.impl_share_28_28_fifo.t16.c48h 250 172800 needok:C2.s2-share.impl_share_28_14_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
+C3E.s2-share.impl_ctl_24_24_fifo.t16.c48h 250 172800 needok:C3E.s2-share.impl_ctl_24_12_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- ctl 24 24
+C3E.s2-share.spec_ctl_24_24_fifo.t16.c48h 250 172800 needok:C3E.s2-share.spec_ctl_24_12_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- ctl 24 24
+C1.s3-commit.impl_20_0_fifo.t16.c48h 250 172800 needok:C1.s3-commit.impl_16_16_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 20 0
+C1.s3-commit.impl_20_1_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 20 1
+C1.s3-commit.impl_20_2_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 20 2
+C1.s3-commit.impl_20_10_fifo.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 20 10
+C1.s3-commit.impl_20_20_fifo.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_10_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 20 20
+C1.s3-commit.impl_21_0_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 21 0
+C1.s3-commit.impl_21_1_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_21_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 21 1
+C1.s3-commit.impl_21_2_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_21_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 21 2
+C1.s3-commit.impl_21_10_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_10_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 21 10
+C1.s3-commit.impl_21_20_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_20_20_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 21 20
+C1.s3-commit.impl_22_0_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_21_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 22 0
+C1.s3-commit.impl_22_1_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_22_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 22 1
+C1.s3-commit.impl_22_2_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_22_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 22 2
+C1.s3-commit.impl_22_10_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_21_10_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 22 10
+C1.s3-commit.impl_22_20_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_21_20_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 22 20
+C1.s3-commit.impl_23_0_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_22_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 23 0
+C1.s3-commit.impl_23_1_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_23_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 23 1
+C1.s3-commit.impl_23_2_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_23_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 23 2
+C1.s3-commit.impl_23_10_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_22_10_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 23 10
+C1.s3-commit.impl_23_20_fifo.g.t16.c48h 250 172800 needok:C1.s3-commit.impl_22_20_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateful --threads 16 --model fifo -- 23 20
+C2.s3-commit.impl_16_0_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_12_12_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 0
+C2.s3-commit.impl_16_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 1
+C2.s3-commit.impl_16_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 2
+C2.s3-commit.impl_16_8_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 8
+C2.s3-commit.impl_16_16_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_8_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 16
+C2.s3-commit.impl_17_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 17 0
+C2.s3-commit.impl_17_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_17_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 17 1
+C2.s3-commit.impl_17_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_17_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 17 2
+C2.s3-commit.impl_17_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_8_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 17 8
+C2.s3-commit.impl_17_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 17 16
+C2.s3-commit.impl_18_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_17_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 18 0
+C2.s3-commit.impl_18_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_18_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 18 1
+C2.s3-commit.impl_18_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_18_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 18 2
+C2.s3-commit.impl_18_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_17_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 18 8
+C2.s3-commit.impl_18_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_17_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 18 16
+C2.s3-commit.impl_19_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_18_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 19 0
+C2.s3-commit.impl_19_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_19_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 19 1
+C2.s3-commit.impl_19_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_19_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 19 2
+C2.s3-commit.impl_19_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_18_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 19 8
+C2.s3-commit.impl_19_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_18_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 19 16
+C2.s3-commit.impl_20_0_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_16_16_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 0
+C2.s3-commit.impl_20_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 1
+C2.s3-commit.impl_20_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 2
+C2.s3-commit.impl_20_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_19_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 8
+C2.s3-commit.impl_20_10_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 10
+C2.s3-commit.impl_20_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_19_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 16
+C2.s3-commit.impl_20_20_fifo.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_10_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 20
+C2.s3-commit.impl_21_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_0_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 0
+C2.s3-commit.impl_21_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 1
+C2.s3-commit.impl_21_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 2
+C2.s3-commit.impl_21_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 8
+C2.s3-commit.impl_21_10_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_10_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 10
+C2.s3-commit.impl_21_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 16
+C2.s3-commit.impl_21_20_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_20_20_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 21 20
+C2.s3-commit.impl_22_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 0
+C2.s3-commit.impl_22_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 1
+C2.s3-commit.impl_22_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 2
+C2.s3-commit.impl_22_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 8
+C2.s3-commit.impl_22_10_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_10_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 10
+C2.s3-commit.impl_22_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 16
+C2.s3-commit.impl_22_20_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_21_20_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 22 20
+C2.s3-commit.impl_23_0_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 0
+C2.s3-commit.impl_23_1_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_23_0_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 1
+C2.s3-commit.impl_23_2_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_23_1_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 2
+C2.s3-commit.impl_23_8_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_8_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 8
+C2.s3-commit.impl_23_10_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_10_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 10
+C2.s3-commit.impl_23_16_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_16_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 16
+C2.s3-commit.impl_23_20_fifo.g.t16.c48h 250 172800 needok:C2.s3-commit.impl_22_20_fifo.g.t16.c48h "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 23 20
+C1.s4-chain.impl_1024_fifo.t16.c48h 250 172800 needok:C1.s4-chain.impl_512_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo -- 1024
+C1.s4-chain.impl_2048_fifo.t16.c48h 250 172800 needok:C1.s4-chain.impl_1024_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo -- 2048
+C2.s4-chain.impl_1024_fifo.t16.c48h 250 172800 needok:C2.s4-chain.impl_512_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo -- 1024
+C2.s4-chain.impl_2048_fifo.t16.c48h 250 172800 needok:C2.s4-chain.impl_1024_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo -- 2048
+C3E.s4-chain.spec_1024_fifo.t16.c48h 250 172800 needok:C3E.s4-chain.spec_512_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo -- 1024
+C3E.s4-chain.impl_1024_fifo.t16.c48h 250 172800 needok:C3E.s4-chain.impl_512_fifo.t16 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo -- 1024
+C3E.s4-chain.spec_2048_fifo.t16.c48h 250 172800 needok:C3E.s4-chain.spec_1024_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo -- 2048
+C3E.s4-chain.impl_2048_fifo.t16.c48h 250 172800 needok:C3E.s4-chain.impl_1024_fifo.t16.c48h "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo -- 2048
+C2.s5-reset.impl_reset_10_8_bag.t16.c48h 250 172800 needok:C2.s5-reset.impl_reset_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- reset 10 8
+C2.s5-reset.impl_ctl_10_8_bag.t16.c48h 250 172800 needok:C2.s5-reset.impl_ctl_10_7_bag.t16 "$DAAVAR"/scripts/rust-run.sh s5-reset conf --engine stateless --threads 16 --model bag -- ctl 10 8
