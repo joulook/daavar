@@ -352,7 +352,7 @@ for pre, fname, title in CAMP:
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
         offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"); par_tf = pre in ("C1", "C2")
-        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked"]
+        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked", "timeout s", "mem GB"]
         cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"] + EXTRA
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
@@ -369,7 +369,7 @@ for pre, fname, title in CAMP:
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
             row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", a.get("family", ""), r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
-            row += [r.get("sweeps") or "", r.get("spec_graphs_explored") or "", r.get("cache_tests") or "", r.get("cache_hits") or "", fnum(r.get("spec_export_ms"), 1000, "{:.1f}") if r.get("spec_export_ms") else "", fnum(r.get("impl_export_ms"), 1000, "{:.1f}") if r.get("impl_export_ms") else "", fnum(r.get("join_ms"), 1000, "{:.1f}") if r.get("join_ms") else "", r.get("spec_export_bytes") or "", r.get("impl_export_bytes") or "", fnum(r.get("spec_export_peak_kb"), 1024) if r.get("spec_export_peak_kb") else "", fnum(r.get("impl_export_peak_kb"), 1024) if r.get("impl_export_peak_kb") else "", fnum(r.get("join_peak_kb"), 1024) if r.get("join_peak_kb") else "", r.get("spec_blocked") or "", r.get("impl_blocked") or ""]
+            row += [r.get("sweeps") or "", r.get("spec_graphs_explored") or "", r.get("cache_tests") or "", r.get("cache_hits") or "", fnum(r.get("spec_export_ms"), 1000, "{:.1f}") if r.get("spec_export_ms") else "", fnum(r.get("impl_export_ms"), 1000, "{:.1f}") if r.get("impl_export_ms") else "", fnum(r.get("join_ms"), 1000, "{:.1f}") if r.get("join_ms") else "", r.get("spec_export_bytes") or "", r.get("impl_export_bytes") or "", fnum(r.get("spec_export_peak_kb"), 1024) if r.get("spec_export_peak_kb") else "", fnum(r.get("impl_export_peak_kb"), 1024) if r.get("impl_export_peak_kb") else "", fnum(r.get("join_peak_kb"), 1024) if r.get("join_peak_kb") else "", r.get("spec_blocked") or "", r.get("impl_blocked") or "", r.get("timeout_s") or "", r.get("mem_limit_gb") or ""]
             w.writerow(row)
     ok = sum(1 for r in rs if r["stop_reason"] == "ok"); ruled = [r for r in rs if r.get("expected") and r["expected"] != "undefined"]
     mism = sum(1 for r in ruled if r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() not in ("", r["expected"]))

@@ -8,13 +8,12 @@ PY=/local/home/mkhoshechin/tmp/venv-tables/bin/python; [ -x "$PY" ] || PY=python
 while :; do
   (cd "$BD" && git pull -q --rebase >/dev/null 2>&1)
   "$PY" -I "$DV/scripts/tables.py" "$BD" "$DV" "$PL/tex/tables" > "$PL/tex/tables/REFRESH.log" 2>&1
-  "$PY" -I "$DV/scripts/standalone-table.py" "$PL/tex/tables" --paper >> "$PL/tex/tables/REFRESH.log" 2>&1
-  "$PY" -I "$DV/scripts/standalone-table.py" "$PL/tex/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
-  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
-  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full >> "$PL/tex/tables/REFRESH.log" 2>&1
+  DT="$PL/../plan/dropped-tables"   # the paper's tables leave out the dropped benchmarks (dropped.keep); the review document keeps only them
+  DROP=""; [ -f "$DT/dropped.keep" ] && DROP="--drop $DT/dropped.keep"
+  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" $DROP >> "$PL/tex/tables/REFRESH.log" 2>&1
+  "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full $DROP >> "$PL/tex/tables/REFRESH.log" 2>&1
   (cd "$PL" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && echo "$(date -Is) tables refreshed, pdf built" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
-  # the dropped-benchmarks review document (owner, 2026-11-02 21:25): same records, the kept families of dropped.keep
-  DT="$PL/../plan/dropped-tables"
+  # the dropped-benchmarks review document (owner, 2026-11-02 21:25): same records, the families of dropped.keep only
   if [ -f "$DT/dropped.keep" ]; then
     "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --keep "$DT/dropped.keep" --out "$DT/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
     "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full --keep "$DT/dropped.keep" --out "$DT/tables" >> "$PL/tex/tables/REFRESH.log" 2>&1
