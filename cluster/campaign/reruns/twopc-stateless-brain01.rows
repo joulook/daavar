@@ -1,0 +1,1 @@
+C2.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h 250 172800 needok:C1.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateless --threads 16 --model fifo -- correct 5 3
