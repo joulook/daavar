@@ -107,7 +107,7 @@ for name, d in GROUPS[GROUP]:
          f"Expected verdicts (the rule file): {expected_text(d)}. "
          f"\\textcolor{{blue}}{{Blue}} rows are at the current pins (TraceForge {TF_PIN}, merge join {JOIN_PIN}, JMC {JMC_PIN}): a rerun gives the same result. "
          f"\\textcolor{{red}}{{Red}} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. "
-         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{spec}}$, $G_{\\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{spec}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; "
+         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{spec}}$, $G_{\\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{spec}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; "
          "$^{\\ast}$ marks a verdict other than the expected one; \\faClock\\ = the time tier was reached; oom = the memory limit was reached.",
          ""]
     seen_ids = set()

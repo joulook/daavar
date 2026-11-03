@@ -254,6 +254,16 @@ with open(OUT + "/join-compare.csv", "w", newline="") as fh:
         same = "yes" if (o["stop_reason"] == "ok" and m["stop_reason"] == "ok" and (o.get("verdict") or "").lower() == (m.get("verdict") or "").lower()) else ("" if o["stop_reason"] != "ok" else "NO")
         w.writerow([b, st(o), o.get("verdict", ""), fnum(o.get("wall_ms"), 1000, "{:.1f}") if o.get("wall_ms") else "", fnum(o.get("peak_rss_kb"), 1024) if o.get("peak_rss_kb") else "", o.get("timeout_s", ""), o.get("mem_limit_gb", ""), st(m), m.get("verdict", ""), fnum(m.get("wall_ms"), 1000, "{:.1f}") if m.get("wall_ms") else "", fnum(m.get("peak_rss_kb"), 1024) if m.get("peak_rss_kb") else "", same])
 print(f"join-compare: {len(_jc)} joins with both an old and a merge record; verdict differs on {sum(1 for d in _jc.values() if d['old']['stop_reason']=='ok' and d['merge']['stop_reason']=='ok' and (d['old'].get('verdict') or '').lower() != (d['merge'].get('verdict') or '').lower())}")
+# the record of the export run a join or online row actually read: the exact id (with its rerun suffix), the latest record
+# of it that started before the reading row; else the base id's winner (audit D1/D2, 2026-11-03)
+_byexact = collections.defaultdict(list)
+for _r in _allrows: _byexact[_r["run_id"]].append(_r)
+for _k in _byexact: _byexact[_k].sort(key=lambda r: r.get("started_at") or "")
+def export_record(ex, reader):
+    cands = [r for r in _byexact.get(ex, []) if (r.get("started_at") or "") <= (reader.get("started_at") or "~")]
+    if cands: return cands[-1]
+    if _byexact.get(ex): return _byexact[ex][-1]
+    return byid.get(base_id(ex))
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
@@ -261,7 +271,7 @@ for pre, fname, title in CAMP:
         for r in rs:
             ex = re.findall(r'/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))   # the runner stores the expanded paths
             if len(ex) == 2:
-                sp, im = byid.get(ex[0]), byid.get(ex[1])
+                sp, im = export_record(ex[0], r), export_record(ex[1], r)
                 def _cnt(x): return x.get("impl_complete") or x.get("iterations") or x.get("graphs_complete")   # a JMC export records its count as iterations
                 if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = _cnt(sp), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
                 if im: r["impl_complete"], r["impl_blocked"], r["impl_graphs_total"], r["impl_export_ms"] = _cnt(im), im.get("impl_blocked"), im.get("impl_graphs_total"), im.get("wall_ms")
@@ -274,7 +284,7 @@ for pre, fname, title in CAMP:
     if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
-            sp = byid.get(ex[0]) if ex else None
+            sp = export_record(ex[0], r) if ex else None
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = (sp.get("impl_complete") or sp.get("iterations") or sp.get("graphs_complete")), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
     if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
         # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)

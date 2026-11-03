@@ -122,7 +122,7 @@ def emit(fn, label, cap, colspec, hdr1, cm, hdr2, body, csvhdr, csvrows):
 COMMON = ("Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the program's correct variant; a second word names the specification variant when the program has several). "
           "$G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)")
 GX = ", $G_x$ = the implementation graphs that no specification graph covers"
-LIMITS = (" T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
+LIMITS = (" T = wall time in seconds, M = peak resident memory in MiB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
           "Every run at 16 threads. \\faClock\\ = the row's time tier was reached (subscript: the tier), oom = the row's memory limit was reached (subscript: the limit when below 250 GB); "
           "a blank cell = not run, because a smaller size had reached a limit.")
 for fam, tset, modes in FAMS:
@@ -251,7 +251,7 @@ if not FULL and KEEP is None:
             csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
                + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
-               "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
+               "T = wall time in seconds, M = peak resident memory in MiB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
                "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
