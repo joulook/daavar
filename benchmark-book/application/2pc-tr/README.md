@@ -1,6 +1,8 @@
 # 2pc-tr(N) — two-phase commit refining TCommit (`two-pc-trillium`)
 
-**Communication model:** bag (`asyn`: UDP reorders; duplication is not modelled), the model the crate declares.
+**Communication models:** bag (`asyn`: UDP reorders; duplication is not modelled), the default of both the Rust
+program and the Java twin, and fifo (`p2p`: per-channel order, selected with `--model fifo` in Rust, the model argument `fifo` in Java); each variant is a pair
+under each model.
 **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin in `java/` (`bench.two_pc_trillium.TwoPcTrillium`);
 context-free Java port in `java-cf/` (`TwoPcTrillium`). **Visible threads:** `obs0 … obs(N−1)`, the observer of
 resource manager `i`'s final state; the oracle `tc` (specification), the transaction manager `tm` and the resource
@@ -80,6 +82,17 @@ graph gives all observers one outcome, `Committed` only if every coin said prepa
 observers' receives are mutually unordered on both sides. Each such graph is covered by the specification graph with
 the same outcome.
 
+### correct under fifo — expected: **conforms**
+
+```
+Spec^fifo(N)          ≜ Spec(N)          with every send^asyn, recv^asyn replaced by send^fifo, recv^fifo
+Impl^fifo_correct(N)  ≜ Impl_correct(N)  with the same replacement
+```
+
+`tc` sends one message to each observer, so fifo constrains nothing in the specification: its graphs are the bag
+specification's. The implementation's fifo graphs are among its bag graphs (fifo only removes reads-from choices; for
+instance an RM can no longer read `Abort` before `Prepare`), so each is covered as under bag.
+
 ### ignore-abort-vote — expected: **violation**
 
 ```
@@ -97,6 +110,17 @@ the mirror image). No specification graph gives two observers different outcomes
 finish; the TM then waits forever for a `Committed` from the aborted RM, which is invisible, so plain Must counts
 these graphs blocked (6 of 10 at `N = 2`) while the conformance check treats them as complete (4 uncovered at
 `N = 2`, 54 at `N = 3`).
+
+### ignore-abort-vote under fifo — expected: **violation** (`N ≥ 2`)
+
+```
+Spec^fifo(N)                    ≜ Spec(N)                    with every send^asyn, recv^asyn replaced by send^fifo, recv^fifo
+Impl^fifo_ignore-abort-vote(N)  ≜ Impl_ignore-abort-vote(N)  with the same replacement
+```
+
+The `N = 2` witness above respects fifo (each RM reads `Prepare` first, then `rm0` reads `Commit`), so counting an
+abort vote as prepared still gives `obs0` `Committed` and `obs1` `Aborted`, which the fifo specification, whose graphs
+are the bag specification's, never does.
 
 ## What it is for
 

@@ -120,7 +120,8 @@ Impl ≜ PB_control-early-ack-primary with
        REPLY ≜ send^fifo(c_c, Ack); _ := recv^fifo(AckPut)          ◀ changed: reply before the backup's ack
 ```
 
-The client's `Ack` comes before the backup has applied the put, but the backup's map is never read (gets are served
+The primary sends the client's `Ack` without waiting for the backup's acknowledgement (it forwards the put first,
+so the backup may already have applied it, but need not have); the backup's map is never read (gets are served
 by the primary, which applied the put first) and the primary reads the backup's ack before its next request. The
 backup's lag is unobservable.
 
@@ -160,11 +161,11 @@ specification's order; a get sees the latest put on its key.
 
 ```
 Impl ≜ BR_early-ack with
-       BRREPLY ≜ send^fifo(c_c, Ack); _ := recv^fifo(AckPut)        ◀ changed: Ack before the backup applied the put
+       BRREPLY ≜ send^fifo(c_c, Ack); _ := recv^fifo(AckPut)        ◀ changed: Ack before the backup's AckPut
 ```
 
-The ack-before-commit fault: gets go to the backup directly, and the primary acknowledges a put before the backup
-has applied it. At `(k, q) = (1, 2)`: `c0: S(Put(0,0,0)) R(Ack) S(Get(0,0)) R(None)`, the get overtaking the
+The ack-before-commit fault: gets go to the backup directly, and the primary acknowledges a put without waiting for the
+backup's acknowledgement, so the backup need not have applied it yet (it may have: the forward is sent first). At `(k, q) = (1, 2)`: `c0: S(Put(0,0,0)) R(Ack) S(Get(0,0)) R(None)`, the get overtaking the
 forwarded put at the backup; the specification returns `Val(0)` (value). At `(2, 1)`: `c0: S(Put(0,0,0)) R(Ack)`,
 `c1: S(Get(1,0)) R(None)`, with the backup reading the get first; `c0`'s `Ack` is not after `c1`'s get, while every
 specification graph that answers `None` serves the get first and orders `c1`'s `S(Get)` before `c0`'s `R(Ack)`

@@ -4,7 +4,8 @@
 the crate declares. **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`; context-free
 Java port, in `java-cf/`. **Visible threads:** `app0 … app(N−1)`; the detectors `det0 … det(N−1)` and the
 specification's `oracle` are invisible. **Parameters:** `N` = the number of nodes (default 3; smallest interesting
-size `N = 2`); fixed: `K = 1` payload per node, `R = 2` probes. ARGS `<N> [variant]`, variant `correct` (default) or
+size `N = 2`; `2 ≤ N ≤ 8`: the Rust program keeps `got` in a byte and adds node `from` as bit `1 << from`, so the set
+semantics below hold only for nodes `0 … 7`; the Java twin's `int` mask has no such limit at these sizes); fixed: `K = 1` payload per node, `R = 2` probes. ARGS `<N> [variant]`, variant `correct` (default) or
 `no-black-on-receive`. **Campaign status:** marked **undecidable** (`cluster/campaign/inputs/undecidable.tsv`): the
 Java twin renders the absent `sent` field of `Idle` as `-1` (`java/`) while the Rust side renders `None` otherwise, so
 every graph is uncovered in the cross-language and online tables (XON, XJ, XT, XTON); the verdicts below are those of

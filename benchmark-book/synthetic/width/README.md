@@ -1,7 +1,7 @@
 # width(w) — pure value branching (`s6-width`)
 
 **Communication model:** fifo. **Language:** Rust, in `rust/`. **Visible threads:** `V`, `C`. **Parameter:** `w` =
-the number of values to choose from.
+the number of values to choose from, `w ≥ 1`.
 
 Notation: as in `../naive/README.md`.
 

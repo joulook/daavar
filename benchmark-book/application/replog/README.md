@@ -5,7 +5,9 @@ in `rust/`; Java twin in `java/` (`bench.replicated_log_aneris.RepDb`); context-
 (`ReplicatedLogAneris`). **Visible threads:** `writer`, `reader`; `leader` and `follower` are invisible.
 **Parameters:** `W` = the number of writes by `writer` (key `i` := `val(i)`, with `val(0) = 37`, `val(1) = 1`,
 `val(i) = i` otherwise) and of reads by `reader` (keys `W−1, …, 0`, in reverse order); default 2, smallest
-interesting size 2.
+interesting size 2; `2 ≤ W ≤ 255`: the Rust program keeps keys, values, entry indices and the follower's `next` in
+bytes (`next` overflows after 255 entries), so the pseudocode below (unbounded integers) and the Java twin (`int`
+counter) describe it only within that range.
 **Source:** Aneris (Krogh-Jespersen et al., ESOP 2020), the reliable-communication library's leader–followers
 `repdb` (`repdb_code.ml`) driven by `causality_example_code.ml`.
 
@@ -119,8 +121,9 @@ prefix of the log and the cover of `correct` applies.
 the asyn-fault program above, under M = bag
 ```
 
-The leader still sends `Entry(x, 37, 0)` before `Entry(y, 1, 1)`, but the bag model lets the follower receive entry
-1 first and apply it with no index check. Schedule at `W = 2`: the follower sends `Sync(0)`, `Sync(1)`; the leader
+Under bag the follower may receive entry 1 first and apply it with no index check: either the leader sends entry 1
+first (it reads both writes, then `Sync(1)` before `Sync(0)`, and answers each at once), or it sends `Entry(x, 37, 0)`
+before `Entry(y, 1, 1)` and delivery reverses them. One witness, of the second kind, at `W = 2`: the follower sends `Sync(0)`, `Sync(1)`; the leader
 parks both, receives `Write(x, 37)` and sends entry 0, receives `Write(y, 1)` and sends entry 1; the follower
 receives entry 1, answers `Read(y)` with `1` and `Read(x)` with `0`, then receives entry 0. The uncovered word is
 

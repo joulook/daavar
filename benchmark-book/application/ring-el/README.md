@@ -1,6 +1,7 @@
 # ring-el(n) — ring leader election under loss, duplication and reordering (`ring-election-igloo`)
 
-**Communication model:** bag (`asyn`: UDP reorders; a lost message is one that is never read). **Languages:** Rust
+**Communication model:** bag (`asyn`: UDP reorders; a lost message is one that is never read; the Rust program's default is fifo, so its
+runs of the two pairs below pass `--model bag` explicitly, while the Java twin defaults to bag). **Languages:** Rust
 (TraceForge's Must API), in `rust/`; Java twin in `java/` (`bench.ring_election_igloo.RingElection`); context-free
 Java port in `java-cf/` (`RingElectionIgloo`). **Visible thread:** `observer`; the specification's `oracle` and the
 implementation's `node0 … node(n−1)` are invisible. **Parameters:** `n ≥ 2` = the number of nodes, with ids

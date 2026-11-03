@@ -5,9 +5,9 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{replog-co} (replicated-log-esop20)}
 \author{}
-\date{generated 2026-11-03 from brain-data 12e87e03c 2026-11-03 11:36:20 +0100}
+\date{generated 2026-11-03 from brain-data b2ae60f86 2026-11-03 17:57:09 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): . \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{correct}, model bag, expected conforms}
@@ -16,10 +16,10 @@
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{red} 1 & 4 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-01 \\
-\color{red} 2 & 16 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & 4 & 28 & brain03, 2026-11-01 \\
-\color{red} 3 & 144 & 4608 & conforms & 0.6 & 2 & 1 h, 250 GB & 36 & 2556 & brain03, 2026-11-01 \\
-\color{red} 4 & 2304 & 294912 & conforms & 43.0 & 6 & 1 h, 250 GB & 576 & 662976 & brain03, 2026-11-01 \\
+\color{blue} 1 & 4 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-03 \\
+\color{blue} 2 & 16 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & 4 & 28 & brain03, 2026-11-03 \\
+\color{blue} 3 & 144 & 4608 & conforms & 0.6 & 4 & 1 h, 250 GB & 36 & 2556 & brain03, 2026-11-03 \\
+\color{blue} 4 & 2304 & 294912 & conforms & 48.1 & 24 & 1 h, 250 GB & 577 & 663000 & brain03, 2026-11-03 \\
 \color{blue} 5 & 57600 & 29491200 & conforms & 17518.0 & 118 & 48 h, 250 GB & 14905 & 423756076 & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
@@ -29,11 +29,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{red} 1 & 1 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-01 \\
-\color{red} 2 & 4 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & 4 & 10 & brain03, 2026-11-01 \\
-\color{red} 3 & 36 & 4608 & conforms & 0.5 & 2 & 1 h, 250 GB & 36 & 666 & brain03, 2026-11-01 \\
-\color{red} 4 & 576 & 294912 & conforms & 22.5 & 2 & 1 h, 250 GB & 577 & 166309 & brain03, 2026-11-01 \\
-\color{red} 5 & 14400 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-01 \\
+\color{blue} 1 & 1 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-03 \\
+\color{blue} 2 & 4 & 128 & conforms & 0.0 & 4 & 1 h, 250 GB & 4 & 10 & brain03, 2026-11-03 \\
+\color{blue} 3 & 36 & 4608 & conforms & 0.6 & 4 & 1 h, 250 GB & 36 & 666 & brain03, 2026-11-03 \\
+\color{blue} 4 & 576 & 294912 & conforms & 26.0 & 25 & 1 h, 250 GB & 576 & 166176 & brain03, 2026-11-03 \\
+\color{blue} 5 & 14400 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateless: pair \textsf{early-reply}, model bag, expected violation}
@@ -42,9 +42,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{red} 1 & 4 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & 25 & 97 & brain03, 2026-11-01 \\
-\color{red} 2 & 16 & 512 & 384 & violation & 0.3 & 2 & 1 h, 250 GB & 388 & 6172 & brain03, 2026-11-01 \\
-\color{red} 3 & 144 & 18432 & 13824 & violation & 60.3 & 2 & 1 h, 250 GB & 13860 & 1993212 & brain03, 2026-11-01 \\
+\color{blue} 1 & 4 & 32 & 24 & violation & 0.0 & 4 & 1 h, 250 GB & 25 & 97 & brain03, 2026-11-03 \\
+\color{blue} 2 & 16 & 512 & 384 & violation & 0.4 & 4 & 1 h, 250 GB & 388 & 6172 & brain03, 2026-11-03 \\
+\color{blue} 3 & 144 & 18432 & 13824 & violation & 70.9 & 17 & 1 h, 250 GB & 13860 & 1993212 & brain03, 2026-11-03 \\
 \color{red} 4 & 2304 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-01 \\
 \bottomrule
 \end{longtable}
@@ -54,15 +54,15 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{red} 1 & 1 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & 25 & 25 & brain03, 2026-11-01 \\
-\color{red} 2 & 4 & 512 & 384 & violation & 0.2 & 2 & 1 h, 250 GB & 388 & 1546 & brain03, 2026-11-01 \\
-\color{red} 3 & 36 & 18432 & 13824 & violation & 23.0 & 2 & 1 h, 250 GB & 13860 & 498330 & brain03, 2026-11-01 \\
+\color{blue} 1 & 1 & 32 & 24 & violation & 0.0 & 4 & 1 h, 250 GB & 25 & 25 & brain03, 2026-11-03 \\
+\color{blue} 2 & 4 & 512 & 384 & violation & 0.2 & 6 & 1 h, 250 GB & 388 & 1546 & brain03, 2026-11-03 \\
+\color{blue} 3 & 36 & 18432 & 13824 & violation & 27.0 & 16 & 1 h, 250 GB & 13860 & 498330 & brain03, 2026-11-03 \\
 \color{red} 4 & 576 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-skipped: a smaller size had reached its limit: 5 early-reply bag, 5 early-reply fifo, 6 early-reply bag, 6 correct bag, 6 correct fifo, 6 early-reply fifo, 7 early-reply bag, 7 early-reply fifo, 7 correct fifo, 7 correct bag, 8 correct bag, 8 early-reply fifo, 8 early-reply bag, 8 correct fifo, 9 early-reply bag, 9 correct fifo, 9 early-reply fifo, 9 correct bag.\par
-planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 7 early-reply bag, 7 correct bag, 8 correct bag, 8 early-reply bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 5 early-reply bag, 5 early-reply fifo, 6 early-reply fifo, 6 early-reply bag, 6 correct bag, 6 correct fifo, 7 correct fifo, 7 correct bag, 7 early-reply bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 correct bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -70,12 +70,12 @@ planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{red} 1 & 4 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 2 & 16 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 3 & 144 & 4608 & conforms & 0.5 & 4 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 4 & 2304 & 294912 & conforms & 14.5 & 4 & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 1 & 4 & 8 & conforms & 0.6 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 2 & 16 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 3 & 144 & 4608 & conforms & 0.6 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4 & 2304 & 294912 & conforms & 21.2 & 26 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 5 & 57600 & 29491200 & conforms & 599.7 & 122 & 48 h, 250 GB & brain05, 2026-11-02 \\
-\color{red} 6 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 6 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateful: pair \textsf{correct}, model fifo, expected conforms}
@@ -84,12 +84,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{red} 1 & 1 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 2 & 4 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 3 & 36 & 4608 & conforms & 0.4 & 4 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 4 & 576 & 294912 & conforms & 15.3 & 8 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 5 & 14400 & 29491200 & conforms & 570.6 & 118 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 6 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 1 & 1 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 2 & 4 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 3 & 36 & 4608 & conforms & 0.6 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4 & 576 & 294912 & conforms & 20.7 & 27 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 5 & 14400 & 29491200 & conforms & 1049.8 & 116 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 6 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateful: pair \textsf{early-reply}, model bag, expected violation}
@@ -98,12 +98,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{red} 1 & 4 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 2 & 16 & 512 & 384 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 3 & 144 & 18432 & 13824 & violation & 1.5 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 4 & 2304 & 1179648 & 884736 & violation & 37.1 & 18 & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 1 & 4 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 2 & 16 & 512 & 384 & violation & 0.1 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 3 & 144 & 18432 & 13824 & violation & 1.9 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4 & 2304 & 1179648 & 884736 & violation & 49.4 & 30 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 5 & 57600 & 117964800 & 88473600 & violation & 2064.1 & 621 & 48 h, 250 GB & brain05, 2026-11-02 \\
-\color{red} 6 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 6 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateful: pair \textsf{early-reply}, model fifo, expected violation}
@@ -112,19 +112,19 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{red} 1 & 1 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 2 & 4 & 512 & 384 & violation & 0.1 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 3 & 36 & 18432 & 13824 & violation & 1.5 & 2 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 4 & 576 & 1179648 & 884736 & violation & 41.0 & 24 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 5 & 14400 & 117964800 & 88473600 & violation & 2107.1 & 618 & 1 h, 250 GB & brain02, 2026-11-01 \\
-\color{red} 6 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-01 \\
+\color{blue} 1 & 1 & 32 & 24 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 2 & 4 & 512 & 384 & violation & 0.1 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 3 & 36 & 18432 & 13824 & violation & 2.0 & 6 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4 & 576 & 1179648 & 884736 & violation & 49.8 & 30 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 5 & 14400 & 117964800 & 88473600 & violation & 3571.1 & 619 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 6 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-left out by the table rules (ok): 5 correct bag, 5 early-reply bag.\par
-skipped: a smaller size had reached its limit: 7 early-reply bag, 7 early-reply fifo, 7 correct fifo, 7 correct bag, 8 early-reply fifo, 8 correct bag, 8 early-reply bag, 8 correct fifo, 9 early-reply bag, 9 early-reply fifo, 9 correct fifo, 9 correct bag.\par
-the tool ended with an error (exit-101): 7 early-reply bag, 8 correct bag.\par
-planned but never scheduled (grid points beyond the ladder): 6 early-reply bag, 6 correct bag, 7 correct bag, 8 early-reply bag, 9 correct bag.\par
+left out by the table rules (ok): 5 early-reply bag, 5 correct bag.\par
+skipped: a smaller size had reached its limit: 7 correct fifo, 7 early-reply bag, 7 correct bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 correct bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag.\par
+the tool ended with an error (exit-101): 7 correct bag, 7 early-reply bag, 8 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 6 correct bag, 6 early-reply bag, 8 early-reply bag, 9 correct bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -135,8 +135,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \color{red} 1 & 4 & 8 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.0 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \color{red} 2 & 16 & 128 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \color{red} 3 & 144 & 4608 & conforms & 0.8 & 4 & 10 min, 16 GB & 0.1 & 0.7 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 4 & 2304 & 294912 & conforms & 18.6 & 6 & 1 h, 250 GB & 0.5 & 18.0 & 0.1 & merge & brain05, 2026-11-03 \\
-\color{blue} 5 & 57600 & 29491200 & conforms & 718.1 & 136 & 1 h, 250 GB & 5.1 & 711.5 & 1.5 & merge & brain05, 2026-11-03 \\
+\color{red} 4 & 2304 & 294912 & conforms & 18.6 & 6 & 1 h, 250 GB & 0.5 & 18.0 & 0.1 & merge & brain05, 2026-11-03 \\
+\color{red} 5 & 57600 & 29491200 & conforms & 718.1 & 136 & 1 h, 250 GB & 5.1 & 711.5 & 1.5 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{correct}, model fifo, expected conforms}
@@ -147,9 +147,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \endhead
 \color{red} 1 & 1 & 8 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \color{red} 2 & 4 & 128 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 3 & 36 & 4608 & conforms & 0.8 & 4 & 1 h, 250 GB & 0.1 & 0.7 & 0.0 & merge & brain05, 2026-11-03 \\
-\color{blue} 4 & 576 & 294912 & conforms & 17.2 & 4 & 1 h, 250 GB & 0.2 & 16.9 & 0.1 & merge & brain05, 2026-11-03 \\
-\color{blue} 5 & 14400 & 29491200 & conforms & 738.1 & 136 & 1 h, 250 GB & 1.8 & 734.9 & 1.5 & merge & brain05, 2026-11-03 \\
+\color{red} 3 & 36 & 4608 & conforms & 0.8 & 4 & 1 h, 250 GB & 0.1 & 0.7 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{red} 4 & 576 & 294912 & conforms & 17.2 & 4 & 1 h, 250 GB & 0.2 & 16.9 & 0.1 & merge & brain05, 2026-11-03 \\
+\color{red} 5 & 14400 & 29491200 & conforms & 738.1 & 136 & 1 h, 250 GB & 1.8 & 734.9 & 1.5 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{early-reply}, model bag, expected violation}
@@ -160,9 +160,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 4 & 32 & 3 & violation & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \color{red} 2 & 16 & 512 & 12 & violation & 0.4 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 3 & 144 & 18432 & 108 & violation & 1.9 & 4 & 1 h, 250 GB & 0.1 & 1.8 & 0.0 & merge & brain05, 2026-11-03 \\
-\color{blue} 4 & 2304 & 1179648 & 1728 & violation & 42.0 & 10 & 1 h, 250 GB & 0.5 & 41.4 & 0.1 & merge & brain05, 2026-11-03 \\
-\color{blue} 5 & 57600 & 117964800 & 43200 & violation & 2078.1 & 572 & 1 h, 250 GB & 5.1 & 2069.4 & 3.6 & merge & brain05, 2026-11-03 \\
+\color{red} 3 & 144 & 18432 & 108 & violation & 1.9 & 4 & 1 h, 250 GB & 0.1 & 1.8 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{red} 4 & 2304 & 1179648 & 1728 & violation & 42.0 & 10 & 1 h, 250 GB & 0.5 & 41.4 & 0.1 & merge & brain05, 2026-11-03 \\
+\color{red} 5 & 57600 & 117964800 & 43200 & violation & 2078.1 & 572 & 1 h, 250 GB & 5.1 & 2069.4 & 3.6 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{early-reply}, model fifo, expected violation}
@@ -173,14 +173,14 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 1 & 32 & 3 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \color{red} 2 & 4 & 512 & 12 & violation & 0.5 & 4 & 10 min, 16 GB & 0.1 & 0.3 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 3 & 36 & 18432 & 108 & violation & 2.0 & 4 & 1 h, 250 GB & 0.1 & 1.8 & 0.0 & merge & brain05, 2026-11-03 \\
-\color{blue} 4 & 576 & 1179648 & 1728 & violation & 42.3 & 14 & 1 h, 250 GB & 0.2 & 42.0 & 0.1 & merge & brain05, 2026-11-03 \\
-\color{blue} 5 & 14400 & 117964800 & 43200 & violation & 1962.6 & 567 & 1 h, 250 GB & 1.8 & 1957.3 & 3.6 & merge & brain05, 2026-11-03 \\
+\color{red} 3 & 36 & 18432 & 108 & violation & 2.0 & 4 & 1 h, 250 GB & 0.1 & 1.8 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{red} 4 & 576 & 1179648 & 1728 & violation & 42.3 & 14 & 1 h, 250 GB & 0.2 & 42.0 & 0.1 & merge & brain05, 2026-11-03 \\
+\color{red} 5 & 14400 & 117964800 & 43200 & violation & 1962.6 & 567 & 1 h, 250 GB & 1.8 & 1957.3 & 3.6 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 6 early-reply fifo, 7 correct bag.\par
-skipped: a smaller size had reached its limit: 6 early-reply bag, 6 correct bag, 6 correct fifo, 6 early-reply fifo, 7 early-reply bag, 7 early-reply fifo, 7 correct fifo, 7 correct bag, 8 early-reply fifo, 8 correct bag, 8 early-reply bag, 8 correct fifo, 9 early-reply bag, 9 correct fifo, 9 early-reply fifo, 9 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply fifo, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
+skipped: a smaller size had reached its limit: 6 early-reply fifo, 6 early-reply bag, 6 correct bag, 6 correct fifo, 7 correct fifo, 7 correct bag, 7 early-reply bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 correct bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -219,7 +219,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-refused (an input missing at run time): 2 correct bag, 2 early-reply fifo, 2 early-reply bag, 2 correct fifo, 3 correct fifo, 3 correct bag, 3 early-reply bag, 3 early-reply fifo.\par
+refused (an input missing at run time): 2 correct fifo, 2 early-reply bag, 2 correct bag, 2 early-reply fifo, 3 correct fifo, 3 correct bag, 3 early-reply fifo, 3 early-reply bag.\par
 planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
@@ -314,7 +314,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 1 correct bag, 1 early-reply bag, 1 correct fifo, 1 early-reply fifo, 2 correct bag, 2 early-reply fifo, 2 early-reply bag, 2 correct fifo, 3 correct fifo, 3 correct bag, 3 early-reply fifo, 3 early-reply bag, 5 correct bag, 5 early-reply bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 1 correct bag, 1 correct fifo, 1 early-reply bag, 1 early-reply fifo, 2 correct fifo, 2 early-reply bag, 2 correct bag, 2 early-reply fifo, 3 correct fifo, 3 correct bag, 3 early-reply fifo, 3 early-reply bag, 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -361,6 +361,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): 1 correct bag, 1 early-reply bag, 1 correct fifo, 1 early-reply fifo, 2 correct bag, 2 early-reply fifo, 2 early-reply bag, 2 correct fifo, 3 correct fifo, 3 correct bag, 3 early-reply fifo, 3 early-reply bag.\par
+left out by the table rules (ok): 1 correct bag, 1 correct fifo, 1 early-reply bag, 1 early-reply fifo, 2 correct fifo, 2 early-reply bag, 2 correct bag, 2 early-reply fifo, 3 correct fifo, 3 correct bag, 3 early-reply fifo, 3 early-reply bag.\par
 planned but never scheduled (grid points beyond the ladder): 5 early-reply bag, 5 correct bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
 \end{document}

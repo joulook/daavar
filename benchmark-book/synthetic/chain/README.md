@@ -1,7 +1,7 @@
 # chain(d) — a relayed chain against a direct one (`s4-chain`)
 
 **Communication model:** fifo. **Language:** Rust, in `rust/`. **Visible threads:** `V0 … Vd`; the relays `Ri` are
-invisible. **Parameter:** `d` = the number of hops.
+invisible. **Parameter:** `d` = the number of hops, `d ≥ 1`.
 
 Notation: as in `../naive/README.md`.
 

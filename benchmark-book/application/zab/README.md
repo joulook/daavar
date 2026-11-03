@@ -4,7 +4,9 @@
 Must API), in `rust/`; Java twin in `java/` (`bench.zab_broadcast_remix.ZabBroadcast`); context-free Java port in
 `java-cf/` (`ZabBroadcastRemix`). **Visible threads:** `c0`, `c1`; the specification's `server` and the
 implementation's `s0` (leader), `s1` (synchronised follower), `s2` (late follower) are invisible.
-**Parameters:** `Q ≥ 1` = the number of writes per client (default 1); fixed: 2 clients, 3 servers, quorum 2, one
+**Parameters:** `1 ≤ Q ≤ 127` = the number of writes per client (default 1; the Rust program's zxids are bytes, so
+the `2Q` zxids below fit only for `2Q ≤ 255`, beyond which the pseudocode and the Java twin's `int` zxid no longer
+describe it); fixed: 2 clients, 3 servers, quorum 2, one
 epoch (a zxid is its counter).
 **Source:** the Zab protocol specification vendored in the Remix artifact (EuroSys 2025),
 `zookeeper-specifications/protocol-spec/Zab.tla` and its `issues.md`.

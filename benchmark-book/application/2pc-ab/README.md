@@ -1,6 +1,7 @@
 # 2pc-ab(n) — two-phase commit with early abort and abstaining participants (`two-pc-abstain-kragl`)
 
-**Communication model:** bag (`asyn`: unordered delivery; the source's channels are multisets). **Languages:**
+**Communication model:** bag (`asyn`: unordered delivery; the source's channels are multisets; the Rust program's default is fifo, so its runs
+of the two pairs below pass `--model bag` explicitly, while the Java twin defaults to bag). **Languages:**
 Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`; context-free Java port, in `java-cf/`.
 **Visible threads:** `p1 … pn`; the coordinator `coord` is invisible. **Parameters:** `n` = the number of
 participants (`n ≥ 1`, the source's `axiom n > 0`). ARGS `<n> [correct|off-by-one]`.

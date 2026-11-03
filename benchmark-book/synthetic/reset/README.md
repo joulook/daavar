@@ -3,7 +3,7 @@
 **Communication model:** bag. **Language:** Rust, in `rust/`. **Visible threads:** `Ai`, `Bi`, `Ci` for `i < k`; the
 padding threads `S0 … S(s−1)` and `D` are invisible. **Parameters:** `k` = the number of copies of the pair; `s` = the
 size of the specification's invisible padding (it multiplies the specification's graphs by `s!` and changes nothing
-visible).
+visible). All three pairs require `k ≥ 1` and `s ≥ 1`.
 
 Notation: as in `../naive/README.md`; `send^{asyn}_t(to, v)` sends with tag `t`, `recv^{asyn}(tag = 2)` receives
 only a message with tag 2. "spawned `A, C, B`" is the order in which the main thread starts the copy's threads.

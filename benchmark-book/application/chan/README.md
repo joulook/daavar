@@ -4,8 +4,11 @@
 Must API), in `rust/`; Java twin in `java/` (`bench.reliable_channel_aneris.ReliableChannel`); context-free Java
 port in `java-cf/` (`ReliableChannelAneris`). **Visible threads:** `sender`, `receiver`; the endpoints `ep_s`
 (sending end) and `ep_r` (receiving end) are invisible, on both sides. **Parameters:** `K` = the number of messages
-(default 2, smallest interesting size 2); `L = 1` loss and `D = 1` duplication in all (fixed); variant `correct` or
-`no-seqno`.
+(default 2, smallest interesting size 2; `2 ≤ K ≤ 254`, see below); `L = 1` loss and `D = 1` duplication in all
+(fixed); variant `correct` or `no-seqno`. The Rust program stores values, sequence ids and `ackId` in bytes, and
+`ep_r`'s `ackId` counts every accepted `Data` (at most `K` in `correct`, `K + 1` in `no-seqno`, which also accepts the
+duplicate); the pseudocode below (unbounded integers) and the Java twin (`int` fields) describe the Rust program only
+within `K ≤ 254`.
 **Source:** Aneris, the reliable-communication library (`examples/reliable_communication/client_server_code.ml`,
 driven by `examples/messages_in_order/`), Iris spec `aneris/examples/reliable_communication/spec/api_spec.v`.
 
@@ -81,7 +84,8 @@ every `Data` is answered with `Ack(ackId)`; each `Recv` is answered with the hea
 deliveries. (The window of one departs from the source, which retransmits the whole buffer forever: with bounded
 retransmissions a window of two can lose a packet for good under bag.)
 
-The specification has neither ids nor acknowledgements, losses or duplicates. With one id in flight, reordering can
+The specification uses sequence positions (`Data(seq, v)`) to put the data back in order; it has no
+acknowledgements, losses or duplicates. With one id in flight, reordering can
 only bring stale copies, which `ep_r` drops and acknowledges with the current `ackId`; so `rbuf` receives `1 … K`
 once each, in order, and `receiver` never blocks (each value is transmitted at least once without loss). Both sides
 have the visible words `sender: (S(Send(j)) R(Queued))` and `receiver: (S(Recv) R(Deliver(j)))` for `j = 1 … K`,

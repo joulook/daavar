@@ -1,6 +1,8 @@
 # 2pc-lb(N) — two-phase commit with retransmission and the counting bug (`two-pc-lbinria`)
 
-**Communication model:** bag (`asyn`: the source's mailbox server runs with `"unordered"` boxes). **Languages:**
+**Communication models:** bag (`asyn`: the source's mailbox server runs with `"unordered"` boxes; the default of
+both the Rust program and the Java twin) and fifo (`p2p`: per-channel order, selected with `--model fifo` in Rust, the model argument `fifo` in Java); each
+variant is a pair under each model. **Languages:**
 Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`; context-free Java port, in `java-cf/`.
 **Visible threads:** the resource managers `rm0 … rm(N−1)`; the transaction manager `tm` (both sides) and the
 transports `p0 … p(N−1)` (implementation only) are invisible. **Parameters:** `N` = the number of resource managers
@@ -70,6 +72,18 @@ every RM sent once, visibly. The duplicates are invisible (transport sends, TM r
 decision points (abort before any receive, commit after all `N`), so every visible word and order of the
 implementation is one of the specification's.
 
+### correct under fifo — expected: **conforms**
+
+```
+Spec^fifo(N)          ≜ Spec(N)          with every send^asyn, recv^asyn replaced by send^fifo, recv^fifo
+Impl^fifo_correct(N)  ≜ Impl_correct(N)  with the same replacement
+```
+
+In the specification every channel carries at most one message (each RM sends one `Prepared` to `tm`, `tm` sends
+one decision to each RM), so fifo constrains nothing: its graphs are the bag specification's. The implementation's
+fifo graphs are among its bag graphs (fifo only removes reads-from choices: a transport's second copy is read after
+its first), so each is covered as under bag.
+
 ### counting-bug — expected: **violation**
 
 ```
@@ -90,6 +104,17 @@ can only abort or block (value). Without a crash the same early commit is caught
 `p0` forwards twice, `tm` commits on those two receives; both RMs receive `Commit`, the specification's word, but
 `rm1`'s `S(Prepared(1))` is not causally before `rm0`'s `R(Commit)`. At `N = 2`, 12 complete implementation graphs
 are uncovered (4 with a crashed RM, 8 with both prepared); 324 at `N = 3`.
+
+### counting-bug under fifo — expected: **violation**
+
+```
+Spec^fifo(N)               ≜ Spec(N)               with every send^asyn, recv^asyn replaced by send^fifo, recv^fifo
+Impl^fifo_counting-bug(N)  ≜ Impl_counting-bug(N)  with the same replacement
+```
+
+Fifo neither removes a retransmitted `Prepared` nor stops `tm` from counting one RM twice: the `N = 2` witness above
+(`rm0` crashes, `p1` forwards `Prepared(1)` twice, `tm` reads both copies in order and commits) is a fifo graph, and
+the fifo specification, whose graphs are the bag specification's, still cannot commit with `rm0` crashed.
 
 ## What it is for
 
