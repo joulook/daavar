@@ -83,8 +83,14 @@ declare -A BUSY=()   # numa-node -> pid
 declare -A ROWPID=() # pid -> "first width"
 free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; for n in ${ROWPID[$p]//,/ }; do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
 allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; done; return 1; }
+ext_busy() {  # $1 numa node -> 0 if a row of another queue runs on it (state=running, live pid, numa_node "k+…"; 2026-11-03: one row per node across queues)
+  local k=$1 s p
+  for s in $(grep -l "^numa_node=$k+" "$EVAL_OUT"/*/status 2>/dev/null); do
+    grep -q '^state=running' "$s" || continue; p=$(sed -n 's/^pid=//p' "$s" | head -1); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && return 0
+  done; return 1
+}
 find_free() {  # $1 width -> a comma list of width free allowed numa nodes (not necessarily consecutive), or empty
-  local w=$1 k out="" c=0; for ((k=0; k<SLOTS; k++)); do { [ -z "${BUSY[$k]:-}" ] && allowed $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
+  local w=$1 k out="" c=0; for ((k=0; k<SLOTS; k++)); do { [ -z "${BUSY[$k]:-}" ] && allowed $k && ! ext_busy $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
 }
 # dispatch: rows are launched in file order as slots free up; a row whose needok dependency has not
 # finished is deferred (not blocking the rows behind it) and re-checked on every pass
