@@ -236,18 +236,21 @@ if not FULL and KEEP is None:
         def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
-            if not re.search(r"\.p(?=\.|$)", r.get("run id", "")): return None   # owner 2026-11-03 20:30: the paper's tables show only the dedicated-machine runs (suffix .p, brain04, at most four rows at a time)
+            # owner 2026-11-03 21:10: a cell from the reserved machine (suffix .p, brain04, at most four rows at a time) is blue; an earlier campaign cell stays, in red, until its .p rerun lands
             if (r.get("pin") or "")[:7] not in ("9a0629e", "367cdc6"): return None   # 367cdc6 is equivalent to 9a0629e except for joins (which must be merge joins)
             if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
             if limit(r) and num(r.get("timeout s")) != 172800: return None
+            r = dict(r); r["colour"] = "blue" if re.search(r"\.p(?=\.|$)", r.get("run id", "")) else "red"
             return r
+        def paint(r, cell): return f"\\textcolor{{{r['colour']}}}{{{cell}}}" if r is not None and cell != "" else cell
         for prog, var, model, size in want:
             k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
             m = inst.get(k, {}) if k else {}
             c2, c1, c3 = fresh(m.get("stateless")), fresh(m.get("stateful")), fresh(m.get("offline"), True)
             dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
-            gi = next((r["impl graphs"] for r in dec if r["impl graphs"]), ""); gs = next((r["spec graphs"] for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), "")
-            gx = next((r.get("uncovered", "") for r in dec if r.get("uncovered") not in ("", None)), "") if viol else None
+            gi_r = next((r for r in dec if r["impl graphs"]), None); gi = gi_r["impl graphs"] if gi_r else ""
+            gs_r = next((r for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
+            gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None) if viol else None; gx = gx_r.get("uncovered", "") if gx_r else ("" if viol else None)
             CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm = nm if (prog, var) != prev else ""; prev = (prog, var)
@@ -255,17 +258,18 @@ if not FULL and KEEP is None:
             expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""   # the stateless engine's own counts: sweeps kept in the witness cache, specification graphs explored (repeats counted)
             sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
             cells = [sweeps, expl, cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
-            body.append(f"{nm} & {size} & {gi} & {gs}" + (f" & {gx}" if viol else "") + " & " + " & ".join(cells) + " \\\\")
-            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
+            owners = [c2, c2, c2, c2, c1, c1, c3, c3]
+            body.append(f"{nm} & {size} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
+            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", c2), ("stateful", c1), ("offline", c3)) if r is not None)])
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
                + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MiB; an offline row runs its two exports as independent jobs side by side: T = the longer export plus the join, M = the largest of the three. "
-               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; every row was run on one machine reserved for these tables, at most four rows at a time, one per NUMA node; a blank cell is a run not yet finished.")
+               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; \\textcolor{blue}{blue} cells were measured on one machine reserved for these tables, at most four rows at a time, one per NUMA node; \\textcolor{red}{red} cells are earlier measurements on shared machines, kept until their reserved-machine rerun lands; a blank cell is a run not yet finished.")
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", body,
-             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "colour (blue = reserved machine, red = earlier campaign)"], csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:

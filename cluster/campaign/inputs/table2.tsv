@@ -2,6 +2,8 @@
 chain	impl	fifo	2048
 chain	impl	fifo	4096
 chain	impl	fifo	8192
+chain	impl	fifo	16384
+chain	impl	fifo	32768
 commit	impl	fifo	12,12
 commit	impl	fifo	16,16
 commit	impl	fifo	20,20
@@ -11,5 +13,3 @@ share	correct	fifo	28,28
 2pc-ab	correct	bag	9
 2pc-ds	correct	bag	4
 2pc-ds	correct	bag	5
-chain	impl	fifo	16384
-chain	impl	fifo	32768
