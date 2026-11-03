@@ -249,7 +249,7 @@ if not FULL and KEEP is None:
             body.append(f"{nm} & {size} & {gi} & {gs}" + (f" & {gx}" if viol else "") + " & " + " & ".join(cells) + " \\\\")
             csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
-               + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine kept in its witness cache, $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs it explored in total, repeats counted. "
+               + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
                "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
         base = 5 if viol else 4
