@@ -240,7 +240,10 @@ if os.path.exists(T2) and not FULL and KEEP is None:
         cells = [cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
         body.append(f"{nm} & {size} & {gi} & {gs} & " + " & ".join(cells) + " \\\\")
         csvrows.append([prog, var, model, size, gi, gs] + [c.replace("\\faClock", "t/o") for c in cells])
-    cap = ("TraceForge standalone refinement checking on three synthetic families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side. " + COMMON + "." + LIMITS)
+    cap = ("TraceForge standalone refinement checking on three synthetic families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side. "
+           "$G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines). "
+           "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
+           "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
     hdr1 = "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & \\multicolumn{2}{c}{stateless} & \\multicolumn{2}{c}{stateful} & \\multicolumn{2}{c}{offline} \\\\"
     emit("table2", "tab:table2", cap, "@{}lrrrrrrrrr@{}", hdr1, "\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}\\cmidrule(lr){9-10}", " & & & & T & M & T & M & T & M \\\\", body,
          ["program", "variant", "model", "size", "G impl", "G spec", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
