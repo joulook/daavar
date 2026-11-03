@@ -1,0 +1,8 @@
+# Table 2 of the paper (owner, 2026-11-03): the rows, in order. program<TAB>variant<TAB>model<TAB>size; a row without results shows empty cells until they land
+chain	impl	fifo	2048
+chain	impl	fifo	4096
+chain	impl	fifo	8192
+commit	impl	fifo	12,12
+commit	impl	fifo	16,16
+commit	impl	fifo	20,20
+share	correct	fifo	28,28
