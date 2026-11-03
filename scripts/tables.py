@@ -57,11 +57,11 @@ except OSError: pass
 EXPLORATORY = set()
 for _l in open(DV + "/cluster/campaign/inputs/exploratory-variants.tsv"):
     if not _l.startswith("#") and _l.strip(): EXPLORATORY.add(tuple(_l.rstrip("\n").split("\t")[:2]))
-def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m|\.r2)+$", "", i)   # a rerun of the same row at a higher tier (.c1h, .c48h), on the second JMC pin (.j2) or with the merge join (.m) is the same case
+def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m|\.r2|\.p)+$", "", i)   # a rerun of the same row at a higher tier (.c1h, .c48h), on the second JMC pin (.j2) or with the merge join (.m) is the same case
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e", "367cdc6"]
 CURRENT_TF = {"9a0629e", "367cdc6"}   # 367cdc6 (SORTED-JOIN) changes only the join and the summary-file reader/writer: equivalent to 9a0629e for every other row kind (owner, 2026-11-03 19:00)
-def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (len(re.findall(r"\.(c1h|c48h|j2|m|r2)(?=\.|$)", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
+def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (len(re.findall(r"\.(c1h|c48h|j2|m|r2|p)(?=\.|$)", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
 _allrows = list(rows)   # every record, before the one-per-id choice (the old-vs-merge join comparison reads it)
 byid = {}
 for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins

@@ -236,6 +236,7 @@ if not FULL and KEEP is None:
         def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
+            if not re.search(r"\.p(?=\.|$)", r.get("run id", "")): return None   # owner 2026-11-03 20:30: the paper's tables show only the dedicated-machine runs (suffix .p, brain04, at most four rows at a time)
             if (r.get("pin") or "")[:7] not in ("9a0629e", "367cdc6"): return None   # 367cdc6 is equivalent to 9a0629e except for joins (which must be merge joins)
             if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
             if limit(r) and num(r.get("timeout s")) != 172800: return None
@@ -259,7 +260,7 @@ if not FULL and KEEP is None:
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
                + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MiB; an offline row runs its two exports as independent jobs side by side: T = the longer export plus the join, M = the largest of the three. "
-               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished at the current engine versions.")
+               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; every row was run on one machine reserved for these tables, at most four rows at a time, one per NUMA node; a blank cell is a run not yet finished.")
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"

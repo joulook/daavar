@@ -22,7 +22,7 @@ def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None
 def sz(s): return [int(x) for x in re.findall(r"\d+", s)]
-SUF = re.compile(r"(\.c1h|\.c48h|\.j2|\.m|\.r2)+$")
+SUF = re.compile(r"(\.c1h|\.c48h|\.j2|\.m|\.r2|\.p)+$")
 def base(i): return SUF.sub("", i)
 # ---- records (every pin) for the statuses; latest per id ---------------------------------------------------
 rec = {}
