@@ -290,7 +290,7 @@ for pre, fname, title in CAMP:
                 r["_exports_current"] = "yes" if (_cur(sp) and _cur(im)) else "no"
                 r["_join_mode"] = "merge" if "--merge" in (r.get("command") or "") else "in-memory"
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
-                if all(x is not None for x in parts): r["wall_ms"] = sum(parts)
+                if all(x is not None for x in parts): r["wall_ms"] = max(parts[0], parts[1]) + parts[2]   # the two exports are independent jobs run side by side: T = the longer export plus the join (owner, 2026-11-03 19:40)
                 r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
     if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
