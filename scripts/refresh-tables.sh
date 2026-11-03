@@ -12,7 +12,7 @@ while :; do
   DROP=""; [ -f "$DT/dropped.keep" ] && DROP="--drop $DT/dropped.keep"
   "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" $DROP >> "$PL/tex/tables/REFRESH.log" 2>&1
   "$PY" -I "$DV/scripts/paper-tables.py" "$PL/tex/tables" --full $DROP >> "$PL/tex/tables/REFRESH.log" 2>&1
-  (cd "$PL" && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && echo "$(date -Is) tables refreshed, pdf built" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
+  (cd "$PL" && latexmk -g -pdf -interaction=nonstopmode -halt-on-error main.tex >/dev/null 2>&1 && echo "$(date -Is) tables refreshed, pdf built" >> "$PL/tex/tables/REFRESH.log" || echo "$(date -Is) LATEX FAILED" >> "$PL/tex/tables/REFRESH.log")
   # the benchmark book (owner, 2026-11-03): per-benchmark evaluation documents, the groups that exist
   for g in synthetic application realsw agentic; do "$PY" -I "$DV/scripts/bench-book.py" "$BD" "$DV" "$PL/tex/tables" $g --build >> "$PL/tex/tables/REFRESH.log" 2>&1; done
   # the dropped-benchmarks review document (owner, 2026-11-02 21:25): same records, the families of dropped.keep only
