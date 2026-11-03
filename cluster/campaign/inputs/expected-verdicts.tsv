@@ -44,8 +44,8 @@ election	fifo	leader-split	-	leader|ring <v> <n>; n>=1	n>=2	violation
 election	fifo	leader-split	-	leader|ring <v> <n>; n>=1	n==1	conforms	one participant: nothing to split
 election	fifo	ring-split	-	leader|ring <v> <n>; n>=1	n>=2	violation	
 election	fifo	ring-split	-	leader|ring <v> <n>; n>=1	n==1	conforms	one participant: nothing to split
-s1-naive	bag	naive	-	<variant> <k> <enc>; k>=1, enc in 1,2	all	violation	
-s1-naive	bag	self	-	<variant> <k> <enc>; k>=1, enc in 1,2	all	conforms	
+s1-naive	bag	naive	-	<variant> <k>; k>=1	all	violation	
+s1-naive	bag	self	-	<variant> <k>; k>=1	all	conforms	
 s2-share	fifo	share	-	<variant> <m> <c>; m>=1, 0<=c<=m	all	conforms	
 s2-share	fifo	ctl	-	<variant> <m> <c>; m>=1, 0<=c<=m	all	conforms	control
 s3-commit	fifo	-	-	<n> <j>; n>=1, 0<=j<=n	all	conforms	

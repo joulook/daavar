@@ -1,9 +1,9 @@
-# naive(k, e) — the stateless worst case (`s1-naive`)
+# naive(k) — the stateless worst case (`s1-naive`)
 
 **Communication model:** bag (`asyn`: unordered delivery). **Language:** Rust (TraceForge's Must API), in `rust/`.
-**Visible threads:** `A`, `C`, `B1 … Bk`. **Parameters:** `k` = the number of `B` senders; `e` = the spawn encoding
-(1 spawns `C, B1..Bk, A`; 2 spawns `B1..Bk, A, C`), which changes nothing visible and only shows that the result does
-not depend on the spawn order.
+**Visible threads:** `A`, `C`, `B1 … Bk`. **Parameter:** `k` = the number of `B` senders. (The engine's test grid
+also had a second spawn encoding, `B1..Bk, A, C` instead of `C, B1..Bk, A`; it changes nothing visible and only the
+exploration order, and was dropped from the benchmark on 2026-11-03; the campaign's rows are those of the first encoding.)
 
 Notation (the paper's): `T: c1; c2` is thread `T` running the commands in order; `‖` composes threads;
 `send^M(to, v)` sends `v` to thread `to` under model `M`; `x := recv^M()` is a blocking receive of any message

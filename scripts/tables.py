@@ -64,6 +64,11 @@ for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin,
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
 for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
+# naive(k): the spawn-encoding argument e is dropped (owner, 2026-11-03); the rows recorded as k,1 are the program's rows, size k; k,2 rows are left out
+_n = len(rows); rows = [r for r in rows if not (r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,2", r["a"].get("size", "")))]
+for r in rows:
+    if r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,1", r["a"].get("size", "")): r["a"] = dict(r["a"], size=r["a"]["size"].split(",")[0])
+print(f"naive: {_n - len(rows)} rows of the second spawn encoding left out; sizes shown as k")
 def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None

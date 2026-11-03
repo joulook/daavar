@@ -1,7 +1,7 @@
 # dir	axes	[max per axis: the program's own bound, - for none]
 # dir	axes (one 0/1 per numeric argument, in the program's argument order): 1 = a size axis the grid extends, 0 = a structural
 # parameter kept at its listed values (an encoding switch, a bound tied to another parameter, a doubling scale). Missing dir = all 1.
-s1-naive	1 0
+s1-naive	1
 s2-share	1 0
 s3-commit	1 0
 s4-chain	0

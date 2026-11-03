@@ -8,21 +8,19 @@
 //! `CommunicationModel::NoOrder` is the public `traceforge::loc::CommunicationModel`, imported
 //! below); `prog`/`Prog` and `named` are `grid.rs:60-70`.
 //!
-//! ARGS: `{naive|self} <k> <enc>`
-//! * `enc`: 1 spawns `c, b1..bk, a` (`c_first`), 2 spawns `b1..bk, a, c` — `naive_fixture`'s
-//!   and `synth_c_first`'s mapping (`grid.rs:857-875`, 4079-4085); any other value panics;
+//! ARGS: `{naive|self} <k>` (the spawn encoding is fixed to `c, b1..bk, a`, `c_first`; the second encoding
+//! `b1..bk, a, c` of the engine's grid changed nothing visible and was dropped on 2026-11-03);
 //! * spec: `naive_d(k, 1, c_first, None)` for both variants;
 //! * impl: `naive` = `naive_d(k, 0, c_first, None)` (the violating `ex:naive`),
 //!   `self` = `naive_d(k, 1, c_first, None)` (`naive-self`, spec against itself).
 //!
 //! Visible threads: `a`, `c`, `b1 .. bk` (`naive_visible`).
 //!
-//! Fixture names: `ex:naive/k<k>/enc<e>` → `s1-naive naive <k> <e>`;
-//! `synth/naive-self/k<k>enc<e>` → `s1-naive self <k> <e>`.
+//! Fixture names: `ex:naive/k<k>/enc1` → `s1-naive naive <k>`; `synth/naive-self/k<k>enc1` → `s1-naive self <k>`.
 //!
 //! Options every row spells (never set here; they are the shared main's `--model`, `--seed`,
 //! `--threshold`): `--model bag --seed 0 --threshold 65536` (`cfg(ConsType::Bag)`,
-//! `grid.rs:88-99`). Example: `<bin> row --model bag --seed 0 --threshold 65536 -- self 3 2`.
+//! `grid.rs:88-99`). Example: `<bin> row --model bag --seed 0 --threshold 65536 -- self 3`.
 //! Declared default model, used when `--model` is left out: `bag`.
 
 use std::sync::Arc;
@@ -102,7 +100,7 @@ fn naive_visible(k: usize) -> Vec<String> {
 // ------------------------------------------------------ the arguments ----
 
 const PROGRAM: &str = "s1-naive";
-const USAGE: &str = "`{naive|self} <k> <enc>`, enc 1 or 2";
+const USAGE: &str = "`{naive|self} <k>`";
 
 fn arity(args: &[String], n: usize) {
     if args.len() != n {
@@ -130,19 +128,14 @@ struct Args {
 }
 
 fn parse(args: &[String]) -> Args {
-    arity(args, 3);
+    arity(args, 2);
     let impl_v = match args[0].as_str() {
         "naive" => 0,
         "self" => 1,
         v => panic!("{PROGRAM}: unknown variant `{v}`; ARGS are {USAGE}"),
     };
     let k = num(args, 1, "k");
-    let c_first = match num(args, 2, "enc") {
-        1 => true,
-        2 => false,
-        e => panic!("{PROGRAM}: ex:naive has encodings 1 and 2, got {e}; ARGS are {USAGE}"),
-    };
-    Args { impl_v, k, c_first }
+    Args { impl_v, k, c_first: true }
 }
 
 fn main() -> std::process::ExitCode {
