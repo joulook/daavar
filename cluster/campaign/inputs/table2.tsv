@@ -22,3 +22,5 @@ chan	correct	bag	7
 ewd998	correct	bag	5
 lb	rr-a4b	fifo	3,3,3
 lb	rr-a4b	fifo	4,4,4
+lock	fifo	fifo	3,4
+lock	fifo	fifo	3,5
