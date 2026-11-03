@@ -85,7 +85,7 @@ free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/d
 allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; done; return 1; }
 ext_busy() {  # $1 numa node -> 0 if a row of another queue runs on it (state=running, live pid, numa_node "k+…"; 2026-11-03: one row per node across queues)
   local k=$1 s p
-  for s in $(grep -l "^numa_node=$k+" "$EVAL_OUT"/*/status 2>/dev/null); do
+  for s in $(grep -l "^numa=$k+" "$EVAL_OUT"/*/status 2>/dev/null); do
     grep -q '^state=running' "$s" || continue; p=$(sed -n 's/^pid=//p' "$s" | head -1); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && return 0
   done; return 1
 }
