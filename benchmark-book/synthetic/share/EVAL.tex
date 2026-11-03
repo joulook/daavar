@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{share} (s2-share)}
 \author{}
-\date{generated 2026-11-03 from brain-data b579da5f9 2026-11-03 10:41:44 +0100}
+\date{generated 2026-11-03 from brain-data a7066b580 2026-11-03 10:49:44 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): share: expected conforms; ctl: expected conforms (control). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G$ = graphs explored (specification, implementation); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -15,27 +15,27 @@
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{blue} correct &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 2,1 & 1 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 2,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,4 & 1 & 16 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,8 & 1 & 256 & conforms & 0.1 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,6 & 1 & 64 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,12 & 1 & 4096 & conforms & 0.5 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,0 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,8 & 1 & 256 & conforms & 0.1 & 8 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,16 & 1 & 65536 & conforms & 2.3 & 36 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,0 & 1 & 1 & conforms & 0.0 & 6 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,12 & 1 & 4096 & conforms & 1.3 & 18 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,24 & 1 & 16777216 & conforms & 732.3 & 138 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,14 & 1 & 16384 & conforms & 3.1 & 64 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,28 & 1 & 268435456 & conforms & 33506.0 & 1126 & 48 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,1 & 1 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,4 & 1 & 16 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,8 & 1 & 256 & conforms & 0.1 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,6 & 1 & 64 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,12 & 1 & 4096 & conforms & 0.5 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,0 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,8 & 1 & 256 & conforms & 0.1 & 8 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,16 & 1 & 65536 & conforms & 2.3 & 36 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,0 & 1 & 1 & conforms & 0.0 & 6 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,12 & 1 & 4096 & conforms & 1.3 & 18 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,24 & 1 & 16777216 & conforms & 732.3 & 138 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,14 & 1 & 16384 & conforms & 3.1 & 64 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,28 & 1 & 268435456 & conforms & 33506.0 & 1126 & 48 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,1 & 3 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 3 & brain03, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,2 & 10 & 4 & conforms & 0.0 & 2 & 1 h, 250 GB & 4 & 10 & brain03, 2026-11-02 \\
@@ -56,35 +56,35 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-no record (never started): ctl 2 4 fifo.g, share 2 4 fifo.g, share 2 6 fifo.g, ctl 2 6 fifo.g, share 2 8 fifo.g, ctl 2 8 fifo.g, ctl 2 12 fifo.g, share 2 12 fifo.g, ctl 2 16 fifo.g, share 2 16 fifo.g, ctl 2 24 fifo.g, share 2 24 fifo.g, ctl 3 0 fifo.g, share 3 0 fifo.g, share 3 1 fifo.g, ctl 3 1 fifo.g, share 3 2 fifo.g, ctl 3 2 fifo.g, share 3 4 fifo.g, ctl 3 4 fifo.g, share 3 6 fifo.g, ctl 3 6 fifo.g, ctl 3 8 fifo.g, share 3 8 fifo.g, share 3 12 fifo.g, ctl 3 12 fifo.g, ctl 3 16 fifo.g, share 3 16 fifo.g, share 3 24 fifo.g, ctl 3 24 fifo.g, share 4 1 fifo.g, ctl 4 1 fifo.g, ctl 4 6 fifo.g, share 4 6 fifo.g, share 4 8 fifo.g, ctl 4 8 fifo.g, share 4 12 fifo.g, ctl 4 12 fifo.g, share 4 16 fifo.g, ctl 4 16 fifo.g, \ldots\ (413 instances).\par
-skipped: a smaller size had reached its limit: ctl 17 16 fifo.g, ctl 18 16 fifo.g, ctl 19 16 fifo.g, ctl 20 16 fifo.g, ctl 21 16 fifo.g, ctl 22 16 fifo.g, ctl 23 16 fifo.g, ctl 24 0 fifo, ctl 24 1 fifo.g, ctl 24 2 fifo.g, ctl 24 12 fifo, ctl 24 16 fifo.g, ctl 24 24 fifo, ctl 25 0 fifo.g, ctl 25 1 fifo.g, ctl 25 2 fifo.g, ctl 25 12 fifo.g, ctl 25 16 fifo.g, ctl 25 24 fifo.g, ctl 26 0 fifo.g, ctl 26 1 fifo.g, ctl 26 2 fifo.g, ctl 26 12 fifo.g, ctl 26 16 fifo.g, ctl 26 24 fifo.g, ctl 27 0 fifo.g, ctl 27 1 fifo.g, ctl 27 2 fifo.g, ctl 27 12 fifo.g, ctl 27 16 fifo.g, ctl 27 24 fifo.g.\par
+planned but never scheduled (grid points beyond the ladder): ctl 2 4 fifo.g, share 2 4 fifo.g, ctl 2 6 fifo.g, share 2 6 fifo.g, ctl 2 8 fifo.g, share 2 8 fifo.g, share 2 12 fifo.g, ctl 2 12 fifo.g, ctl 2 16 fifo.g, share 2 16 fifo.g, ctl 2 24 fifo.g, share 2 24 fifo.g, share 3 0 fifo.g, ctl 3 0 fifo.g, ctl 3 1 fifo.g, share 3 1 fifo.g, ctl 3 2 fifo.g, share 3 2 fifo.g, share 3 4 fifo.g, ctl 3 4 fifo.g, share 3 6 fifo.g, ctl 3 6 fifo.g, share 3 8 fifo.g, ctl 3 8 fifo.g, \ldots\ (413 instances in all).\par
+skipped: a smaller size had reached its limit: ctl 17 16 fifo.g, ctl 18 16 fifo.g, ctl 19 16 fifo.g, ctl 20 16 fifo.g, ctl 21 16 fifo.g, ctl 22 16 fifo.g, ctl 23 16 fifo.g, ctl 24 0 fifo, ctl 24 1 fifo.g, ctl 24 2 fifo.g, ctl 24 12 fifo, ctl 24 16 fifo.g, ctl 24 24 fifo, ctl 25 0 fifo.g, ctl 25 1 fifo.g, ctl 25 2 fifo.g, ctl 25 12 fifo.g, ctl 25 16 fifo.g, ctl 25 24 fifo.g, ctl 26 0 fifo.g, ctl 26 1 fifo.g, ctl 26 2 fifo.g, ctl 26 12 fifo.g, ctl 26 16 fifo.g, \ldots\ (31 instances in all).\par
 \section*{stateful}
 \begin{longtable}{@{}lllrrrlrrll@{}}
 \toprule
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{blue} correct &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 2,1 & 1 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 2,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 4,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 8,8 & 1 & 256 & conforms & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,6 & 1 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 12,12 & 1 & 4096 & conforms & 0.6 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,8 & 1 & 256 & conforms & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 16,16 & 1 & 65536 & conforms & 2.6 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,12 & 1 & 4096 & conforms & 1.4 & 16 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 24,24 & 1 & 16777216 & conforms & 779.7 & 142 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,0 & 1 & 1 & conforms & 0.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,14 & 1 & 16384 & conforms & 3.1 & 54 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} correct &  & fifo & 28,28 & 1 & 268435456 & conforms & 33257.0 & 1130 & 48 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,1 & 1 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 2,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,2 & 1 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 4,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,4 & 1 & 16 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 8,8 & 1 & 256 & conforms & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,6 & 1 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 12,12 & 1 & 4096 & conforms & 0.6 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,8 & 1 & 256 & conforms & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 16,16 & 1 & 65536 & conforms & 2.6 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,12 & 1 & 4096 & conforms & 1.4 & 16 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 24,24 & 1 & 16777216 & conforms & 779.7 & 142 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,0 & 1 & 1 & conforms & 0.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,14 & 1 & 16384 & conforms & 3.1 & 54 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 28,28 & 1 & 268435456 & conforms & 33257.0 & 1130 & 48 h, 250 GB & brain01, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,0 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,1 & 2 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \color{blue} ctl &  & fifo & 2,2 & 4 & 4 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
@@ -105,34 +105,34 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-no record (never started): ctl 2 4 fifo.g, share 2 4 fifo.g, share 2 6 fifo.g, ctl 2 6 fifo.g, share 2 8 fifo.g, ctl 2 8 fifo.g, ctl 2 12 fifo.g, share 2 12 fifo.g, ctl 2 16 fifo.g, share 2 16 fifo.g, ctl 2 24 fifo.g, share 2 24 fifo.g, ctl 3 0 fifo.g, share 3 0 fifo.g, share 3 1 fifo.g, ctl 3 1 fifo.g, share 3 2 fifo.g, ctl 3 2 fifo.g, share 3 4 fifo.g, ctl 3 4 fifo.g, share 3 6 fifo.g, ctl 3 6 fifo.g, ctl 3 8 fifo.g, share 3 8 fifo.g, share 3 12 fifo.g, ctl 3 12 fifo.g, ctl 3 16 fifo.g, share 3 16 fifo.g, share 3 24 fifo.g, ctl 3 24 fifo.g, share 4 1 fifo.g, ctl 4 1 fifo.g, ctl 4 6 fifo.g, share 4 6 fifo.g, share 4 8 fifo.g, ctl 4 8 fifo.g, share 4 12 fifo.g, ctl 4 12 fifo.g, share 4 16 fifo.g, ctl 4 16 fifo.g, \ldots\ (416 instances).\par
-skipped: a smaller size had reached its limit: ctl 17 16 fifo.g, ctl 18 16 fifo.g, ctl 19 16 fifo.g, ctl 20 16 fifo.g, ctl 21 16 fifo.g, ctl 22 16 fifo.g, ctl 23 16 fifo.g, ctl 24 0 fifo, ctl 24 1 fifo.g, ctl 24 2 fifo.g, ctl 24 12 fifo, ctl 24 16 fifo.g, ctl 24 24 fifo, ctl 25 0 fifo.g, ctl 25 1 fifo.g, ctl 25 2 fifo.g, ctl 25 12 fifo.g, ctl 25 16 fifo.g, ctl 25 24 fifo.g, ctl 26 0 fifo.g, ctl 26 1 fifo.g, ctl 26 2 fifo.g, ctl 26 12 fifo.g, ctl 26 16 fifo.g, ctl 26 24 fifo.g, ctl 27 0 fifo.g, ctl 27 1 fifo.g, ctl 27 2 fifo.g, ctl 27 12 fifo.g, ctl 27 16 fifo.g, ctl 27 24 fifo.g.\par
+planned but never scheduled (grid points beyond the ladder): ctl 2 4 fifo.g, share 2 4 fifo.g, ctl 2 6 fifo.g, share 2 6 fifo.g, ctl 2 8 fifo.g, share 2 8 fifo.g, share 2 12 fifo.g, ctl 2 12 fifo.g, ctl 2 16 fifo.g, share 2 16 fifo.g, ctl 2 24 fifo.g, share 2 24 fifo.g, share 3 0 fifo.g, ctl 3 0 fifo.g, ctl 3 1 fifo.g, share 3 1 fifo.g, ctl 3 2 fifo.g, share 3 2 fifo.g, share 3 4 fifo.g, ctl 3 4 fifo.g, share 3 6 fifo.g, ctl 3 6 fifo.g, share 3 8 fifo.g, ctl 3 8 fifo.g, \ldots\ (416 instances in all).\par
+skipped: a smaller size had reached its limit: ctl 17 16 fifo.g, ctl 18 16 fifo.g, ctl 19 16 fifo.g, ctl 20 16 fifo.g, ctl 21 16 fifo.g, ctl 22 16 fifo.g, ctl 23 16 fifo.g, ctl 24 0 fifo, ctl 24 1 fifo.g, ctl 24 2 fifo.g, ctl 24 12 fifo, ctl 24 16 fifo.g, ctl 24 24 fifo, ctl 25 0 fifo.g, ctl 25 1 fifo.g, ctl 25 2 fifo.g, ctl 25 12 fifo.g, ctl 25 16 fifo.g, ctl 25 24 fifo.g, ctl 26 0 fifo.g, ctl 26 1 fifo.g, ctl 26 2 fifo.g, ctl 26 12 fifo.g, ctl 26 16 fifo.g, \ldots\ (31 instances in all).\par
 \section*{offline}
 \begin{longtable}{@{}lllrrrlrrlrrrrl@{}}
 \toprule
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} correct & share & fifo & 2,0 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 2,1 & 1 & 2 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 2,2 & 1 & 4 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 4,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 4,2 & 1 & 4 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 4,4 & 1 & 16 & conforms & 0.1 & 2 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 8,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 8,4 & 1 & 16 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 8,8 & 1 & 256 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 12,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 12,6 & 1 & 64 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.0 & 0.4 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 12,12 & 1 & 4096 & conforms & 1.1 & 8 & 10 min, 16 GB & 0.2 & 0.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 16,0 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 16,8 & 1 & 256 & conforms & 0.6 & 8 & 10 min, 16 GB & 0.3 & 0.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 16,16 & 1 & 65536 & conforms & 3.1 & 34 & 10 min, 16 GB & 0.1 & 2.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 24,0 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 24,12 & 1 & 4096 & conforms & 2.0 & 16 & 10 min, 16 GB & 0.2 & 1.8 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 24,24 & 1 & 16777216 & conforms & 940.3 & 136 & 10 min, 16 GB & 0.3 & 940.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} correct & share & fifo & 28,0 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{blue} correct & share & fifo & 28,14 & 1 & 16384 & conforms & 3.6 & 62 & 1 h, 250 GB & 0.1 & 3.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} single & share & fifo & 2,0 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 2,1 & 1 & 2 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 2,2 & 1 & 4 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 4,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 4,2 & 1 & 4 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 4,4 & 1 & 16 & conforms & 0.1 & 2 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 8,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 8,4 & 1 & 16 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 8,8 & 1 & 256 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 12,0 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 12,6 & 1 & 64 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.0 & 0.4 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 12,12 & 1 & 4096 & conforms & 1.1 & 8 & 10 min, 16 GB & 0.2 & 0.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 16,0 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 16,8 & 1 & 256 & conforms & 0.6 & 8 & 10 min, 16 GB & 0.3 & 0.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 16,16 & 1 & 65536 & conforms & 3.1 & 34 & 10 min, 16 GB & 0.1 & 2.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 24,0 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 24,12 & 1 & 4096 & conforms & 2.0 & 16 & 10 min, 16 GB & 0.2 & 1.8 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 24,24 & 1 & 16777216 & conforms & 940.3 & 136 & 10 min, 16 GB & 0.3 & 940.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single & share & fifo & 28,0 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} single & share & fifo & 28,14 & 1 & 16384 & conforms & 3.6 & 62 & 1 h, 250 GB & 0.1 & 3.5 & 0.0 & merge & brain01, 2026-11-03 \\
 \color{red} ctl & ctl & fifo & 2,0 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} ctl & ctl & fifo & 2,1 & 2 & 2 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} ctl & ctl & fifo & 2,2 & 4 & 4 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
@@ -153,7 +153,7 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-no record (never started): ctl 2 4 fifo.g, share 2 4 fifo.g, share 2 6 fifo.g, ctl 2 6 fifo.g, share 2 8 fifo.g, ctl 2 8 fifo.g, ctl 2 12 fifo.g, share 2 12 fifo.g, ctl 2 16 fifo.g, share 2 16 fifo.g, ctl 2 24 fifo.g, share 2 24 fifo.g, ctl 3 0 fifo.g, share 3 0 fifo.g, share 3 1 fifo.g, ctl 3 1 fifo.g, share 3 2 fifo.g, ctl 3 2 fifo.g, share 3 4 fifo.g, ctl 3 4 fifo.g, share 3 6 fifo.g, ctl 3 6 fifo.g, ctl 3 8 fifo.g, share 3 8 fifo.g, share 3 12 fifo.g, ctl 3 12 fifo.g, ctl 3 16 fifo.g, share 3 16 fifo.g, share 3 24 fifo.g, ctl 3 24 fifo.g, share 4 1 fifo.g, ctl 4 1 fifo.g, ctl 4 6 fifo.g, share 4 6 fifo.g, share 4 8 fifo.g, ctl 4 8 fifo.g, share 4 12 fifo.g, ctl 4 12 fifo.g, share 4 16 fifo.g, ctl 4 16 fifo.g, \ldots\ (441 instances).\par
+planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, share 2 8 fifo, ctl 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, ctl 3 0 fifo, share 3 0 fifo, share 3 1 fifo, ctl 3 1 fifo, share 3 2 fifo, ctl 3 2 fifo, ctl 3 4 fifo, share 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (441 instances in all).\par
 left out by the table rules (ok): ctl 2 0 fifo, ctl 2 1 fifo, ctl 2 2 fifo, ctl 4 0 fifo, ctl 4 2 fifo, ctl 4 4 fifo, ctl 8 0 fifo, ctl 8 4 fifo, ctl 8 8 fifo, ctl 12 0 fifo, ctl 12 6 fifo, ctl 12 12 fifo, ctl 16 0 fifo, ctl 16 8 fifo, ctl 16 16 fifo, ctl 24 0 fifo, ctl 24 12 fifo, ctl 28 0 fifo, ctl 28 14 fifo.\par
 skipped: a smaller size had reached its limit: ctl 24 24 fifo.\par
 \end{document}

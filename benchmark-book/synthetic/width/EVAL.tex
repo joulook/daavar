@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{width} (s6-width)}
 \author{}
-\date{generated 2026-11-03 from brain-data b579da5f9 2026-11-03 10:41:44 +0100}
+\date{generated 2026-11-03 from brain-data a7066b580 2026-11-03 10:49:44 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G$ = graphs explored (specification, implementation); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -15,49 +15,49 @@
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{blue} impl &  & fifo & 2 & 3 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 3 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 8 & 36 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & 8 & 36 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 32 & 528 & 32 & conforms & 0.0 & 2 & 1 h, 250 GB & 32 & 528 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 128 & 8256 & 128 & conforms & 0.1 & 2 & 1 h, 250 GB & 128 & 8256 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 512 & 131328 & 512 & conforms & 1.7 & 2 & 1 h, 250 GB & 512 & 131328 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 1024 & 524800 & 1024 & conforms & 6.7 & 4 & 1 h, 250 GB & 1024 & 524800 & brain03, 2026-11-02 \\
-\color{blue} impl &  & fifo & 2048 & 2098176 & 2048 & conforms & 26.6 & 14 & 1 h, 250 GB & 2048 & 2098176 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 2 & 3 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 3 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 8 & 36 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & 8 & 36 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 32 & 528 & 32 & conforms & 0.0 & 2 & 1 h, 250 GB & 32 & 528 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 128 & 8256 & 128 & conforms & 0.1 & 2 & 1 h, 250 GB & 128 & 8256 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 512 & 131328 & 512 & conforms & 1.7 & 2 & 1 h, 250 GB & 512 & 131328 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 1024 & 524800 & 1024 & conforms & 6.7 & 4 & 1 h, 250 GB & 1024 & 524800 & brain03, 2026-11-02 \\
+\color{blue} single &  & fifo & 2048 & 2098176 & 2048 & conforms & 26.6 & 14 & 1 h, 250 GB & 2048 & 2098176 & brain03, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-no record (never started): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
 \section*{stateful}
 \begin{longtable}{@{}lllrrrlrrll@{}}
 \toprule
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{blue} impl &  & fifo & 2 & 2 & 2 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 8 & 8 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 32 & 32 & 32 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 128 & 128 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 512 & 512 & 512 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 1024 & 1024 & 1024 & conforms & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} impl &  & fifo & 2048 & 2048 & 2048 & conforms & 0.2 & 6 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 2 & 2 & 2 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 8 & 8 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 32 & 32 & 32 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 128 & 128 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 512 & 512 & 512 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 1024 & 1024 & 1024 & conforms & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} single &  & fifo & 2048 & 2048 & 2048 & conforms & 0.2 & 6 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-no record (never started): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
 \section*{offline}
 \begin{longtable}{@{}lllrrrlrrlrrrrl@{}}
 \toprule
 variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} impl &  & fifo & 2 & 2 & 2 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} impl &  & fifo & 8 & 8 & 8 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} impl &  & fifo & 32 & 32 & 32 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} impl &  & fifo & 128 & 128 & 128 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} impl &  & fifo & 512 & 512 & 512 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{blue} impl &  & fifo & 1024 & 1024 & 1024 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} impl &  & fifo & 2048 & 2048 & 2048 & conforms & 0.3 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} single &  & fifo & 2 & 2 & 2 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single &  & fifo & 8 & 8 & 8 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single &  & fifo & 32 & 32 & 32 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single &  & fifo & 128 & 128 & 128 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} single &  & fifo & 512 & 512 & 512 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} single &  & fifo & 1024 & 1024 & 1024 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} single &  & fifo & 2048 & 2048 & 2048 & conforms & 0.3 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-no record (never started): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
 \end{document}

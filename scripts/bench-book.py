@@ -100,7 +100,7 @@ for name, d in GROUPS[GROUP]:
                 ex = f" & {fmt(r.get('spec export s'))} & {fmt(r.get('impl export s'))} & {fmt(r.get('join s'))} & {jk}"
             else: ex = ""
             run = f"{esc(r.get('node',''))}, {esc((r.get('started','') or '')[:10])}"
-            L.append(f"\\color{{{c}}} {esc(r['variant'] or 'single')} & {esc(r['spec'])} & {r['model']} & {esc(r['size'])} & {esc(r['spec graphs'])} & {esc(r['impl graphs'])} & {verdict_cell(r)} & {fmt(r.get('wall s')) if r['verdict'] in ('conforms','violation') else ''} & {fmt(r.get('peak MB'), '{:.0f}') if r['verdict'] in ('conforms','violation') else ''} & {tier(r)}{ex} & {run} \\\\")
+            L.append(f"\\color{{{c}}} {esc(r['variant'] if r['variant'] not in ('', 'impl', 'correct') else 'single')} & {esc(r['spec'])} & {r['model']} & {esc(r['size'])} & {esc(r['spec graphs'])} & {esc(r['impl graphs'])} & {verdict_cell(r)} & {fmt(r.get('wall s')) if r['verdict'] in ('conforms','violation') else ''} & {fmt(r.get('peak MB'), '{:.0f}') if r['verdict'] in ('conforms','violation') else ''} & {tier(r)}{ex} & {run} \\\\")
         L += ["\\bottomrule", "\\end{longtable}"]
         # not run: planned ids of this kind without a measured row
         nr = collections.defaultdict(list)
@@ -109,9 +109,9 @@ for name, d in GROUPS[GROUP]:
             st = None
             for cand in sorted([i for i in rec if base(i) == b], key=lambda i: rec[i].get("started_at") or ""):
                 st = rec[cand]["stop_reason"]
-            m = re.match(r"^[A-Z0-9]+\.[^.]+\.(impl|spec)_(.*?)(\.t\d+)?(\.[xgf]\d+)?(\.vs-[^.]*)?$", b)
+            m = re.match(r"^[A-Z0-9]+\.[^.]+\.(impl|spec)_(.*?)(\.t\d+)?(\.[xgf]\d*)?(\.vs-[^.]*)?$", b)
             inst = m.group(2).replace("_", " ") if m else b
-            if st is None: nr["no record (never started)"].append(inst)
+            if st is None: nr["planned but never scheduled (grid points beyond the ladder)"].append(inst)
             elif st.startswith("skipped"): nr["skipped: a smaller size had reached its limit"].append(inst)
             elif st.startswith("exit-"): nr[f"the tool ended with an error ({esc(st)})"].append(inst)
             elif st == "refused": nr["refused (an input missing at run time)"].append(inst)
@@ -120,7 +120,7 @@ for name, d in GROUPS[GROUP]:
             L.append(f"\\paragraph{{Not run ({ename}).}}")
             for why, insts in nr.items():
                 insts = sorted(set(insts), key=lambda s: sz(s))
-                shown = ", ".join(esc(x) for x in insts[:40]) + (f", \\ldots\\ ({len(insts)} instances)" if len(insts) > 40 else "")
+                shown = ", ".join(esc(x) for x in insts[:24]) + (f", \\ldots\\ ({len(insts)} instances in all)" if len(insts) > 24 else "")
                 L.append(f"{why}: {shown}.\\par")
     L.append("\\end{document}")
     open(f"{out_dir}/EVAL.tex", "w").write("\n".join(L) + "\n")
