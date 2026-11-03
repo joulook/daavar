@@ -109,8 +109,9 @@ for name, d in GROUPS[GROUP]:
             st = None
             for cand in sorted([i for i in rec if base(i) == b], key=lambda i: rec[i].get("started_at") or ""):
                 st = rec[cand]["stop_reason"]
-            m = re.match(r"^[A-Z0-9]+\.[^.]+\.(impl|spec)_(.*?)(\.t\d+)?(\.[xgf]\d*)?(\.vs-[^.]*)?$", b)
-            inst = m.group(2).replace("_", " ") if m else b
+            core = re.sub(r"(\.(t\d+|[xgf]\d*|vs-[^.]*))+$", "", b)   # the ladder, grid, thread and spec tags, in any order
+            m = re.match(r"^[A-Z0-9]+\.[^.]+\.(impl|spec)_(.*)$", core)
+            inst = m.group(2).replace("_", " ") if m else core
             if st is None: nr["planned but never scheduled (grid points beyond the ladder)"].append(inst)
             elif st.startswith("skipped"): nr["skipped: a smaller size had reached its limit"].append(inst)
             elif st.startswith("exit-"): nr[f"the tool ended with an error ({esc(st)})"].append(inst)

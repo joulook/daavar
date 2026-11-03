@@ -122,7 +122,7 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): twin 10 8 bag.f7, reset 10 8 bag.f7, ctl 10 8 bag.f7, ctl 10 9 bag, reset 10 9 bag, reset 10 10 bag, ctl 10 10 bag, ctl 11 1 bag.g, twin 11 1 bag.g, reset 11 1 bag.g, ctl 11 3 bag.g, reset 11 3 bag.g, twin 11 3 bag.g, ctl 11 4 bag.g, twin 11 4 bag.g, reset 11 4 bag.g, reset 12 1 bag.g, twin 12 1 bag.g, ctl 12 1 bag.g, twin 12 3 bag.g, ctl 12 3 bag.g, reset 12 3 bag.g, twin 12 4 bag.g, reset 12 4 bag.g, \ldots\ (37 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, reset 10 8 bag, ctl 10 8 bag, ctl 10 9 bag, reset 10 9 bag, reset 10 10 bag, ctl 10 10 bag, ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, \ldots\ (37 instances in all).\par
 \section*{stateful}
 \begin{longtable}{@{}lllrrrlrrll@{}}
 \toprule
@@ -240,7 +240,7 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): twin 10 8 bag.f7, reset 10 8 bag.f7, ctl 10 8 bag.f7, ctl 11 1 bag.g, twin 11 1 bag.g, reset 11 1 bag.g, ctl 11 3 bag.g, reset 11 3 bag.g, twin 11 3 bag.g, ctl 11 4 bag.g, twin 11 4 bag.g, reset 11 4 bag.g, reset 12 1 bag.g, twin 12 1 bag.g, ctl 12 1 bag.g, twin 12 3 bag.g, ctl 12 3 bag.g, reset 12 3 bag.g, twin 12 4 bag.g, reset 12 4 bag.g, ctl 12 4 bag.g, ctl 13 1 bag.g, twin 13 1 bag.g, reset 13 1 bag.g, \ldots\ (39 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, reset 10 8 bag, ctl 10 8 bag, ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, reset 12 4 bag, twin 13 1 bag, reset 13 1 bag, ctl 13 1 bag, \ldots\ (33 instances in all).\par
 \section*{offline}
 \begin{longtable}{@{}lllrrrlrrlrrrrl@{}}
 \toprule
@@ -354,6 +354,6 @@ variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verd
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): twin 11 1 bag, reset 11 1 bag, ctl 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, twin 11 4 bag, ctl 11 4 bag, reset 11 4 bag, reset 12 1 bag, twin 12 1 bag, ctl 12 1 bag, twin 12 3 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 4 bag, ctl 12 4 bag, reset 12 4 bag, twin 13 1 bag, ctl 13 1 bag, reset 13 1 bag, twin 13 3 bag, ctl 13 3 bag, reset 13 3 bag, \ldots\ (27 instances in all).\par
-refused (an input missing at run time): reset 10 9 bag, ctl 10 9 bag, reset 10 10 bag, ctl 10 10 bag.\par
+planned but never scheduled (grid points beyond the ladder): ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, reset 12 4 bag, twin 13 1 bag, reset 13 1 bag, ctl 13 1 bag, ctl 13 3 bag, reset 13 3 bag, twin 13 3 bag, \ldots\ (27 instances in all).\par
+refused (an input missing at run time): reset 10 9 bag, ctl 10 9 bag, ctl 10 10 bag, reset 10 10 bag.\par
 \end{document}
