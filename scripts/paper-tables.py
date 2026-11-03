@@ -251,7 +251,7 @@ if not FULL and KEEP is None:
             gi_r = next((r for r in dec if r["impl graphs"]), None); gi = gi_r["impl graphs"] if gi_r else ""
             gs_r = next((r for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
             gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None) if viol else None; gx = gx_r.get("uncovered", "") if gx_r else ("" if viol else None)
-            CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav"}   # the owner's names for the curated tables (2026-11-03)
+            CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav", ("bcast", "decide-early"): "bcast-de", ("chan", "no-seqno"): "chan-ns"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm = nm if (prog, var) != prev else ""; prev = (prog, var)
             if nm and body: body.append("\\midrule")

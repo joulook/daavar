@@ -17,3 +17,5 @@ share	correct	fifo	28,28
 2pc-lb	correct	bag	7
 2pc-le	ring-conf	fifo	10
 2pc-tr	correct	bag	8
+bcast	correct	bag	5
+chan	correct	bag	7
