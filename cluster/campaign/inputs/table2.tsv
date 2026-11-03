@@ -28,3 +28,4 @@ pbkv	pb	fifo	6,2
 pbkv	pb	fifo	4,4
 replog-co	correct	fifo	5
 ring-el	correct	bag	6
+zab	correct	fifo	4
