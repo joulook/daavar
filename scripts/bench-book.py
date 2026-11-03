@@ -71,6 +71,11 @@ def colour(r, kind):   # blue = at the current pins; red = superseded
     if kind in OFFLINE:
         cmd = rec.get(rid, {}).get("command", "")
         if "--merge" not in cmd and not re.search(r"\.m(?=\.|$)", rid): return "red", "in-memory join (the merge join replaces it)"
+        for e in re.findall(r"/([A-Za-z0-9._-]+)/export\.jsonl", cmd):   # an offline row is three runs: both exports must be at the current pins too
+            er = rec.get(e, {})
+            if "jmc-run.sh" in er.get("command", ""):
+                if (er.get("jmc_commit") or "")[:8] != JMC_PIN: return "red", f"export {e} at JMC pin {(er.get('jmc_commit') or '?')[:8]}"
+            elif (er.get("traceforge_commit") or "")[:7] != TF_PIN: return "red", f"export {e} at TraceForge pin {(er.get('traceforge_commit') or '?')[:7]}"
     return "blue", ""
 TIER = {600: "10 min", 3600: "1 h", 14400: "4 h", 86400: "24 h", 172800: "48 h"}
 def tier(r):
