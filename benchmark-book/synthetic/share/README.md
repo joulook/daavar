@@ -1,29 +1,47 @@
 # share(m, c) — invisible choice behind relays (`s2-share`)
 
-**Communication model:** fifo (per-channel order; the `p2p` channel). **Language:** Rust only.
-**Visible threads:** `a0 … a{m-1}` and `c0 … c{m-1}`. **Parameters:** `m` = the number of relay modules;
-`c` = how many of them contain the invisible choice (`0 ≤ c ≤ m`).
+**Communication model:** fifo (`p2p`: per-channel order). **Language:** Rust, in `rust/`.
+**Visible threads:** `A0 … A(m−1)` and `C0 … C(m−1)`; the relays `Ri` are invisible. **Parameters:** `m` = the number
+of relay modules; `c` = how many of them contain the invisible choice (`0 ≤ c ≤ m`).
 
-## The program
-
-`m` independent modules on disjoint FIFO channels. In module `i` the visible `a_i` sends the value 9 to an invisible
-relay `r_i`; `r_i` receives it and forwards it to the visible `c_i`, who receives it. The implementation's relay, in
-the first `c` modules, first tries a **non-blocking** receive and, if nothing has arrived yet, a blocking one: the
-choice between "arrived already" and "not yet" is an invisible branch, so the implementation has `2^c` complete
-graphs that all look the same from outside (one visible signature, one visible order). The specification removes
-the relays: `a_i` sends 9 straight to `c_i`; it has one graph.
+Notation: as in `../naive/README.md`. `x := recv^{fifo,nb}()` is the non-blocking receive, which returns `⊥` when
+no message has arrived yet.
 
 ## The pairs
 
-| variant | implementation | specification | expected | why |
-|---|---|---|---|---|
-| `share` | relays with the invisible choice in `c` modules (`2^c` graphs) | direct sends (1 graph) | **conforms** | all `2^c` implementation graphs project to the same visible behaviour as the specification's single graph: one summary covers them all. |
-| `ctl` (control) | relays with a blocking receive, and in the first `c` modules a **visible** choice: `r_i` sends `10·i + b` with `b ∈ {0,1}` chosen non-deterministically | the same program | **conforms** (self-paired) | the same shape with the branch made visible in `c_i`'s value: `2^c` graphs on both sides, each with its own signature, so nothing is shared. The control separates the cost of exploration from the benefit of sharing. |
+### share — expected: **conforms**
+
+```
+Impl(m, c) ≜ ‖_{i<m} ( Ai: send^fifo(Ri, 9)
+                     ‖ Ri: [ if i < c:  x := recv^{fifo,nb}();  if x = ⊥ then x := recv^fifo() ]
+                           [ if i ≥ c:  x := recv^fifo() ]
+                           send^fifo(Ci, x)
+                     ‖ Ci: y := recv^fifo() )
+
+Spec(m)    ≜ ‖_{i<m} ( Ai: send^fifo(Ci, 9) ‖ Ci: y := recv^fifo() )
+```
+
+`m` independent modules on disjoint channels. In the implementation, `Ai` sends `9` to the invisible relay `Ri`,
+which forwards it to `Ci`. In the first `c` modules the relay first tries a non-blocking receive and falls back to a
+blocking one: whether the message "had already arrived" is an invisible branch, so the implementation has `2^c`
+complete graphs that all have the same visible events in the same visible order. The specification removes the
+relays: `Ai` sends straight to `Ci`; it has one graph. Every implementation graph is covered by that one graph.
+
+### ctl (the matched control, self-paired) — expected: **conforms**
+
+```
+Ctl(m, c) ≜ ‖_{i<m} ( Ai: send^fifo(Ri, 9)
+                    ‖ Ri: x := recv^fifo();  b := (if i < c then nondet({0,1}) else 0);  send^fifo(Ci, 10·i + b)
+                    ‖ Ci: y := recv^fifo() )
+```
+
+The same shape with a blocking receive in every relay and, in the first `c` modules, a choice that is **visible**
+in the value `Ci` receives (`10·i` or `10·i + 1`). Both sides are this program: `2^c` graphs each, every graph with
+its own signature, so nothing is shared. The control is checked against its own export (a join against the `share`
+specification is not a measurement).
 
 ## What it is for
 
-At fixed `m`, raising `c` multiplies the implementation's graphs while the visible behaviour stays the same: the index
-of the stateful engine and the summaries of the offline mode stay at one entry, and the witness cache of the stateless
-engine hits on every graph after the first. The control `ctl` has the same number of graphs with no sharing at all,
-so its cost is the exploration's own. Note for the tables: `ctl` is self-paired, so its offline joins must use the
-export of `ctl` as the specification (a join against the `share` specification is not a measurement).
+At fixed `m`, raising `c` multiplies the implementation's graphs while its visible behaviour stays one: the stateful
+index and the offline summaries stay at one entry and the stateless witness cache hits on every graph after the
+first. `ctl` has the same number of graphs with no sharing, so its cost is the exploration's own.
