@@ -13,3 +13,4 @@ reset	reset	bag	20,11
 2pc-tr	ignore-abort-vote	bag	8
 bcast	decide-early	bag	5
 chan	no-seqno	bag	7
+ewd998	no-black-on-receive	bag	5
