@@ -1,5 +1,7 @@
 # ewd998(N) — Safra's termination detection against a termination oracle (`ewd998-termination`)
 
+**In the paper:** Table 2 (conforming): `ewd998` = variant `correct`, model bag, size 5. Table 3 (violating): `ewd998-nb` = variant `no-black-on-receive`, model bag, size 5. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: unordered delivery; `EWD998Chan` receives from any inbox index), the model
 the crate declares. **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`; context-free
 Java port, in `java-cf/`. **Visible threads:** `app0 … app(N−1)`; the detectors `det0 … det(N−1)` and the

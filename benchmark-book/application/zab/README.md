@@ -1,5 +1,7 @@
 # zab(Q) — Zab broadcast phase with a late follower (`zab-broadcast-remix`)
 
+**In the paper:** Table 2 (conforming): `zab` = variant `correct`, model fifo, size 4. Table 3 (violating): `zab-issue1` = variant `issue 1`, model fifo, size 4. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`: `Zab.tla`'s `msgs[i][j]` are FIFO queues). **Languages:** Rust (TraceForge's
 Must API), in `rust/`; Java twin in `java/` (`bench.zab_broadcast_remix.ZabBroadcast`); context-free Java port in
 `java-cf/` (`ZabBroadcastRemix`). **Visible threads:** `c0`, `c1`; the specification's `server` and the

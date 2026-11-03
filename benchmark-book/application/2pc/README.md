@@ -1,5 +1,7 @@
 # 2pc(n, r) — two-phase commit over r rounds (`a1-commit`)
 
+**In the paper:** Table 2 (conforming): `2pc` = variant `correct`, model fifo, size 5,3. Table 3 (violating): `2pc-ea` = variant `early-abort`, model fifo, size 5,3. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`: per-channel order). **Languages:** Rust (TraceForge's Must API), in `rust/`;
 Java twin, in `java/`; context-free Java port, in `java-cf/`. **Visible threads:** `p0`, `p1`; the coordinator
 `coord`, the participants `p2 … p(n−1)` and the thread that sends `Init` are invisible. **Parameters:** `n` = the

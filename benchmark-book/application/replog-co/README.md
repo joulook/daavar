@@ -1,5 +1,7 @@
 # replog-co(c) — replicated log over two-phase commit (`replicated-log-esop20`)
 
+**In the paper:** Table 2 (conforming): `replog-co` = variant `correct`, model fifo, size 5. Table 3 (violating): `replog-co-er` = variant `early-reply`, model fifo, size 5. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication models:** bag (`asyn`, Aneris's reliable unordered network) and fifo (`p2p`). **Languages:** Rust
 (TraceForge's Must API), in `rust/`; Java twin in `java/` (`bench.replicated_log_esop20.RepLog`); context-free Java
 port in `java-cf/` (`ReplicatedLog`). **Visible threads:** `client1 … clientc`, `auditor`; the specification's `log`

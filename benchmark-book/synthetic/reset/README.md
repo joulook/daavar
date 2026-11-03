@@ -1,5 +1,7 @@
 # reset(k, s) — certificate resets across backward revisits (`s5-reset`)
 
+**In the paper:** Table 3 (violating): `reset` = variant `reset`, model bag, size 20,11. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag. **Language:** Rust, in `rust/`. **Visible threads:** `Ai`, `Bi`, `Ci` for `i < k`; the
 padding threads `S0 … S(s−1)` and `D` are invisible. **Parameters:** `k` = the number of copies of the pair; `s` = the
 size of the specification's invisible padding (it multiplies the specification's graphs by `s!` and changes nothing

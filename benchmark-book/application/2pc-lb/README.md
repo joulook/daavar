@@ -1,5 +1,7 @@
 # 2pc-lb(N) — two-phase commit with retransmission and the counting bug (`two-pc-lbinria`)
 
+**In the paper:** Table 2 (conforming): `2pc-lb` = variant `correct`, model bag, size 6, 7. Table 3 (violating): `2pc-lb-cb` = variant `counting-bug`, model bag, size 6, 7. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication models:** bag (`asyn`: the source's mailbox server runs with `"unordered"` boxes; the default of
 both the Rust program and the Java twin) and fifo (`p2p`: per-channel order, selected with `--model fifo` in Rust, the model argument `fifo` in Java); each
 variant is a pair under each model. **Languages:**

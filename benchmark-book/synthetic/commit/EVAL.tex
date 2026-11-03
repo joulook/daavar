@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{commit} (s3-commit)}
 \author{}
-\date{generated 2026-11-03 from brain-data e6c29d7dd 2026-11-03 20:14:23 +0100}
+\date{generated 2026-11-03 from brain-data 4f70fdcf4 2026-11-03 22:15:02 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -52,10 +52,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 8,8 & 256 & 256 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \color{blue} 12,0 & 4096 & 4096 & conforms & 1.7 & 32 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \color{blue} 12,6 & 4096 & 4096 & conforms & 1.7 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} 12,12 & 4096 & 4096 & conforms & 1.6 & 34 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 12,12 & 4096 & 4096 & conforms & 1.9 & 34 & 48 h, 250 GB & brain04, 2026-11-03 \\
 \color{blue} 16,0 & 65536 & 65536 & conforms & 1007.8 & 643 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \color{blue} 16,8 & 65536 & 65536 & conforms & 1013.1 & 643 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} 16,16 & 65536 & 65536 & conforms & 1015.2 & 643 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 16,16 & 65536 & 65536 & conforms & 958.0 & 643 & 48 h, 250 GB & brain04, 2026-11-03 \\
 \color{blue} 20,0 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -80,10 +80,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \color{red} 8,8 & 256 & 256 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 12,0 & 4096 & 4096 & conforms & 1.6 & 74 & 10 min, 16 GB & 0.4 & 0.4 & 1.1 & in-memory & brain01, 2026-11-02 \\
 \color{red} 12,6 & 4096 & 4096 & conforms & 1.5 & 74 & 10 min, 16 GB & 0.4 & 0.4 & 1.1 & in-memory & brain01, 2026-11-02 \\
-\color{blue} 12,12 & 4096 & 4096 & conforms & 0.6 & 8 & 48 h, 250 GB & 0.3 & 0.4 & 0.2 & merge & brain01, 2026-11-03 \\
 \color{blue} 16,0 & 65536 & 65536 & conforms & 12.7 & 78 & 1 h, 250 GB & 9.0 & 9.1 & 3.5 & merge & brain01, 2026-11-03 \\
 \color{blue} 16,8 & 65536 & 65536 & conforms & 12.7 & 78 & 1 h, 250 GB & 8.9 & 9.0 & 3.7 & merge & brain01, 2026-11-03 \\
-\color{blue} 16,16 & 65536 & 65536 & conforms & 12.4 & 78 & 1 h, 250 GB & 5.4 & 8.9 & 3.5 & merge & brain01, 2026-11-03 \\
 \color{blue} 20,0 & 1048576 & 1048576 & conforms & 274.3 & 1190 & 1 h, 250 GB & 206.9 & 206.2 & 67.5 & merge & brain01, 2026-11-03 \\
 \color{blue} 20,10 & 1048576 & 1048576 & conforms & 272.6 & 1189 & 1 h, 250 GB & 205.3 & 204.7 & 67.3 & merge & brain01, 2026-11-03 \\
 \color{blue} 20,20 & 1048576 & 1048576 & conforms & 274.2 & 1191 & 1 h, 250 GB & 111.5 & 206.9 & 67.3 & merge & brain01, 2026-11-03 \\
@@ -91,4 +89,5 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \end{longtable}
 \paragraph{Not run (offline).}
 planned but never scheduled (grid points beyond the ladder): 2 4 fifo, 2 6 fifo, 2 8 fifo, 2 10 fifo, 2 12 fifo, 2 16 fifo, 2 20 fifo, 3 0 fifo, 3 1 fifo, 3 2 fifo, 3 4 fifo, 3 6 fifo, 3 8 fifo, 3 10 fifo, 3 12 fifo, 3 16 fifo, 3 20 fifo, 4 1 fifo, 4 6 fifo, 4 8 fifo, 4 10 fifo, 4 12 fifo, 4 16 fifo, 4 20 fifo, \ldots\ (202 instances in all).\par
+the tool ended with an error (exit-127): 12 12 fifo, 16 16 fifo.\par
 \end{document}

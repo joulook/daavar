@@ -1,5 +1,7 @@
 # width(w) — pure value branching (`s6-width`)
 
+**In the paper:** not in Tables 2 and 3 (reported in the appendix tables and in EVAL.pdf here only).
+
 **Communication model:** fifo. **Language:** Rust, in `rust/`. **Visible threads:** `V`, `C`. **Parameter:** `w` =
 the number of values to choose from, `w ≥ 1`.
 

@@ -1,5 +1,7 @@
 # replog(W) — leader–follower replicated log (`replicated-log-aneris`)
 
+**In the paper:** not in Tables 2 and 3 (reported in the appendix tables and in EVAL.pdf here only).
+
 **Communication models:** fifo (`p2p`, the default) and bag (`asyn`). **Languages:** Rust (TraceForge's Must API),
 in `rust/`; Java twin in `java/` (`bench.replicated_log_aneris.RepDb`); context-free Java port in `java-cf/`
 (`ReplicatedLogAneris`). **Visible threads:** `writer`, `reader`; `leader` and `follower` are invisible.

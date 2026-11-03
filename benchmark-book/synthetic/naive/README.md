@@ -1,5 +1,7 @@
 # naive(k) — the stateless worst case (`s1-naive`)
 
+**In the paper:** Table 3 (violating): `naive` = variant `naive`, model bag, size 10, 11. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: unordered delivery). **Language:** Rust (TraceForge's Must API), in `rust/`.
 **Visible threads:** `A`, `C`, `B1 … Bk`. **Parameter:** `k` = the number of `B` senders. (The engine's test grid
 also had a second spawn encoding, `B1..Bk, A, C` instead of `C, B1..Bk, A`; it changes nothing visible and only the

@@ -1,5 +1,7 @@
 # 2pc-ab(n) — two-phase commit with early abort and abstaining participants (`two-pc-abstain-kragl`)
 
+**In the paper:** Table 2 (conforming): `2pc-ab` = variant `correct`, model bag, size 8, 9. Table 3 (violating): `2pc-ab-off1` = variant `off-by-one`, model bag, size 8, 9. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: unordered delivery; the source's channels are multisets; the Rust program's default is fifo, so its runs
 of the two pairs below pass `--model bag` explicitly, while the Java twin defaults to bag). **Languages:**
 Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`; context-free Java port, in `java-cf/`.

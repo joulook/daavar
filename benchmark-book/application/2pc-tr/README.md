@@ -1,5 +1,7 @@
 # 2pc-tr(N) — two-phase commit refining TCommit (`two-pc-trillium`)
 
+**In the paper:** Table 2 (conforming): `2pc-tr` = variant `correct`, model bag, size 8. Table 3 (violating): `2pc-tr-iav` = variant `ignore-abort-vote`, model bag, size 8. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication models:** bag (`asyn`: UDP reorders; duplication is not modelled), the default of both the Rust
 program and the Java twin, and fifo (`p2p`: per-channel order, selected with `--model fifo` in Rust, the model argument `fifo` in Java); each variant is a pair
 under each model.

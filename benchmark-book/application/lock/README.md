@@ -1,5 +1,7 @@
 # lock(k, q) — a lock service with a waiter queue (`a3-lock`)
 
+**In the paper:** Table 2 (conforming): `lock` = variant `fifo`, model fifo, size 3,4, 3,5. Table 3 (violating): `lock-wr` = variant `wrong-round`, model fifo, size 3,4, 3,5. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`: per-channel order); every channel is built per-sender FIFO (`LocalOrder`)
 whatever the run's `--model`. **Languages:** Rust (TraceForge's Must API), in `rust/`; context-free Java port, in
 `java-cf/` (no Java twin). **Visible threads:** the clients `c0 … c(k−1)`; the specification's `lock` and the

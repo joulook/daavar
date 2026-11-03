@@ -1,5 +1,7 @@
 # pbkv(k, q) and pbkv-sh(k, q, s) — a replicated and a sharded key-value store (`a2-store`)
 
+**In the paper:** Table 2 (conforming): `pbkv` = variant `pb`, model fifo, size 6,2, 4,4. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`: per-channel order); every channel is built per-sender FIFO (`LocalOrder`)
 whatever the run's `--model`. **Languages:** Rust (TraceForge's Must API), in `rust/`; context-free Java port, in
 `java-cf/` (no Java twin). **Visible threads:** the clients `c0 … c(k−1)`; the specification's `store`, the

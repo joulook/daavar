@@ -1,5 +1,7 @@
 # bcast(n) — broadcast consensus: decide the max of n values (`broadcast-consensus-civl`)
 
+**In the paper:** Table 2 (conforming): `bcast` = variant `correct`, model bag, size 5. Table 3 (violating): `bcast-de` = variant `decide-early`, model bag, size 5. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: the source's channels are multisets), the model the crate declares.
 **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin in `java/` (`bench.broadcast_consensus_civl.Spec`
 and `.Impl`); context-free Java port in `java-cf/` (`BroadcastConsensus`). **Visible threads:** `c0 … c(n−1)`, one

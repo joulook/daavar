@@ -1,5 +1,7 @@
 # share(m, c) — invisible choice behind relays (`s2-share`)
 
+**In the paper:** Table 2 (conforming): `share` = variant `correct`, model fifo, size 28,28. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`: per-channel order). **Language:** Rust, in `rust/`.
 **Visible threads:** `A0 … A(m−1)` and `C0 … C(m−1)`; the relays `Ri` are invisible. **Parameters:** `m` = the number
 of relay modules; `c` = how many of them contain the invisible choice (`0 ≤ c ≤ m`).

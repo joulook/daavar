@@ -1,5 +1,7 @@
 # 2pc-le(n) — leader election, then two-phase commit (`election`)
 
+**In the paper:** Table 2 (conforming): `2pc-le` = variant `ring-conf`, model fifo, size 10. Table 3 (violating): `2pc-le-split` = variant `ring-split`, model fifo, size 11. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo (`p2p`); every row and every verdict below is under fifo (the crate and the twins
 also accept `bag`, which was not checked). **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin in
 `java/` (`bench.election.Election`); context-free Java port in `java-cf/` (`bench.election.Election`).

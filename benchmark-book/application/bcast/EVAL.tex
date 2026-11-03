@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{bcast} (broadcast-consensus-civl)}
 \author{}
-\date{generated 2026-11-03 from brain-data e6c29d7dd 2026-11-03 20:14:23 +0100}
+\date{generated 2026-11-03 from brain-data 4f70fdcf4 2026-11-03 22:15:02 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -34,8 +34,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-skipped: a smaller size had reached its limit: 5 decide-early bag, 6 correct bag, 6 decide-early bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 correct bag, 10 decide-early bag.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct, 6 bag correct, 6 bag decide-early.\par
+skipped: a smaller size had reached its limit: 5 decide-early bag, 6 decide-early bag, 6 correct bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 correct bag, 10 decide-early bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early, 6 bag decide-early, 6 bag correct.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -62,8 +62,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-skipped: a smaller size had reached its limit: 6 correct bag, 6 decide-early bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 correct bag, 10 decide-early bag.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early, 6 bag correct, 6 bag decide-early, 7 bag decide-early, 7 bag correct, 8 bag correct, 8 bag decide-early.\par
+skipped: a smaller size had reached its limit: 6 decide-early bag, 6 correct bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 correct bag, 10 decide-early bag.\par
+left out by the table rules (timeout): 6 bag decide-early, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct, 7 bag decide-early, 7 bag correct, 8 bag decide-early, 8 bag correct.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -88,8 +89,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 5 correct bag, 5 decide-early bag, 6 decide-early bag, 6 correct bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 correct bag, 10 decide-early bag.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct, 6 bag correct, 6 bag decide-early.\par
+skipped: a smaller size had reached its limit: 5 decide-early bag, 5 correct bag, 6 decide-early bag, 6 correct bag, 7 correct bag, 7 decide-early bag, 8 correct bag, 8 decide-early bag, 9 correct bag, 9 decide-early bag, 10 decide-early bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early, 6 bag decide-early, 6 bag correct.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -114,7 +115,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct, 6 bag correct, 6 bag decide-early.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early, 6 bag decide-early, 6 bag correct.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -139,7 +140,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 2 bag decide-early, 2 bag correct, 3 bag decide-early, 3 bag correct, 4 bag correct, 4 bag decide-early, 5 bag correct, 5 bag decide-early, 6 bag correct, 6 bag decide-early.\par
+planned but never scheduled (grid points beyond the ladder): 2 bag correct, 2 bag decide-early, 3 bag correct, 3 bag decide-early, 4 bag correct, 4 bag decide-early, 5 bag decide-early, 5 bag correct, 6 bag decide-early, 6 bag correct.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -164,7 +165,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct, 6 bag correct, 6 bag decide-early.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early, 6 bag decide-early, 6 bag correct.\par
 \section*{twins offline, Rust implementation against its Java twin}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -197,8 +198,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
-refused (an input missing at run time): 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+refused (an input missing at run time): 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -231,8 +232,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
-skipped: a smaller size had reached its limit: 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+skipped: a smaller size had reached its limit: 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -265,8 +266,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-refused (an input missing at run time): 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+refused (an input missing at run time): 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -299,8 +300,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+skipped: a smaller size had reached its limit: 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -333,8 +334,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Java port (JMC) against the Rust implementation's export).}
-the tool ended with an error (exit-2): 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+the tool ended with an error (exit-2): 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -367,6 +368,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-skipped: a smaller size had reached its limit: 4 bag correct, 4 bag decide-early.\par
-planned but never scheduled (grid points beyond the ladder): 5 bag decide-early, 5 bag correct.\par
+skipped: a smaller size had reached its limit: 4 bag decide-early, 4 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag decide-early.\par
 \end{document}

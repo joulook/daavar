@@ -1,5 +1,7 @@
 # prodcons(k) — producer–consumer over a FIFO channel, a model-sensitivity control (`producer-consumer-civl`)
 
+**In the paper:** not in Tables 2 and 3 (reported in the appendix tables and in EVAL.pdf here only).
+
 **Communication model:** the specification's channel is fifo (`p2p`) by construction, whatever the run's model; the
 implementation's channel takes the run's model, fifo (`p2p`) or bag (`asyn`). The pair is run under both.
 **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/` (classes `Spec` and `Impl`);

@@ -1,5 +1,7 @@
 # chain(d) — a relayed chain against a direct one (`s4-chain`)
 
+**In the paper:** Table 2 (conforming): `chain` = variant `impl`, model fifo, size 2048, 4096, 8192, 16384, 32768. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo. **Language:** Rust, in `rust/`. **Visible threads:** `V0 … Vd`; the relays `Ri` are
 invisible. **Parameter:** `d` = the number of hops, `d ≥ 1`.
 

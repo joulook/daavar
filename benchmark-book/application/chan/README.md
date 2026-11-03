@@ -1,5 +1,7 @@
 # chan(K) — a reliable FIFO channel over a lossy, duplicating link (`reliable-channel-aneris`)
 
+**In the paper:** Table 2 (conforming): `chan` = variant `correct`, model bag, size 7. Table 3 (violating): `chan-ns` = variant `no-seqno`, model bag, size 7. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: UDP reorders), the model the crate declares. **Languages:** Rust (TraceForge's
 Must API), in `rust/`; Java twin in `java/` (`bench.reliable_channel_aneris.ReliableChannel`); context-free Java
 port in `java-cf/` (`ReliableChannelAneris`). **Visible threads:** `sender`, `receiver`; the endpoints `ep_s`

@@ -1,5 +1,7 @@
 # commit(n, j) — the commitment dial (`s3-commit`)
 
+**In the paper:** Table 2 (conforming): `commit` = variant `impl`, model fifo, size 12,12, 16,16, 20,20. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** fifo. **Language:** Rust, in `rust/`. **Visible threads:** `P`, `C`.
 **Parameters:** `n` = the number of chosen bits (`2^n` graphs on each side); `j` = how many of them the
 specification chooses before its first visible send (`0 ≤ j ≤ n`).

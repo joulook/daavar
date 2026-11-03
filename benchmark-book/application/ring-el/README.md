@@ -1,5 +1,7 @@
 # ring-el(n) — ring leader election under loss, duplication and reordering (`ring-election-igloo`)
 
+**In the paper:** Table 2 (conforming): `ring-el` = variant `correct`, model bag, size 6. Table 3 (violating): `ring-el-nc` = variant `no-compare`, model bag, size 6. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication model:** bag (`asyn`: UDP reorders; a lost message is one that is never read; the Rust program's default is fifo, so its
 runs of the two pairs below pass `--model bag` explicitly, while the Java twin defaults to bag). **Languages:** Rust
 (TraceForge's Must API), in `rust/`; Java twin in `java/` (`bench.ring_election_igloo.RingElection`); context-free

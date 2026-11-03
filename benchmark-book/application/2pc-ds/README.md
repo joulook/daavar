@@ -1,5 +1,7 @@
 # 2pc-ds(N) — multi-round two-phase commit with acknowledgements (`two-pc-disel`)
 
+**In the paper:** Table 2 (conforming): `2pc-ds` = variant `correct`, model bag, size 4, 5. Table 3 (violating): `2pc-ds-sal` = variant `skip-ack-loop`, model bag, size 4, 5. Every other variant, model and size stays in the appendix tables and in EVAL.pdf here.
+
 **Communication models:** bag (`asyn`: Disel's message soup, the default) and fifo (`p2p`: per-channel order); the
 verdicts are the same under both. **Languages:** Rust (TraceForge's Must API), in `rust/`; Java twin, in `java/`;
 context-free Java port, in `java-cf/`. **Visible threads:** the participants `p0 … p(N−1)`; the coordinator `cn` is
