@@ -16,4 +16,14 @@ for n in brain01 brain02 brain03 brain04 brain05; do
     for s in /local/mkhoshechin/eval/out-9a0629e/*/status; do
       grep -q "^state=running" $s 2>/dev/null && kill -0 $(sed -n "s/^pid=//p" $s | head -1) 2>/dev/null && echo "'$n' $(sed -n "s/^queue=//p" $s | head -1) running $(basename $(dirname $s))"
     done' 2>/dev/null
-done | awk '{b=$4; gsub(/\.(t16|c48h|c1h|j2|m|r2|p|x[0-9]+|f[0-9]+|w[0-9]+)/,"",b); print $1, $2, $3, $4, b}' | grep -E -- "$pat" | sort -k5,5 -k3,3
+done | python3 -I -c '
+import sys,re
+# base = engine.directory.{sorted tokens of the descriptor}: row files name the same instance in different orders
+# (impl_5_bag_correct vs impl_5_correct_bag), so a set of tokens, not the string, identifies the instance
+for l in sys.stdin:
+    f=l.split()
+    if len(f)<4: continue
+    i=f[3]; p=i.split("."); rest=".".join(p[2:]) if len(p)>2 else ""
+    toks=sorted(t for t in re.split(r"[._]", rest) if t and not re.fullmatch(r"t16|c48h|c1h|j2|m|r2|p|x\d+|f\d+|w\d+", t))
+    print(f[0], f[1], f[2], i, p[0]+"."+(p[1] if len(p)>1 else "")+"."+"_".join(toks))
+' | grep -E -- "$pat" | sort -k5,5 -k3,3
