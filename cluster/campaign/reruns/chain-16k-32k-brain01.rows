@@ -1,0 +1,10 @@
+C3E.s4-chain.spec_16384_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo --threshold 131072 -- 16384
+C3E.s4-chain.impl_16384_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo --threshold 131072 -- 16384
+C1.s4-chain.impl_16384_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo --threshold 131072 -- 16384
+C2.s4-chain.impl_16384_fifo.t16.r2 250 172800 needok:C1.s4-chain.impl_16384_fifo.t16.r2 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo --threshold 131072 -- 16384
+C3J.s4-chain.impl_16384_fifo.r2.m 250 172800 needok:C3E.s4-chain.impl_16384_fifo.t16.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s4-chain.spec_16384_fifo.t16.r2/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_16384_fifo.t16.r2/export.jsonl
+C3E.s4-chain.spec_32768_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo --threshold 262144 -- 32768
+C3E.s4-chain.impl_32768_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo --threshold 262144 -- 32768
+C1.s4-chain.impl_32768_fifo.t16.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo --threshold 262144 -- 32768
+C2.s4-chain.impl_32768_fifo.t16.r2 250 172800 needok:C1.s4-chain.impl_32768_fifo.t16.r2 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo --threshold 262144 -- 32768
+C3J.s4-chain.impl_32768_fifo.r2.m 250 172800 needok:C3E.s4-chain.impl_32768_fifo.t16.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s4-chain.spec_32768_fifo.t16.r2/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_32768_fifo.t16.r2/export.jsonl

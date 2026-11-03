@@ -11,3 +11,5 @@ share	correct	fifo	28,28
 2pc-ab	correct	bag	9
 2pc-ds	correct	bag	4
 2pc-ds	correct	bag	5
+chain	impl	fifo	16384
+chain	impl	fifo	32768
