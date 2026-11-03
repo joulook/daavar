@@ -1,0 +1,378 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=16mm]{geometry}
+\usepackage{booktabs,longtable,array,xcolor,fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
+\title{Evaluation runs: \textsf{2pc-tr} (two-pc-trillium)}
+\author{}
+\date{generated 2026-11-03 from brain-data 03b0b57cc 2026-11-03 11:21:51 +0100}
+\begin{document}\maketitle\small
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): . \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+
+\section*{stateless}
+\subsection*{stateless: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+\midrule
+\endhead
+\color{blue} 2 & 4 & 12 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 4 & brain03, 2026-11-02 \\
+\color{blue} 3 & 8 & 87 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 9 & brain03, 2026-11-02 \\
+\color{blue} 4 & 16 & 888 & conforms & 0.1 & 4 & 1 h, 250 GB & 2 & 17 & brain03, 2026-11-02 \\
+\color{blue} 5 & 32 & 16365 & conforms & 0.4 & 4 & 1 h, 250 GB & 2 & 27 & brain03, 2026-11-02 \\
+\color{blue} 6 & 64 & 531648 & conforms & 8.4 & 4 & 1 h, 250 GB & 2 & 20 & brain03, 2026-11-02 \\
+\color{blue} 7 & 128 & 25499439 & conforms & 222.8 & 46 & 1 h, 250 GB & 2 & 57 & brain03, 2026-11-02 \\
+\color{blue} 8 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateless: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+\midrule
+\endhead
+\color{blue} 2 & 4 & 10 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 6 & 19 & brain03, 2026-11-02 \\
+\color{blue} 3 & 8 & 96 & 54 & violation & 0.0 & 4 & 1 h, 250 GB & 56 & 435 & brain03, 2026-11-02 \\
+\color{blue} 4 & 16 & 1560 & 960 & violation & 0.8 & 4 & 1 h, 250 GB & 962 & 15371 & brain03, 2026-11-02 \\
+\color{blue} 5 & 32 & 39120 & 24600 & violation & 13.9 & 4 & 1 h, 250 GB & 24602 & 787206 & brain03, 2026-11-02 \\
+\color{blue} 6 & 64 & 1409040 & 889920 & violation & 428.9 & 16 & 1 h, 250 GB & 889922 & 56954928 & brain03, 2026-11-02 \\
+\color{blue} 7 & 128 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (stateless).}
+planned but never scheduled (grid points beyond the ladder): 7 ignore-abort-vote bag, 7 bag ignore-abort-vote, 7 bag correct, 8 correct bag, 8 bag ignore-abort-vote, 8 bag correct, 9 bag ignore-abort-vote, 9 bag correct, 10 bag correct, 10 bag ignore-abort-vote, 11 bag ignore-abort-vote, 11 bag correct.\par
+skipped: a smaller size had reached its limit: 8 ignore-abort-vote bag, 9 correct bag, 9 ignore-abort-vote bag, 10 correct bag, 10 ignore-abort-vote bag.\par
+\section*{stateful}
+\subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrll@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
+\midrule
+\endhead
+\color{blue} 2 & 4 & 12 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3 & 8 & 87 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4 & 16 & 888 & conforms & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5 & 32 & 16365 & conforms & 0.5 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6 & 64 & 531648 & conforms & 9.5 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7 & 128 & 25499439 & conforms & 866.8 & 46 & 48 h, 250 GB & brain05, 2026-11-02 \\
+\color{blue} 8 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateful: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrll@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & run \\
+\midrule
+\endhead
+\color{blue} 2 & 4 & 10 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3 & 8 & 96 & 54 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4 & 16 & 1560 & 960 & violation & 0.2 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5 & 32 & 39120 & 24600 & violation & 1.6 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6 & 64 & 1409040 & 889920 & violation & 21.7 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7 & 128 & 69048000 & 43641360 & violation & 1201.2 & 132 & 48 h, 250 GB & brain05, 2026-11-02 \\
+\color{blue} 8 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (stateful).}
+left out by the table rules (ok): 7 ignore-abort-vote bag, 7 correct bag.\par
+skipped: a smaller size had reached its limit: 9 correct bag, 9 ignore-abort-vote bag, 10 correct bag, 10 ignore-abort-vote bag.\par
+planned but never scheduled (grid points beyond the ladder): 8 bag ignore-abort-vote, 8 bag correct, 9 bag ignore-abort-vote, 9 bag correct, 10 bag correct, 10 bag ignore-abort-vote, 11 bag ignore-abort-vote, 11 bag correct.\par
+\section*{offline}
+\subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 12 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3 & 8 & 87 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 4 & 16 & 888 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 5 & 32 & 16365 & conforms & 0.9 & 4 & 10 min, 16 GB & 0.0 & 0.8 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 6 & 64 & 531648 & conforms & 10.9 & 24 & 1 h, 250 GB & 0.0 & 10.9 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{blue} 7 & 128 & 25499439 & conforms & 318.9 & 42 & 1 h, 250 GB & 0.1 & 318.9 & 0.0 & merge & brain05, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{offline: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 10 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3 & 8 & 96 & 6 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 4 & 16 & 1560 & 14 & violation & 0.3 & 4 & 10 min, 16 GB & 0.0 & 0.3 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 5 & 32 & 39120 & 30 & violation & 2.1 & 6 & 1 h, 250 GB & 0.0 & 2.0 & 0.1 & merge & brain05, 2026-11-03 \\
+\color{blue} 6 & 64 & 1409040 & 62 & violation & 29.4 & 26 & 1 h, 250 GB & 0.0 & 29.3 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{blue} 7 & 128 & 69048000 & 126 & violation & 1114.3 & 118 & 1 h, 250 GB & 0.1 & 1114.3 & 0.0 & merge & brain05, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (offline).}
+skipped: a smaller size had reached its limit: 8 ignore-abort-vote bag, 8 correct bag, 9 correct bag, 9 ignore-abort-vote bag, 10 correct bag, 10 ignore-abort-vote bag.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag ignore-abort-vote, 7 bag correct, 8 bag ignore-abort-vote, 8 bag correct, 9 bag ignore-abort-vote, 9 bag correct.\par
+\section*{cross offline, Rust implementation against the Java specification}
+\subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 12 & conforms & 2.8 & 160 & 10 min, 16 GB & 2.7 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 87 & conforms & 0.3 & 4 & 10 min, 250 GB &  & 0.1 & 0.3 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 888 & conforms & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 10 & 2 & violation & 2.7 & 160 & 10 min, 16 GB & 2.7 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 96 & 6 & violation & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 1560 & 14 & violation & 0.0 & 4 & 10 min, 250 GB &  & 0.3 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (cross offline, Rust implementation against the Java specification).}
+planned but never scheduled (grid points beyond the ladder): 7 bag ignore-abort-vote.jmcspec-tfimpl, 7 bag correct.jmcspec-tfimpl, 8 bag correct.jmcspec-tfimpl, 8 bag ignore-abort-vote.jmcspec-tfimpl, 9 bag ignore-abort-vote.jmcspec-tfimpl, 9 bag correct.jmcspec-tfimpl.\par
+\section*{cross online, Rust implementation (TraceForge) against the Java specification export}
+\subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 12 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 8 & 87 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 4 & 16 & 888 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 4 & 10 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 3 & 8 & 96 & 54 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 4 & 16 & 1560 & 960 & violation & 0.2 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
+planned but never scheduled (grid points beyond the ladder): 7 bag ignore-abort-vote, 7 bag correct, 8 bag ignore-abort-vote, 8 bag correct, 9 bag ignore-abort-vote, 9 bag correct.\par
+\section*{twins offline, Rust implementation against its Java twin}
+\subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 3.1 & 153 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 87 & conforms & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 888 & conforms & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 3.2 & 172 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 96 & conforms & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 1560 & conforms & 0.1 & 4 & 10 min, 250 GB &  & 0.3 & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 2 & violation & 3.1 & 153 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 96 & 6 & violation & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 1560 & 14 & violation & 0.1 & 4 & 10 min, 250 GB &  & 0.3 & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (twins offline, Rust implementation against its Java twin).}
+planned but never scheduled (grid points beyond the ladder): 7 bag correct.jimpl-tfimpl, 7 bag ignore-abort-vote.jimpl-tfimpl, 7 bag ignore-abort-vote.vs-correct.jimpl-tfimpl, 8 bag ignore-abort-vote.vs-correct.jimpl-tfimpl, 8 bag ignore-abort-vote.jimpl-tfimpl, 8 bag correct.jimpl-tfimpl.\par
+\section*{twins offline, Java implementation against its Rust twin}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 3.1 & 153 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 87 &  & conforms & 0.1 & 4 & 10 min, 250 GB & 0.1 &  & 0.1 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 888 &  & conforms & 0.1 & 4 & 10 min, 250 GB & 0.1 &  & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 3.1 & 172 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 96 &  & conforms & 0.1 & 4 & 10 min, 250 GB & 0.1 &  & 0.1 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 1560 &  & conforms & 0.0 & 4 & 10 min, 250 GB & 0.3 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 2 & violation & 3.1 & 172 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 87 &  & 6 & violation & 0.0 & 4 & 10 min, 250 GB & 0.1 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 888 &  & 14 & violation & 0.1 & 4 & 10 min, 250 GB & 0.1 &  & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (twins offline, Java implementation against its Rust twin).}
+planned but never scheduled (grid points beyond the ladder): 7 bag ignore-abort-vote.vs-correct.tfimpl-jimpl, 7 bag ignore-abort-vote.tfimpl-jimpl, 7 bag correct.tfimpl-jimpl, 8 bag ignore-abort-vote.vs-correct.tfimpl-jimpl, 8 bag correct.tfimpl-jimpl, 8 bag ignore-abort-vote.tfimpl-jimpl.\par
+\section*{context-free twins offline, Rust implementation against the context-free Java port}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 3.2 & 164 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 87 & conforms & 0.1 & 4 & 10 min, 250 GB &  & 0.1 & 0.1 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 888 & conforms & 0.1 & 4 & 10 min, 250 GB &  & 0.1 & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 3.1 & 160 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 96 & conforms & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 1560 & conforms & 0.1 & 4 & 10 min, 250 GB &  & 0.3 & 0.1 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 2 & violation & 3.2 & 164 & 10 min, 16 GB & 3.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 &  & 96 & 6 & violation & 0.0 & 4 & 10 min, 250 GB &  & 0.1 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 &  & 1560 & 14 & violation & 0.0 & 4 & 10 min, 250 GB &  & 0.3 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
+planned but never scheduled (grid points beyond the ladder): 7 bag correct.jimpl-tfimpl, 7 bag ignore-abort-vote.jimpl-tfimpl, 7 bag ignore-abort-vote.vs-correct.jimpl-tfimpl, 8 bag ignore-abort-vote.vs-correct.jimpl-tfimpl, 8 bag ignore-abort-vote.jimpl-tfimpl, 8 bag correct.jimpl-tfimpl.\par
+\section*{context-free twins offline, Java port against the Rust implementation}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 3.2 & 164 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 87 &  & conforms & 0.2 & 4 & 10 min, 250 GB & 0.1 &  & 0.2 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 888 &  & conforms & 0.0 & 4 & 10 min, 250 GB & 0.1 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 3.1 & 160 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 96 &  & conforms & 0.1 & 4 & 10 min, 250 GB & 0.1 &  & 0.1 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 1560 &  & conforms & 0.0 & 4 & 10 min, 250 GB & 0.3 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 2 & violation & 3.1 & 160 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 87 &  & 6 & violation & 0.0 & 4 & 10 min, 250 GB & 0.1 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 4 & 888 &  & 14 & violation & 0.0 & 4 & 10 min, 250 GB & 0.1 &  & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
+planned but never scheduled (grid points beyond the ladder): 7 bag ignore-abort-vote.vs-correct.tfimpl-jimpl, 7 bag ignore-abort-vote.tfimpl-jimpl, 7 bag correct.tfimpl-jimpl, 8 bag ignore-abort-vote.vs-correct.tfimpl-jimpl, 8 bag correct.tfimpl-jimpl, 8 bag ignore-abort-vote.tfimpl-jimpl.\par
+\section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
+\subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 3.1 & 160 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{blue} 3 & 87 & 87 & conforms & 8.2 & 162 & 1 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 4 & 888 & 888 & conforms & 13.2 & 2044 & 1 h, 250 GB &  & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 3.1 & 158 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{blue} 3 & 96 & 96 & conforms & 8.1 & 170 & 1 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 4 & 1560 & 1560 & conforms & 16.4 & 2129 & 1 h, 250 GB &  & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 4 & violation & 3.1 & 160 & 1 h, 250 GB & 1881 & brain01, 2026-11-02 \\
+\color{blue} 3 & 87 & 96 & 54 & violation & 7.9 & 165 & 1 h, 250 GB & 4054 & brain01, 2026-11-03 \\
+\color{blue} 4 & 888 & 1560 & 960 & violation & 16.9 & 2116 & 1 h, 250 GB & 4494 & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins online, Java port (JMC) against the Rust implementation's export).}
+planned but never scheduled (grid points beyond the ladder): 7 bag correct.w16, 7 bag ignore-abort-vote.w16, 7 bag ignore-abort-vote.vs-correct.w16, 8 bag correct.w16, 8 bag ignore-abort-vote.vs-correct.w16, 8 bag ignore-abort-vote.w16.\par
+\section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
+\subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 12 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 87 & 87 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 4 & 888 & 888 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{ignore-abort-vote}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 10 & 10 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 96 & 96 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 4 & 1560 & 1560 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{ignore-abort-vote}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 2 & 12 & 10 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 3 & 87 & 96 & 54 & violation & 0.0 & 4 & 1 h, 250 GB & 6 & brain01, 2026-11-02 \\
+\color{red} 4 & 888 & 1560 & 960 & violation & 0.2 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+\end{document}

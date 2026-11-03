@@ -10,7 +10,10 @@ leave out (skipped, tool errors) come from brain-data. usage: bench-book.py <bra
 import csv, glob, os, re, sys, collections, subprocess, datetime
 BD, DV, T, GROUP = sys.argv[1:5]; BUILD = "--build" in sys.argv
 TF_PIN = "9a0629e"; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"
-GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")]}
+GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")],
+          "application": [("2pc", "a1-commit"), ("2pc-ab", "two-pc-abstain-kragl"), ("2pc-ds", "two-pc-disel"), ("2pc-lb", "two-pc-lbinria"), ("2pc-le", "election"), ("2pc-tr", "two-pc-trillium"),
+                          ("bcast", "broadcast-consensus-civl"), ("chan", "reliable-channel-aneris"), ("ewd998", "ewd998-termination"), ("lb", "a4-balancer"), ("lock", "a3-lock"), ("pbkv", "a2-store"),
+                          ("prodcons", "producer-consumer-civl"), ("replog", "replicated-log-aneris"), ("replog-co", "replicated-log-esop20"), ("ring-el", "ring-election-igloo"), ("zab", "zab-broadcast-remix")]}
 if GROUP not in GROUPS: sys.exit(f"group {GROUP}: not defined yet (groups: {', '.join(GROUPS)})")
 def esc(s): return str(s).replace("_", "\\_").replace("%", "\\%").replace("&", "\\&")
 def num(x):
@@ -41,12 +44,29 @@ for r in csv.DictReader(open(DV + "/cluster/campaign/inputs/expected-verdicts.ts
 def load(name):
     try: return list(csv.DictReader(open(f"{T}/{name}.csv")))
     except OSError: return []
-ENG = [("stateless", "campaign-stateless", "C2"), ("stateful", "campaign-stateful", "C1"), ("offline", "campaign-offline-tf", "C3J")]
+ENG = [("stateless", "campaign-stateless", "C2"), ("stateful", "campaign-stateful", "C1"), ("offline", "campaign-offline-tf", "C3J"),
+       ("cross offline, Java implementation against the Rust specification", "campaign-offline-rust-spec", "XJ1"),
+       ("cross offline, Rust implementation against the Java specification", "campaign-offline-java-spec", "XJ2"),
+       ("cross online, Java implementation (JMC) against the Rust specification export", "campaign-online-java-impl", "XON1"),
+       ("cross online, Rust implementation (TraceForge) against the Java specification export", "campaign-online-rust-impl", "XON2"),
+       ("twins offline, Rust implementation against its Java twin", "campaign-twin-offline-java-spec", "XT1"),
+       ("twins offline, Java implementation against its Rust twin", "campaign-twin-offline-rust-spec", "XT2"),
+       ("twins online, Java implementation (JMC) against the Rust twin's export", "campaign-twin-online-java-impl", "XTON1"),
+       ("twins online, Rust implementation (TraceForge) against the Java twin's export", "campaign-twin-online-rust-impl", "XTON2"),
+       ("context-free twins offline, Rust implementation against the context-free Java port", "campaign-cftwin-offline-java-spec", "XC1"),
+       ("context-free twins offline, Java port against the Rust implementation", "campaign-cftwin-offline-rust-spec", "XC2"),
+       ("context-free twins online, Java port (JMC) against the Rust implementation's export", "campaign-cftwin-online-java-impl", "XCON1"),
+       ("context-free twins online, Rust implementation (TraceForge) against the Java port's export", "campaign-cftwin-online-rust-impl", "XCON2")]
+OFFLINE = {"C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"}; ONLINE = {"XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"}
+JAVA = {"XJ1", "XJ2", "XON1", "XON2", "XT1", "XT2", "XTON1", "XTON2", "XC1", "XC2", "XCON1", "XCON2"}   # a Java side is involved: the JMC pin matters
 def colour(r, kind):   # blue = at the current pins; red = superseded
     pin = (r.get("pin") or "")[:7]
     if pin != TF_PIN: return "red", f"TraceForge pin {pin or '?'} (current {TF_PIN})"
     rid = r.get("run id", "")
-    if kind == "C3J":
+    if kind in JAVA:
+        j = (rec.get(rid, {}).get("jmc_commit") or "")[:8]
+        if j != JMC_PIN: return "red", f"JMC pin {j or '?'} (current {JMC_PIN})"
+    if kind in OFFLINE:
         cmd = rec.get(rid, {}).get("command", "")
         if "--merge" not in cmd and not re.search(r"\.m(?=\.|$)", rid): return "red", "in-memory join (the merge join replaces it)"
     return "blue", ""
@@ -88,13 +108,15 @@ for name, d in GROUPS[GROUP]:
     # G_spec = the specification's own graph count: from the stateful or offline row of the instance (the stateless engine
     # reports the specification graphs it explored, repeats counted, which is G_spec^expl, not G_spec)
     gspec = {}
-    for kind in ("C1", "C3J"):
+    for kind in ("C1", "C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"):
         for r in data[kind]:
             if r.get("spec graphs") and (r["verdict"] in ("conforms", "violation") or r.get("spec export s")):
                 gspec.setdefault((r["variant"], r["spec"], r["model"], r["size"]), r["spec graphs"])
     for ename, fname, kind in ENG:
         rows = data[kind]
-        if not rows: L.append(f"\\section*{{{ename}}}\\noindent No run of the {ename} engine on this benchmark."); continue
+        if not rows:
+            if kind in ("C1", "C2", "C3J"): L.append(f"\\section*{{{ename}}}\\noindent No run of the {ename} engine on this benchmark.")
+            continue
         L.append(f"\\section*{{{ename}}}")
         pairs = collections.OrderedDict()
         for r in rows: pairs.setdefault((r["variant"], r["spec"], r["model"]), []).append(r)
@@ -107,8 +129,8 @@ for name, d in GROUPS[GROUP]:
             rs.sort(key=lambda r: sz(r["size"]))
             label = esc(var if var not in ("", "impl") else "single")
             L.append(f"\\subsection*{{{ename}: pair \\textsf{{{label}}}" + (f" against \\textsf{{{esc(spec)}}}" if spec and spec not in (var, "spec", "correct") else "") + f", model {model}, expected {side}}}")
-            extra_hdr = {"stateless": " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$", "stateful": "", "offline": " & export spec & export impl & join & join kind"}[ename]
-            ncol = {"stateless": 2, "stateful": 0, "offline": 4}[ename]
+            extra_hdr = " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$" if kind == "C2" else (" & export spec & export impl & join & join kind" if kind in OFFLINE else (" & first miss ms" if kind in ONLINE else ""))
+            ncol = 2 if kind == "C2" else (4 if kind in OFFLINE else (1 if kind in ONLINE else 0))
             gx_hdr = " & $G_x$" if viol else ""
             L += [f"\\begin{{longtable}}{{@{{}}rrr{'r' if viol else ''}lrrl{'r' * ncol}l@{{}}}}", "\\toprule",
                   f"size & $G_{{\\mathit{{spec}}}}$ & $G_{{\\mathit{{impl}}}}${gx_hdr} & verdict & T & M & tier{extra_hdr} & run \\\\", "\\midrule", "\\endhead"]
@@ -116,8 +138,9 @@ for name, d in GROUPS[GROUP]:
                 c, why = colour(r, kind); seen_ids.add(base(r["run id"]))
                 dec = r["verdict"] in ("conforms", "violation")
                 gs = r["spec graphs"] if kind != "C2" else gspec.get((var, spec, model, r["size"]), "")
-                if ename == "stateless": ex = f" & {esc(r.get('sweeps','')) if dec else ''} & {esc(r.get('spec graphs explored','')) if dec else ''}"
-                elif ename == "offline":
+                if kind == "C2": ex = f" & {esc(r.get('sweeps','')) if dec else ''} & {esc(r.get('spec graphs explored','')) if dec else ''}"
+                elif kind in ONLINE: ex = f" & {esc(r.get('first miss ms','')) if r['verdict'] == 'violation' else ''}"
+                elif kind in OFFLINE:
                     jk = "merge" if (re.search(r"\.m(?=\.|$)", r["run id"]) or "--merge" in rec.get(r["run id"], {}).get("command", "")) else "in-memory"
                     ex = f" & {fmt(r.get('spec export s'))} & {fmt(r.get('impl export s'))} & {fmt(r.get('join s')) if dec else ''} & {jk}"
                 else: ex = ""
