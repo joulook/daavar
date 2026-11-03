@@ -219,35 +219,43 @@ for fam, tset, modes in FAMS:
                  ["program", "variant", "spec", "model", "size", "impl", "G impl", "G spec"] + (["G x"] if viol else []) + ["offline s", "offline MB", "online s", "online MB", "summary files MB"], csvrows)
             summary.append(f"{fn}: {len({k[:4] for k in keys})} instances, {len(csvrows)} rows")
 
-# ---- Table 2 of the paper: the rows of inputs/table2.tsv, standalone columns, no model superscript (owner, 2026-11-03) ----
-T2 = os.path.join(DV, "cluster", "campaign", "inputs", "table2.tsv")
-if os.path.exists(T2) and not FULL and KEEP is None:
-    want = [l.rstrip("\n").split("\t") for l in open(T2) if l.strip() and not l.startswith("#")]
+# ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
+# size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
+CURATED = [("table2", "tab:table2", False, "TraceForge standalone refinement checking on three synthetic families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side."),
+           ("table3", "tab:table3", True, "TraceForge standalone refinement checking on the synthetic families' violating pairs, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side.")]
+if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
     for m, rs in data.items():
         for r in rs: inst.setdefault(key_of(r), {})[m] = r
-    body = []; csvrows = []; prev = None
-    for prog, var, model, size in want:
-        k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
-        m = inst.get(k, {}) if k else {}
-        c2, c1, c3 = m.get("stateless"), m.get("stateful"), m.get("offline")
-        dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
-        gi = next((r["impl graphs"] for r in dec if r["impl graphs"]), ""); gs = next((r["spec graphs"] for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), "")
-        nm = f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct") else "")
-        nm = nm if (prog, var) != prev else ""; prev = (prog, var)
-        if nm and body: body.append("\\midrule")
-        cells = [cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
-        body.append(f"{nm} & {size} & {gi} & {gs} & " + " & ".join(cells) + " \\\\")
-        csvrows.append([prog, var, model, size, gi, gs] + [c.replace("\\faClock", "t/o") for c in cells])
-    cap = ("TraceForge standalone refinement checking on three synthetic families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side. "
-           "$G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines). "
-           "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
-           "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
-    hdr1 = "instance & size & $G_{\\mathit{impl}}$ & $G_{\\mathit{spec}}$ & \\multicolumn{2}{c}{stateless} & \\multicolumn{2}{c}{stateful} & \\multicolumn{2}{c}{offline} \\\\"
-    emit("table2", "tab:table2", cap, "@{}lrrrrrrrrr@{}", hdr1, "\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}\\cmidrule(lr){9-10}", " & & & & T & M & T & M & T & M \\\\", body,
-         ["program", "variant", "model", "size", "G impl", "G spec", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
-    summary.append(f"table2: {len(csvrows)} rows")
+    for tname, tlabel, viol, what in CURATED:
+        TF_ = os.path.join(DV, "cluster", "campaign", "inputs", tname + ".tsv")
+        if not os.path.exists(TF_): continue
+        want = [l.rstrip("\n").split("\t") for l in open(TF_) if l.strip() and not l.startswith("#")]
+        body = []; csvrows = []; prev = None
+        for prog, var, model, size in want:
+            k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
+            m = inst.get(k, {}) if k else {}
+            c2, c1, c3 = m.get("stateless"), m.get("stateful"), m.get("offline")
+            dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
+            gi = next((r["impl graphs"] for r in dec if r["impl graphs"]), ""); gs = next((r["spec graphs"] for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), "")
+            gx = next((r.get("uncovered", "") for r in dec if r.get("uncovered") not in ("", None)), "") if viol else None
+            nm = f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct") else "")
+            nm = nm if (prog, var) != prev else ""; prev = (prog, var)
+            if nm and body: body.append("\\midrule")
+            cells = [cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
+            body.append(f"{nm} & {size} & {gi} & {gs}" + (f" & {gx}" if viol else "") + " & " + " & ".join(cells) + " \\\\")
+            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
+        cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
+               + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + ". "
+               "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
+               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
+        base = 5 if viol else 4
+        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
+        cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(3))
+        emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & T & M & T & M & T & M \\\\", body,
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
+        summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
     print(f"{len(incons)} graph-count inconsistencies across the engines:")
