@@ -5,3 +5,5 @@ reset	reset	bag	20,11
 2pc	early-abort	fifo	5,3
 2pc-ab	off-by-one	bag	8
 2pc-ab	off-by-one	bag	9
+2pc-ds	skip-ack-loop	bag	4
+2pc-ds	skip-ack-loop	bag	5
