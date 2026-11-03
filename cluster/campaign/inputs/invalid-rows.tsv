@@ -5,3 +5,23 @@ C3E.s4-chain.impl_512_fifo.t16
 C3E.s4-chain.spec_512_fifo.t16
 C1.s4-chain.impl_512_fifo.t16
 C2.s4-chain.impl_512_fifo.t16
+# Rows killed from outside and recorded as 48 h timeouts (exit 137; the runner now records 'invalid: killed'): the 16 rows brain04-clear.sh stopped at 19:42 for the paper reservation and the 3 the stray long-48h dispatcher had launched after it (evicted 20:26). Form: run id<TAB>started_at of that run; a later rerun of the same id stays valid.
+C1.broadcast-consensus-civl.impl_6_bag_correct.t16	2026-11-03T19:30:25+01:00
+C1.broadcast-consensus-civl.impl_6_bag_decide-early.t16	2026-11-03T19:30:25+01:00
+C1.election.impl_ring_conf_11_fifo.t16	2026-11-03T19:29:37+01:00
+C1.election.impl_ring_split_11_fifo.t16	2026-11-03T19:29:37+01:00
+C1.ring-election-igloo.impl_7_correct_bag.t16	2026-11-03T19:29:37+01:00
+C1.ring-election-igloo.impl_7_no-compare_bag.t16	2026-11-03T19:29:37+01:00
+C1.two-pc-disel.impl_5_bag_correct.t16	2026-11-03T19:29:37+01:00
+C1.two-pc-disel.impl_5_bag_skip-ack-loop.t16	2026-11-03T19:29:37+01:00
+C1.two-pc-disel.impl_7_bag_skip-ack-loop.t16	2026-11-03T19:30:35+01:00
+C1.two-pc-lbinria.impl_7_bag_correct.t16	2026-11-03T19:30:25+01:00
+C1.two-pc-lbinria.impl_8_bag_counting-bug.t16	2026-11-03T19:30:25+01:00
+C1.two-pc-trillium.impl_9_bag_correct.t16	2026-11-03T19:29:37+01:00
+C1.two-pc-trillium.impl_9_bag_ignore-abort-vote.t16	2026-11-03T19:29:37+01:00
+C1.zab-broadcast-remix.impl_5_fifo_correct.t16	2026-11-03T19:30:25+01:00
+C1.zab-broadcast-remix.impl_5_fifo_issue1-propose-to-ackld.t16	2026-11-03T19:30:25+01:00
+C1.zab-broadcast-remix.impl_6_fifo_correct.t16	2026-11-03T19:30:25+01:00
+C1.ring-election-igloo.impl_6_no-compare_bag.x2.t16.c48h	2026-11-03T19:46:21+01:00
+C1.n-buyer-kragl.impl_7_correct_bag.x2.t16.c48h	2026-11-03T19:46:35+01:00
+C2.n-buyer-kragl.impl_6_correct_bag.x1.t16.c48h	2026-11-03T19:46:28+01:00
