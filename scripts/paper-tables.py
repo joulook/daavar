@@ -243,18 +243,19 @@ if not FULL and KEEP is None:
             nm = f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm = nm if (prog, var) != prev else ""; prev = (prog, var)
             if nm and body: body.append("\\midrule")
-            cells = [cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
+            expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""   # the stateless engine's own count: specification graphs explored, repeats counted
+            cells = [expl, cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
             body.append(f"{nm} & {size} & {gi} & {gs}" + (f" & {gx}" if viol else "") + " & " + " & ".join(cells) + " \\\\")
             csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells])
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
-               + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + ". "
+               + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs the stateless engine explored in total, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
                "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
         base = 5 if viol else 4
-        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
-        cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(3))
-        emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & T & M & T & M & T & M \\\\", body,
-             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
+        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{3}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
+        cm = f"\\cmidrule(lr){{{base + 1}-{base + 3}}}\\cmidrule(lr){{{base + 4}-{base + 5}}}\\cmidrule(lr){{{base + 6}-{base + 7}}}"
+        emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", body,
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB"], csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
