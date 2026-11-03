@@ -190,3 +190,12 @@ C3J.a3-lock.impl_fifo_3_5_fifo.vs-fifo.p.m 250 172800 needok:C3E.a3-lock.impl_fi
 C3E.a3-lock.impl_wrong-round_3_5_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- wrong-round 3 5
 C1.a3-lock.impl_wrong-round_3_5_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock conf --engine stateful --threads 16 --model fifo -- wrong-round 3 5
 C3J.a3-lock.impl_wrong-round_3_5_fifo.vs-fifo.p.m 250 172800 needok:C3E.a3-lock.impl_wrong-round_3_5_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a3-lock.spec_fifo_3_5_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.a3-lock.impl_wrong-round_3_5_fifo.t16.p/export.jsonl
+# pbkv pb at 6,2 and 4,4 (Table 2), owner 2026-11-03 23:00: the 4,4 export exceeded 250 GB at the 1 h tier, so its offline cell is expected to be oom; no stateless (6,2 stateless timed out at 1 h)
+C3E.a2-store.spec_pb_6_2_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 6 2
+C3E.a2-store.impl_pb_6_2_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- pb 6 2
+C1.a2-store.impl_pb_6_2_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- pb 6 2
+C3J.a2-store.impl_pb_6_2_fifo.vs-pb.p.m 250 172800 needok:C3E.a2-store.impl_pb_6_2_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_6_2_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_pb_6_2_fifo.t16.p/export.jsonl
+C3E.a2-store.spec_pb_4_4_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 4 4
+C3E.a2-store.impl_pb_4_4_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- pb 4 4
+C1.a2-store.impl_pb_4_4_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- pb 4 4
+C3J.a2-store.impl_pb_4_4_fifo.vs-pb.p.m 250 172800 needok:C3E.a2-store.impl_pb_4_4_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_4_4_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_pb_4_4_fifo.t16.p/export.jsonl

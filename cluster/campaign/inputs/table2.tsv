@@ -24,3 +24,5 @@ lb	rr-a4b	fifo	3,3,3
 lb	rr-a4b	fifo	4,4,4
 lock	fifo	fifo	3,4
 lock	fifo	fifo	3,5
+pbkv	pb	fifo	6,2
+pbkv	pb	fifo	4,4
