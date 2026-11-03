@@ -92,7 +92,7 @@ def expected_text(d):
     for e in EXP.get(d, []):
         var = e["variant"] if e["variant"] != "-" else "(the single pair)"
         out.append(f"{esc(var)}: expected {e['verdict']}" + (f" ({esc(e['note'])})" if e.get("note") else ""))
-    return "; ".join(out)
+    return "; ".join(out) if out else "no entry in the rule file (the README states the expectation)"
 for name, d in GROUPS[GROUP]:
     out_dir = f"{DV}/benchmark-book/{GROUP}/{name}"; os.makedirs(out_dir, exist_ok=True)
     L = ["\\documentclass[10pt]{article}", "\\usepackage[a4paper,margin=16mm]{geometry}", "\\usepackage{booktabs,longtable,array,xcolor,fontawesome5}", "\\usepackage[hidelinks]{hyperref}",

@@ -3,10 +3,16 @@
 daavar/cluster (never trusted from the record alone). usage: tables.py <brain-data> <daavar> <outdir>"""
 import csv, glob, sys, collections, os, re, statistics
 BD, DV, OUT = sys.argv[1:4]; os.makedirs(OUT, exist_ok=True)
-rows = []
+rows = []; _malformed = 0
 for f in [BD + "/results.tsv"] + sorted(glob.glob(BD + "/results/*.tsv")):
     _perpin = 1 if re.search(r"/results/[^/]+\.[0-9a-f]{7}\.tsv$", f) else 0   # results/<node>.<pin>.tsv
-    for _r in csv.DictReader(open(f), delimiter="\t"): _r["_perpin"] = _perpin; rows.append(_r)
+    with open(f) as _fh:
+        _hdr = _fh.readline().rstrip("\n").split("\t"); _n = len(_hdr)
+        for _line in _fh:
+            _vals = _line.rstrip("\n").split("\t")
+            if len(_vals) != _n: _malformed += 1; continue   # a line written against another header (a harvested row): not a record (data-pipeline rule, 2026-11-03)
+            _r = dict(zip(_hdr, _vals)); _r["_perpin"] = _perpin; rows.append(_r)
+if _malformed: print(f"malformed record lines left out (field count differs from the file's header): {_malformed}")
 attrs = {}
 for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv") + glob.glob(DV + "/cluster/campaign/*/*.rows.tsv"):
     for r in csv.DictReader(open(f), delimiter="\t"): attrs[r["id"].replace("'", "")] = {k: (v or "").replace("'", "") for k, v in r.items()}  # early row files carried stray quotes (the runner strips them from the id)
