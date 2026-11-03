@@ -49,6 +49,11 @@ try:
 except OSError: pass
 for _l in open(DV + "/cluster/campaign/inputs/undecidable.tsv"):
     if not _l.startswith("#") and _l.strip(): _f = _l.rstrip("\n").split("\t"); UNDECIDABLE[_f[0]] = set(_f[1].split())
+INVALID = set()   # run ids whose run was cut by TraceForge's per-thread label threshold (inputs/invalid-rows.tsv, 2026-11-03): not a measurement until rerun with a higher threshold
+try:
+    for _l in open(DV + "/cluster/campaign/inputs/invalid-rows.tsv"):
+        if _l.strip() and not _l.startswith("#"): INVALID.add(_l.split()[0])
+except OSError: pass
 EXPLORATORY = set()
 for _l in open(DV + "/cluster/campaign/inputs/exploratory-variants.tsv"):
     if not _l.startswith("#") and _l.strip(): EXPLORATORY.add(tuple(_l.rstrip("\n").split("\t")[:2]))
@@ -332,6 +337,9 @@ for pre, fname, title in CAMP:
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
     rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
+    _x = [r for r in rs if base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID]
+    if _x: print(f"{pre}: {len(_x)} rows cut by the thread threshold left out (inputs/invalid-rows.tsv)")
+    rs = [r for r in rs if not (base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID)]
     # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
     _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
     if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))
