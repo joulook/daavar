@@ -1,0 +1,10 @@
+C3E.s1-naive.spec_naive_10_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 10
+C3E.s1-naive.impl_naive_10_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 10
+C1.s1-naive.impl_naive_10_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 10
+C2.s1-naive.impl_naive_10_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 10
+C3J.s1-naive.impl_naive_10_bag.m 250 172800 needok:C3E.s1-naive.impl_naive_10_bag.t16 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s1-naive.spec_naive_10_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_10_bag.t16/export.jsonl
+C3E.s1-naive.spec_naive_11_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive export spec --out export.jsonl --threads 16 --model bag -- naive 11
+C3E.s1-naive.impl_naive_11_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive export impl --out export.jsonl --threads 16 --model bag -- naive 11
+C1.s1-naive.impl_naive_11_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateful --threads 16 --model bag -- naive 11
+C2.s1-naive.impl_naive_11_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 11
+C3J.s1-naive.impl_naive_11_bag.m 250 172800 needok:C3E.s1-naive.impl_naive_11_bag.t16 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s1-naive.spec_naive_11_bag.t16/export.jsonl "$EVAL_OUT"/C3E.s1-naive.impl_naive_11_bag.t16/export.jsonl
