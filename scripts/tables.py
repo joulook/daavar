@@ -46,10 +46,10 @@ for _l in open(DV + "/cluster/campaign/inputs/undecidable.tsv"):
 EXPLORATORY = set()
 for _l in open(DV + "/cluster/campaign/inputs/exploratory-variants.tsv"):
     if not _l.startswith("#") and _l.strip(): EXPLORATORY.add(tuple(_l.rstrip("\n").split("\t")[:2]))
-def base_id(i): return re.sub(r"\.c(1|48)h$", "", i)   # a rerun of the same row at a higher tier (id + .c1h or .c48h) is the same case
+def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2)$", "", i)   # a rerun of the same row at a higher tier (.c1h, .c48h) or on the second JMC pin (.j2) is the same case
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
-def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (bool(re.search(r"\.c(1|48)h$", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
+def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (bool(re.search(r"(\.c(1|48)h|\.j2)$", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
 byid = {}
 for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
