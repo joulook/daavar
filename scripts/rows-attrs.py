@@ -36,7 +36,7 @@ for F in FILES:
         if known(i) or base_id(i) in seen: continue
         pre, d, desc, side, size, model, var, vs = parse(i); t = template(pre, d)
         if t is None: print("no template for", i); continue
-        e = dict(t); e["id"] = i; e["family"] = e["benchmark"] = d; e["size"] = size; e["model"] = model or t.get("model", "")
+        e = dict(t); e["id"] = base_id(i);   # tables.py looks attributes up by the base id (tier/rerun/join suffixes stripped) e["family"] = e["benchmark"] = d; e["size"] = size; e["model"] = model or t.get("model", "")
         e["variant"] = ("spec-" + var if side == "spec" and str(t.get("variant", "")).startswith("spec-") else var)
         e["tier"] = "c48h" if to == "172800" else ("c4h" if to == "14400" else ("c1h" if to == "3600" else t.get("tier", "")))
         m16 = re.search(r"\.(t|w)(\d+)", i); e["threads"] = m16.group(2) if m16 else "1"
