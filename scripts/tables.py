@@ -50,6 +50,7 @@ def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m)+$", "", i)   # a rerun of 
 # pins in order of landing on the frozen engine a3a7e1b; the newest pin's run wins, then the latest start
 PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "9a0629e"]
 def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (len(re.findall(r"\.(c1h|c48h|j2|m)(?=\.|$)", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
+_allrows = list(rows)   # every record, before the one-per-id choice (the old-vs-merge join comparison reads it)
 byid = {}
 for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
@@ -226,6 +227,22 @@ CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C
         ("XCON2", "campaign-cftwin-online-rust-impl", "Context-free twins, online: Rust implementation (TraceForge) against Java port export")]
 def fnum(x, div=1.0, fmt="{:.0f}"):
     v = num(x); return "--" if v is None else fmt.format(v / div)
+# ---- old join versus merge join (SORTED-JOIN 367cdc6, 2026-11-03): the same join id with and without the .m suffix ----
+_jc = {}
+for r in _allrows:
+    if not r["run_id"].startswith(("C3J.", "XJ1.", "XJ2.", "XT1.", "XT2.", "XC1.", "XC2.")): continue
+    b = re.sub(r"\.m(?=\.|$)", "", r["run_id"]); side = "merge" if re.search(r"\.m(?=\.|$)", r["run_id"]) else "old"
+    cur = _jc.setdefault(b, {}).get(side)
+    if cur is None or (r.get("started_at") or "") > (cur.get("started_at") or ""): _jc[b][side] = r
+_jc = {b: d for b, d in _jc.items() if "old" in d and "merge" in d}
+with open(OUT + "/join-compare.csv", "w", newline="") as fh:
+    w = csv.writer(fh); w.writerow(["join id", "old stop", "old verdict", "old wall s", "old peak MB", "old timeout s", "old mem GB", "merge stop", "merge verdict", "merge wall s", "merge peak MB", "same verdict"])
+    for b in sorted(_jc):
+        o, m = _jc[b]["old"], _jc[b]["merge"]
+        def st(r): return r["stop_reason"] if r["stop_reason"] in ("ok", "timeout", "memory") else r["stop_reason"][:20]
+        same = "yes" if (o["stop_reason"] == "ok" and m["stop_reason"] == "ok" and (o.get("verdict") or "").lower() == (m.get("verdict") or "").lower()) else ("" if o["stop_reason"] != "ok" else "NO")
+        w.writerow([b, st(o), o.get("verdict", ""), fnum(o.get("wall_ms"), 1000, "{:.1f}") if o.get("wall_ms") else "", fnum(o.get("peak_rss_kb"), 1024) if o.get("peak_rss_kb") else "", o.get("timeout_s", ""), o.get("mem_limit_gb", ""), st(m), m.get("verdict", ""), fnum(m.get("wall_ms"), 1000, "{:.1f}") if m.get("wall_ms") else "", fnum(m.get("peak_rss_kb"), 1024) if m.get("peak_rss_kb") else "", same])
+print(f"join-compare: {len(_jc)} joins with both an old and a merge record; verdict differs on {sum(1 for d in _jc.values() if d['old']['stop_reason']=='ok' and d['merge']['stop_reason']=='ok' and (d['old'].get('verdict') or '').lower() != (d['merge'].get('verdict') or '').lower())}")
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
