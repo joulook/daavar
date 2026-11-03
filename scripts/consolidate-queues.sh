@@ -21,9 +21,9 @@ rank() {  # lower runs first
     *) echo 3;;
   esac
 }
-out="$EVAL_OUT/queues/all-$(date +%m%d-%H%M).rows"; mkdir -p "$(dirname "$out")"; : > "$out"
+out="$EVAL_OUT/queues/all-$(date +%m%d-%H%M%S).rows"   # seconds: a second consolidation in the same minute must not truncate the first one's file (2026-11-03 19:30); mkdir -p "$(dirname "$out")"; : > "$out"
 for f in $(for f in $files; do echo "$(rank "$f") $f"; done | sort -n -k1,1 -s | awk '{print $2}' | awk '!seen[$0]++'); do cat "$f" >> "$out"; echo >> "$out"; done
 awk 'NF && !seen[$1]++' "$out" > "$out.dedup" && mv "$out.dedup" "$out"
 free=""; for k in 0 1 2 3 4 5 6 7; do case ",$RES," in *",$k,"*) continue;; esac; free="$free${free:+,}$k"; done
 echo "stopped $stopped dispatchers; $(grep -c . "$out") rows in $out; numa $free"
-FOREIGN_LOAD_POLICY=ignore NUMA_SET="$free" bash "$S/start-queue.sh" "$out" "all-$(date +%H%M)" 8 | tail -1
+FOREIGN_LOAD_POLICY=ignore NUMA_SET="$free" bash "$S/start-queue.sh" "$out" "all-$(date +%H%M%S)" 8 | tail -1
