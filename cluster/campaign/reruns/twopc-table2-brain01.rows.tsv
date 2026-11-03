@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.a1-commit.spec_correct_5_3_fifo.x2.t16.c48h	C	a1-commit	5,3	fifo	correct	export	16			c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	a1-commit		
+C3E.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h	C	a1-commit	5,3	fifo	correct	export	16			c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	a1-commit		
+C1.a1-commit.impl_correct_5_3_fifo.x2.t16.c48h	C	a1-commit	5,3	fifo	correct	stateful-parallel	16	readme		c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	a1-commit	a1-commit.spec_correct_5_3_fifo.x2	a1-commit.impl_correct_5_3_fifo.x2
+C3J.a1-commit.impl_correct_5_3_fifo.x2.c48h.m	C	a1-commit	5,3	fifo	correct	join	1			c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a1-commit	a1-commit.spec_correct_5_3_fifo.x2	a1-commit.impl_correct_5_3_fifo.x2

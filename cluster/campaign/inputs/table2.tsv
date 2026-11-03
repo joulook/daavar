@@ -6,3 +6,4 @@ commit	impl	fifo	12,12
 commit	impl	fifo	16,16
 commit	impl	fifo	20,20
 share	correct	fifo	28,28
+2pc	correct	fifo	5,3
