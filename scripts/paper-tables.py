@@ -233,10 +233,17 @@ if not FULL and KEEP is None:
         if not os.path.exists(TF_): continue
         want = [l.rstrip("\n").split("\t") for l in open(TF_) if l.strip() and not l.startswith("#")]
         body = []; csvrows = []; prev = None
+        def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
+            # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
+            if r is None: return None
+            if (r.get("pin") or "")[:7] != "9a0629e": return None
+            if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
+            if limit(r) and num(r.get("timeout s")) != 172800: return None
+            return r
         for prog, var, model, size in want:
             k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
             m = inst.get(k, {}) if k else {}
-            c2, c1, c3 = m.get("stateless"), m.get("stateful"), m.get("offline")
+            c2, c1, c3 = fresh(m.get("stateless")), fresh(m.get("stateful")), fresh(m.get("offline"), True)
             dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
             gi = next((r["impl graphs"] for r in dec if r["impl graphs"]), ""); gs = next((r["spec graphs"] for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), "")
             gx = next((r.get("uncovered", "") for r in dec if r.get("uncovered") not in ("", None)), "") if viol else None
@@ -252,7 +259,7 @@ if not FULL and KEEP is None:
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
                + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MiB; an offline row counts the two exports and the join together (T summed, M the largest of the three). "
-               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished.")
+               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; a blank cell is a run not yet finished at the current engine versions.")
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"
