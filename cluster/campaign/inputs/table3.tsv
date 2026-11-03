@@ -14,3 +14,5 @@ reset	reset	bag	20,11
 bcast	decide-early	bag	5
 chan	no-seqno	bag	7
 ewd998	no-black-on-receive	bag	5
+lb	rr-a4a	fifo	3,3,3
+lb	rr-a4a	fifo	4,4,4
