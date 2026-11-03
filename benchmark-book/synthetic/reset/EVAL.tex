@@ -5,355 +5,406 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{reset} (s5-reset)}
 \author{}
-\date{generated 2026-11-03 from brain-data a7066b580 2026-11-03 10:49:44 +0100}
+\date{generated 2026-11-03 from brain-data 03b0b57cc 2026-11-03 11:21:51 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): reset: expected violation; ctl: expected violation (the matched control is a violating one); twin: expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G$ = graphs explored (specification, implementation); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): reset: expected violation; ctl: expected violation (the matched control is a violating one); twin: expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
-\begin{longtable}{@{}lllrrrlrrlrrl@{}}
+\subsection*{stateless: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{blue} single &  & bag & 1,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 1,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 1,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 2,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 2,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 2,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 3,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 3,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 3,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 4,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 4,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 4,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 5,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 5,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 5,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 6,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 6,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 6,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 7,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 7,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 7,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 8,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 8,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 8,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 9,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 9,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 9,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 10,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 10,3 & 1 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 10,4 & 1 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & bag & 10,5 & 1 & 120 & conforms & 0.1 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,6 & 1 & 720 & conforms & 0.6 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,7 & 1 & 5040 & conforms & 4.3 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,8 & 1 & 40320 & conforms & 36.3 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,9 & 1 & 362880 & conforms & 336.4 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,10 & 1 & 3628800 & conforms & 3500.3 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,1 & 2 & 2 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 2 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,3 & 7 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & 7 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,4 & 25 & 2 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 25 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,1 & 4 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 4 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,3 & 19 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 19 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,4 & 73 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 73 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,1 & 8 & 8 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 8 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,3 & 43 & 8 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 43 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,4 & 169 & 8 & violation & 0.1 & 2 & 1 h, 250 GB & 8 & 169 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,1 & 16 & 16 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 16 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,3 & 91 & 16 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 91 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,4 & 361 & 16 & violation & 0.1 & 2 & 1 h, 250 GB & 16 & 361 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,1 & 32 & 32 & violation & 0.0 & 2 & 1 h, 250 GB & 32 & 32 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,3 & 187 & 32 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 187 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,4 & 745 & 32 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 745 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,1 & 64 & 64 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 64 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,3 & 379 & 64 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 379 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,4 & 1513 & 64 & violation & 0.2 & 2 & 1 h, 250 GB & 64 & 1513 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,1 & 128 & 128 & violation & 0.1 & 4 & 1 h, 250 GB & 128 & 128 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,3 & 763 & 128 & violation & 0.2 & 4 & 1 h, 250 GB & 128 & 763 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,4 & 3049 & 128 & violation & 0.5 & 4 & 1 h, 250 GB & 128 & 3049 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,1 & 256 & 256 & violation & 0.3 & 8 & 1 h, 250 GB & 256 & 256 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,3 & 1531 & 256 & violation & 0.5 & 8 & 1 h, 250 GB & 256 & 1531 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,4 & 6121 & 256 & violation & 1.1 & 6 & 1 h, 250 GB & 256 & 6121 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,1 & 512 & 512 & violation & 0.7 & 16 & 1 h, 250 GB & 512 & 512 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,3 & 3067 & 512 & violation & 1.1 & 16 & 1 h, 250 GB & 512 & 3067 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,4 & 12265 & 512 & violation & 2.8 & 12 & 1 h, 250 GB & 512 & 12265 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,1 & 1024 & 1024 & violation & 1.8 & 32 & 1 h, 250 GB & 1024 & 1024 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,3 & 6139 & 1024 & violation & 2.8 & 30 & 1 h, 250 GB & 1024 & 6139 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,4 & 24553 & 1024 & violation & 6.4 & 26 & 1 h, 250 GB & 1024 & 24553 & brain03, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,5 & 122761 & 1024 & violation & 27.4 & 30 & 1 h, 250 GB & 1024 & 122761 & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,6 & 736561 & 1024 & violation & 156.1 & 30 & 1 h, 250 GB & 1024 & 736561 & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,7 & 5155921 & 1024 & violation & 1101.9 & 24 & 1 h, 250 GB & 1024 & 5155921 & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,8 & 41247361 & 1024 & violation & 9207.0 & 26 & 48 h, 250 GB & 1024 & 41247361 & brain01, 2026-11-03 \\
-\color{blue} reset &  & bag & 1,1 & 2 & 2 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 2 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 1,3 & 7 & 2 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 7 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 1,4 & 25 & 2 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 25 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,1 & 4 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 4 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,3 & 19 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 19 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,4 & 73 & 4 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 73 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,1 & 8 & 8 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 8 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,3 & 43 & 8 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 43 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,4 & 169 & 8 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 169 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,1 & 16 & 16 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 16 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,3 & 91 & 16 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 91 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,4 & 361 & 16 & violation & 0.1 & 2 & 1 h, 250 GB & 16 & 361 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,1 & 32 & 32 & violation & 0.0 & 2 & 1 h, 250 GB & 32 & 32 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,3 & 187 & 32 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 187 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,4 & 745 & 32 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 745 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,1 & 64 & 64 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 64 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,3 & 379 & 64 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 379 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,4 & 1513 & 64 & violation & 0.2 & 2 & 1 h, 250 GB & 64 & 1513 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,1 & 128 & 128 & violation & 0.1 & 4 & 1 h, 250 GB & 128 & 128 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,3 & 763 & 128 & violation & 0.3 & 6 & 1 h, 250 GB & 128 & 763 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,4 & 3049 & 128 & violation & 0.5 & 4 & 1 h, 250 GB & 128 & 3049 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,1 & 256 & 256 & violation & 0.3 & 10 & 1 h, 250 GB & 256 & 256 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,3 & 1531 & 256 & violation & 0.5 & 8 & 1 h, 250 GB & 256 & 1531 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,4 & 6121 & 256 & violation & 1.1 & 8 & 1 h, 250 GB & 256 & 6121 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,1 & 512 & 512 & violation & 0.7 & 16 & 1 h, 250 GB & 512 & 512 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,3 & 3067 & 512 & violation & 1.0 & 18 & 1 h, 250 GB & 512 & 3067 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,4 & 12265 & 512 & violation & 2.4 & 16 & 1 h, 250 GB & 512 & 12265 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,1 & 1024 & 1024 & violation & 1.2 & 30 & 1 h, 250 GB & 1024 & 1024 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,3 & 6139 & 1024 & violation & 2.0 & 30 & 1 h, 250 GB & 1024 & 6139 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,4 & 24553 & 1024 & violation & 4.6 & 34 & 1 h, 250 GB & 1024 & 24553 & brain03, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,5 & 122761 & 1024 & violation & 19.6 & 30 & 1 h, 250 GB & 1024 & 122761 & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,6 & 736561 & 1024 & violation & 113.2 & 34 & 1 h, 250 GB & 1024 & 736561 & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,7 & 5155921 & 1024 & violation & 801.4 & 30 & 1 h, 250 GB & 1024 & 5155921 & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,8 & 41247361 & 1024 & violation & 6572.0 & 30 & 48 h, 250 GB & 1024 & 41247361 & brain01, 2026-11-03 \\
+\color{blue} 1,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 6 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 24 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 120 & conforms & 0.1 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 720 & conforms & 0.6 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 5040 & conforms & 4.3 & 2 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 40320 & conforms & 36.3 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} 10,9 & 362880 & 362880 & conforms & 336.4 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\color{blue} 10,10 & 3628800 & 3628800 & conforms & 3500.3 & 10 & 1 h, 250 GB & 1 & 1 & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateless: pair \textsf{ctl}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+\midrule
+\endhead
+\color{blue} 1,1 & 1 & 2 & 1 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 2 & brain03, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & 7 & brain03, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 2 & 1 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 25 & brain03, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 4 & brain03, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 19 & brain03, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 73 & brain03, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 8 & 7 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 8 & brain03, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 8 & 7 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 43 & brain03, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 8 & 7 & violation & 0.1 & 2 & 1 h, 250 GB & 8 & 169 & brain03, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 16 & 15 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 16 & brain03, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 16 & 15 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 91 & brain03, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 16 & 15 & violation & 0.1 & 2 & 1 h, 250 GB & 16 & 361 & brain03, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 32 & 31 & violation & 0.0 & 2 & 1 h, 250 GB & 32 & 32 & brain03, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 32 & 31 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 187 & brain03, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 32 & 31 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 745 & brain03, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 64 & 63 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 64 & brain03, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 64 & 63 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 379 & brain03, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 64 & 63 & violation & 0.2 & 2 & 1 h, 250 GB & 64 & 1513 & brain03, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 128 & 127 & violation & 0.1 & 4 & 1 h, 250 GB & 128 & 128 & brain03, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 128 & 127 & violation & 0.2 & 4 & 1 h, 250 GB & 128 & 763 & brain03, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 128 & 127 & violation & 0.5 & 4 & 1 h, 250 GB & 128 & 3049 & brain03, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 256 & 255 & violation & 0.3 & 8 & 1 h, 250 GB & 256 & 256 & brain03, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 256 & 255 & violation & 0.5 & 8 & 1 h, 250 GB & 256 & 1531 & brain03, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 256 & 255 & violation & 1.1 & 6 & 1 h, 250 GB & 256 & 6121 & brain03, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 512 & 511 & violation & 0.7 & 16 & 1 h, 250 GB & 512 & 512 & brain03, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 512 & 511 & violation & 1.1 & 16 & 1 h, 250 GB & 512 & 3067 & brain03, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 512 & 511 & violation & 2.8 & 12 & 1 h, 250 GB & 512 & 12265 & brain03, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1024 & 1023 & violation & 1.8 & 32 & 1 h, 250 GB & 1024 & 1024 & brain03, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 1024 & 1023 & violation & 2.8 & 30 & 1 h, 250 GB & 1024 & 6139 & brain03, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 1024 & 1023 & violation & 6.4 & 26 & 1 h, 250 GB & 1024 & 24553 & brain03, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 1024 & 1023 & violation & 27.4 & 30 & 1 h, 250 GB & 1024 & 122761 & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 1024 & 1023 & violation & 156.1 & 30 & 1 h, 250 GB & 1024 & 736561 & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 1024 & 1023 & violation & 1101.9 & 24 & 1 h, 250 GB & 1024 & 5155921 & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 9207.0 & 26 & 48 h, 250 GB & 1024 & 41247361 & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateless: pair \textsf{reset}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+\midrule
+\endhead
+\color{blue} 1,1 & 1 & 2 & 1 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 2 & brain03, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 2 & 1 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 7 & brain03, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 2 & 1 & violation & 0.0 & 2 & 1 h, 250 GB & 2 & 25 & brain03, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 4 & brain03, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 19 & brain03, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 4 & 3 & violation & 0.0 & 2 & 1 h, 250 GB & 4 & 73 & brain03, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 8 & 7 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 8 & brain03, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 8 & 7 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 43 & brain03, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 8 & 7 & violation & 0.0 & 2 & 1 h, 250 GB & 8 & 169 & brain03, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 16 & 15 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 16 & brain03, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 16 & 15 & violation & 0.0 & 2 & 1 h, 250 GB & 16 & 91 & brain03, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 16 & 15 & violation & 0.1 & 2 & 1 h, 250 GB & 16 & 361 & brain03, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 32 & 31 & violation & 0.0 & 2 & 1 h, 250 GB & 32 & 32 & brain03, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 32 & 31 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 187 & brain03, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 32 & 31 & violation & 0.1 & 2 & 1 h, 250 GB & 32 & 745 & brain03, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 64 & 63 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 64 & brain03, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 64 & 63 & violation & 0.1 & 2 & 1 h, 250 GB & 64 & 379 & brain03, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 64 & 63 & violation & 0.2 & 2 & 1 h, 250 GB & 64 & 1513 & brain03, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 128 & 127 & violation & 0.1 & 4 & 1 h, 250 GB & 128 & 128 & brain03, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 128 & 127 & violation & 0.3 & 6 & 1 h, 250 GB & 128 & 763 & brain03, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 128 & 127 & violation & 0.5 & 4 & 1 h, 250 GB & 128 & 3049 & brain03, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 256 & 255 & violation & 0.3 & 10 & 1 h, 250 GB & 256 & 256 & brain03, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 256 & 255 & violation & 0.5 & 8 & 1 h, 250 GB & 256 & 1531 & brain03, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 256 & 255 & violation & 1.1 & 8 & 1 h, 250 GB & 256 & 6121 & brain03, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 512 & 511 & violation & 0.7 & 16 & 1 h, 250 GB & 512 & 512 & brain03, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 512 & 511 & violation & 1.0 & 18 & 1 h, 250 GB & 512 & 3067 & brain03, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 512 & 511 & violation & 2.4 & 16 & 1 h, 250 GB & 512 & 12265 & brain03, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1024 & 1023 & violation & 1.2 & 30 & 1 h, 250 GB & 1024 & 1024 & brain03, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 1024 & 1023 & violation & 2.0 & 30 & 1 h, 250 GB & 1024 & 6139 & brain03, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 1024 & 1023 & violation & 4.6 & 34 & 1 h, 250 GB & 1024 & 24553 & brain03, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 1024 & 1023 & violation & 19.6 & 30 & 1 h, 250 GB & 1024 & 122761 & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 1024 & 1023 & violation & 113.2 & 34 & 1 h, 250 GB & 1024 & 736561 & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 1024 & 1023 & violation & 801.4 & 30 & 1 h, 250 GB & 1024 & 5155921 & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 6572.0 & 30 & 48 h, 250 GB & 1024 & 41247361 & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, reset 10 8 bag, ctl 10 8 bag, ctl 10 9 bag, reset 10 9 bag, reset 10 10 bag, ctl 10 10 bag, ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, \ldots\ (37 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): ctl 10 8 bag, twin 10 8 bag, reset 10 8 bag, reset 10 9 bag, ctl 10 9 bag, reset 10 10 bag, ctl 10 10 bag, twin 11 1 bag, reset 11 1 bag, ctl 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, twin 11 4 bag, ctl 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 3 bag, reset 12 4 bag, twin 12 4 bag, \ldots\ (37 instances in all).\par
 \section*{stateful}
-\begin{longtable}{@{}lllrrrlrrll@{}}
+\subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrll@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{blue} single &  & bag & 1,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 1,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 1,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 2,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 2,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 2,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 3,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 3,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 3,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 4,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 4,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 4,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 5,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 5,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 5,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 6,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 6,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 6,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 7,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 7,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 7,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 8,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 8,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 8,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 9,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 9,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 9,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 10,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 10,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 10,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & bag & 10,5 & 120 & 120 & conforms & 0.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,6 & 720 & 720 & conforms & 0.3 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,7 & 5040 & 5040 & conforms & 2.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,8 & 40320 & 40320 & conforms & 17.1 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,9 & 362880 & 362880 & conforms & 157.8 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,10 & 3628800 & 3628800 & conforms & 1601.8 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,1 & 1 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,3 & 6 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 1,4 & 24 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,1 & 1 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,3 & 6 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 2,4 & 24 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,1 & 1 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,3 & 6 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 3,4 & 24 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,1 & 1 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,3 & 6 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 4,4 & 24 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,1 & 1 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,3 & 6 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 5,4 & 24 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,1 & 1 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,3 & 6 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 6,4 & 24 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,1 & 1 & 128 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,3 & 6 & 128 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 7,4 & 24 & 128 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,1 & 1 & 256 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,3 & 6 & 256 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 8,4 & 24 & 256 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,1 & 1 & 512 & violation & 0.2 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,3 & 6 & 512 & violation & 0.3 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 9,4 & 24 & 512 & violation & 0.3 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,1 & 1 & 1024 & violation & 0.8 & 34 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,3 & 6 & 1024 & violation & 0.8 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,4 & 24 & 1024 & violation & 0.8 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,5 & 120 & 1024 & violation & 0.8 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,6 & 720 & 1024 & violation & 0.9 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,7 & 5040 & 1024 & violation & 1.8 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,8 & 40320 & 1024 & violation & 9.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,9 & 362880 & 1024 & violation & 77.5 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,10 & 3628800 & 1024 & violation & 791.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 1,1 & 1 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 1,3 & 6 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 1,4 & 24 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,1 & 1 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,3 & 6 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 2,4 & 24 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,1 & 1 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,3 & 6 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 3,4 & 24 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,1 & 1 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,3 & 6 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 4,4 & 24 & 16 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,1 & 1 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,3 & 6 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 5,4 & 24 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,1 & 1 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,3 & 6 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 6,4 & 24 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,1 & 1 & 128 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,3 & 6 & 128 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 7,4 & 24 & 128 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,1 & 1 & 256 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,3 & 6 & 256 & violation & 0.1 & 6 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 8,4 & 24 & 256 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,1 & 1 & 512 & violation & 0.2 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,3 & 6 & 512 & violation & 0.2 & 18 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 9,4 & 24 & 512 & violation & 0.2 & 16 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,1 & 1 & 1024 & violation & 0.5 & 38 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,3 & 6 & 1024 & violation & 0.5 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,4 & 24 & 1024 & violation & 0.5 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,5 & 120 & 1024 & violation & 0.6 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,6 & 720 & 1024 & violation & 0.6 & 36 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,7 & 5040 & 1024 & violation & 1.6 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,8 & 40320 & 1024 & violation & 9.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,9 & 362880 & 1024 & violation & 79.8 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,10 & 3628800 & 1024 & violation & 807.5 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 1,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 6 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 24 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 120 & conforms & 0.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 720 & conforms & 0.3 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 5040 & conforms & 2.1 & 2 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 40320 & conforms & 17.1 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,9 & 362880 & 362880 & conforms & 157.8 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,10 & 3628800 & 3628800 & conforms & 1601.8 & 10 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateful: pair \textsf{ctl}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrll@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & run \\
+\midrule
+\endhead
+\color{blue} 1,1 & 1 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 128 & 127 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 128 & 127 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 128 & 127 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 256 & 255 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 256 & 255 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 256 & 255 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 512 & 511 & violation & 0.2 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 512 & 511 & violation & 0.3 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 512 & 511 & violation & 0.3 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1024 & 1023 & violation & 0.8 & 34 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 1024 & 1023 & violation & 0.8 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 1024 & 1023 & violation & 0.8 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 1024 & 1023 & violation & 0.8 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 1024 & 1023 & violation & 0.9 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 1024 & 1023 & violation & 1.8 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 9.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,9 & 362880 & 1024 & 1023 & violation & 77.5 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,10 & 3628800 & 1024 & 1023 & violation & 791.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{stateful: pair \textsf{reset}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrll@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & run \\
+\midrule
+\endhead
+\color{blue} 1,1 & 1 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,3 & 6 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 1,4 & 24 & 2 & 1 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,1 & 1 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,3 & 6 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2,4 & 24 & 4 & 3 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,1 & 1 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,3 & 6 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 3,4 & 24 & 8 & 7 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,1 & 1 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,3 & 6 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 4,4 & 24 & 16 & 15 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,1 & 1 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,3 & 6 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 5,4 & 24 & 32 & 31 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,1 & 1 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,3 & 6 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 6,4 & 24 & 64 & 63 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,1 & 1 & 128 & 127 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,3 & 6 & 128 & 127 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 7,4 & 24 & 128 & 127 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,1 & 1 & 256 & 255 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,3 & 6 & 256 & 255 & violation & 0.1 & 6 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8,4 & 24 & 256 & 255 & violation & 0.1 & 8 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,1 & 1 & 512 & 511 & violation & 0.2 & 14 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,3 & 6 & 512 & 511 & violation & 0.2 & 18 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 9,4 & 24 & 512 & 511 & violation & 0.2 & 16 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,1 & 1 & 1024 & 1023 & violation & 0.5 & 38 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,3 & 6 & 1024 & 1023 & violation & 0.5 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,4 & 24 & 1024 & 1023 & violation & 0.5 & 36 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 10,5 & 120 & 1024 & 1023 & violation & 0.6 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,6 & 720 & 1024 & 1023 & violation & 0.6 & 36 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,7 & 5040 & 1024 & 1023 & violation & 1.6 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 9.0 & 34 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,9 & 362880 & 1024 & 1023 & violation & 79.8 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
+\color{blue} 10,10 & 3628800 & 1024 & 1023 & violation & 807.5 & 32 & 1 h, 250 GB & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, reset 10 8 bag, ctl 10 8 bag, ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, reset 12 4 bag, twin 13 1 bag, reset 13 1 bag, ctl 13 1 bag, \ldots\ (33 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): ctl 10 8 bag, twin 10 8 bag, reset 10 8 bag, twin 11 1 bag, reset 11 1 bag, ctl 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, twin 11 4 bag, ctl 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 3 bag, reset 12 4 bag, twin 12 4 bag, ctl 12 4 bag, ctl 13 1 bag, reset 13 1 bag, twin 13 1 bag, \ldots\ (33 instances in all).\par
 \section*{offline}
-\begin{longtable}{@{}lllrrrlrrlrrrrl@{}}
+\subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} single &  & bag & 1,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 1,3 & 6 & 6 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 1,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 2,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 2,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 2,4 & 24 & 24 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 3,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 3,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 3,4 & 24 & 24 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 4,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 4,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 4,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 5,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 5,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 5,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 6,1 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 6,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 6,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 7,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 7,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 7,4 & 24 & 24 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 8,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 8,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 8,4 & 24 & 24 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.4 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 9,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 9,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 9,4 & 24 & 24 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,3 & 6 & 6 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,5 & 120 & 120 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,6 & 720 & 720 & conforms & 0.5 & 4 & 10 min, 16 GB & 0.3 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,7 & 5040 & 5040 & conforms & 2.7 & 4 & 10 min, 16 GB & 1.4 & 1.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & bag & 10,8 & 40320 & 40320 & conforms & 21.3 & 10 & 10 min, 16 GB & 10.7 & 10.7 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{blue} single &  & bag & 10,9 & 362880 & 362880 & conforms & 195.7 & 9 & 1 h, 250 GB & 98.5 & 97.3 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} single &  & bag & 10,10 & 3628800 & 3628800 & conforms & 1988.3 & 10 & 1 h, 250 GB & 992.2 & 996.2 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{red} ctl &  & bag & 1,1 & 1 & 2 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 1,3 & 6 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 1,4 & 24 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 2,1 & 1 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 2,3 & 6 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 2,4 & 24 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 3,1 & 1 & 8 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 3,3 & 6 & 8 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 3,4 & 24 & 8 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 4,1 & 1 & 16 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 4,3 & 6 & 16 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 4,4 & 24 & 16 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 5,1 & 1 & 32 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 5,3 & 6 & 32 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 5,4 & 24 & 32 & violation & 0.4 & 4 & 10 min, 16 GB & 0.2 & 0.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 6,1 & 1 & 64 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 6,3 & 6 & 64 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 6,4 & 24 & 64 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 7,1 & 1 & 128 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 7,3 & 6 & 128 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 7,4 & 24 & 128 & violation & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 8,1 & 1 & 256 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 8,3 & 6 & 256 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 8,4 & 24 & 256 & violation & 0.5 & 6 & 10 min, 16 GB & 0.4 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 9,1 & 1 & 512 & violation & 0.3 & 12 & 10 min, 16 GB & 0.1 & 0.1 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 9,3 & 6 & 512 & violation & 0.5 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 9,4 & 24 & 512 & violation & 0.2 & 12 & 10 min, 16 GB & 0.1 & 0.1 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,1 & 1 & 1024 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,3 & 6 & 1024 & violation & 0.6 & 24 & 10 min, 16 GB & 0.2 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,4 & 24 & 1024 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,5 & 120 & 1024 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.4 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,6 & 720 & 1024 & violation & 0.8 & 24 & 10 min, 16 GB & 0.3 & 0.4 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} ctl &  & bag & 10,7 & 5040 & 1024 & violation & 1.9 & 24 & 10 min, 16 GB & 1.4 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{blue} ctl &  & bag & 10,8 & 40320 & 1024 & violation & 11.1 & 9 & 1 h, 250 GB & 10.7 & 0.3 & 0.1 & merge & brain01, 2026-11-03 \\
-\color{red} reset &  & bag & 1,1 & 1 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 1,3 & 6 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 1,4 & 24 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 2,1 & 1 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 2,3 & 6 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 2,4 & 24 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 3,1 & 1 & 8 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 3,3 & 6 & 8 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 3,4 & 24 & 8 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 4,1 & 1 & 16 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 4,3 & 6 & 16 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 4,4 & 24 & 16 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 5,1 & 1 & 32 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 5,3 & 6 & 32 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 5,4 & 24 & 32 & violation & 0.2 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 6,1 & 1 & 64 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 6,3 & 6 & 64 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 6,4 & 24 & 64 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 7,1 & 1 & 128 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 7,3 & 6 & 128 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 7,4 & 24 & 128 & violation & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 8,1 & 1 & 256 & violation & 0.3 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 8,3 & 6 & 256 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 8,4 & 24 & 256 & violation & 0.6 & 6 & 10 min, 16 GB & 0.4 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 9,1 & 1 & 512 & violation & 0.3 & 12 & 10 min, 16 GB & 0.1 & 0.2 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 9,3 & 6 & 512 & violation & 0.5 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 9,4 & 24 & 512 & violation & 0.4 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,1 & 1 & 1024 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,3 & 6 & 1024 & violation & 0.7 & 24 & 10 min, 16 GB & 0.2 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,4 & 24 & 1024 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,5 & 120 & 1024 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,6 & 720 & 1024 & violation & 0.7 & 24 & 10 min, 16 GB & 0.3 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{red} reset &  & bag & 10,7 & 5040 & 1024 & violation & 1.8 & 24 & 10 min, 16 GB & 1.4 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
-\color{blue} reset &  & bag & 10,8 & 40320 & 1024 & violation & 11.5 & 9 & 1 h, 250 GB & 10.7 & 0.3 & 0.5 & merge & brain01, 2026-11-03 \\
+\color{red} 1,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,3 & 6 & 6 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,4 & 24 & 24 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,4 & 24 & 24 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,1 & 1 & 1 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,4 & 24 & 24 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,1 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,4 & 24 & 24 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.4 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,3 & 6 & 6 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,4 & 24 & 24 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,1 & 1 & 1 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,3 & 6 & 6 & conforms & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,4 & 24 & 24 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,5 & 120 & 120 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,6 & 720 & 720 & conforms & 0.5 & 4 & 10 min, 16 GB & 0.3 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,7 & 5040 & 5040 & conforms & 2.7 & 4 & 10 min, 16 GB & 1.4 & 1.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,8 & 40320 & 40320 & conforms & 21.3 & 10 & 10 min, 16 GB & 10.7 & 10.7 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 10,9 & 362880 & 362880 & conforms & 195.7 & 9 & 1 h, 250 GB & 98.5 & 97.3 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 10,10 & 3628800 & 3628800 & conforms & 1988.3 & 10 & 1 h, 250 GB & 992.2 & 996.2 & 0.0 & merge & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{offline: pair \textsf{ctl}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1,1 & 1 & 2 & 1 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,3 & 6 & 2 & 1 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,4 & 24 & 2 & 1 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,1 & 1 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,3 & 6 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,4 & 24 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,1 & 1 & 8 & 7 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,3 & 6 & 8 & 7 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,4 & 24 & 8 & 7 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,1 & 1 & 16 & 15 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,3 & 6 & 16 & 15 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,4 & 24 & 16 & 15 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,1 & 1 & 32 & 31 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,3 & 6 & 32 & 31 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,4 & 24 & 32 & 31 & violation & 0.4 & 4 & 10 min, 16 GB & 0.2 & 0.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,1 & 1 & 64 & 63 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,3 & 6 & 64 & 63 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,4 & 24 & 64 & 63 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,1 & 1 & 128 & 127 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,3 & 6 & 128 & 127 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,4 & 24 & 128 & 127 & violation & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,1 & 1 & 256 & 255 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,3 & 6 & 256 & 255 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,4 & 24 & 256 & 255 & violation & 0.5 & 6 & 10 min, 16 GB & 0.4 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,1 & 1 & 512 & 511 & violation & 0.3 & 12 & 10 min, 16 GB & 0.1 & 0.1 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,3 & 6 & 512 & 511 & violation & 0.5 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,4 & 24 & 512 & 511 & violation & 0.2 & 12 & 10 min, 16 GB & 0.1 & 0.1 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,1 & 1 & 1024 & 1023 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,3 & 6 & 1024 & 1023 & violation & 0.6 & 24 & 10 min, 16 GB & 0.2 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,4 & 24 & 1024 & 1023 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,5 & 120 & 1024 & 1023 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.4 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,6 & 720 & 1024 & 1023 & violation & 0.8 & 24 & 10 min, 16 GB & 0.3 & 0.4 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,7 & 5040 & 1024 & 1023 & violation & 1.9 & 24 & 10 min, 16 GB & 1.4 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 11.1 & 9 & 1 h, 250 GB & 10.7 & 0.3 & 0.1 & merge & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{offline: pair \textsf{reset}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1,1 & 1 & 2 & 1 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,3 & 6 & 2 & 1 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 1,4 & 24 & 2 & 1 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,1 & 1 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,3 & 6 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2,4 & 24 & 4 & 3 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,1 & 1 & 8 & 7 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,3 & 6 & 8 & 7 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3,4 & 24 & 8 & 7 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,1 & 1 & 16 & 15 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,3 & 6 & 16 & 15 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4,4 & 24 & 16 & 15 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,1 & 1 & 32 & 31 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,3 & 6 & 32 & 31 & violation & 0.2 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5,4 & 24 & 32 & 31 & violation & 0.2 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,1 & 1 & 64 & 63 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,3 & 6 & 64 & 63 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 6,4 & 24 & 64 & 63 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,1 & 1 & 128 & 127 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,3 & 6 & 128 & 127 & violation & 0.3 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 7,4 & 24 & 128 & 127 & violation & 0.3 & 4 & 10 min, 16 GB & 0.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,1 & 1 & 256 & 255 & violation & 0.3 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,3 & 6 & 256 & 255 & violation & 0.2 & 6 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8,4 & 24 & 256 & 255 & violation & 0.6 & 6 & 10 min, 16 GB & 0.4 & 0.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,1 & 1 & 512 & 511 & violation & 0.3 & 12 & 10 min, 16 GB & 0.1 & 0.2 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,3 & 6 & 512 & 511 & violation & 0.5 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 9,4 & 24 & 512 & 511 & violation & 0.4 & 12 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,1 & 1 & 1024 & 1023 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,3 & 6 & 1024 & 1023 & violation & 0.7 & 24 & 10 min, 16 GB & 0.2 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,4 & 24 & 1024 & 1023 & violation & 0.6 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,5 & 120 & 1024 & 1023 & violation & 0.5 & 24 & 10 min, 16 GB & 0.1 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,6 & 720 & 1024 & 1023 & violation & 0.7 & 24 & 10 min, 16 GB & 0.3 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{red} 10,7 & 5040 & 1024 & 1023 & violation & 1.8 & 24 & 10 min, 16 GB & 1.4 & 0.3 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 10,8 & 40320 & 1024 & 1023 & violation & 11.5 & 9 & 1 h, 250 GB & 10.7 & 0.3 & 0.5 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): ctl 11 1 bag, reset 11 1 bag, twin 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, ctl 12 1 bag, reset 12 1 bag, ctl 12 3 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 4 bag, twin 12 4 bag, reset 12 4 bag, twin 13 1 bag, reset 13 1 bag, ctl 13 1 bag, ctl 13 3 bag, reset 13 3 bag, twin 13 3 bag, \ldots\ (27 instances in all).\par
-refused (an input missing at run time): reset 10 9 bag, ctl 10 9 bag, ctl 10 10 bag, reset 10 10 bag.\par
+planned but never scheduled (grid points beyond the ladder): twin 11 1 bag, reset 11 1 bag, ctl 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, twin 11 4 bag, ctl 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 3 bag, reset 12 4 bag, twin 12 4 bag, ctl 12 4 bag, ctl 13 1 bag, reset 13 1 bag, twin 13 1 bag, ctl 13 3 bag, twin 13 3 bag, reset 13 3 bag, \ldots\ (27 instances in all).\par
+refused (an input missing at run time): ctl 10 9 bag, reset 10 9 bag, reset 10 10 bag, ctl 10 10 bag.\par
 \end{document}

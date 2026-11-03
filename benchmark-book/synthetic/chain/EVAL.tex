@@ -5,55 +5,58 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{chain} (s4-chain)}
 \author{}
-\date{generated 2026-11-03 from brain-data a7066b580 2026-11-03 10:49:44 +0100}
+\date{generated 2026-11-03 from brain-data 03b0b57cc 2026-11-03 11:21:51 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms (--threshold 65536 is needed at d>=512). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G$ = graphs explored (specification, implementation); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms (--threshold 65536 is needed at d>=512). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
-\begin{longtable}{@{}lllrrrlrrlrrl@{}}
+\subsection*{stateless: pair \textsf{single}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
-\color{blue} single &  & fifo & 2 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & fifo & 8 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & fifo & 32 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
-\color{blue} single &  & fifo & 128 & 1 & 1 & conforms & 0.1 & 14 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 2 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 8 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 32 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
+\color{blue} 128 & 1 & 1 & conforms & 0.1 & 14 & 1 h, 250 GB & 1 & 1 & brain03, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
 the tool ended with an error (exit-101): 512 fifo.\par
 skipped: a smaller size had reached its limit: 1024 fifo, 2048 fifo.\par
-planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo.\par
 \section*{stateful}
-\begin{longtable}{@{}lllrrrlrrll@{}}
+\subsection*{stateful: pair \textsf{single}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrll@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
 \midrule
 \endhead
-\color{blue} single &  & fifo & 2 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & fifo & 8 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & fifo & 32 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
-\color{blue} single &  & fifo & 128 & 1 & 1 & conforms & 0.1 & 12 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 2 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 8 & 1 & 1 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 32 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-02 \\
+\color{blue} 128 & 1 & 1 & conforms & 0.1 & 12 & 1 h, 250 GB & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
 the tool ended with an error (exit-101): 512 fifo.\par
 skipped: a smaller size had reached its limit: 1024 fifo, 2048 fifo.\par
-planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo.\par
 \section*{offline}
-\begin{longtable}{@{}lllrrrlrrlrrrrl@{}}
+\subsection*{offline: pair \textsf{single}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
 \toprule
-variant & spec & model & size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} single &  & fifo & 2 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} single &  & fifo & 8 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{blue} single &  & fifo & 32 & 1 & 1 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.0 & 0.0 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} single &  & fifo & 128 & 1 & 1 & conforms & 0.2 & 10 & 1 h, 250 GB & 0.2 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2 & 1 & 1 & conforms & 0.4 & 4 & 10 min, 16 GB & 0.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 8 & 1 & 1 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 32 & 1 & 1 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.0 & 0.0 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 128 & 1 & 1 & conforms & 0.2 & 10 & 1 h, 250 GB & 0.2 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
 skipped: a smaller size had reached its limit: 512 fifo, 1024 fifo, 2048 fifo.\par
-planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo.\par
 \end{document}

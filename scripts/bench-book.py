@@ -80,28 +80,51 @@ for name, d in GROUPS[GROUP]:
          f"Expected verdicts (the rule file): {expected_text(d)}. "
          f"\\textcolor{{blue}}{{Blue}} rows are at the current pins (TraceForge {TF_PIN}, merge join {JOIN_PIN}, JMC {JMC_PIN}): a rerun gives the same result. "
          f"\\textcolor{{red}}{{Red}} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. "
-         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G$ = graphs explored (specification, implementation); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; "
+         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{spec}}$, $G_{\\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{spec}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; "
          "$^{\\ast}$ marks a verdict other than the expected one; \\faClock\\ = the time tier was reached; oom = the memory limit was reached.",
          ""]
     seen_ids = set()
+    data = {kind: [r for r in load(fname) if r.get("directory") == d] for ename, fname, kind in ENG}
+    # G_spec = the specification's own graph count: from the stateful or offline row of the instance (the stateless engine
+    # reports the specification graphs it explored, repeats counted, which is G_spec^expl, not G_spec)
+    gspec = {}
+    for kind in ("C1", "C3J"):
+        for r in data[kind]:
+            if r.get("spec graphs") and (r["verdict"] in ("conforms", "violation") or r.get("spec export s")):
+                gspec.setdefault((r["variant"], r["spec"], r["model"], r["size"]), r["spec graphs"])
     for ename, fname, kind in ENG:
-        rows = [r for r in load(fname) if r.get("directory") == d]
-        rows.sort(key=lambda r: (r["variant"], r["spec"], r["model"], sz(r["size"])))
+        rows = data[kind]
         if not rows: L.append(f"\\section*{{{ename}}}\\noindent No run of the {ename} engine on this benchmark."); continue
-        extra_hdr = {"stateless": " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$", "stateful": "", "offline": " & export spec & export impl & join & join kind"}[ename]
-        ncol = {"stateless": 2, "stateful": 0, "offline": 4}[ename]
-        L += [f"\\section*{{{ename}}}", f"\\begin{{longtable}}{{@{{}}lllrrrlrrl{'r' * ncol}l@{{}}}}", "\\toprule",
-              f"variant & spec & model & size & $G_{{\\mathit{{spec}}}}$ & $G_{{\\mathit{{impl}}}}$ & verdict & T & M & tier{extra_hdr} & run \\\\", "\\midrule", "\\endhead"]
-        for r in rows:
-            c, why = colour(r, kind); seen_ids.add(base(r["run id"]))
-            if ename == "stateless": ex = f" & {esc(r.get('sweeps',''))} & {esc(r.get('spec graphs explored',''))}"
-            elif ename == "offline":
-                jk = "merge" if (re.search(r"\.m(?=\.|$)", r["run id"]) or "--merge" in rec.get(r["run id"], {}).get("command", "")) else "in-memory"
-                ex = f" & {fmt(r.get('spec export s'))} & {fmt(r.get('impl export s'))} & {fmt(r.get('join s'))} & {jk}"
-            else: ex = ""
-            run = f"{esc(r.get('node',''))}, {esc((r.get('started','') or '')[:10])}"
-            L.append(f"\\color{{{c}}} {esc(r['variant'] if r['variant'] not in ('', 'impl', 'correct') else 'single')} & {esc(r['spec'])} & {r['model']} & {esc(r['size'])} & {esc(r['spec graphs'])} & {esc(r['impl graphs'])} & {verdict_cell(r)} & {fmt(r.get('wall s')) if r['verdict'] in ('conforms','violation') else ''} & {fmt(r.get('peak MB'), '{:.0f}') if r['verdict'] in ('conforms','violation') else ''} & {tier(r)}{ex} & {run} \\\\")
-        L += ["\\bottomrule", "\\end{longtable}"]
+        L.append(f"\\section*{{{ename}}}")
+        pairs = collections.OrderedDict()
+        for r in rows: pairs.setdefault((r["variant"], r["spec"], r["model"]), []).append(r)
+        def pair_side(rs):   # conforming pairs first, then violating: by the expectation, else by the decided verdicts
+            e = next((r["expected"] for r in rs if r.get("expected") in ("conforms", "violation")), None)
+            if e: return e
+            return "violation" if any(r["verdict"] == "violation" for r in rs) else "conforms"
+        for (var, spec, model), rs in sorted(pairs.items(), key=lambda kv: (pair_side(kv[1]) == "violation", kv[0])):
+            side = pair_side(rs); viol = side == "violation"
+            rs.sort(key=lambda r: sz(r["size"]))
+            label = esc(var if var not in ("", "impl") else "single")
+            L.append(f"\\subsection*{{{ename}: pair \\textsf{{{label}}}" + (f" against \\textsf{{{esc(spec)}}}" if spec and spec not in (var, "spec", "correct") else "") + f", model {model}, expected {side}}}")
+            extra_hdr = {"stateless": " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$", "stateful": "", "offline": " & export spec & export impl & join & join kind"}[ename]
+            ncol = {"stateless": 2, "stateful": 0, "offline": 4}[ename]
+            gx_hdr = " & $G_x$" if viol else ""
+            L += [f"\\begin{{longtable}}{{@{{}}rrr{'r' if viol else ''}lrrl{'r' * ncol}l@{{}}}}", "\\toprule",
+                  f"size & $G_{{\\mathit{{spec}}}}$ & $G_{{\\mathit{{impl}}}}${gx_hdr} & verdict & T & M & tier{extra_hdr} & run \\\\", "\\midrule", "\\endhead"]
+            for r in rs:
+                c, why = colour(r, kind); seen_ids.add(base(r["run id"]))
+                dec = r["verdict"] in ("conforms", "violation")
+                gs = r["spec graphs"] if kind != "C2" else gspec.get((var, spec, model, r["size"]), "")
+                if ename == "stateless": ex = f" & {esc(r.get('sweeps','')) if dec else ''} & {esc(r.get('spec graphs explored','')) if dec else ''}"
+                elif ename == "offline":
+                    jk = "merge" if (re.search(r"\.m(?=\.|$)", r["run id"]) or "--merge" in rec.get(r["run id"], {}).get("command", "")) else "in-memory"
+                    ex = f" & {fmt(r.get('spec export s'))} & {fmt(r.get('impl export s'))} & {fmt(r.get('join s')) if dec else ''} & {jk}"
+                else: ex = ""
+                gx = (f" & {esc(r.get('uncovered', '')) if r['verdict'] == 'violation' else ''}") if viol else ""
+                run = f"{esc(r.get('node',''))}, {esc((r.get('started','') or '')[:10])}"
+                L.append(f"\\color{{{c}}} {esc(r['size'])} & {esc(gs)} & {esc(r['impl graphs'])}{gx} & {verdict_cell(r)} & {fmt(r.get('wall s')) if dec else ''} & {fmt(r.get('peak MB'), '{:.0f}') if dec else ''} & {tier(r)}{ex} & {run} \\\\")
+            L += ["\\bottomrule", "\\end{longtable}"]
         # not run: planned ids of this kind without a measured row
         nr = collections.defaultdict(list)
         for b, (k, line) in planned.get(d, {}).items():
