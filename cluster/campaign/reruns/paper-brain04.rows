@@ -129,3 +129,12 @@ C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p 250 172800 "$DAAVAR"/scripts/ru
 C1.two-pc-lbinria.impl_7_bag_counting-bug.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 7 counting-bug
 C3J.two-pc-lbinria.impl_7_bag_counting-bug.p.m 250 172800 needok:C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-lbinria.spec_7_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p/export.jsonl
 C2.two-pc-lbinria.impl_7_bag_counting-bug.t16.p 250 172800 needok:C1.two-pc-lbinria.impl_7_bag_counting-bug.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateless --threads 16 --model bag -- 7 counting-bug
+# 2pc-le = election ring conf 10 (Table 2) and 2pc-le-split = election ring split 11 (Table 3): owner 2026-11-03 21:05; no stateless row (ring conf 8 already timed out at 1 h) unless the owner asks
+C3E.election.spec_ring_conf_10_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 10
+C3E.election.impl_ring_conf_10_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring conf 10
+C1.election.impl_ring_conf_10_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 10
+C3J.election.impl_ring_conf_10_fifo.vs-ring-conf.p.m 250 172800 needok:C3E.election.impl_ring_conf_10_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.election.spec_ring_conf_10_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.election.impl_ring_conf_10_fifo.t16.p/export.jsonl
+C3E.election.spec_ring_conf_11_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 11
+C3E.election.impl_ring_split_11_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring split 11
+C1.election.impl_ring_split_11_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring split 11
+C3J.election.impl_ring_split_11_fifo.vs-ring-conf.p.m 250 172800 needok:C3E.election.impl_ring_split_11_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.election.spec_ring_conf_11_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.election.impl_ring_split_11_fifo.t16.p/export.jsonl
