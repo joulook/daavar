@@ -15,6 +15,7 @@ done
 sleep 2
 rank() {  # lower runs first
   case "$1" in
+    */twins*|*/cftwins*|*twin*) echo 0;;   # owner 2026-11-03 23:45: Java-impl-against-Rust-impl twin checks run before everything else on the shared nodes
     */reruns/table2-*|*/reruns/naive-table3*|*/reruns/reset-table3*|*/reruns/twopc-*|*/reruns/twopcab*|*/reruns/twopcds*|*/reruns/chain-*|*/reruns/commit1212*|*/reruns/hermes-spec2*) echo 0;;
     */reruns/pinfix-*|*/reruns/join-merge-*|*/reruns/join-1h-*|*/reruns/jmc-pin2-*|*/reruns/pin-rerun-*) echo 1;;
     */reruns/synthetic-48h*|*/scaling*|*/cf*|*/twins*|*/phase*) echo 2;;
