@@ -2,3 +2,4 @@
 naive	naive	bag	10
 naive	naive	bag	11
 reset	reset	bag	20,11
+2pc	early-abort	fifo	5,3
