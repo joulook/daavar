@@ -1,0 +1,251 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=16mm]{geometry}
+\usepackage{booktabs,longtable,array,xcolor,fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
+\title{Evaluation runs: \textsf{bank} (bank-grove)}
+\author{}
+\date{generated 2026-11-03 from brain-data 48587ddd0 2026-11-03 23:12:27 +0100}
+\begin{document}\maketitle\small
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+
+\section*{stateless}\noindent No run of the stateless engine on this benchmark.
+\section*{stateful}\noindent No run of the stateful engine on this benchmark.
+\section*{offline}
+\subsection*{offline: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 366 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2 & 30 & 43383 & conforms & 2.0 & 18 & 10 min, 16 GB & 0.0 & 2.0 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3 & 140 & 2752874 & conforms & 117.9 & 61 & 10 min, 16 GB & 0.0 & 117.8 & 0.1 & in-memory & brain05, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{offline: pair \textsf{unordered}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 258 & 9 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2 & 30 & 11072 & 157 & violation & 0.6 & 14 & 10 min, 16 GB & 0.0 & 0.6 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3 & 140 & 247764 & 1586 & violation & 7.8 & 40 & 10 min, 16 GB & 0.0 & 7.7 & 0.1 & in-memory & brain05, 2026-11-02 \\
+\color{red} 4 & 630 & 4869014 & 14510 & violation & 227.0 & 238 & 10 min, 16 GB & 0.1 & 225.6 & 1.4 & in-memory & brain05, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (offline).}
+planned but never scheduled (grid points beyond the ladder): 5 unordered fifo.\par
+skipped: a smaller size had reached its limit: 4 ordered fifo, 5 ordered fifo, 6 ordered fifo, 6 unordered fifo, 7 unordered fifo, 7 ordered fifo, 8 ordered fifo, 8 unordered fifo, 9 unordered fifo, 9 ordered fifo.\par
+\section*{cross offline, Rust implementation against the Java specification}
+\subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 366 & conforms & 3.1 & 165 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 30 & 43383 & conforms & 3.1 & 160 & 10 min, 16 GB & 3.1 & 2.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 140 & 2752874 & conforms & 117.8 & 156 & 10 min, 16 GB & 3.6 & 117.8 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{unordered}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 258 & 9 & violation & 3.1 & 165 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 30 & 11072 & 157 & violation & 3.1 & 160 & 10 min, 16 GB & 3.1 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 140 & 247764 & 1586 & violation & 7.8 & 156 & 10 min, 16 GB & 3.6 & 7.7 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\section*{cross online, Java implementation (JMC) against the Rust specification export}
+\subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 366 & conforms & 10.2 & 342 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2 & 30 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 3 & 140 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{unordered}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 258 & 110 & violation & 5.0 & 322 & 1 h, 250 GB & 349 & brain05, 2026-11-02 \\
+\color{red} 2 & 30 & 11072 & 5598 & violation & 645.6 & 973 & 1 h, 250 GB & 820 & brain05, 2026-11-02 \\
+\color{red} 3 & 140 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
+planned but never scheduled (grid points beyond the ladder): 1 fifo unordered, 1 fifo ordered, 2 fifo unordered, 2 fifo ordered, 3 fifo unordered, 3 fifo ordered.\par
+\section*{cross online, Rust implementation (TraceForge) against the Java specification export}
+\subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 366 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 2 & 30 & 43383 & conforms & 2.0 & 10 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 140 & 2752874 & conforms & 109.1 & 63 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{unordered}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 6 & 258 & 110 & violation & 0.1 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 2 & 30 & 11072 & 5598 & violation & 0.5 & 10 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 3 & 140 & 247764 & 122182 & violation & 8.3 & 30 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\section*{twins offline, Rust implementation against its Java twin}
+\subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 9.9 & 958 & 10 min, 16 GB & 9.9 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 43383 & 43383 & conforms & 1504.8 & 15241 & 10 min, 16 GB & 1504.7 & 2.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 6.4 & 329 & 10 min, 16 GB & 6.4 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 11072 & 11072 & conforms & 317.2 & 14570 & 10 min, 16 GB & 317.1 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (twins offline, Rust implementation against its Java twin).}
+refused (an input missing at run time): 3 fifo unordered, 3 fifo ordered.\par
+\section*{twins offline, Java implementation against its Rust twin}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 9.9 & 958 & 10 min, 16 GB & 0.1 & 9.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 43383 & 43383 & conforms & 1504.8 & 15241 & 10 min, 16 GB & 2.0 & 1504.7 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 6.4 & 329 & 10 min, 16 GB & 0.1 & 6.4 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 11072 & 11072 & conforms & 317.2 & 14570 & 10 min, 16 GB & 0.6 & 317.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (twins offline, Java implementation against its Rust twin).}
+skipped: a smaller size had reached its limit: 3 fifo unordered, 3 fifo ordered.\par
+\section*{context-free twins offline, Rust implementation against the context-free Java port}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 9.0 & 887 & 10 min, 16 GB & 9.0 & 0.4 & 0.0 & in-memory & brain02, 2026-11-03 \\
+\color{red} 2 & 43383 & 43383 & conforms & 1288.6 & 15323 & 10 min, 16 GB & 1288.6 & 2.3 & 0.0 & in-memory & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 7.9 & 754 & 10 min, 16 GB & 7.8 & 0.2 & 0.1 & in-memory & brain02, 2026-11-03 \\
+\color{red} 2 & 11072 & 11072 & conforms & 240.5 & 14903 & 10 min, 16 GB & 240.4 & 0.7 & 0.1 & in-memory & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
+refused (an input missing at run time): 3 fifo unordered, 3 fifo ordered.\par
+\section*{context-free twins offline, Java port against the Rust implementation}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 9.0 & 887 & 10 min, 16 GB & 0.4 & 9.0 & 0.0 & in-memory & brain02, 2026-11-03 \\
+\color{red} 2 & 43383 & 43383 & conforms & 1288.6 & 15323 & 10 min, 16 GB & 2.3 & 1288.6 & 0.0 & in-memory & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 7.9 & 754 & 10 min, 16 GB & 0.2 & 7.8 & 0.1 & in-memory & brain02, 2026-11-03 \\
+\color{red} 2 & 11072 & 11072 & conforms & 240.5 & 14903 & 10 min, 16 GB & 0.7 & 240.4 & 0.1 & in-memory & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
+skipped: a smaller size had reached its limit: 3 fifo unordered, 3 fifo ordered.\par
+\section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
+\subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 10.2 & 952 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3 & 2752874 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 7.0 & 708 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2 & 11072 & 11072 & conforms & 263.4 & 14822 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3 & 247764 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins online, Java port (JMC) against the Rust implementation's export).}
+planned but never scheduled (grid points beyond the ladder): 2 fifo ordered.\par
+\section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
+\subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{ordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 366 & 366 & conforms & 3.8 & 2 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2 & 43383 & 43383 & conforms & 2.2 & 16 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{unordered}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 1 & 258 & 258 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2 & 11072 & 11072 & conforms & 0.6 & 14 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
+skipped: a smaller size had reached its limit: 3 fifo unordered, 3 fifo ordered.\par
+\end{document}

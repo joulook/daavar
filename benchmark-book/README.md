@@ -19,30 +19,51 @@ Regenerate: `python3 -I scripts/bench-book.py <brain-data> <daavar> <PLDI/tex/ta
 
 ## In the paper
 
-The owner's selection for the paper's Tables 2 (conforming) and 3 (violating), 2026-11-03; every README carries the same line. Everything else is in the appendix tables and in each benchmark's EVAL.pdf.
+The owner's selection for the paper's Tables 2 (conforming) and 3 (violating), 2026-11-03; every README carries the same line. Everything else is in the appendix tables and in each benchmark's EVAL.pdf. The directory column is the source directory under daavar/benchmarks/; every source directory with a runnable program has a book entry (the twelve literature benchmarks abd … rpc and lb-ll were added on 2026-11-03 after the owner found them missing). `bully-election-fdr3` has a README and the original source only, no Rust or Java program, and was never run; it has no book entry.
 
-| benchmark | Table 2 | Table 3 |
-|---|---|---|
-| synthetic/chain | chain 2048, 4096, 8192, 16384, 32768 | -- |
-| synthetic/commit | commit 12,12, 16,16, 20,20 | -- |
-| synthetic/naive | -- | naive 10, 11 |
-| synthetic/reset | -- | reset 20,11 |
-| synthetic/share | share 28,28 | -- |
-| synthetic/width | -- | -- |
-| application/2pc-ab | 2pc-ab 8, 9 | 2pc-ab-off1 8, 9 |
-| application/2pc-ds | 2pc-ds 4, 5 | 2pc-ds-sal 4, 5 |
-| application/2pc-lb | 2pc-lb 6, 7 | 2pc-lb-cb 6, 7 |
-| application/2pc-le | 2pc-le 10 | 2pc-le-split 11 |
-| application/2pc-tr | 2pc-tr 8 | 2pc-tr-iav 8 |
-| application/2pc | 2pc 5,3 | 2pc-ea 5,3 |
-| application/bcast | bcast 5 | bcast-de 5 |
-| application/chan | chan 7 | chan-ns 7 |
-| application/ewd998 | ewd998 5 | ewd998-nb 5 |
-| application/lb | lb 3,3,3, 4,4,4 | lb-strict 3,3,3, 4,4,4 |
-| application/lock | lock 3,4, 3,5 | lock-wr 3,4, 3,5 |
-| application/pbkv | pbkv 6,2, 4,4 | -- |
-| application/prodcons | -- | -- |
-| application/replog-co | replog-co 5 | replog-co-er 5 |
-| application/replog | -- | -- |
-| application/ring-el | ring-el 6 | ring-el-nc 6 |
-| application/zab | zab 4 | zab-issue1 4 |
+| benchmark | source directory | Table 2 | Table 3 |
+|---|---|---|---|
+| synthetic/chain | `s4-chain` | chain 2048, 4096, 8192, 16384, 32768 | -- |
+| synthetic/commit | `s3-commit` | commit 12,12, 16,16, 20,20 | -- |
+| synthetic/naive | `s1-naive` | -- | naive 10, 11 |
+| synthetic/reset | `s5-reset` | -- | reset 20,11 |
+| synthetic/share | `s2-share` | share 28,28 | -- |
+| synthetic/width | `s6-width` | -- | -- |
+| application/2pc | `a1-commit` | 2pc 5,3 | 2pc-ea 5,3 |
+| application/2pc-ab | `two-pc-abstain-kragl` | 2pc-ab 8, 9 | 2pc-ab-off1 8, 9 |
+| application/2pc-ds | `two-pc-disel` | 2pc-ds 4, 5 | 2pc-ds-sal 4, 5 |
+| application/2pc-lb | `two-pc-lbinria` | 2pc-lb 6, 7 | 2pc-lb-cb 6, 7 |
+| application/2pc-le | `election` | 2pc-le 10 | 2pc-le-split 11 |
+| application/2pc-tr | `two-pc-trillium` | 2pc-tr 8 | 2pc-tr-iav 8 |
+| application/abd | `abd-register-civl` | -- | -- |
+| application/bank | `bank-grove` | -- | -- |
+| application/bcast | `broadcast-consensus-civl` | bcast 5 | bcast-de 5 |
+| application/calc | `calculator-disel` | -- | -- |
+| application/chan | `reliable-channel-aneris` | chan 7 | chan-ns 7 |
+| application/eokv | `kv-exactly-once-grove` | -- | -- |
+| application/ewd998 | `ewd998-termination` | ewd998 5 | ewd998-nb 5 |
+| application/fencing | `fencing-grove` | -- | -- |
+| application/ironlock | `ironlock` | -- | -- |
+| application/lb | `a4-balancer` | lb 3,3,3, 4,4,4 | lb-strict 3,3,3, 4,4,4 |
+| application/lb-ll | `balancer-load-aware` | -- | -- |
+| application/lock | `a3-lock` | lock 3,4, 3,5 | lock-wr 3,4, 3,5 |
+| application/memcached | `memcached-oopsla25` | -- | -- |
+| application/nbuyer | `n-buyer-kragl` | -- | -- |
+| application/paxos | `paxos-oopsla25` | -- | -- |
+| application/pbkv | `a2-store` | pbkv 6,2, 4,4 | -- |
+| application/prodcons | `producer-consumer-civl` | -- | -- |
+| application/replog | `replicated-log-aneris` | -- | -- |
+| application/replog-co | `replicated-log-esop20` | replog-co 5 | replog-co-er 5 |
+| application/ring-el | `ring-election-igloo` | ring-el 6 | ring-el-nc 6 |
+| application/rpc | `rpc-at-most-once-aneris` | -- | -- |
+| application/sikv | `kv-snapshot-isolation-tla` | -- | -- |
+| application/zab | `zab-broadcast-remix` | zab 4 | zab-issue1 4 |
+| realsw/omnipaxos | `omnipaxos` | -- | -- |
+| realsw/raft | `raft-rs` | -- | -- |
+| agentic/ben-or | `ben-or` | -- | -- |
+| agentic/caspaxos | `caspaxos` | -- | -- |
+| agentic/chain-replication | `chain-replication` | -- | -- |
+| agentic/flexible-paxos | `flexible-paxos` | -- | -- |
+| agentic/hermes | `hermes` | -- | -- |
+| agentic/ricart-agrawala | `ricart-agrawala` | -- | -- |
+| agentic/vrr | `vrr` | -- | -- |

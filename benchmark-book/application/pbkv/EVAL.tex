@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{pbkv} (a2-store)}
 \author{}
-\date{generated 2026-11-03 from brain-data 4f70fdcf4 2026-11-03 22:15:02 +0100}
+\date{generated 2026-11-03 from brain-data 48587ddd0 2026-11-03 23:12:27 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): pb: expected conforms; pb-br: expected conforms; control-early-ack-primary: expected conforms; control-early-ack-fwd: expected conforms; silent-put: expected violation; early-ack: expected violation; early-ack: expected conforms (one operation: nothing to reorder or read stale); stale-get: expected violation; stale-get: expected conforms (one operation: nothing to reorder or read stale); sh: expected conforms; misroute: expected violation; misroute: expected conforms (one shard, or one operation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -230,8 +230,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): misroute 4 3 3 fifo, misroute 4 3 4 fifo, misroute 4 4 2 fifo, misroute 4 4 3 fifo, sh 4 4 3 fifo, misroute 4 4 4 fifo, misroute 4 5 2 fifo, misroute 4 5 3 fifo, misroute 4 5 4 fifo, misroute 5 2 3 fifo, misroute 5 2 4 fifo, misroute 5 3 2 fifo, misroute 5 3 3 fifo, misroute 5 3 4 fifo, misroute 5 4 2 fifo, misroute 5 4 3 fifo, misroute 5 4 4 fifo, misroute 5 5 2 fifo, misroute 5 5 3 fifo, misroute 5 5 4 fifo.\par
-skipped: a smaller size had reached its limit: sh 3 4 2 fifo, misroute 3 4 3 fifo, sh 3 4 3 fifo, misroute 3 4 4 fifo, sh 3 4 4 fifo, pb-br 3 5 fifo, early-ack 3 5 fifo, pb 3 5 fifo, control-early-ack-fwd 3 5 fifo, stale-get 3 5 fifo, control-early-ack-primary 3 5 fifo, sh 3 5 1 fifo, sh 3 5 2 fifo, misroute 3 5 2 fifo, sh 3 5 3 fifo, misroute 3 5 3 fifo, misroute 3 5 4 fifo, sh 3 5 4 fifo, pb 3 6 fifo, pb-br 3 6 fifo, control-early-ack-fwd 3 6 fifo, control-early-ack-primary 3 6 fifo, silent-put 3 6 fifo, early-ack 3 6 fifo, \ldots\ (198 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): misroute 4 3 3 fifo, misroute 4 3 4 fifo, misroute 4 4 2 fifo, sh 4 4 3 fifo, misroute 4 4 3 fifo, misroute 4 4 4 fifo, misroute 4 5 2 fifo, misroute 4 5 3 fifo, misroute 4 5 4 fifo, misroute 5 2 3 fifo, misroute 5 2 4 fifo, misroute 5 3 2 fifo, misroute 5 3 3 fifo, misroute 5 3 4 fifo, misroute 5 4 2 fifo, misroute 5 4 3 fifo, misroute 5 4 4 fifo, misroute 5 5 2 fifo, misroute 5 5 3 fifo, misroute 5 5 4 fifo.\par
+skipped: a smaller size had reached its limit: sh 3 4 2 fifo, sh 3 4 3 fifo, misroute 3 4 3 fifo, sh 3 4 4 fifo, misroute 3 4 4 fifo, stale-get 3 5 fifo, early-ack 3 5 fifo, pb-br 3 5 fifo, pb 3 5 fifo, control-early-ack-primary 3 5 fifo, control-early-ack-fwd 3 5 fifo, sh 3 5 1 fifo, sh 3 5 2 fifo, misroute 3 5 2 fifo, misroute 3 5 3 fifo, sh 3 5 3 fifo, sh 3 5 4 fifo, misroute 3 5 4 fifo, silent-put 3 6 fifo, early-ack 3 6 fifo, control-early-ack-primary 3 6 fifo, control-early-ack-fwd 3 6 fifo, pb-br 3 6 fifo, pb 3 6 fifo, \ldots\ (198 instances in all).\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{control-early-ack-fwd}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -516,8 +516,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): stale-get 3 6 fifo, silent-put 5 3 fifo, silent-put 6 3 fifo, misroute 6 6 4 fifo, sh 6 6 4 fifo, control-early-ack-primary 7 2 fifo, silent-put 7 2 fifo, control-early-ack-primary 7 3 fifo, control-early-ack-fwd 7 3 fifo, control-early-ack-fwd 7 4 fifo, control-early-ack-fwd 7 5 fifo, control-early-ack-fwd 7 6 fifo, control-early-ack-fwd 7 7 fifo.\par
-skipped: a smaller size had reached its limit: pb 3 7 fifo, control-early-ack-primary 3 7 fifo, stale-get 3 7 fifo, pb-br 3 7 fifo, early-ack 3 7 fifo, control-early-ack-fwd 3 7 fifo, sh 4 4 2 fifo, misroute 4 4 3 fifo, sh 4 4 3 fifo, sh 4 4 4 fifo, misroute 4 4 4 fifo, stale-get 4 5 fifo, control-early-ack-primary 4 5 fifo, control-early-ack-fwd 4 5 fifo, pb 4 5 fifo, early-ack 4 5 fifo, pb-br 4 5 fifo, silent-put 4 5 fifo, sh 4 5 1 fifo, sh 4 5 2 fifo, misroute 4 5 2 fifo, sh 4 5 3 fifo, misroute 4 5 3 fifo, misroute 4 5 4 fifo, \ldots\ (143 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): stale-get 3 6 fifo, silent-put 5 3 fifo, pb 6 2 fifo, silent-put 6 3 fifo, misroute 6 6 4 fifo, sh 6 6 4 fifo, control-early-ack-primary 7 2 fifo, silent-put 7 2 fifo, control-early-ack-primary 7 3 fifo, control-early-ack-fwd 7 3 fifo, control-early-ack-fwd 7 4 fifo, control-early-ack-fwd 7 5 fifo, control-early-ack-fwd 7 6 fifo, control-early-ack-fwd 7 7 fifo.\par
+skipped: a smaller size had reached its limit: stale-get 3 7 fifo, control-early-ack-fwd 3 7 fifo, control-early-ack-primary 3 7 fifo, pb-br 3 7 fifo, pb 3 7 fifo, early-ack 3 7 fifo, sh 4 4 2 fifo, sh 4 4 3 fifo, misroute 4 4 3 fifo, misroute 4 4 4 fifo, sh 4 4 4 fifo, control-early-ack-primary 4 5 fifo, pb 4 5 fifo, silent-put 4 5 fifo, pb-br 4 5 fifo, stale-get 4 5 fifo, early-ack 4 5 fifo, control-early-ack-fwd 4 5 fifo, sh 4 5 1 fifo, misroute 4 5 2 fifo, sh 4 5 2 fifo, misroute 4 5 3 fifo, sh 4 5 3 fifo, sh 4 5 4 fifo, \ldots\ (143 instances in all).\par
 \section*{offline}
 \subsection*{offline: pair \textsf{control-early-ack-fwd}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -617,7 +617,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): sh 2 2 3 fifo, misroute 2 2 3 fifo, misroute 2 2 4 fifo, sh 2 2 4 fifo, pb-br 2 3 fifo, silent-put 2 3 fifo, early-ack 2 3 fifo, control-early-ack-primary 2 3 fifo, pb 2 3 fifo, stale-get 2 3 fifo, control-early-ack-fwd 2 3 fifo, sh 2 3 1 fifo, misroute 2 3 2 fifo, sh 2 3 2 fifo, sh 2 3 3 fifo, misroute 2 3 3 fifo, sh 2 3 4 fifo, misroute 2 3 4 fifo, control-early-ack-primary 2 4 fifo, pb 2 4 fifo, stale-get 2 4 fifo, pb-br 2 4 fifo, early-ack 2 4 fifo, control-early-ack-fwd 2 4 fifo, \ldots\ (342 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): sh 2 2 3 fifo, misroute 2 2 3 fifo, sh 2 2 4 fifo, misroute 2 2 4 fifo, stale-get 2 3 fifo, pb 2 3 fifo, control-early-ack-fwd 2 3 fifo, early-ack 2 3 fifo, control-early-ack-primary 2 3 fifo, pb-br 2 3 fifo, silent-put 2 3 fifo, sh 2 3 1 fifo, misroute 2 3 2 fifo, sh 2 3 2 fifo, misroute 2 3 3 fifo, sh 2 3 3 fifo, sh 2 3 4 fifo, misroute 2 3 4 fifo, stale-get 2 4 fifo, pb-br 2 4 fifo, control-early-ack-fwd 2 4 fifo, silent-put 2 4 fifo, early-ack 2 4 fifo, pb 2 4 fifo, \ldots\ (342 instances in all).\par
 skipped: a smaller size had reached its limit: control-early-ack-primary 4 4 fifo, early-ack 4 4 fifo.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-early-ack-fwd}, model fifo, expected conforms}
@@ -811,7 +811,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: pb 4 4 fifo, control-early-ack-primary 4 4 fifo, pb-br 4 4 fifo, control-early-ack-fwd 4 4 fifo, early-ack 4 4 fifo, stale-get 4 4 fifo.\par
+skipped: a smaller size had reached its limit: control-early-ack-primary 4 4 fifo, pb 4 4 fifo, control-early-ack-fwd 4 4 fifo, pb-br 4 4 fifo, stale-get 4 4 fifo, early-ack 4 4 fifo.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{control-early-ack-fwd}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -1006,5 +1006,5 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-skipped: a smaller size had reached its limit: pb 4 4 fifo, control-early-ack-primary 4 4 fifo, pb-br 4 4 fifo, control-early-ack-fwd 4 4 fifo, early-ack 4 4 fifo, stale-get 4 4 fifo.\par
+skipped: a smaller size had reached its limit: control-early-ack-primary 4 4 fifo, pb 4 4 fifo, control-early-ack-fwd 4 4 fifo, pb-br 4 4 fifo, stale-get 4 4 fifo, early-ack 4 4 fifo.\par
 \end{document}

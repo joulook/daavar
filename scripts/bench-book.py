@@ -13,7 +13,9 @@ TF_PIN = "367cdc6"; TF_EQUIV = {"9a0629e", "367cdc6"}; JMC_PIN = "3c43b2d2"; JOI
 GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")],
           "application": [("2pc", "a1-commit"), ("2pc-ab", "two-pc-abstain-kragl"), ("2pc-ds", "two-pc-disel"), ("2pc-lb", "two-pc-lbinria"), ("2pc-le", "election"), ("2pc-tr", "two-pc-trillium"),
                           ("bcast", "broadcast-consensus-civl"), ("chan", "reliable-channel-aneris"), ("ewd998", "ewd998-termination"), ("lb", "a4-balancer"), ("lock", "a3-lock"), ("pbkv", "a2-store"),
-                          ("prodcons", "producer-consumer-civl"), ("replog", "replicated-log-aneris"), ("replog-co", "replicated-log-esop20"), ("ring-el", "ring-election-igloo"), ("zab", "zab-broadcast-remix")],
+                          ("prodcons", "producer-consumer-civl"), ("replog", "replicated-log-aneris"), ("replog-co", "replicated-log-esop20"), ("ring-el", "ring-election-igloo"), ("zab", "zab-broadcast-remix"),
+                          ("abd", "abd-register-civl"), ("bank", "bank-grove"), ("calc", "calculator-disel"), ("eokv", "kv-exactly-once-grove"), ("sikv", "kv-snapshot-isolation-tla"), ("fencing", "fencing-grove"),
+                          ("ironlock", "ironlock"), ("memcached", "memcached-oopsla25"), ("nbuyer", "n-buyer-kragl"), ("paxos", "paxos-oopsla25"), ("rpc", "rpc-at-most-once-aneris"), ("lb-ll", "balancer-load-aware")],
           "realsw": [("raft", "raft-rs"), ("omnipaxos", "omnipaxos")],
           "agentic": [("caspaxos", "caspaxos"), ("chain-replication", "chain-replication"), ("hermes", "hermes"), ("flexible-paxos", "flexible-paxos"), ("ricart-agrawala", "ricart-agrawala"), ("vrr", "vrr"), ("ben-or", "ben-or")]}
 if GROUP not in GROUPS: sys.exit(f"group {GROUP}: not defined yet (groups: {', '.join(GROUPS)})")
