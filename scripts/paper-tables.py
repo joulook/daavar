@@ -240,7 +240,7 @@ if not FULL and KEEP is None:
             dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
             gi = next((r["impl graphs"] for r in dec if r["impl graphs"]), ""); gs = next((r["spec graphs"] for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), "")
             gx = next((r.get("uncovered", "") for r in dec if r.get("uncovered") not in ("", None)), "") if viol else None
-            CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea"}   # the owner's names for the curated tables (2026-11-03)
+            CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-of1"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm = nm if (prog, var) != prev else ""; prev = (prog, var)
             if nm and body: body.append("\\midrule")
