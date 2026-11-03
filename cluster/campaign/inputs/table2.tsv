@@ -9,3 +9,5 @@ share	correct	fifo	28,28
 2pc	correct	fifo	5,3
 2pc-ab	correct	bag	8
 2pc-ab	correct	bag	9
+2pc-ds	correct	bag	4
+2pc-ds	correct	bag	5
