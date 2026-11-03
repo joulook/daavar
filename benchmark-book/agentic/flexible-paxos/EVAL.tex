@@ -1,0 +1,49 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=16mm]{geometry}
+\usepackage{booktabs,longtable,array,xcolor,fontawesome5}
+\usepackage[hidelinks]{hyperref}
+\setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
+\title{Evaluation runs: \textsf{flexible-paxos} (flexible-paxos)}
+\author{}
+\date{generated 2026-11-03 from brain-data aa58c0a7b 2026-11-03 13:48:38 +0100}
+\begin{document}\maketitle\small
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): . \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+
+\section*{stateless}
+\subsection*{stateless: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+\midrule
+\endhead
+\color{blue} 4,2 &  &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  &  & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (stateless).}
+skipped: a smaller size had reached its limit: 5 2 bag.\par
+\section*{stateful}
+\subsection*{stateful: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrll@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run \\
+\midrule
+\endhead
+\color{blue} 4,2 &  &  & \faClock\ (4 h) &  &  & 4 h, 250 GB & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (stateful).}
+skipped: a smaller size had reached its limit: 5 2 bag.\par
+\section*{offline}\noindent No run of the offline engine on this benchmark.
+\section*{cross online, Java implementation (JMC) against the Rust specification export}
+\subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{red} 4,2 & 84 &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
+the tool ended with an error (exit-2): 5 2 bag.\par
+\end{document}

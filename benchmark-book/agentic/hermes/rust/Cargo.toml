@@ -1,0 +1,9 @@
+[package]
+name = "bench_hermes"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../../traceforge/traceforge" }
+
+[workspace]
