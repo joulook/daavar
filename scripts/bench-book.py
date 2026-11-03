@@ -13,7 +13,8 @@ TF_PIN = "9a0629e"; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"
 GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")],
           "application": [("2pc", "a1-commit"), ("2pc-ab", "two-pc-abstain-kragl"), ("2pc-ds", "two-pc-disel"), ("2pc-lb", "two-pc-lbinria"), ("2pc-le", "election"), ("2pc-tr", "two-pc-trillium"),
                           ("bcast", "broadcast-consensus-civl"), ("chan", "reliable-channel-aneris"), ("ewd998", "ewd998-termination"), ("lb", "a4-balancer"), ("lock", "a3-lock"), ("pbkv", "a2-store"),
-                          ("prodcons", "producer-consumer-civl"), ("replog", "replicated-log-aneris"), ("replog-co", "replicated-log-esop20"), ("ring-el", "ring-election-igloo"), ("zab", "zab-broadcast-remix")]}
+                          ("prodcons", "producer-consumer-civl"), ("replog", "replicated-log-aneris"), ("replog-co", "replicated-log-esop20"), ("ring-el", "ring-election-igloo"), ("zab", "zab-broadcast-remix")],
+          "realsw": [("raft", "raft-rs"), ("omnipaxos", "omnipaxos")]}
 if GROUP not in GROUPS: sys.exit(f"group {GROUP}: not defined yet (groups: {', '.join(GROUPS)})")
 def esc(s): return str(s).replace("_", "\\_").replace("%", "\\%").replace("&", "\\&")
 def num(x):

@@ -1,0 +1,85 @@
+== count spec --model fifo -- 1 1
+expected Setup, got Commit(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+real	0m0.004s
+user	0m0.001s
+sys	0m0.003s
+== count impl --model fifo -- 1 1 1
+expected Setup, got Raft(Wire(MsgRequestVote, 1, 2, 1))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+real	0m55.075s
+user	0m55.057s
+sys	0m0.005s
+== count spec --model fifo -- 1 1
+
+real	0m0.117s
+user	0m0.082s
+sys	0m0.005s
+== count impl --model fifo -- 1 1 1
+
+real	5m38.463s
+user	5m25.973s
+sys	0m0.180s
+== (prev build, main sends Setup) count impl --model fifo -- 1 1 1: execs=0 blocked=1323550 real 3m57s
+== count spec --model fifo -- 1 0
+execs=0 blocked=24
+real	0m0.004s
+== count spec --model fifo -- 2 0
+execs=0 blocked=480
+real	0m0.032s
+== count spec --model fifo -- 3 0
+execs=0 blocked=8960
+real	0m0.543s
+== count impl --model fifo -- 1 1 1
+execs=0 blocked=1323550
+real	4m10.566s
+last progress: 
+== count impl --model fifo -- 1 1 2
+real	10m0.002s
+last progress: 
+== count impl --model fifo -- 1 1 3
+real	10m0.008s
+last progress: 
+== count impl --model fifo -- 2 1 1
+real	10m0.002s
+last progress: 
+(note: 'last progress' empty because the progress lines are on stdout and were filtered; the three 600 s runs printed no final count)
+== export spec --out out/export/rust-spec-e1.jsonl --model fifo -- 1 0
+exported: 9 lines from 24 graphs to out/export/rust-spec-e1.jsonl
+
+real	0m0.014s
+user	0m0.001s
+sys	0m0.002s
+Executions attempted so far: 20 total 0 finished normally 20 blocked.
+== export impl --out out/export/rust-impl-e1t1c1.jsonl --model fifo -- 1 1 1
+exported: 5 lines from 1323550 graphs to out/export/rust-impl-e1t1c1.jsonl
+
+real	5m34.577s
+user	5m31.807s
+sys	0m0.094s
+Executions attempted so far: 1000000 total 0 finished normally 1000000 blocked (4132.23/sec).
+== conf-join spec impl
+spec: tool=traceforge program=raft_must:spec size=1,0 model=p2p enumeration=complete
+impl: tool=traceforge program=raft_must:impl size=1,1,1 model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+== conf --model fifo -- 1 1 1
+conformance: run seed 2444011064552858207 (reproduce with the same `Config` plus `.with_seed(2444011064552858207)`)
+conformance: silence. Every complete graph of the implementation is covered by one of the specification (thm:stateful), and both enumerations reached the end of their state spaces.
+Only silence is a verdict: a run that produced no report, hit no search budget and reached the end of its state space is the certificate, and nothing else is.
+This run therefore certifies visible-trace refinement of the specification by the implementation, resting on:
+  - the draft's own lemmas, including the open A4 transport gap
+
+
+real	7m48.438s
+user	7m39.107s
+sys	0m0.184s
+Executions attempted so far: 1000000 total 0 finished normally 1000000 blocked (2793.30/sec).
+== conf --model fifo -- 1 1 2
+
+real	10m0.002s
+user	9m23.642s
+sys	0m0.468s
+Executions attempted so far: 2000000 total 0 finished normally 2000000 blocked (4056.80/sec).
