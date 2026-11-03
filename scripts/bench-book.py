@@ -9,7 +9,7 @@ leave out (skipped, tool errors) come from brain-data. usage: bench-book.py <bra
 [--build]   groups: synthetic | application | realsw | agentic"""
 import csv, glob, os, re, sys, collections, subprocess, datetime
 BD, DV, T, GROUP = sys.argv[1:5]; BUILD = "--build" in sys.argv
-TF_PIN = "9a0629e"; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"
+TF_PIN = "367cdc6"; TF_EQUIV = {"9a0629e", "367cdc6"}; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"   # 9a0629e is equivalent to 367cdc6 for every row kind but the join
 GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")],
           "application": [("2pc", "a1-commit"), ("2pc-ab", "two-pc-abstain-kragl"), ("2pc-ds", "two-pc-disel"), ("2pc-lb", "two-pc-lbinria"), ("2pc-le", "election"), ("2pc-tr", "two-pc-trillium"),
                           ("bcast", "broadcast-consensus-civl"), ("chan", "reliable-channel-aneris"), ("ewd998", "ewd998-termination"), ("lb", "a4-balancer"), ("lock", "a3-lock"), ("pbkv", "a2-store"),
@@ -63,7 +63,7 @@ OFFLINE = {"C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"}; ONLINE = {"XON1", "
 JAVA = {"XJ1", "XJ2", "XON1", "XON2", "XT1", "XT2", "XTON1", "XTON2", "XC1", "XC2", "XCON1", "XCON2"}   # a Java side is involved: the JMC pin matters
 def colour(r, kind):   # blue = at the current pins; red = superseded
     pin = (r.get("pin") or "")[:7]
-    if pin != TF_PIN: return "red", f"TraceForge pin {pin or '?'} (current {TF_PIN})"
+    if pin not in TF_EQUIV: return "red", f"TraceForge pin {pin or '?'} (current {TF_PIN})"
     rid = r.get("run id", "")
     if kind in JAVA:
         j = (rec.get(rid, {}).get("jmc_commit") or "")[:8]
@@ -75,7 +75,7 @@ def colour(r, kind):   # blue = at the current pins; red = superseded
             er = rec.get(e, {})
             if "jmc-run.sh" in er.get("command", ""):
                 if (er.get("jmc_commit") or "")[:8] != JMC_PIN: return "red", f"export {e} at JMC pin {(er.get('jmc_commit') or '?')[:8]}"
-            elif (er.get("traceforge_commit") or "")[:7] != TF_PIN: return "red", f"export {e} at TraceForge pin {(er.get('traceforge_commit') or '?')[:7]}"
+            elif (er.get("traceforge_commit") or "")[:7] not in TF_EQUIV: return "red", f"export {e} at TraceForge pin {(er.get('traceforge_commit') or '?')[:7]}"
     return "blue", ""
 TIER = {600: "10 min", 3600: "1 h", 14400: "4 h", 86400: "24 h", 172800: "48 h"}
 def tier(r):
@@ -105,7 +105,7 @@ for name, d in GROUPS[GROUP]:
          "\\begin{document}\\maketitle\\small",
          f"\\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. "
          f"Expected verdicts (the rule file): {expected_text(d)}. "
-         f"\\textcolor{{blue}}{{Blue}} rows are at the current pins (TraceForge {TF_PIN}, merge join {JOIN_PIN}, JMC {JMC_PIN}): a rerun gives the same result. "
+         f"\\textcolor{{blue}}{{Blue}} rows are at the current pins (TraceForge {TF_PIN}, whose predecessor 9a0629e is equivalent for every engine but the join; merge join {JOIN_PIN}; JMC {JMC_PIN}): a rerun gives the same result. "
          f"\\textcolor{{red}}{{Red}} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. "
          "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{spec}}$, $G_{\\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{spec}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; "
          "$^{\\ast}$ marks a verdict other than the expected one; \\faClock\\ = the time tier was reached; oom = the memory limit was reached.",

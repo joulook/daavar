@@ -236,7 +236,7 @@ if not FULL and KEEP is None:
         def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
-            if (r.get("pin") or "")[:7] != "9a0629e": return None
+            if (r.get("pin") or "")[:7] not in ("9a0629e", "367cdc6"): return None   # 367cdc6 is equivalent to 9a0629e except for joins (which must be merge joins)
             if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
             if limit(r) and num(r.get("timeout s")) != 172800: return None
             return r
