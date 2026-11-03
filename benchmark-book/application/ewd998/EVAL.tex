@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{ewd998} (ewd998-termination)}
 \author{}
-\date{generated 2026-11-03 from brain-data 03b0b57cc 2026-11-03 11:21:51 +0100}
+\date{generated 2026-11-03 from brain-data 12e87e03c 2026-11-03 11:36:20 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): . \textcolor{blue}{Blue} rows are at the current pins (TraceForge 9a0629e, merge join 367cdc6, JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -32,7 +32,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 5 correct bag, 5 no-black-on-receive bag, 6 no-black-on-receive bag, 6 correct bag, 7 correct bag, 7 no-black-on-receive bag, 8 no-black-on-receive bag, 8 correct bag, 9 no-black-on-receive bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -57,7 +57,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-skipped: a smaller size had reached its limit: 5 correct bag, 5 no-black-on-receive bag, 6 no-black-on-receive bag, 6 correct bag, 7 correct bag, 7 no-black-on-receive bag, 8 no-black-on-receive bag, 8 correct bag, 9 no-black-on-receive bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -80,7 +80,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 4 correct bag, 5 correct bag, 5 no-black-on-receive bag, 6 no-black-on-receive bag, 6 correct bag, 7 correct bag, 7 no-black-on-receive bag, 8 correct bag, 8 no-black-on-receive bag, 9 correct bag, 9 no-black-on-receive bag.\par
+skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 4 correct bag, 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

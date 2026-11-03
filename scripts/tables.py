@@ -251,8 +251,9 @@ for pre, fname, title in CAMP:
             ex = re.findall(r'/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))   # the runner stores the expanded paths
             if len(ex) == 2:
                 sp, im = byid.get(ex[0]), byid.get(ex[1])
-                if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
-                if im: r["impl_complete"], r["impl_blocked"], r["impl_graphs_total"], r["impl_export_ms"] = im.get("impl_complete"), im.get("impl_blocked"), im.get("impl_graphs_total"), im.get("wall_ms")
+                def _cnt(x): return x.get("impl_complete") or x.get("iterations") or x.get("graphs_complete")   # a JMC export records its count as iterations
+                if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = _cnt(sp), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
+                if im: r["impl_complete"], r["impl_blocked"], r["impl_graphs_total"], r["impl_export_ms"] = _cnt(im), im.get("impl_blocked"), im.get("impl_graphs_total"), im.get("wall_ms")
                 r["join_ms"] = r.get("wall_ms"); r["join_peak_kb"] = r.get("peak_rss_kb")
                 if sp: r["spec_export_bytes"], r["spec_export_peak_kb"] = sp.get("export_bytes"), sp.get("peak_rss_kb")
                 if im: r["impl_export_bytes"], r["impl_export_peak_kb"] = im.get("export_bytes"), im.get("peak_rss_kb")
@@ -263,7 +264,7 @@ for pre, fname, title in CAMP:
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = byid.get(ex[0]) if ex else None
-            if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = sp.get("impl_complete"), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
+            if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = (sp.get("impl_complete") or sp.get("iterations") or sp.get("graphs_complete")), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
     if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
         # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)
         Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris", "calculator-disel"}
