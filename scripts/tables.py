@@ -267,6 +267,8 @@ for _r in _allrows: _byexact[_r["run_id"]].append(_r)
 for _k in _byexact: _byexact[_k].sort(key=lambda r: r.get("started_at") or "")
 def export_record(ex, reader):
     cands = [r for r in _byexact.get(ex, []) if (r.get("started_at") or "") <= (reader.get("started_at") or "~")]
+    same = [r for r in cands if r.get("node") == reader.get("node")]   # the reader read the file on its own node
+    if same: return same[-1]
     if cands: return cands[-1]
     if _byexact.get(ex): return _byexact[ex][-1]
     return byid.get(base_id(ex))
