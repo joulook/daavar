@@ -9,7 +9,7 @@
 # publish.sh pushes the row to brain-data (R2b). Rows with a `done` marker are skipped
 # (restartable). Start it detached with start-queue.sh, never in a foreground ssh session.
 # usage: run-queue.sh <rows-file> <queue-name> [slots=8]
-# env: ROWS_TSV (attributes sidecar, default <rows-file>.tsv), FOREIGN_LOAD_POLICY=wait|kill|ignore
+# env: ROWS_TSV (attributes sidecar, default <rows-file>.tsv), FOREIGN_LOAD_POLICY=wait|kill|ignore, MEM_CAP (GB, shared nodes)
 #      (default wait: do not launch while foreign load is present; kill: also kill a running row
 #      and mark it invalid), FOREIGN_LOAD_MARGIN (load-average units, default 8), PUBLISH=1.
 set -uo pipefail
@@ -23,7 +23,8 @@ export ROWS_TSV S
 QDIR="$EVAL_OUT/queues/$QNAME"; mkdir -p "$QDIR"
 echo "queue $QNAME start $(date -Is) rows=$ROWS slots=$SLOTS numa=$NUMA_SET pin=$TF_PIN host=$(hostname) pid=$$" >> "$QDIR/queue.log"
 
-cores_of() { local out="" n; for n in ${1//,/ }; do out+="${out:+,}$((16*n))-$((16*n+15))"; done; echo "$out"; }   # $1: comma list of numa nodes
+cores_of() {  # $1: comma list of numa nodes -> the cpus of those nodes from lscpu (brain: 16k..16k+15; pinky: the even or odd cpus; volta: 0-7,16-23 / 8-15,24-31)
+  local out="" n c; for n in ${1//,/ }; do c=$(lscpu -p=cpu,node | awk -F, -v n="$n" '!/^#/ && $2==n {print $1}' | paste -sd,); [ -n "$c" ] || c="$((16*n))-$((16*n+15))"; out+="${out:+,}$c"; done; echo "$out"; }
 width_of() { case "$1" in *-t64*) echo 4;; *-t32*) echo 2;; *) echo 1;; esac; }
 busy_threads() {  # physical cores held by every running row on this node, across all output trees and queues
   local t=0 s nw w
@@ -52,6 +53,7 @@ sampler() {  # $1 rowdir $2 pid-of-row: every 10 s append the process tree's res
 }
 run_row() {  # id memGB timeoutS numa-list width cmd...
   local id="$1" mem="$2" to="$3" first="$4" w="$5"; shift 5
+  [ -n "${MEM_CAP:-}" ] && [ "$mem" -gt "$MEM_CAP" ] && mem=$MEM_CAP   # shared nodes (2026-11-05): never more than MEM_CAP GB per row
   local d="$EVAL_OUT/$id"; mkdir -p "$d"
   local cores; cores=$(cores_of "$first")
   printf '%s\n' "$*" > "$d/cmd.txt"
