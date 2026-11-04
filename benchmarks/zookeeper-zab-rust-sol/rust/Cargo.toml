@@ -1,0 +1,9 @@
+[package]
+name = "bench_zookeeper_zab_sol"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]
