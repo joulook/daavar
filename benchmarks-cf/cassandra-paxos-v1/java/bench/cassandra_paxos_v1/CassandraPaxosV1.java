@@ -530,14 +530,32 @@ public final class CassandraPaxosV1 implements MpProgram {
             latchDecrement();
         }
 
-        public List<Integer> replicasMissingMostRecentCommit() {
+        public MissingMostRecentCommit replicasMissingMostRecentCommit() {
             // PORT: the paxosStatePurging() == legacy branch (MRC older than the paxos TTL is ignored) needs
             // wall-clock time; with counter ballots no MRC is ever too old, so the branch is dropped.
-            List<Integer> missing = new ArrayList<>();
-            for (Map.Entry<Integer, Commit> e : commitsByReplica.entrySet())
-                if (!e.getValue().ballot().equals(mostRecentCommit.ballot()))
-                    missing.add(e.getKey());
-            return missing;
+            // PORT (Fix round 2, finding 3): the source returns a live Iterables.filter view over
+            // commitsByReplica (PrepareCallback l.110), not a materialised list; so does this.
+            return new MissingMostRecentCommit(this);
+        }
+    }
+
+    /**
+     * PORT (Fix round 2, finding 3): Iterables.filter(commitsByReplica.keySet(), inetAddress ->
+     * !commitsByReplica.get(inetAddress).ballot.equals(mostRecentCommit.ballot)) as a live view: each
+     * traversal re-reads the callback's map and mostRecentCommit, element by element. The traversal
+     * visits the replicas in index order and tests each key when it reaches it, as a weakly consistent
+     * ConcurrentHashMap iterator may see or miss an entry added during the traversal.
+     */
+    static final class MissingMostRecentCommit {
+        final PrepareCallback callback;
+
+        MissingMostRecentCommit(PrepareCallback callback) {
+            this.callback = callback;
+        }
+
+        boolean contains(int replica) {
+            Commit c = callback.commitsByReplica.get(replica);
+            return c != null && !c.ballot().equals(callback.mostRecentCommit.ballot());
         }
     }
 
@@ -733,8 +751,12 @@ public final class CassandraPaxosV1 implements MpProgram {
          */
         void deliverLate(int requestId) {
             final int late = requestId;
+            final int self = id;
             while (true) {
-                java.util.Optional<MpMessage> m = Channel.tryRecv(model, msg -> responseId(msg) == late);
+                // PORT (Fix round 2, finding 3): also this node's own pending prepare request of that callback,
+                // so that the local prepare (a local stage task in the source) can run and answer at these points.
+                java.util.Optional<MpMessage> m = Channel.tryRecv(model, msg -> responseId(msg) == late
+                        || (msg instanceof PaxosPrepareReq r && r.id() == late && r.from() == self));
                 if (m.isEmpty())
                     return;
                 dispatch(m.get());
@@ -926,8 +948,9 @@ public final class CassandraPaxosV1 implements MpProgram {
                 // Since we waited for quorum nodes, if some of them haven't seen the last commit (which may just be a timing issue, but may also
                 // mean we lost messages), we pro-actively "repair" those nodes, and retry.
                 deliverLate(summary.requestId); // PORT (Fix round 1, finding 3)
-                List<Integer> missingMRC = summary.replicasMissingMostRecentCommit();
-                if (missingMRC.size() > 0) {
+                MissingMostRecentCommit missingMRC = summary.replicasMissingMostRecentCommit();
+                if (size(missingMRC) > 0) { // Iterables.size(missingMRC)
+                    deliverLate(summary.requestId); // PORT (Fix round 2, finding 3): between the size test and the send traversal
                     sendCommit(mostRecent, missingMRC);
                     // TODO: provided commits don't invalid the prepare we just did above (which they don't), we could just wait
                     // for all the missingMRC to acknowledge this commit and then move on with proposing our value. [...]
@@ -958,11 +981,29 @@ public final class CassandraPaxosV1 implements MpProgram {
             return tstamp;
         }
 
+        /**
+         * PORT (Fix round 2, finding 3): Iterables.size over the live view; late prepare responses may
+         * run before each element is tested.
+         */
+        int size(MissingMostRecentCommit view) {
+            int count = 0;
+            for (int replica = 0; replica < N; replica++) {
+                deliverLate(view.callback.requestId);
+                if (view.contains(replica))
+                    count++;
+            }
+            return count;
+        }
+
         /** Unlike commitPaxos, this does not wait for replies */
-        void sendCommit(Commit commit, List<Integer> replicas) {
+        void sendCommit(Commit commit, MissingMostRecentCommit replicas) {
             PaxosCommitReq message = new PaxosCommitReq(-1, id, commit); // PORT: Message.out without callback: id -1
-            for (int target : replicas)
-                send(target, message);
+            for (int target = 0; target < N; target++) // for (InetAddressAndPort target : replicas)
+            {
+                deliverLate(replicas.callback.requestId); // PORT (Fix round 2, finding 3): the view is traversed again, live
+                if (replicas.contains(target))
+                    send(target, message);
+            }
         }
 
         PrepareCallback preparePaxos(Commit toPrepare) {

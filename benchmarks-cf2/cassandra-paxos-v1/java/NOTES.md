@@ -280,6 +280,49 @@ common shell contract.
 Not changed beyond the above: the `// PORT:` markers were added on the new lines; older added declarations that
 lack one are covered by the class-level and section comments only.
 
+## 5b. Fix round 2 (second review, translit-review/REVIEW.md)
+
+Line numbers are those of `CassandraPaxosV1.java` after this round. Round-1 line numbers in 5a after l.541 are
+now shifted down; find the code by the method names given there, it is unchanged.
+
+Items 1, 2, 7: confirmed fixed by the review; unchanged. Items 4, 8: settled by INTERFACE.md; unchanged.
+Items 5, 6, 9: left as declared in 5a (5: the review notes that one process could also represent local stage tasks
+explicitly; I did not do that, so 5a's "needs several processes" is too strong and is withdrawn as a reason; the
+abstraction stays declared).
+
+Item 3 (frozen callbacks, not fully fixed) -- changed:
+- `replicasMissingMostRecentCommit` (l.533-540) no longer materialises an `ArrayList`. It returns a live view,
+  `MissingMostRecentCommit` (l.542-560), standing for the source's `Iterables.filter(commitsByReplica.keySet(), ...)`
+  (PrepareCallback l.110). Each membership test re-reads `commitsByReplica` and `mostRecentCommit`.
+- `Iterables.size(missingMRC)` is `Node.size` (l.988-996): it traverses the view in replica-index order and calls
+  `deliverLate` before each element, so a late prepare response can run during the count.
+- Between the size test and the repair sends there is another `deliverLate` (l.953).
+- `sendCommit` (l.998-1006) traverses the view again, live, with `deliverLate` before each element, so a response
+  that arrives after counting but before or during the send traversal changes the recipients, as in the
+  source's second traversal (StorageProxy l.656-660, 683-687). The review's example (third promise with the old
+  commit arriving after the count) is now reachable: that replica is included in the repair sends.
+- The traversal visits keys in index order and tests each key when reached. This is my model of the
+  `ConcurrentHashMap` iterator's weak consistency: an entry added for a key already passed is missed, and one
+  for a key not yet reached is seen. The real hash order is not modelled.
+- `deliverLate` (l.752-764) now also accepts this node's own pending `PaxosPrepareReq` of the same callback, so that
+  the local prepare (a local stage task in the source) can execute and answer at these points (the overlap with
+  item 5 the review names).
+- Not modelled (residual, declared): the atomicity of one `onResponse`. The source's `onResponse` is
+  `synchronized`, but the coordinator reads the fields without the lock, so it can see a response half-applied.
+  The port runs each callback body indivisibly. My analysis of which partial states matter:
+  - (a) in-progress updated, `promised` not yet false: same observations as the whole response running just after
+    the `promised` check, because `promised` is not re-read.
+  - (b) `commitsByReplica.put` done, `mostRecentCommit` not yet raised: this differs only when the late response's
+    MRC B' is newer than the current B. Then the count is positive either way, so the branch (`sendCommit` then
+    `continue`) is the same. What changes is the set of replicas that receive the commit of the local `mostRecent`
+    (= B).
+  - The one effect of (b) on data I cannot rule out is B's cell reaching a replica that already holds B'. That
+    write can win only on equal counters with a larger value. I have no argument that this is unreachable, so the
+    residual stays open.
+
+New findings: the review reports none. Its checks of the round-1 changes (permanent callbacks, finite non-blocking
+loops, learning ballots from late responses, restamping) need no change.
+
 ## 6. Compile and run
 
 Compile (inside this directory):
@@ -292,10 +335,10 @@ Run (inside this directory):
 
     java -Xss4m -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_paxos_v1.CassandraPaxosV1:impl,1,v1,fifo' must 0 1 report - 600 </dev/null
 
-Last output line (fix round 1 run, after the F4 revert): `max_porf_count: 0`. Exit status 0; timeout after 600 s:
-`ran: 15312 iterations`, `blocked: 15312`, `completed: 0` (every execution ends with the replicas blocked on
-receive), `graphs: 0 distinct complete, 15312 distinct blocked; stack not exhausted`, `stop_reason: timeout`,
-`max_graph_events: 144`. Counting mode (export `-`), so `max_visible_events` is 0.
+Last output line (fix round 2 run): `max_porf_count: 0`. Exit status 0; timeout after 600 s: `ran: 12456 iterations`,
+`blocked: 12456`, `completed: 0` (every execution ends with the replicas blocked on receive), `graphs: 0 distinct
+complete, 12456 distinct blocked; stack not exhausted`, `stop_reason: timeout`, `max_graph_events: 153`. Counting
+mode (export `-`), so `max_visible_events` is 0.
 
 Earlier runs, same command and same last line: round 0, 18396 blocked iterations, `max_graph_events: 123`; round 1
-with the since-reverted F4 change, 13655 blocked iterations, `max_graph_events: 144`.
+with the since-reverted F4 change, 13655, 144; round 1 after the F4 revert, 15312, 144.
