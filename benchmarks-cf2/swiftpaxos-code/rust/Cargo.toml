@@ -1,0 +1,8 @@
+[package]
+name = "bench_swiftpaxos_code"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]
