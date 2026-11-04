@@ -153,14 +153,32 @@ public final class CassandraPaxosV1 implements MpProgram {
 
     /**
      * PORT: PartitionUpdate of the one partition reduced to the single register x: either empty
-     * (PartitionUpdate.emptyUpdate) or a write of x. Its write timestamp is the ballot of the
-     * Commit that carries it (Commit.newProposal: withTimestamp(update, ballot.unixMicros())).
+     * (PartitionUpdate.emptyUpdate) or a write of x with its cell timestamp (Fix round 1, finding 7:
+     * the cell timestamp is kept in the update, as the source keeps it in the cells, and is
+     * ballot.unixMicros() = the ballot counter, set by Commit.newProposal's withTimestamp).
      */
     @Tag("PartitionUpdate")
-    public record PartitionUpdate(boolean isEmpty, int x) {
+    public record PartitionUpdate(boolean isEmpty, int x, long timestamp) {
         public static PartitionUpdate emptyUpdate() {
-            return new PartitionUpdate(true, 0);
+            return new PartitionUpdate(true, 0, 0); // PORT: no cells, so no timestamp
         }
+
+        /** Commit.withTimestamp (Commit.java l.472-475): every cell gets the given timestamp. */
+        static PartitionUpdate withTimestamp(PartitionUpdate update, long timestamp) {
+            return update.isEmpty ? update : new PartitionUpdate(false, update.x, timestamp); // PORT: one cell
+        }
+    }
+
+    /**
+     * PORT: Cells.reconcile / resolveRegular (src-4.1 db/rows/Cells.java l.68-127) for the one live
+     * int cell: the higher timestamp wins; on equal timestamps compareValues(left, right) >= 0 ? left
+     * : right, i.e. the larger value (non-negative int32 bytes compare as the numbers). Returns
+     * whether the right cell (ts2, x2) wins over the left (ts1, x1).
+     */
+    static boolean rightWins(long ts1, int x1, long ts2, int x2) {
+        if (ts1 != ts2)
+            return ts2 > ts1;
+        return !(Integer.compare(x1, x2) >= 0);
     }
 
     /**
@@ -179,7 +197,7 @@ public final class CassandraPaxosV1 implements MpProgram {
         }
 
         public static Commit newProposal(Ballot ballot, PartitionUpdate update) {
-            // PORT: update = withTimestamp(update, ballot.unixMicros()); the timestamp is the commit's ballot.
+            update = PartitionUpdate.withTimestamp(update, ballot.unixMicros());
             return new Commit(ballot, update);
         }
 
@@ -288,9 +306,9 @@ public final class CassandraPaxosV1 implements MpProgram {
     @Tag("ReadReq")
     public record ReadReq(int id, int from) implements MpMessage {}
 
-    /** PORT: READ_RSP, reduced to the register's value and write timestamp (Ballot.none() when absent). */
+    /** PORT: READ_RSP, reduced to the register's cell: present?, value, cell timestamp (Fix round 1, finding 7). */
     @Tag("ReadRsp")
-    public record ReadRsp(int id, int from, int x, Ballot timestamp) implements MpMessage {}
+    public record ReadRsp(int id, int from, boolean present, int x, long timestamp) implements MpMessage {}
 
     static boolean isVerb(MpMessage m) {
         return m instanceof PaxosPrepareReq || m instanceof PaxosProposeReq || m instanceof PaxosCommitReq
@@ -305,8 +323,15 @@ public final class CassandraPaxosV1 implements MpProgram {
         return Integer.MIN_VALUE;
     }
 
+    static boolean isResponse(MpMessage m) {
+        return m instanceof PaxosPrepareRsp || m instanceof PaxosProposeRsp || m instanceof PaxosCommitRsp
+                || m instanceof ReadRsp;
+    }
+
+    // PORT (Fix round 1, finding 1): the idle loop receives every message a replica can be sent,
+    // responses included (they are dispatched to their callback or discarded).
     static boolean isNodeInput(MpMessage m) {
-        return isVerb(m) || m instanceof Cas || m instanceof Read;
+        return isVerb(m) || isResponse(m) || m instanceof Cas || m instanceof Read;
     }
 
     static boolean isReply(MpMessage m) {
@@ -473,22 +498,18 @@ public final class CassandraPaxosV1 implements MpProgram {
         Commit mostRecentInProgressCommit;
         // PORT: ConcurrentHashMap<InetAddressAndPort, Commit> as a map ordered by replica index.
         private final Map<Integer, Commit> commitsByReplica = new TreeMap<>();
-        private final Node coordinator;
+        int requestId; // PORT: the callback's message id, for Node.deliverLate
 
-        PrepareCallback(int targets, Node coordinator) {
+        PrepareCallback(int targets) {
             super(targets);
             // need to inject the right key in the empty commit so comparing with empty commits in the response works as expected
             mostRecentCommit = Commit.emptyCommit();
             mostRecentInProgressCommit = Commit.emptyCommit();
-            this.coordinator = coordinator;
         }
 
         public void onResponse(MpMessage msg) {
             PaxosPrepareRsp message = (PaxosPrepareRsp) msg;
             PrepareResponse response = message.payload();
-            // PORT: the interface's ballot rule: the coordinator has seen every ballot of a prepare response.
-            coordinator.observe(response.inProgressCommit().ballot());
-            coordinator.observe(response.mostRecentCommit().ballot());
 
             // We set the mostRecentInProgressCommit even if we're not promised as, in that case, the ballot of that commit
             // will be used to avoid generating a ballot that has not chance to win on retry (think clock skew).
@@ -584,8 +605,9 @@ public final class CassandraPaxosV1 implements MpProgram {
      */
     static final class ReadCallback implements Callback {
         private int pending;
+        private boolean present = false;
         private int x = 0; // the row absent counts as 0 (INTERFACE.md)
-        private Ballot timestamp = Ballot.none();
+        private long timestamp = 0;
 
         ReadCallback(int blockFor) {
             pending = blockFor;
@@ -597,7 +619,9 @@ public final class CassandraPaxosV1 implements MpProgram {
 
         public void onResponse(MpMessage m) {
             ReadRsp r = (ReadRsp) m;
-            if (r.timestamp().uuidTimestamp() > timestamp.uuidTimestamp()) {
+            // PORT: DataResolver merge = Cells.reconcile of the responses' cells (Fix round 1, finding 7)
+            if (r.present() && (!present || rightWins(timestamp, x, r.timestamp(), r.x()))) {
+                present = true;
                 timestamp = r.timestamp();
                 x = r.x();
             }
@@ -622,14 +646,20 @@ public final class CassandraPaxosV1 implements MpProgram {
         // PaxosState: PORT: one partition, in memory (no system.paxos table, no ACTIVE/RECENT caches).
         Snapshot current = new Snapshot(Ballot.none(), Ballot.none(), null, Commit.emptyCommit());
 
-        // PORT: the base table of the partition: register x and its write timestamp (null: row absent).
+        // PORT: the base table of the partition: one int cell x with its cell timestamp (absent: row absent).
+        boolean xPresent = false;
         int x = 0;
-        Ballot xTimestamp = null;
+        long xTimestamp = 0;
 
-        // PORT: ClientState.lastTimestampMicros; here the highest ballot counter this coordinator has seen.
+        // PORT: ClientState.lastTimestampMicros; here the highest ballot counter this process has seen
+        // (Fix round 1, finding 2: every ballot of every message it receives, and its own ballots).
         long lastTimestampMicros = 0;
         // PORT: the coordinator's callback ids (Message ids).
         int nextRequestId = 0;
+        // PORT (Fix round 1, finding 1): MessagingService's callback map. A callback stays registered
+        // after its await returns (the source keeps it until its RPC timeout expires; here there is no
+        // time, so it stays), and a late response still runs its onResponse, as in the source.
+        final Map<Integer, Callback> callbacks = new TreeMap<>();
         // PORT: the attempt budget replaces the contention deadline; ballots generated for the current request.
         int attempts = 0;
 
@@ -649,7 +679,65 @@ public final class CassandraPaxosV1 implements MpProgram {
                 else if (m instanceof Read r)
                     clientRead(r);
                 else
-                    doVerb(m);
+                    dispatch(m);
+            }
+        }
+
+        /**
+         * PORT (Fix round 1, findings 1 and 2): one received replica message: its ballots are
+         * observed, then a verb runs its handler, a response runs its callback's onResponse
+         * (ResponseVerbHandler) or, with no callback registered (id -1: sendCommit, ANY commits), is
+         * discarded.
+         */
+        void dispatch(MpMessage m) {
+            observeAll(m);
+            if (isVerb(m)) {
+                doVerb(m);
+            } else {
+                Callback callback = callbacks.get(responseId(m));
+                if (callback != null)
+                    callback.onResponse(m);
+                // else: PORT: no callback for this id: the response is received and dropped
+            }
+        }
+
+        /** PORT (Fix round 1, finding 2): the interface's "seen": every ballot a received message carries. */
+        void observeAll(MpMessage m) {
+            if (m instanceof PaxosPrepareReq r) {
+                observe(r.payload().ballot());
+            } else if (m instanceof PaxosProposeReq r) {
+                observe(r.payload().ballot());
+            } else if (m instanceof PaxosCommitReq r) {
+                observe(r.payload().ballot());
+            } else if (m instanceof PaxosPrepareRsp r) {
+                observe(r.payload().inProgressCommit().ballot());
+                observe(r.payload().mostRecentCommit().ballot());
+            } else if (m instanceof ReadRsp r) {
+                if (r.present() && r.timestamp() > lastTimestampMicros)
+                    lastTimestampMicros = r.timestamp(); // a cell timestamp is a ballot counter
+            }
+        }
+
+        /** PORT: register a callback under a fresh id (MessagingService.sendWithCallback). */
+        int register(Callback callback) {
+            int requestId = nextRequestId++;
+            callbacks.put(requestId, callback);
+            return requestId;
+        }
+
+        /**
+         * PORT (Fix round 1, finding 3): between the latch reaching zero and a read of the callback's
+         * fields, the source may still run onResponse for late responses on other threads. Here the
+         * coordinator may receive any number (zero included) of pending responses for that callback
+         * first: non-blocking receives, the strategy choosing ⊥ or a pending response.
+         */
+        void deliverLate(int requestId) {
+            final int late = requestId;
+            while (true) {
+                java.util.Optional<MpMessage> m = Channel.tryRecv(model, msg -> responseId(msg) == late);
+                if (m.isEmpty())
+                    return;
+                dispatch(m.get());
             }
         }
 
@@ -662,15 +750,15 @@ public final class CassandraPaxosV1 implements MpProgram {
                 lastTimestampMicros = b.unixMicros();
         }
 
-        /** PORT: callback.await(): while waiting, the process keeps serving the replica verbs. */
+        /**
+         * PORT: callback.await() (AbstractPaxosCallback l.60-68 without the RPC timeout: the waits are
+         * timeout-free by the common model's "no time"). While waiting, the process keeps receiving
+         * every replica message (verbs and all responses, Fix round 1, finding 1).
+         */
         void await(int requestId, Callback callback) {
-            final int awaited = requestId;
             while (callback.latchCount() > 0) {
-                MpMessage m = Channel.recv(model, msg -> isVerb(msg) || responseId(msg) == awaited);
-                if (isVerb(m))
-                    doVerb(m);
-                else
-                    callback.onResponse(m);
+                MpMessage m = Channel.recv(model, msg -> isVerb(msg) || isResponse(msg));
+                dispatch(m);
             }
         }
 
@@ -722,7 +810,7 @@ public final class CassandraPaxosV1 implements MpProgram {
 
                 // Create the desired updates
                 // PORT: request.makeUpdates(current, clientState, ballot): SET x = value; no triggers
-                PartitionUpdate updates = new PartitionUpdate(false, request.value());
+                PartitionUpdate updates = new PartitionUpdate(false, request.value(), ballot.unixMicros());
 
                 return Pair.create(updates, null);
             };
@@ -777,7 +865,8 @@ public final class CassandraPaxosV1 implements MpProgram {
                 // PORT: contentions += e.contentions (metrics only) dropped
                 throw e;
             }
-            // PORT: catch (WriteTimeoutException e) -> CasWriteTimeoutException: no RPC timeouts here.
+            // PORT: catch (WriteTimeoutException e) -> CasWriteTimeoutException: unreachable, because the common model
+            // assumes timeout-free RPC waits ("no time", INTERFACE.md); not because there are no failures (Fix round 1, finding 8).
             // PORT: finally recordCasContention(...) (metrics) dropped.
 
             throw new CasWriteTimeoutException("doPaxos: attempt budget exhausted");
@@ -795,19 +884,24 @@ public final class CassandraPaxosV1 implements MpProgram {
                 // already we also want to make sure we pick a timestamp that has a chance to be promised, i.e. one that is greater that the most recently known
                 // in progress (#5667). Lastly, we don't want to use a timestamp that is older than the last one assigned by ClientState or operations may appear
                 // out-of-order (#7801).
+                if (summary != null)
+                    deliverLate(summary.requestId); // PORT (Fix round 1, finding 3): late responses may still land before this read
                 long minTimestampMicrosToUse = summary == null ? Long.MIN_VALUE : 1 + summary.mostRecentInProgressCommit.ballot().unixMicros();
                 Ballot ballot = nextBallot(minTimestampMicrosToUse); // PORT: flag GLOBAL/LOCAL dropped
 
                 // prepare
                 Commit toPrepare = Commit.newPrepare(ballot);
                 summary = preparePaxos(toPrepare);
+                deliverLate(summary.requestId); // PORT (Fix round 1, finding 3)
                 if (!summary.promised) {
                     contentions++;
                     // PORT: sleep a random amount to give the other proposer a chance to finish -- dropped
                     continue;
                 }
 
+                deliverLate(summary.requestId); // PORT (Fix round 1, finding 3)
                 Commit inProgress = summary.mostRecentInProgressCommit;
+                deliverLate(summary.requestId); // PORT (Fix round 1, finding 3)
                 Commit mostRecent = summary.mostRecentCommit;
 
                 // If we have an in-progress ballot greater than the MRC we know, then it's an in-progress round that
@@ -831,6 +925,7 @@ public final class CassandraPaxosV1 implements MpProgram {
                 // https://issues.apache.org/jira/browse/CASSANDRA-5062?focusedCommentId=13619810&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13619810)
                 // Since we waited for quorum nodes, if some of them haven't seen the last commit (which may just be a timing issue, but may also
                 // mean we lost messages), we pro-actively "repair" those nodes, and retry.
+                deliverLate(summary.requestId); // PORT (Fix round 1, finding 3)
                 List<Integer> missingMRC = summary.replicasMissingMostRecentCommit();
                 if (missingMRC.size() > 0) {
                     sendCommit(mostRecent, missingMRC);
@@ -872,8 +967,9 @@ public final class CassandraPaxosV1 implements MpProgram {
 
         PrepareCallback preparePaxos(Commit toPrepare) {
             // PORT: requiredParticipants() = 2 (SERIAL, RF 3)
-            PrepareCallback callback = new PrepareCallback(ConsistencyLevel.SERIAL.blockFor(), this);
-            int requestId = nextRequestId++;
+            PrepareCallback callback = new PrepareCallback(ConsistencyLevel.SERIAL.blockFor());
+            int requestId = register(callback); // PORT: sendWithCallback registers the callback
+            callback.requestId = requestId; // PORT: for deliverLate
             PaxosPrepareReq message = new PaxosPrepareReq(requestId, id, toPrepare);
 
             for (int replica = 0; replica < N; replica++) // contacts(): all three replicas
@@ -895,7 +991,7 @@ public final class CassandraPaxosV1 implements MpProgram {
         boolean proposePaxos(Commit proposal, boolean backoffIfPartial) {
             // PORT: contacts().size() = 3, requiredParticipants() = 2
             ProposeCallback callback = new ProposeCallback(N, ConsistencyLevel.SERIAL.blockFor(), !backoffIfPartial);
-            int requestId = nextRequestId++;
+            int requestId = register(callback); // PORT: sendWithCallback registers the callback
             PaxosProposeReq message = new PaxosProposeReq(requestId, id, proposal);
             for (int replica = 0; replica < N; replica++) {
                 // PORT: replica.isSelf(): local stage execution replaced by a send to itself (as in preparePaxos)
@@ -920,7 +1016,7 @@ public final class CassandraPaxosV1 implements MpProgram {
             // PORT: ReplicaPlans.forWrite(..., writeAll): all three replicas, all alive
             if (shouldBlock) {
                 responseHandler = new WriteResponseHandler(consistencyLevel.blockFor());
-                requestId = nextRequestId++;
+                requestId = register(responseHandler); // PORT: sendWriteWithCallback registers the handler
             }
 
             PaxosCommitReq message = new PaxosCommitReq(requestId, id, proposal);
@@ -950,7 +1046,7 @@ public final class CassandraPaxosV1 implements MpProgram {
 
         int fetchRows(ConsistencyLevel consistencyLevel) {
             ReadCallback handler = new ReadCallback(consistencyLevel.blockFor());
-            int requestId = nextRequestId++;
+            int requestId = register(handler); // PORT: the read executor registers its callback
             ReadReq message = new ReadReq(requestId, id);
             for (int replica = 0; replica < N; replica++)
                 send(replica, message);
@@ -1038,8 +1134,7 @@ public final class CassandraPaxosV1 implements MpProgram {
 
         /** PORT: ReadCommandVerbHandler, reduced to returning the local row of x with its timestamp. */
         void readCommandVerbHandlerDoVerb(ReadReq message) {
-            Ballot ts = xTimestamp == null ? Ballot.none() : xTimestamp;
-            send(message.from(), new ReadRsp(message.id(), id, x, ts));
+            send(message.from(), new ReadRsp(message.id(), id, xPresent, x, xTimestamp));
         }
 
         // ---------------------------------------------------------------- PaxosState (replica side)
@@ -1117,14 +1212,16 @@ public final class CassandraPaxosV1 implements MpProgram {
 
         /**
          * PORT: Keyspace.apply of the commit's mutation on the base table: an empty update writes
-         * nothing; a write of x carries the commit's ballot as timestamp and is reconciled last-write-wins.
+         * nothing; a write of x carries its cell timestamp (the proposing ballot's counter) and is reconciled by Cells.reconcile.
          */
         void applyMutation(Commit commit) {
             if (commit.update().isEmpty())
                 return;
-            if (xTimestamp == null || commit.ballot().uuidTimestamp() > xTimestamp.uuidTimestamp()) {
+            // PORT (Fix round 1, finding 7): reconcile by the update's cell timestamp (Cells.reconcile), not by ballot
+            if (!xPresent || rightWins(xTimestamp, x, commit.update().timestamp(), commit.update().x())) {
+                xPresent = true;
                 x = commit.update().x();
-                xTimestamp = commit.ballot();
+                xTimestamp = commit.update().timestamp();
             }
         }
     }

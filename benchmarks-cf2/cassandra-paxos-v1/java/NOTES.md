@@ -213,6 +213,73 @@ D14. Program shell. `programName() = "cassandra_paxos_v1"`, `size() = "q=<q>,var
 `Tid` before any process runs, without a setup message), starts them in the order of the interface, and awaits
 the clients and then the replicas (a replica never ends, so main ends blocked).
 
+## 5a. Fix round 1 (review plan/case-studies/cassandra/translit-review/REVIEW.md)
+
+Line numbers are those of `CassandraPaxosV1.java` after this round. Where this section contradicts D2, D4, D6, D9,
+D10 or D13 above, this section is what the code does.
+
+F1. Responses left undeliverable (D4, D9) -- fixed. The idle loop (`isNodeInput`, l.333) and the waiting loop
+(`await`, l.758) now receive every response, not only those of the callback being awaited. Each received message
+goes through `dispatch` (l.692): a verb runs its handler; a response runs the `onResponse` of the callback
+registered under its id (`callbacks`, l.662; `register`, l.722, called by preparePaxos, proposePaxos, the blocking
+commitPaxos and fetchRows) or, when no callback is registered (id -1: `sendCommit` and ANY commits), it is received
+and dropped (ResponseVerbHandler with no callback). Callbacks are never unregistered: the source keeps a callback
+until its RPC timeout expires, and there is no time here.
+
+F2. "Seen" narrowed (D2) -- fixed. `observeAll` (l.705), called by `dispatch` before every handler or callback,
+advances `lastTimestampMicros` from every ballot in every message the process receives: prepare, propose and
+commit requests (replica side), prepare responses (inProgress and MRC, also on rejection and when late), and the
+cell timestamp of read responses (a ballot counter). Own ballots are still recorded (`getTimestampForPaxos`,
+l.950-957); that line stays a PORT deviation from the source's `tstamp == minUnixMicros` rule, which would
+repeat a ballot with (counter, id) ballots. Otherwise the generator is the source's arithmetic without a clock.
+
+F3. Prepare summary frozen (D4) -- fixed. `deliverLate(id)` (l.734) receives, by non-blocking receives, any number
+(zero included, the strategy choosing ⊥) of pending responses for the prepare callback and dispatches them to it
+(after latch zero onResponse still runs and still changes `promised`, `mostRecentInProgressCommit`,
+`mostRecentCommit`, `commitsByReplica`, as in PrepareCallback l.63-86). It is called before every read of the
+summary in beginAndRepairPaxos: before `summary.promised` (l.895), before reading `mostRecentInProgressCommit`
+(l.902) and `mostRecentCommit` (l.904), before `replicasMissingMostRecentCommit` (l.928), and before the next
+iteration's `minTimestampMicrosToUse` (l.888). Propose, commit and read callbacks are not given such points: per the
+review, a late propose response cannot change the decision already taken; late commit acks and read responses
+are read by nobody after their await. Late responses of every callback are still received (F1).
+
+F4. Failed rule (D10) -- settled by INTERFACE.md in the source's favour (its "Attempt budget" paragraph now says
+that a proposal accepted by fewer than a quorum once every replica has answered is the source's unknown result and
+is answered `Failed` at once, without using the remaining attempts). The round-1 change (returning false so that
+doPaxos retried) is reverted: proposePaxos throws CasWriteUnknownResultException again (l.1006), exactly as
+StorageProxy l.765-766, and clientCas/clientRead map it to `Failed` immediately. A proposal refused by all three
+(rejected by a higher ballot) still returns false and is a retried attempt. D10 stands as first written.
+
+F5. Local work as self-messages (D3) -- not changed. The fix is not local: modelling local stage tasks and
+callback actions separately from the transport needs a different process structure (several tasks per replica,
+which INTERFACE.md's one-process-per-role excludes). The claim "keeps every interleaving" in D3 is withdrawn: the
+self-send adds a self-response queue position and the transport's FIFO/bag order to local work, and no
+equivalence argument is given.
+
+F6. Quorum read replaced (D5) -- not changed (not local: needs AbstractReadExecutor, digest resolution,
+speculation and blocking read repair). D5 is an unproved abstraction; the contact abstraction (first two of
+three) and the omission of read repair are both as stated in D5.
+
+F7. Cell timestamps vs ballot order (D6) -- fixed. `PartitionUpdate` now carries its cell timestamp (l.161);
+`Commit.newProposal` stamps it with `ballot.unixMicros()` (the counter) via `withTimestamp` (l.167), so a replayed
+proposal is re-stamped with the new ballot as in the source. The table keeps the cell timestamp (l.650-652),
+`applyMutation` (l.1221) and the read resolver (l.622) reconcile with `rightWins` (l.178), a transcription of
+`Cells.resolveRegular` (src-4.1 db/rows/Cells.java l.79-127) for one live cell: higher timestamp wins, on a tie
+the larger value. `ReadRsp` (l.311) carries presence, value and cell timestamp. The D6 claim "equal timestamps
+cannot occur" is withdrawn: `(b,0)` and `(b,1)` share the cell timestamp b.
+
+F8. Timeouts (D13) -- justification fixed (l.868-869, and `await`'s comment l.755-757): the RPC waits are
+timeout-free because INTERFACE.md now states it ("a quorum not reached" can only mean rejections; there is no
+timeout transition), not because there are no failures.
+
+F9. Main's await of a blocked replica raises the API's synthetic `MP_RECV_REQUEST_EVENT` (`awaitOfBlocked`,
+MpThread.awaitBlocked) -- not changed. Every spawned non-daemon process must be awaited, a replica never ends,
+and a daemon has no role; there is no local alternative. The event reads no message. It needs an exemption in the
+common shell contract.
+
+Not changed beyond the above: the `// PORT:` markers were added on the new lines; older added declarations that
+lack one are covered by the class-level and section comments only.
+
 ## 6. Compile and run
 
 Compile (inside this directory):
@@ -225,4 +292,10 @@ Run (inside this directory):
 
     java -Xss4m -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_paxos_v1.CassandraPaxosV1:impl,1,v1,fifo' must 0 1 report - 600 </dev/null
 
-Last output line: `max_porf_count: 0`. The run hit the 600 s timeout and did not finish (exit status 0): `ran: 18396 iterations`, `blocked: 18396`, `completed: 0` (every execution ends with the replicas blocked on receive, as intended), `graphs: 0 distinct complete, 18396 distinct blocked; stack not exhausted`, `stop_reason: timeout`, `max_graph_events: 123`. It ran in counting mode (export `-`, so no roles), which is why `max_visible_events` is 0.
+Last output line (fix round 1 run, after the F4 revert): `max_porf_count: 0`. Exit status 0; timeout after 600 s:
+`ran: 15312 iterations`, `blocked: 15312`, `completed: 0` (every execution ends with the replicas blocked on
+receive), `graphs: 0 distinct complete, 15312 distinct blocked; stack not exhausted`, `stop_reason: timeout`,
+`max_graph_events: 144`. Counting mode (export `-`), so `max_visible_events` is 0.
+
+Earlier runs, same command and same last line: round 0, 18396 blocked iterations, `max_graph_events: 123`; round 1
+with the since-reverted F4 change, 13655 blocked iterations, `max_graph_events: 144`.
