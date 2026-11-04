@@ -21,8 +21,8 @@ def esc(s): return s.replace('_','\\_').replace('%','\\%')
 def fnum(x):
     try: v=float(x); return str(int(v)) if v==int(v) else '%.1f' % v
     except Exception: return '--'
-def mib(x):
-    try: return str(round(float(x)/1.048576))
+def mib(x):   # the CSV's peak MB is already KiB/1024, i.e. MiB (audit 2026-11-04: no second division)
+    try: return str(round(float(x)))
     except Exception: return '--'
 def gi(x):
     try: return int(float(x))
@@ -54,7 +54,7 @@ def load(f):
 def viol_of(r): return (r['expected']=='violation') if r['expected'] in ('conforms','violation') else (r['verdict']=='violation')
 TITLE={'twin':'Cross-language twin checks: a Java implementation against a Rust implementation of one specification','cross':'Cross-language refinement checks: an implementation in one language against the specification in the other','realsw':'Real software and agentic benchmarks: specification against each implementation'}[MODE]
 L=[r'\documentclass[9pt]{article}',r'\usepackage[a4paper,landscape,margin=12mm]{geometry}',r'\usepackage{booktabs,longtable,amsmath,xcolor,fontawesome5}',r'\usepackage[T1]{fontenc}',r'\setlength{\tabcolsep}{3.5pt}',r'\begin{document}',r'\section*{'+TITLE+'}',
-   r"Every row is one instance (program, variant, size), the largest size at which both the offline and the online check of the same side exist; one run each. Names as in the paper, the size in parentheses; the superscript is the communication model (B = bag/asyn, F = fifo/p2p). $G_{\mathit{impl}}$, $G_{\mathit{spec}}$ = the graphs of the checked side and of the export it is checked against; $G_x$ = the checked side's graphs that no graph of the other side covers (violating tables). Online: M = peak memory of the online run (MiB), T$_{\mathit{exp}}$ = the export of the specification side, T$_{\mathit{run}}$ = the online run, T = their sum. Offline: M = the largest peak of the two exports and the join, T$_{\mathit{exp}}$ = the longer export, T$_{\mathit{join}}$ = the join, T = their sum. \faClock\ = time limit reached, oom = memory limit reached, -- = no verdict. \textcolor{red}{Red} = a run of the earlier campaign that had its NUMA node to itself; \textcolor{orange}{orange} = a run of the earlier campaign that shared its NUMA node with another run for more than 30 s (the overlapping queues before the evening of 2026-11-03), whose times are not to be trusted; \textcolor{blue}{blue} = a run started after 2026-11-03 23:30 under the one-row-per-node rule. Instances with only one of the two checks follow in the per-kind tables.",r'\medskip', open(R+'/plan/twin-tables/BENCHMARKS.tex').read(), r'\medskip']
+   r"Every row is one instance (program, variant, size), the largest size, per communication model, at which both the offline and the online check of the same side exist; one run each; a time or memory limit is shown only from the 48 h tier. Sums of T are over the CSV's values rounded to 0.1 s, so a total can differ from the raw sum by 0.1 s. Names as in the paper, the size in parentheses; the superscript is the communication model (B = bag/asyn, F = fifo/p2p). $G_{\mathit{impl}}$, $G_{\mathit{spec}}$ = the graphs of the checked side and of the export it is checked against; $G_x$ = the checked side's graphs that no graph of the other side covers (violating tables). Online: M = peak memory of the online run (MiB), T$_{\mathit{exp}}$ = the export of the specification side, T$_{\mathit{run}}$ = the online run, T = their sum. Offline: M = the largest peak of the two exports and the join, T$_{\mathit{exp}}$ = the longer export, T$_{\mathit{join}}$ = the join, T = their sum. \faClock\ = time limit reached, oom = memory limit reached, -- = no verdict. \textcolor{red}{Red} = a run of the earlier campaign that had its NUMA node to itself; \textcolor{orange}{orange} = a run of the earlier campaign that shared its NUMA node with another run for more than 30 s (the overlapping queues before the evening of 2026-11-03), whose times are not to be trusted; \textcolor{blue}{blue} = a run started after 2026-11-03 23:30 under the one-row-per-node rule. Instances with only one of the two checks follow in the per-kind tables.",r'\medskip', open(R+'/plan/twin-tables/BENCHMARKS.tex').read(), r'\medskip']
 HDR=lambda viol: (r'\multicolumn{'+str(4 if viol else 3)+r'}{c}{} & \multicolumn{4}{c}{online} & \multicolumn{4}{c}{offline} \\ \cmidrule(lr){'+str(5 if viol else 4)+'-'+str(8 if viol else 7)+r'}\cmidrule(lr){'+str(9 if viol else 8)+'-'+str(12 if viol else 11)+r'}'+'\n'+r'instance & $G_{\mathit{impl}}$ & $G_{\mathit{spec}}$'+(r' & $G_x$' if viol else '')+r' & M & T$_{\mathit{exp}}$ & T$_{\mathit{run}}$ & T & M & T$_{\mathit{exp}}$ & T$_{\mathit{join}}$ & T \\')
 leftover=[]
 for off_f,on_f,title in PAIRS:
@@ -68,7 +68,8 @@ for off_f,on_f,title in PAIRS:
         for k in both:
             r=offd[k]
             if viol_of(r)!=viol: continue
-            pk=(k[0],k[1],k[2]); g=gi(r['impl graphs'])
+            if r['verdict'] in ('t/o','oom') and (r.get('timeout s') or '') != '172800': continue   # a limit marker only at the 48 h tier (the paper's rule)
+            pk=(k[0],k[1],k[2],k[4]); g=tuple(int(t) if t.isdigit() else 0 for t in k[3].split(','))   # the largest size, per model
             if pk not in pairs or g>pairs[pk][0]: pairs[pk]=(g,k)
         rows=[(offd[k],ond[k]) for _,k in pairs.values()]
         if not rows: continue
@@ -90,7 +91,8 @@ for title,kind,rest in leftover:
         best={}
         for r in rest:
             if viol_of(r)!=viol: continue
-            pk=(r['program'],r['variant'],r.get('spec','')); g=gi(r['impl graphs'])
+            if r['verdict'] in ('t/o','oom') and (r.get('timeout s') or '') != '172800': continue
+            pk=(r['program'],r['variant'],r.get('spec',''),r['model']); g=tuple(int(t) if t.isdigit() else 0 for t in r['size'].split(','))
             if pk not in best or g>best[pk][0]: best[pk]=(g,r)
         rows=[r for _,r in best.values()]
         if not rows: continue
