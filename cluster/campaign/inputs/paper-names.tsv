@@ -60,3 +60,7 @@ omnipaxos	.*	omnipaxos	.
 omnipaxos-derived	.*	omnipaxos-derived	.
 omnipaxos-paper	.*	omnipaxos-paper	.
 omnipaxos-spec	.*	omnipaxos-spec	.
+omnipaxos-paper-sol	.*	omnipaxos-paper-sol	.
+omnipaxos-rust-sol	.*	omnipaxos-rust-sol	.
+omnipaxos-derived-sol	.*	omnipaxos-derived-sol	.
+omnipaxos-spec-sol	.*	omnipaxos-spec-sol	.
