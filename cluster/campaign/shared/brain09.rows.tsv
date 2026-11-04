@@ -1,0 +1,10 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C1.raft-rs.impl_reorder_2_1_1_fifo.t16	C	raft-rs	2,1,1	fifo	reorder	stateful-parallel	16	readme		c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	raft-rs	raft-rs.spec_correct_1_1_2_fifo	raft-rs.impl_reorder_2_1_1_fifo
+C3E.omnipaxos.impl_reorder_2_1_1_fifo.t16	C	omnipaxos	2,1,1	fifo	reorder	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_reorder_2_1_1_fifo	C	omnipaxos	2,1,1	fifo	reorder	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos	omnipaxos.spec_correct_2_1_1_fifo	omnipaxos.impl_reorder_2_1_1_fifo
+C3J.raft-rs.impl_correct_2_2_1_fifo.f3	C	raft-rs	2,2,1	fifo	correct	join	1	readme		c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	raft-rs	raft-rs.spec_correct_2_2_1_fifo	raft-rs.impl_correct_2_2_1_fifo
+C3J.bank-grove.impl_5_unordered_fifo.f4	C	bank-grove	5	fifo	unordered	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	bank-grove	bank-grove.spec_5_fifo	bank-grove.impl_5_unordered_fifo
+C3J.n-buyer-kragl.impl_8_correct_bag.f5	C	n-buyer-kragl	8	bag	correct	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	n-buyer-kragl	n-buyer-kragl.spec_8_bag	n-buyer-kragl.impl_8_correct_bag
+C3J.n-buyer-kragl.impl_8_correct_bag.f6	C	n-buyer-kragl	8	bag	correct	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	n-buyer-kragl	n-buyer-kragl.spec_8_bag	n-buyer-kragl.impl_8_correct_bag
+C3J.n-buyer-kragl.impl_8_no-subtract_bag.f2	C	n-buyer-kragl	8	bag	no-subtract	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	n-buyer-kragl	n-buyer-kragl.spec_8_bag	n-buyer-kragl.impl_8_no-subtract_bag
+C3J.n-buyer-kragl.impl_8_no-subtract_bag.f3	C	n-buyer-kragl	8	bag	no-subtract	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	n-buyer-kragl	n-buyer-kragl.spec_8_bag	n-buyer-kragl.impl_8_no-subtract_bag

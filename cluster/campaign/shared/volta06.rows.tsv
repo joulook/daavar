@@ -1,0 +1,4 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.a1-commit.impl_control-reverse_8_4_fifo.f1	C	a1-commit	8,4	fifo	control-reverse	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a1-commit	a1-commit.spec_correct_8_4_fifo	a1-commit.impl_control-reverse_8_4_fifo
+C3J.a2-store.impl_control-early-ack-primary_4_4_fifo.f7	C	a2-store	4,4	fifo	control-early-ack-primary	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a2-store	a2-store.spec_pb_4_4_fifo	a2-store.impl_control-early-ack-primary_4_4_fifo
+C3J.ironlock.impl_20_grant-without-token_bag.f6	C	ironlock	20	bag	grant-without-token	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	ironlock	ironlock.spec_20_bag	ironlock.impl_20_grant-without-token_bag

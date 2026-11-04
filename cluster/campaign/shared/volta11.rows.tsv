@@ -1,0 +1,2 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.kv-exactly-once-grove.impl_11_no-request-id_bag.f5	C	kv-exactly-once-grove	11	bag	no-request-id	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	kv-exactly-once-grove	kv-exactly-once-grove.spec_11_bag	kv-exactly-once-grove.impl_11_no-request-id_bag

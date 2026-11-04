@@ -1,0 +1,2 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.calculator-disel.impl_20_memo_bag.f6	C	calculator-disel	20	bag	memo	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	calculator-disel	calculator-disel.spec_20_bag	calculator-disel.impl_20_memo_bag
