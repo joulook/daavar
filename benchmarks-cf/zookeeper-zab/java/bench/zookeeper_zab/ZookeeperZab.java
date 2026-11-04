@@ -2,6 +2,7 @@ package bench.zookeeper_zab;
 
 import org.mpi_sws.jmc.api.mp.Channel;
 import org.mpi_sws.jmc.api.mp.MpProcess;
+import org.mpi_sws.jmc.api.mp.Nondet;
 import org.mpi_sws.jmc.mp.events.CommunicationModel;
 import org.mpi_sws.jmc.mp.events.MpMessage;
 import org.mpi_sws.jmc.mp.events.Tid;
@@ -19,11 +20,13 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
 import java.util.function.LongConsumer;
+import java.util.function.Predicate;
 
 /**
  * ZooKeeper 3.9's atomic broadcast (Zab), transliterated to JMC's message-passing API under the
@@ -38,12 +41,13 @@ import java.util.function.LongConsumer;
  *
  * <p>Threads. A ZooKeeper server is many threads (QuorumPeer, the LearnerCnxAcceptor, one
  * LearnerHandler and one sender thread per learner, and the request-processor threads); here each
- * server is one JMC process. The leader's blocking waits (getEpochToPropose, waitForEpochAck,
- * waitForNewLeaderAck, waitForStartup) are written in continuation-passing style over
- * {@link Threads}: a wait whose condition does not hold parks the rest of its caller on the
- * monitor, and notifyAll() makes the parked continuations ready; ready continuations run, in park
- * order, after the step that woke them and before the process receives its next message. The
- * request processors run inline (PORT, NOTES.md D5).
+ * server is one JMC process that schedules them itself ({@link #nextEvent}): a thread runs as a
+ * step from one blocking point to the next, and the process chooses, with a non-blocking receive
+ * and Nondet, between reading a pending message and running one enabled step. The leader's
+ * blocking waits (getEpochToPropose, waitForEpochAck, waitForNewLeaderAck, waitForStartup) are
+ * written in continuation-passing style over {@link Threads}: a parked continuation becomes an
+ * enabled step when notified, and so does the notifier's own rest after it leaves the monitor.
+ * NOTES.md lists what is still collapsed ("Fix round 1").
  */
 public final class ZookeeperZab implements MpProgram {
 
@@ -216,11 +220,17 @@ public final class ZookeeperZab implements MpProgram {
     public record Start() implements MpMessage {}
 
     /**
-     * org.apache.zookeeper.server.quorum.QuorumPacket(type, zxid, data, authinfo). PORT: sid names
-     * the sending server (the TCP socket a packet arrives on); authinfo is dropped.
+     * org.apache.zookeeper.server.quorum.QuorumPacket(type, zxid, data, authinfo). PORT: sid and
+     * cnx name the TCP connection a packet travels on (the learner's server id and the learner's
+     * connection number); authinfo is dropped.
      */
     @Tag("QuorumPacket")
-    public record QuorumPacket(int sid, int type, long zxid, PacketData data) implements MpMessage {}
+    public record QuorumPacket(int sid, int cnx, int type, long zxid, PacketData data) implements MpMessage {
+        /** The same packet on connection cnx (a leader-side packet is stamped when it is queued). */
+        QuorumPacket on(int cnx) {
+            return new QuorumPacket(sid, cnx, type, zxid, data);
+        }
+    }
 
     /** The byte[] payload of a QuorumPacket, as typed records (PORT: no serialization). */
     public sealed interface PacketData permits NoData, LearnerInfo, IntData, TxnLogEntry, RequestData, Snapshot {}
@@ -277,6 +287,8 @@ public final class ZookeeperZab implements MpProgram {
     static final int LEADERINFO = 17;
     static final int ACKEPOCH = 18;
     static final int INFORMANDACTIVATE = 19;
+    /** PORT: not a ZooKeeper packet: the end of a TCP connection (socket.close() / EOF). */
+    static final int CLOSE = -1;
 
     /** org.apache.zookeeper.ZooDefs.OpCode, the codes used here. */
     static final class OpCode {
@@ -329,17 +341,43 @@ public final class ZookeeperZab implements MpProgram {
         }
     }
 
-    /** PORT: ServiceUtils.requestSystemExit; a server exit is a failure (no server fails). */
-    static AssertionError requestSystemExit(String why) {
-        return new AssertionError("ServiceUtils.requestSystemExit: " + why);
+    /**
+     * PORT: an exception the source throws as a RuntimeException that the follower's catch
+     * (Exception) in followLeader handles (IllegalStateException of addCommittedProposal).
+     */
+    static final class ZabStateException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
+        ZabStateException(String m) {
+            super(m);
+        }
+    }
+
+    /**
+     * PORT: ServiceUtils.requestSystemExit (and the critical-thread exit of a request processor
+     * that throws): the server's JVM exits. Thrown to QuorumPeer.run, which ends the process
+     * normally (the server is gone; nothing else runs on it).
+     */
+    static final class SystemExit extends Error {
+        private static final long serialVersionUID = 1L;
+
+        SystemExit(String m) {
+            super(m, null, false, false);
+        }
+    }
+
+    static SystemExit requestSystemExit(String why) {
+        return new SystemExit("ServiceUtils.requestSystemExit: " + why);
     }
 
     /**
      * PORT: the threads of one server process. A blocked Java thread becomes a continuation parked
-     * on a monitor; notifyAll() makes them ready; they run after the waking step, in park order.
+     * on a monitor; notifyAll() makes it ready; each ready continuation is a separately scheduled
+     * step (see {@link #nextEvent}), as is the notifier's own continuation after it leaves the
+     * monitor ({@link #resume}).
      */
     static final class Threads {
-        final ArrayDeque<Runnable> ready = new ArrayDeque<>();
+        final List<Runnable> ready = new ArrayList<>();
 
         final class Monitor {
             final List<Runnable> waiters = new ArrayList<>();
@@ -363,11 +401,41 @@ public final class ZookeeperZab implements MpProgram {
             }
         }
 
-        void runReady() {
-            while (!ready.isEmpty()) {
-                ready.poll().run();
-            }
+        /** PORT: the calling thread leaves a synchronized block after notifyAll(): its rest is a step. */
+        void resume(Runnable k) {
+            ready.add(k);
         }
+
+        /** The ready continuations, each as a step that removes itself before it runs. */
+        List<Runnable> readySteps() {
+            List<Runnable> steps = new ArrayList<>();
+            for (Runnable r : ready) {
+                steps.add(() -> {
+                    ready.remove(r);
+                    r.run();
+                });
+            }
+            return steps;
+        }
+    }
+
+    /**
+     * PORT: one scheduling decision of a server process. With no enabled internal step, the
+     * process blocks on a receive. Otherwise a non-blocking receive either reads a pending
+     * message (returned) or reads nothing, and then one of the enabled steps, chosen with
+     * Nondet, runs (null is returned). A step is a thread's run from one blocking point (a socket
+     * read, a queue take, a monitor wait, leaving a monitor it notified) to its next one.
+     */
+    static MpMessage nextEvent(CommunicationModel model, Predicate<MpMessage> guard, List<Runnable> enabled) {
+        if (enabled.isEmpty()) {
+            return Channel.recv(model, guard);
+        }
+        Optional<MpMessage> m = Channel.tryRecv(model, guard);
+        if (m.isPresent()) {
+            return m.get();
+        }
+        enabled.get(Nondet.chooseIndex(enabled.size())).run();
+        return null;
     }
 
     // ------------------------------------------------------------------------------------------
@@ -494,7 +562,7 @@ public final class ZookeeperZab implements MpProgram {
         @Override
         QuorumPacket getQuorumPacket() {
             TxnLogEntry data = request.getSerializeData();
-            return new QuorumPacket(sid, PROPOSAL, request.zxid, data);
+            return new QuorumPacket(sid, 0, PROPOSAL, request.zxid, data);
         }
 
         @Override
@@ -648,7 +716,7 @@ public final class ZookeeperZab implements MpProgram {
             } else if (!allowDiscontinuousProposals
                     && request.zxid != maxCommittedLog + 1
                     && ZxidUtils.getEpochFromZxid(request.zxid) <= ZxidUtils.getEpochFromZxid(maxCommittedLog)) {
-                throw new IllegalStateException("Committed proposal cached out of order: 0x"
+                throw new ZabStateException("Committed proposal cached out of order: 0x"
                         + Long.toHexString(request.zxid) + " is not the next proposal of 0x"
                         + Long.toHexString(maxCommittedLog));
             }
@@ -693,13 +761,32 @@ public final class ZookeeperZab implements MpProgram {
             }
             List<Proposal> ps = new ArrayList<>();
             for (TxnLogEntry t : txnLog) {
-                ps.add(new Proposal(new QuorumPacket(sid, PROPOSAL, t.header().zxid(), t)));
+                ps.add(new Proposal(new QuorumPacket(sid, 0, PROPOSAL, t.header().zxid(), t)));
             }
             return ps.iterator();
         }
 
         void setlastProcessedZxid(long zxid) {
             dataTree.lastProcessedZxid = zxid;
+        }
+
+        /**
+         * ZKDatabase.fastForwardDataBase → FileTxnSnapLog.fastForwardFromEdits: apply the logged
+         * txns after lastProcessedZxid to the data tree and the committedLog. PORT: zks is told of
+         * each application (the interface's Committed notification, see ZooKeeperServer.delivered).
+         */
+        long fastForwardDataBase(ZooKeeperServer zks) {
+            for (TxnLogEntry t : new ArrayList<>(txnLog)) {
+                if (t.header().zxid() <= dataTree.lastProcessedZxid) {
+                    continue;
+                }
+                dataTree.processTxn(t.header(), t.txn());
+                Request r = new Request(t.header(), t.txn());
+                addCommittedProposal(r);
+                zks.delivered(r);
+            }
+            initialized = true;
+            return dataTree.lastProcessedZxid;
         }
 
         void processTxn(TxnHeader hdr, int txn) {
@@ -750,6 +837,8 @@ public final class ZookeeperZab implements MpProgram {
 
     enum LearnerType { PARTICIPANT, OBSERVER }
 
+    enum SyncMode { NONE, DIFF, SNAP, TRUNC }
+
     /** org.apache.zookeeper.server.quorum.QuorumPeer: the run() state loop and the epochs. */
     static final class QuorumPeer {
         final long myid;
@@ -766,6 +855,13 @@ public final class ZookeeperZab implements MpProgram {
         ZabState zabState = ZabState.ELECTION;
         Follower follower;
         Leader leader;
+        private SyncMode syncMode = SyncMode.NONE;
+        /** PORT: the number of this learner's next connection to the leader (connection identity). */
+        int nextCnx = 1;
+        /** PORT: the cxid of the client's next request (assigned by the server, see NOTES.md D11). */
+        int nextCxid = 1;
+        /** PORT: the late joiner has received Start. */
+        private boolean started = false;
 
         QuorumPeer(int myid, Tid[] nodes, Tid client, CommunicationModel model, int late) {
             this.myid = myid;
@@ -808,6 +904,14 @@ public final class ZookeeperZab implements MpProgram {
             return true; // PORT: no shutdown
         }
 
+        SyncMode getSyncMode() {
+            return syncMode;
+        }
+
+        void setSyncMode(SyncMode m) {
+            syncMode = m;
+        }
+
         long getLastLoggedZxid() {
             if (!zkDb.isInitialized()) {
                 zkDb.loadDataBase();
@@ -819,37 +923,60 @@ public final class ZookeeperZab implements MpProgram {
             Channel.send(model, dst, m);
         }
 
+        /** A leader-side packet; its connection (0 here) is stamped when it is queued or written. */
         QuorumPacket packet(int type, long zxid, PacketData data) {
-            return new QuorumPacket((int) myid, type, zxid, data);
+            return new QuorumPacket((int) myid, 0, type, zxid, data);
         }
 
+        /** QuorumPeer.run. */
         void run() {
+            try {
+                runLoop();
+            } catch (SystemExit exit) {
+                // PORT: the server's JVM exited; the process ends (main's await returns)
+                LOG.error(exit.getMessage());
+            }
+        }
+
+        private void runLoop() {
             zkDb.loadDataBase(); // QuorumPeer.start → loadDataBase (empty)
-            // PORT: the election (LOOKING) is replaced by the fixed vote for n0 in epoch 1.
-            state = myid == LEADER_ID ? ServerState.LEADING : ServerState.FOLLOWING;
-            switch (state) {
-                case FOLLOWING:
-                    if (late == 1 && myid == N - 1) {
-                        // PORT: the late joiner starts its learner protocol only after Start from n0.
-                        Channel.recv(model, Start.class);
-                    }
-                    try {
+            while (isRunning()) {
+                switch (state) {
+                    case LOOKING:
+                        // PORT: the election is replaced by the interface's fixed vote: n0 leads
+                        // epoch 1. It is also the outcome of every later LOOKING round: no server
+                        // fails, so n0 keeps leading and a follower that left goes back to it.
+                        state = myid == LEADER_ID ? ServerState.LEADING : ServerState.FOLLOWING;
+                        break;
+                    case FOLLOWING:
+                        if (late == 1 && myid == N - 1 && !started) {
+                            // PORT: the late joiner starts its learner protocol only after Start from n0.
+                            Channel.recv(model, Start.class);
+                            started = true;
+                        }
+                        // try { ... } catch (Exception e) { LOG.warn } finally { ... }: followLeader
+                        // catches its own exceptions; PORT: the finally block runs on normal return
+                        // only (it sends, and must not run while JMC unwinds a blocked process)
                         follower = makeFollower();
                         follower.followLeader();
-                    } catch (ZabException ex) {
-                        // PORT: the source logs, shuts the follower down and goes back to LOOKING;
-                        // with a fixed leader and no failures this cannot happen, so it is a failure.
-                        throw new AssertionError("n" + myid + " stopped following: " + ex.getMessage(), ex);
-                    }
-                    throw new AssertionError("followLeader returned"); // PORT: isRunning() is always true
-                case LEADING:
-                    leader = makeLeader();
-                    leader.lead();
-                    leader.serve(); // PORT: the leader process's receive loop; never returns
-                    throw new AssertionError("lead returned");
-                default:
-                    throw new AssertionError("LOOKING");
+                        follower.shutdown();
+                        follower = null;
+                        updateServerState();
+                        break;
+                    case LEADING:
+                        leader = makeLeader();
+                        leader.lead();
+                        leader.serve(); // PORT: the leader process's receive loop; never returns
+                        throw new AssertionError("lead returned");
+                    default:
+                        throw new AssertionError(state.toString());
+                }
             }
+        }
+
+        /** QuorumPeer.updateServerState (reconfigFlag is never set). */
+        private void updateServerState() {
+            state = ServerState.LOOKING;
         }
 
         Follower makeFollower() {
@@ -877,8 +1004,6 @@ public final class ZookeeperZab implements MpProgram {
         boolean running = false;
         CommitProcessor commitProcessor;
         RequestProcessor firstProcessor;
-        /** PORT: the cxid of the client's next request (assigned by the server, see NOTES.md). */
-        private int nextCxid = 1;
 
         ZooKeeperServer(QuorumPeer self, ZKDatabase zkDb) {
             this.self = self;
@@ -929,9 +1054,26 @@ public final class ZookeeperZab implements MpProgram {
             running = true;
         }
 
+        /**
+         * ZooKeeperServer.shutdown(fullyShutDown). PORT: the request processors stop with this
+         * object (its queues are no longer scheduled); fastForwardDataBase applies the logged
+         * txns beyond lastProcessedZxid.
+         */
+        void shutdown(boolean fullyShutDown) {
+            if (running) { // canShutdown()
+                running = false; // shutdownComponents()
+                if (!fullyShutDown) {
+                    zkDb.fastForwardDataBase(this);
+                }
+            }
+            if (fullyShutDown) {
+                zkDb.clear();
+            }
+        }
+
         /** PORT: a client's Propose{value} as a setData request of its session (sessionId = myid + 1). */
         void submitRequest(int value) {
-            Request si = new Request(self.getMyId() + 1, nextCxid++, OpCode.setData, value);
+            Request si = new Request(self.getMyId() + 1, self.nextCxid++, OpCode.setData, value);
             si.hasCnxn = true;
             firstProcessor.processRequest(si);
         }
@@ -983,67 +1125,165 @@ public final class ZookeeperZab implements MpProgram {
     }
 
     /**
-     * org.apache.zookeeper.server.quorum.CommitProcessor. PORT: its thread runs inline; a commit
-     * is processed when it is handed over (commits arrive in zxid order and every request is a
-     * write, so the session queues never hold a commit back).
+     * org.apache.zookeeper.server.quorum.CommitProcessor: queuedRequests, queuedWriteRequests,
+     * the per-session pendingRequests and committedRequests, as in the source. PORT: its thread
+     * is a step ({@link #run}, one iteration of the source's do-while loop), enabled when a
+     * commit is waiting (an iteration with no commit waiting only moves requests into
+     * pendingRequests, which the next commit-handling iteration does first in any case); no
+     * worker pool (writes are processed inline by the source too; there are no reads).
      */
     static final class CommitProcessor implements RequestProcessor {
         final RequestProcessor nextProcessor;
+        final boolean matchSyncs;
+        final ArrayDeque<Request> queuedRequests = new ArrayDeque<>();
         final ArrayDeque<Request> queuedWriteRequests = new ArrayDeque<>();
+        final Map<Long, Deque<Request>> pendingRequests = new HashMap<>();
+        final ArrayDeque<Request> committedRequests = new ArrayDeque<>();
+        /** maxCommitBatchSize: zookeeper.commitProcessor.maxCommitBatchSize, default 1. */
+        final int maxCommitBatchSize = 1;
+        boolean stopped = false;
 
-        CommitProcessor(RequestProcessor nextProcessor) {
+        CommitProcessor(RequestProcessor nextProcessor, boolean matchSyncs) {
             this.nextProcessor = nextProcessor;
+            this.matchSyncs = matchSyncs;
         }
 
         boolean needCommit(Request request) {
-            return request.type == OpCode.setData || request.type == OpCode.sync;
-        }
-
-        @Override
-        public void processRequest(Request request) {
-            if (needCommit(request)) {
-                queuedWriteRequests.add(request);
+            switch (request.type) {
+                case OpCode.setData:
+                    return true;
+                case OpCode.sync:
+                    return matchSyncs;
+                default:
+                    return false;
             }
         }
 
-        void commit(Request request) {
-            if (request == null) {
-                return;
+        /** PORT: the scheduler's enabling condition for {@link #run}. */
+        boolean hasWork() {
+            return !stopped && !committedRequests.isEmpty();
+        }
+
+        /** One iteration of CommitProcessor.run's do-while loop. */
+        void run() {
+            boolean commitIsWaiting = !committedRequests.isEmpty();
+            int requestsToProcess = queuedRequests.size();
+            Request request;
+            while (!stopped && requestsToProcess > 0 && (request = queuedRequests.poll()) != null) {
+                requestsToProcess--;
+                if (needCommit(request) || pendingRequests.containsKey(request.sessionId)) {
+                    Deque<Request> requests = pendingRequests.computeIfAbsent(request.sessionId, sid -> new ArrayDeque<>());
+                    requests.addLast(request);
+                } else {
+                    sendToNextProcessor(request);
+                }
+                if (!pendingRequests.isEmpty() && !committedRequests.isEmpty()) {
+                    commitIsWaiting = true;
+                    break;
+                }
             }
-            // CommitProcessor.run: the committed head, matched against the earliest local write
-            if (!queuedWriteRequests.isEmpty()
-                    && queuedWriteRequests.peek().sessionId == request.sessionId
-                    && queuedWriteRequests.peek().cxid == request.cxid) {
-                Request topPending = queuedWriteRequests.poll();
-                topPending.setHdr(request.getHdr());
-                topPending.setTxn(request.getTxn());
-                topPending.zxid = request.zxid;
-                request = topPending;
+            if (!commitIsWaiting) {
+                commitIsWaiting = !committedRequests.isEmpty();
             }
-            processWrite(request);
+            if (commitIsWaiting && !stopped) {
+                // waitForEmptyPool(): PORT: no worker pool
+                int commitsToProcess = maxCommitBatchSize;
+                Set<Long> queuesToDrain = new HashSet<>();
+                while (commitIsWaiting && !stopped && commitsToProcess > 0) {
+                    request = committedRequests.peek();
+                    if (!queuedWriteRequests.isEmpty()
+                            && queuedWriteRequests.peek().sessionId == request.sessionId
+                            && queuedWriteRequests.peek().cxid == request.cxid) {
+                        Deque<Request> sessionQueue = pendingRequests.get(request.sessionId);
+                        if (sessionQueue == null || sessionQueue.isEmpty() || !needCommit(sessionQueue.peek())) {
+                            break;
+                        } else {
+                            Request topPending = sessionQueue.poll();
+                            topPending.setHdr(request.getHdr());
+                            topPending.setTxn(request.getTxn());
+                            topPending.zxid = request.zxid;
+                            request = topPending;
+                            queuedWriteRequests.poll();
+                            queuesToDrain.add(request.sessionId);
+                        }
+                    }
+                    committedRequests.remove();
+                    commitsToProcess--;
+                    processWrite(request);
+                    commitIsWaiting = !committedRequests.isEmpty();
+                }
+                for (Long sessionId : queuesToDrain) {
+                    Deque<Request> sessionQueue = pendingRequests.get(sessionId);
+                    while (!stopped && !sessionQueue.isEmpty() && !needCommit(sessionQueue.peek())) {
+                        sendToNextProcessor(sessionQueue.poll());
+                    }
+                    if (sessionQueue.isEmpty()) {
+                        pendingRequests.remove(sessionId);
+                    }
+                }
+            }
+        }
+
+        private void sendToNextProcessor(Request request) {
+            nextProcessor.processRequest(request); // PORT: no worker pool
         }
 
         private void processWrite(Request request) {
             nextProcessor.processRequest(request);
         }
+
+        void commit(Request request) {
+            if (stopped || request == null) {
+                return;
+            }
+            committedRequests.add(request);
+        }
+
+        @Override
+        public void processRequest(Request request) {
+            if (stopped) {
+                return;
+            }
+            queuedRequests.add(request);
+            if (needCommit(request)) {
+                queuedWriteRequests.add(request);
+            }
+        }
     }
 
     /**
-     * org.apache.zookeeper.server.SyncRequestProcessor: append to the log, then pass on.
-     * PORT: its thread runs inline and flushes every request at once (no batching, no snapshots).
+     * org.apache.zookeeper.server.SyncRequestProcessor: append to the log, flush, then pass on.
+     * PORT: its thread is a step ({@link #nextStep}): while queuedRequests is non-empty the
+     * thread's next action is to take and append one request; when it is empty and appended
+     * requests wait, the poll times out and the thread flushes (shouldFlush() is false below
+     * maxBatchSize = 1000 with flushDelay 0). No snapshots.
      */
     static final class SyncRequestProcessor implements RequestProcessor {
         final ZooKeeperServer zks;
         final RequestProcessor nextProcessor;
+        final ArrayDeque<Request> queuedRequests = new ArrayDeque<>();
         final ArrayDeque<Request> toFlush = new ArrayDeque<>();
+        final int maxBatchSize = 1000;
 
         SyncRequestProcessor(ZooKeeperServer zks, RequestProcessor nextProcessor) {
             this.zks = zks;
             this.nextProcessor = nextProcessor;
         }
 
-        @Override
-        public void processRequest(Request si) {
+        /** PORT: the thread's next step, or null when it waits in queuedRequests.take(). */
+        Runnable nextStep() {
+            if (!queuedRequests.isEmpty()) {
+                return this::runOne;
+            }
+            if (!toFlush.isEmpty()) {
+                return this::flush; // queuedRequests.poll(pollTime) returned null
+            }
+            return null;
+        }
+
+        /** SyncRequestProcessor.run, one request taken from queuedRequests. */
+        private void runOne() {
+            Request si = queuedRequests.poll();
             if (zks.getZKDatabase().append(si)) {
                 // shouldSnapshot(): PORT: no snapshots
             } else if (toFlush.isEmpty()) {
@@ -1053,7 +1293,13 @@ public final class ZookeeperZab implements MpProgram {
                 return;
             }
             toFlush.add(si);
-            flush(); // PORT: shouldFlush() is always true
+            if (shouldFlush()) {
+                flush();
+            }
+        }
+
+        private boolean shouldFlush() {
+            return (maxBatchSize > 0) && (toFlush.size() >= maxBatchSize);
         }
 
         private void flush() {
@@ -1070,6 +1316,11 @@ public final class ZookeeperZab implements MpProgram {
                 }
             }
         }
+
+        @Override
+        public void processRequest(final Request request) {
+            queuedRequests.add(request);
+        }
     }
 
     // ------------------------------------------------------------------------------------------
@@ -1080,6 +1331,7 @@ public final class ZookeeperZab implements MpProgram {
     static final class LeaderZooKeeperServer extends ZooKeeperServer {
         Leader leader;
         PrepRequestProcessor prepRequestProcessor;
+        ProposalRequestProcessor proposalProcessor;
         private boolean startSent = false;
 
         LeaderZooKeeperServer(QuorumPeer self, ZKDatabase zkDb) {
@@ -1100,8 +1352,8 @@ public final class ZookeeperZab implements MpProgram {
             }
             RequestProcessor finalProcessor = new FinalRequestProcessor(this);
             RequestProcessor toBeAppliedProcessor = new Leader.ToBeAppliedRequestProcessor(finalProcessor, this);
-            commitProcessor = new CommitProcessor(toBeAppliedProcessor);
-            ProposalRequestProcessor proposalProcessor = new ProposalRequestProcessor(this, commitProcessor);
+            commitProcessor = new CommitProcessor(toBeAppliedProcessor, false);
+            proposalProcessor = new ProposalRequestProcessor(this, commitProcessor);
             prepRequestProcessor = new PrepRequestProcessor(this, proposalProcessor);
             firstProcessor = new LeaderRequestProcessor(this, prepRequestProcessor);
         }
@@ -1153,12 +1405,18 @@ public final class ZookeeperZab implements MpProgram {
             submittedRequests.add(request);
         }
 
-        /** The thread's loop; PORT: run inline while the leader's serving gate is open. */
+        /**
+         * PORT: the scheduler's enabling condition for {@link #run}: a request waits and the
+         * leader's serving gate is open (NOTES.md D6).
+         */
+        boolean hasWork() {
+            return zks.getLeader().servingGate() && !submittedRequests.isEmpty();
+        }
+
+        /** One iteration of PrepRequestProcessor.run's loop: take a request and prepare it. */
         void run() {
-            while (zks.getLeader().servingGate() && !submittedRequests.isEmpty()) {
-                Request request = submittedRequests.poll();
-                pRequest(request);
-            }
+            Request request = submittedRequests.poll();
+            pRequest(request);
         }
 
         void pRequest(Request request) {
@@ -1244,8 +1502,10 @@ public final class ZookeeperZab implements MpProgram {
         protected boolean quorumFormed = false;
         private final LinkedHashSet<LearnerHandler> learners = new LinkedHashSet<>();
         private final LinkedHashSet<LearnerHandler> forwardingFollowers = new LinkedHashSet<>();
-        /** PORT: the learner sockets, by the sid of the server at the other end. */
-        private final Map<Integer, LearnerHandler> sockets = new TreeMap<>();
+        /** PORT: the learner sockets, by connection: {@link #socketKey}(sid, cnx). */
+        private final Map<Long, LearnerHandler> sockets = new TreeMap<>();
+        /** PORT: the late = 0 barrier has opened (it stays open). */
+        private boolean allJoined = false;
         final Map<Long, Proposal> outstandingProposals = new HashMap<>();
         private final ArrayDeque<Proposal> toBeApplied = new ArrayDeque<>();
         protected final Proposal newLeaderProposal = new Proposal();
@@ -1352,43 +1612,74 @@ public final class ZookeeperZab implements MpProgram {
             }
         }
 
+        static long socketKey(int sid, int cnx) {
+            return ((long) cnx << 8) | sid;
+        }
+
         /**
-         * The leader process's receive loop. PORT: one loop multiplexes the learner sockets
-         * (LearnerCnxAcceptor and the LearnerHandler reads) and the client connection; a socket is
-         * read only while its handler is reading, so a packet waits in the channel otherwise.
+         * The leader process's scheduler. PORT: one loop multiplexes the leader's threads: the
+         * learner sockets (LearnerCnxAcceptor and the LearnerHandler reads), the client
+         * connection, the woken waits, the PrepRequestProcessor, SyncRequestProcessor and
+         * CommitProcessor threads and the LearnerHandler sender threads (see {@link #nextEvent}).
+         * A socket is read only while its handler is at a read point; otherwise its packets stay
+         * in the channel.
          */
         void serve() {
             while (true) {
-                threads.runReady();
-                zk.prepRequestProcessor.run();
-                final Set<Integer> readable = readableSockets();
-                MpMessage m = Channel.recv(self.model,
+                List<Runnable> enabled = enabledSteps();
+                final Set<Long> known = Set.copyOf(sockets.keySet());
+                final Set<Long> readable = readableSockets();
+                MpMessage m = nextEvent(self.model,
                         msg -> msg instanceof Propose
-                                || (msg instanceof QuorumPacket && readable.contains(((QuorumPacket) msg).sid())));
+                                || (msg instanceof QuorumPacket q
+                                        && (!known.contains(socketKey(q.sid(), q.cnx()))
+                                                || readable.contains(socketKey(q.sid(), q.cnx())))),
+                        enabled);
+                if (m == null) {
+                    continue; // a step ran
+                }
                 if (m instanceof Propose) {
                     zk.submitRequest(((Propose) m).value());
                 } else {
                     QuorumPacket qp = (QuorumPacket) m;
-                    LearnerHandler handler = sockets.get(qp.sid());
+                    long key = socketKey(qp.sid(), qp.cnx());
+                    LearnerHandler handler = sockets.get(key);
                     if (handler == null) {
                         // LearnerCnxAcceptor: a new connection gets a LearnerHandler
-                        handler = new LearnerHandler(qp.sid(), this);
-                        sockets.put(qp.sid(), handler);
+                        handler = new LearnerHandler(qp.sid(), qp.cnx(), this);
+                        sockets.put(key, handler);
                     }
                     handler.receive(qp);
                 }
             }
         }
 
-        private Set<Integer> readableSockets() {
-            Set<Integer> r = new HashSet<>();
-            for (int sid = 0; sid < N; sid++) {
-                if (sid == self.getMyId()) {
-                    continue;
+        /** PORT: the leader's enabled thread steps, in a fixed order (index 0 is Nondet's min). */
+        private List<Runnable> enabledSteps() {
+            List<Runnable> steps = threads.readySteps();
+            if (zk.prepRequestProcessor.hasWork()) {
+                steps.add(zk.prepRequestProcessor::run);
+            }
+            Runnable sync = zk.proposalProcessor.syncProcessor.nextStep();
+            if (sync != null) {
+                steps.add(sync);
+            }
+            if (zk.commitProcessor.hasWork()) {
+                steps.add(zk.commitProcessor::run);
+            }
+            for (LearnerHandler h : sockets.values()) {
+                if (h.senderHasWork()) {
+                    steps.add(h::sendPacket);
                 }
-                LearnerHandler h = sockets.get(sid);
-                if (h == null || h.isReading()) {
-                    r.add(sid);
+            }
+            return steps;
+        }
+
+        private Set<Long> readableSockets() {
+            Set<Long> r = new HashSet<>();
+            for (Map.Entry<Long, LearnerHandler> en : sockets.entrySet()) {
+                if (en.getValue().isReading()) {
+                    r.add(en.getKey());
                 }
             }
             return Set.copyOf(r);
@@ -1396,25 +1687,32 @@ public final class ZookeeperZab implements MpProgram {
 
         /**
          * PORT: when the PrepRequestProcessor may take requests: the leader serves (after
-         * startZkServer), and with late = 0 every follower has been sent UPTODATE (INTERFACE.md: all
-         * three servers join the leader before any proposal is made).
+         * startZkServer), and with late = 0 both followers have joined: each has received UPTODATE
+         * and acknowledged it (INTERFACE.md: all three servers join the leader before any proposal
+         * is made). Once open the barrier stays open.
          */
         boolean servingGate() {
             if (!zk.isRunning() || !leaderServes) {
                 return false;
             }
-            if (self.late == 1) {
+            if (self.late == 1 || allJoined) {
                 return true;
             }
             for (int sid = 0; sid < N; sid++) {
                 if (sid == self.getMyId()) {
                     continue;
                 }
-                LearnerHandler h = sockets.get(sid);
-                if (h == null || !h.upToDateQueued) {
+                boolean joined = false;
+                for (LearnerHandler h : sockets.values()) {
+                    if (h.socketSid == sid && h.upToDateAcked) {
+                        joined = true;
+                    }
+                }
+                if (!joined) {
                     return false;
                 }
             }
+            allJoined = true;
             return true;
         }
 
@@ -1617,7 +1915,7 @@ public final class ZookeeperZab implements MpProgram {
                 threads.waitWhile(connectingFollowersMonitor, () -> waitingForNewEpoch, () -> k.accept(epoch));
                 return;
             }
-            k.accept(epoch);
+            threads.resume(() -> k.accept(epoch)); // PORT: return epoch, as a step after leaving the monitor
         }
 
         /** Leader.waitForEpochAck. */
@@ -1645,7 +1943,7 @@ public final class ZookeeperZab implements MpProgram {
                 threads.waitWhile(electingFollowersMonitor, () -> !electionFinished, k);
                 return;
             }
-            k.run();
+            threads.resume(k); // PORT: return, as a step after leaving the monitor
         }
 
         /** Leader.waitForNewLeaderAck. */
@@ -1669,7 +1967,7 @@ public final class ZookeeperZab implements MpProgram {
                 threads.waitWhile(newLeaderProposalMonitor, () -> !quorumFormed, k);
                 return;
             }
-            k.run();
+            threads.resume(k); // PORT: return, as a step after leaving the monitor
         }
     }
 
@@ -1681,8 +1979,9 @@ public final class ZookeeperZab implements MpProgram {
     static final class LearnerHandler {
         enum Phase { READ_FOLLOWERINFO, BLOCKED, READ_ACKEPOCH, READ_NEWLEADER_ACK, LOOP, CLOSED }
 
-        /** PORT: the socket: the sid of the server at the other end. */
+        /** PORT: the socket: the sid of the server at the other end and its connection number. */
         final int socketSid;
+        final int cnx;
         final Leader learnerMaster;
         protected long sid = 0;
         protected int version = 0x1;
@@ -1693,15 +1992,20 @@ public final class ZookeeperZab implements MpProgram {
         private long leaderLastZxid;
         protected final boolean forceSnapSync = false;
         Phase phase = Phase.READ_FOLLOWERINFO;
-        /** PORT: UPTODATE was queued (the late = 0 serving gate). */
-        boolean upToDateQueued = false;
+        /**
+         * PORT: the learner acknowledged UPTODATE (the first zero-counter ACK read in the packet
+         * loop; the NEWLEADER ACK was read before UPTODATE was sent, so the two cannot be
+         * confused even on bag). Feeds the late = 0 barrier only.
+         */
+        boolean upToDateAcked = false;
 
         // run()'s locals across the cuts
         private long newLeaderZxid;
         private boolean needSnap;
 
-        LearnerHandler(int socketSid, Leader learnerMaster) {
+        LearnerHandler(int socketSid, int cnx, Leader learnerMaster) {
             this.socketSid = socketSid;
+            this.cnx = cnx;
             this.learnerMaster = learnerMaster;
         }
 
@@ -1723,6 +2027,13 @@ public final class ZookeeperZab implements MpProgram {
 
         /** A packet read from this handler's socket. */
         void receive(QuorumPacket qp) {
+            if (qp.type() == CLOSE && phase != Phase.CLOSED) {
+                // PORT: ia.readRecord throws EOFException: catch (IOException) { closeSocket(); }
+                // finally { shutdown(); }
+                LOG.error("Unexpected exception in LearnerHandler: EOF");
+                shutdown();
+                return;
+            }
             switch (phase) {
                 case READ_FOLLOWERINFO:
                     guarded(() -> run(qp));
@@ -1851,7 +2162,6 @@ public final class ZookeeperZab implements MpProgram {
         /** LearnerHandler.run(), after waitForStartup: UPTODATE, then the packet loop. */
         private void run7() {
             enqueue(learnerMaster.self.packet(UPTODATE, -1, new NoData())); // queuedPackets.add(...)
-            upToDateQueued = true; // PORT: the serving gate
             phase = Phase.LOOP;
         }
 
@@ -1861,6 +2171,9 @@ public final class ZookeeperZab implements MpProgram {
                 case ACK:
                     if (this.learnerType == LearnerType.OBSERVER) {
                         LOG.debug("Received ACK from Observer " + this.sid);
+                    }
+                    if ((qp.zxid() & 0xffffffffL) == 0) {
+                        upToDateAcked = true; // PORT: observation for the late = 0 barrier only
                     }
                     learnerMaster.processAck(this.sid, qp.zxid());
                     break;
@@ -1888,30 +2201,36 @@ public final class ZookeeperZab implements MpProgram {
             }
         }
 
-        /** LearnerHandler.startSendingPackets: PORT: the sender thread sends what is queued, in order. */
+        /**
+         * LearnerHandler.startSendingPackets. PORT: the sender thread is the step
+         * {@link #sendPacket}, enabled while queuedPackets is non-empty.
+         */
         protected void startSendingPackets() {
             if (!sendingThreadStarted) {
                 sendingThreadStarted = true;
-                while (!queuedPackets.isEmpty()) {
-                    writeRecord(queuedPackets.poll());
-                }
             } else {
                 LOG.error("Attempting to start sending thread after it already started");
             }
         }
 
-        /** oa.writeRecord(p, "packet") + flush: straight onto the socket. */
-        private void writeRecord(QuorumPacket p) {
-            learnerMaster.self.send(learnerMaster.self.nodes[socketSid], p);
+        boolean senderHasWork() {
+            return sendingThreadStarted && phase != Phase.CLOSED && !queuedPackets.isEmpty();
         }
 
-        /** queuedPackets.add(p): PORT: once the sender thread runs, the packet is sent at once. */
+        /** One iteration of LearnerHandler.sendPackets: take the head of the queue and write it. */
+        void sendPacket() {
+            QuorumPacket p = queuedPackets.poll();
+            writeRecord(p);
+        }
+
+        /** oa.writeRecord(p, "packet") + flush: onto this connection. */
+        private void writeRecord(QuorumPacket p) {
+            learnerMaster.self.send(learnerMaster.self.nodes[socketSid], p.on(cnx));
+        }
+
+        /** queuedPackets.add(p). */
         private void enqueue(QuorumPacket p) {
-            if (sendingThreadStarted) {
-                writeRecord(p);
-            } else {
-                queuedPackets.add(p);
-            }
+            queuedPackets.add(p);
         }
 
         /** LearnerHandler.syncFollower. */
@@ -2027,7 +2346,10 @@ public final class ZookeeperZab implements MpProgram {
         /** LearnerHandler.shutdown. */
         void shutdown() {
             queuedPackets.clear(); // queuedPackets.put(proposalOfDeath)
-            phase = Phase.CLOSED; // closeSocket()
+            if (phase != Phase.CLOSED) {
+                writeRecord(learnerMaster.self.packet(CLOSE, -1, new NoData())); // closeSocket(): PORT: FIN
+            }
+            phase = Phase.CLOSED;
             learnerMaster.removeLearnerHandler(this);
         }
 
@@ -2062,9 +2384,43 @@ public final class ZookeeperZab implements MpProgram {
         @Override
         void setupRequestProcessors() {
             RequestProcessor finalProcessor = new FinalRequestProcessor(this);
-            commitProcessor = new CommitProcessor(finalProcessor);
+            commitProcessor = new CommitProcessor(finalProcessor, true);
             firstProcessor = new FollowerRequestProcessor(this, commitProcessor);
             syncProcessor = new SyncRequestProcessor(this, new SendAckRequestProcessor(getFollower()));
+        }
+
+        /**
+         * PORT: the enabled steps of this server's request-processor threads (FollowerRequest-,
+         * Sync- and CommitProcessor), in a fixed order. An exception in one of them is the
+         * critical-thread exit of the source (ZooKeeperCriticalThread.handleException).
+         */
+        List<Runnable> enabledSteps() {
+            List<Runnable> steps = new ArrayList<>();
+            if (!isRunning()) {
+                return steps;
+            }
+            FollowerRequestProcessor frp = (FollowerRequestProcessor) firstProcessor;
+            if (frp.hasWork()) {
+                steps.add(critical(frp::run));
+            }
+            Runnable sync = syncProcessor.nextStep();
+            if (sync != null) {
+                steps.add(critical(sync));
+            }
+            if (commitProcessor.hasWork()) {
+                steps.add(critical(commitProcessor::run));
+            }
+            return steps;
+        }
+
+        private static Runnable critical(Runnable r) {
+            return () -> {
+                try {
+                    r.run();
+                } catch (ZabStateException | NullPointerException ex) {
+                    throw new SystemExit("critical thread failed: " + ex); // PORT: handleException → exit
+                }
+            };
         }
 
         void logRequest(Request request) {
@@ -2104,9 +2460,21 @@ public final class ZookeeperZab implements MpProgram {
             this.nextProcessor = nextProcessor;
         }
 
-        /** processRequest + one iteration of run(). PORT: the thread runs inline. */
+        final ArrayDeque<Request> queuedRequests = new ArrayDeque<>();
+
         @Override
         public void processRequest(Request request) {
+            queuedRequests.add(request);
+        }
+
+        /** PORT: the scheduler's enabling condition for {@link #run}. */
+        boolean hasWork() {
+            return !queuedRequests.isEmpty();
+        }
+
+        /** One iteration of FollowerRequestProcessor.run: take a request, queue it locally, forward it. */
+        void run() {
+            Request request = queuedRequests.poll();
             maybeSendRequestToNextProcessor(request);
             switch (request.type) {
                 case OpCode.sync:
@@ -2135,7 +2503,7 @@ public final class ZookeeperZab implements MpProgram {
         @Override
         public void processRequest(Request si) {
             if (si.type != OpCode.sync) {
-                QuorumPacket qp = learner.self.packet(ACK, si.getHdr().zxid(), new NoData());
+                QuorumPacket qp = learner.packet(ACK, si.getHdr().zxid(), new NoData());
                 learner.writePacket(qp, false);
             }
         }
@@ -2158,27 +2526,63 @@ public final class ZookeeperZab implements MpProgram {
         /** PORT: the leader's address (findLeader: the fixed leader n0). */
         Tid leaderAddr;
         protected int leaderProtocolVersion = 0x01;
+        /** PORT: this learner's connection to the leader (0 before connectToLeader). */
+        int cnx = 0;
+        /** sockBeingClosed. */
+        private boolean sockBeingClosed = false;
 
         Learner(QuorumPeer self, FollowerZooKeeperServer zk) {
             this.self = self;
             this.zk = zk;
         }
 
+        /** A packet on this learner's connection. */
+        QuorumPacket packet(int type, long zxid, PacketData data) {
+            return new QuorumPacket((int) self.getMyId(), cnx, type, zxid, data);
+        }
+
         /** Learner.writePacket; asyncSending is false by default, so writePacketNow. */
         void writePacket(QuorumPacket pp, boolean flush) {
-            if (pp != null) {
+            if (pp != null && !sockBeingClosed) { // PORT: a write on a closed socket goes nowhere
                 self.send(leaderAddr, pp);
             }
         }
 
-        /** Learner.readPacket: the next packet on the leader socket. */
-        QuorumPacket readPacket() {
-            return Channel.recv(self.model, QuorumPacket.class);
+        /** Learner.readPacket: the next packet on this connection (older connections' data is dead). */
+        QuorumPacket readPacket() throws ZabException {
+            final int c = cnx;
+            QuorumPacket pp = Channel.recv(self.model, QuorumPacket.class, q -> q.cnx() == c);
+            if (pp.type() == CLOSE) {
+                throw new ZabException("EOF: the leader closed the connection"); // PORT: EOFException
+            }
+            return pp;
+        }
+
+        /** Learner.closeSocket. PORT: the close reaches the leader as a CLOSE after the data sent. */
+        void closeSocket() {
+            if (!sockBeingClosed) {
+                if (leaderAddr == null) {
+                    sockBeingClosed = true;
+                    return; // closing before establishing the connection is a noop
+                }
+                self.send(leaderAddr, packet(CLOSE, -1, new NoData()));
+                sockBeingClosed = true;
+            }
+        }
+
+        /** Learner.shutdown. */
+        void shutdown() {
+            // self.setZooKeeperServer(null); self.closeAllConnections(): PORT: the client's
+            // messages are read only while following (Follower.followLeader's loop)
+            closeSocket();
+            if (zk != null) {
+                zk.shutdown(self.getSyncMode().equals(SyncMode.SNAP));
+            }
         }
 
         /** Learner.request: forward a client request to the leader. */
         void request(Request request) {
-            QuorumPacket qp = self.packet(REQUEST, -1,
+            QuorumPacket qp = packet(REQUEST, -1,
                     new RequestData(request.sessionId, request.cxid, request.type, request.requestValue));
             writePacket(qp, true);
         }
@@ -2188,15 +2592,16 @@ public final class ZookeeperZab implements MpProgram {
             return self.nodes[(int) LEADER_ID];
         }
 
-        /** Learner.connectToLeader. PORT: every address is known; no connection set-up. */
+        /** Learner.connectToLeader. PORT: every address is known; a new connection number. */
         protected void connectToLeader(Tid addr) {
             this.leaderAddr = addr;
+            this.cnx = self.nextCnx++;
         }
 
         /** Learner.registerWithLeader. */
         protected long registerWithLeader(int pktType) throws ZabException {
             long lastLoggedZxid = self.getLastLoggedZxid();
-            QuorumPacket qp = self.packet(pktType, ZxidUtils.makeZxid(self.getAcceptedEpoch(), 0),
+            QuorumPacket qp = packet(pktType, ZxidUtils.makeZxid(self.getAcceptedEpoch(), 0),
                     new LearnerInfo(self.getMyId(), 0x10000, self.getQuorumVerifier().getVersion()));
             writePacket(qp, true);
             qp = readPacket();
@@ -2213,7 +2618,7 @@ public final class ZookeeperZab implements MpProgram {
                     throw new ZabException("Leaders epoch, " + newEpoch + " is less than accepted epoch, "
                             + self.getAcceptedEpoch());
                 }
-                QuorumPacket ackNewEpoch = self.packet(ACKEPOCH, lastLoggedZxid, new IntData(epochBytes));
+                QuorumPacket ackNewEpoch = packet(ACKEPOCH, lastLoggedZxid, new IntData(epochBytes));
                 writePacket(ackNewEpoch, true);
                 return ZxidUtils.makeZxid(newEpoch, 0);
             } else {
@@ -2255,6 +2660,7 @@ public final class ZookeeperZab implements MpProgram {
             // synchronized (zk): PORT: one thread per process
             if (qp.type() == DIFF) {
                 LOG.info("Getting a diff from the leader 0x" + Long.toHexString(qp.zxid()));
+                self.setSyncMode(SyncMode.DIFF);
                 if (zk.shouldForceWriteInitialSnapshotAfterLeaderElection()) {
                     snapshotNeeded = true;
                     syncSnapshot = true;
@@ -2262,12 +2668,14 @@ public final class ZookeeperZab implements MpProgram {
                     snapshotNeeded = false;
                 }
             } else if (qp.type() == SNAP) {
+                self.setSyncMode(SyncMode.SNAP);
                 LOG.info("Getting a snapshot from leader 0x" + Long.toHexString(qp.zxid()));
                 zk.getZKDatabase().deserializeSnapshot((Snapshot) qp.data()); // PORT: from SNAP's data
                 // initConfigInZKDatabase, the signature check: PORT: dropped
                 zk.getZKDatabase().setlastProcessedZxid(qp.zxid());
                 syncSnapshot = true;
             } else if (qp.type() == TRUNC) {
+                self.setSyncMode(SyncMode.TRUNC);
                 LOG.warn("Truncating log to get in sync with the leader 0x" + Long.toHexString(qp.zxid()));
                 boolean truncated = zk.getZKDatabase().truncateLog(qp.zxid());
                 if (!truncated) {
@@ -2357,15 +2765,16 @@ public final class ZookeeperZab implements MpProgram {
                             fzk.getZKDatabase().commit();
                         }
                         self.setCurrentEpoch(newEpoch);
-                        // sock.setSoTimeout(...), setSyncMode(NONE): PORT: no time
-                        writePacket(self.packet(ACK, newLeaderZxid, new NoData()), true);
+                        // sock.setSoTimeout(...): PORT: no time
+                        self.setSyncMode(SyncMode.NONE);
+                        writePacket(packet(ACK, newLeaderZxid, new NoData()), true);
                         break;
                     }
                     default:
                         break;
                 }
             }
-            QuorumPacket ack = self.packet(ACK, ZxidUtils.makeZxid(newEpoch, 0), new NoData());
+            QuorumPacket ack = packet(ACK, ZxidUtils.makeZxid(newEpoch, 0), new NoData());
             writePacket(ack, true);
             zk.startup();
             // self.updateElectionVote(newEpoch): PORT: no election
@@ -2391,28 +2800,43 @@ public final class ZookeeperZab implements MpProgram {
         }
 
         /** Follower.followLeader. */
-        void followLeader() throws ZabException {
+        void followLeader() {
             self.setZabState(ZabState.DISCOVERY);
             Tid leaderServer = findLeader();
-            connectToLeader(leaderServer);
-            long newEpochZxid = registerWithLeader(FOLLOWERINFO);
-            long newEpoch = ZxidUtils.getEpochFromZxid(newEpochZxid);
-            if (newEpoch < self.getAcceptedEpoch()) {
-                LOG.error("Proposed leader epoch is less than our accepted epoch");
-                throw new ZabException("Error: Epoch of leader is lower");
-            }
-            self.setZabState(ZabState.SYNCHRONIZATION);
-            syncWithLeader(newEpochZxid);
-            self.setZabState(ZabState.BROADCAST);
-            // ObserverMaster: PORT: no observers
-            while (this.isRunning()) {
-                // PORT: one receive serves the leader socket (readPacket) and the client connection
-                MpMessage m = Channel.recv(self.model);
-                if (m instanceof QuorumPacket) {
-                    processPacket((QuorumPacket) m);
-                } else if (m instanceof Propose) {
-                    fzk.submitRequest(((Propose) m).value());
+            try {
+                connectToLeader(leaderServer);
+                long newEpochZxid = registerWithLeader(FOLLOWERINFO);
+                long newEpoch = ZxidUtils.getEpochFromZxid(newEpochZxid);
+                if (newEpoch < self.getAcceptedEpoch()) {
+                    LOG.error("Proposed leader epoch is less than our accepted epoch");
+                    throw new ZabException("Error: Epoch of leader is lower");
                 }
+                self.setZabState(ZabState.SYNCHRONIZATION);
+                syncWithLeader(newEpochZxid);
+                self.setZabState(ZabState.BROADCAST);
+                // ObserverMaster: PORT: no observers
+                while (this.isRunning()) {
+                    // PORT: the reader thread (readPacket + processPacket), the client connection
+                    // and the request-processor threads, scheduled by nextEvent
+                    final int c = cnx;
+                    MpMessage m = nextEvent(self.model,
+                            msg -> msg instanceof Propose || (msg instanceof QuorumPacket q && q.cnx() == c),
+                            fzk.enabledSteps());
+                    if (m instanceof QuorumPacket) {
+                        QuorumPacket qp = (QuorumPacket) m;
+                        if (qp.type() == CLOSE) {
+                            throw new ZabException("EOF: the leader closed the connection"); // PORT: EOFException
+                        }
+                        processPacket(qp);
+                    } else if (m instanceof Propose) {
+                        fzk.submitRequest(((Propose) m).value());
+                    }
+                }
+            } catch (ZabException | ZabStateException | NullPointerException | ClassCastException e) {
+                // catch (Exception e): PORT: the exceptions this port can raise on the reader thread
+                LOG.warn("Exception when following the leader " + e);
+                closeSocket();
+                // pendingRevalidations.clear(): PORT: no sessions
             }
         }
 

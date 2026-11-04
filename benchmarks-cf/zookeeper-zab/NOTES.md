@@ -140,6 +140,8 @@ lastProcessedZxid = 0 (INTERFACE.md: as if the election had just elected n0).
 
 ## 4. Decisions and simplifications
 
+**Fix round 1 (section 6) revises D1, D2, D5, D6, D12 and D13; where they disagree, section 6 holds.**
+
 Each item names the source lines that left the point open or that were replaced.
 
 **D1. Election.** `QuorumPeer.run`'s LOOKING case (quorum/QuorumPeer.java 1427 ff.) is replaced:
@@ -236,8 +238,9 @@ transaction it applies, in order, including the other client's. The source repli
 request's own session (`if (request.cnxn == null) return;`, FinalRequestProcessor.java 160). The
 port sends from `ZooKeeperServer.processTxn` (`delivered`), so applications during
 `syncWithLeader` (direct `processTxn` before NEWLEADER, the ZOOKEEPER-3911 path) also count; a SNAP
-installs a tree without per-transaction replies. Neither case carries a transaction for n1 in these
-instances (D6), so only n2 (no client) can apply that way.
+installs a tree without per-transaction replies. (Corrected in fix round 1: under bag, and after a
+learner reconnects, n1 can apply transactions on these paths too; the notification is sent there as
+well, which is what the interface requires.)
 
 **D13. Fatal paths.** `ServiceUtils.requestSystemExit` (an unmatched COMMIT in
 `FollowerZooKeeperServer.commit`, a failed TRUNC) and unreachable features (reconfig,
@@ -299,3 +302,187 @@ max_porf_count: 0
 The exhaustive enumeration of e = 1, late = 0 does not finish in 600 s; D2/D5 already remove
 the pipeline-thread interleavings, so most of the remaining branching is the order of packet
 arrivals at n0 from n1, n2 and c0.
+
+## 6. Fix round 1
+
+Input: `plan/case-studies/zookeeper/translit-review/REVIEW.md` (findings 1-8). Line numbers below are
+those of `java/bench/zookeeper_zab/ZookeeperZab.java` after this round. Every changed line carries
+`// PORT:` as before. Section 5 records the round-0 run; the round-1 run is at the end of this
+section.
+
+### 6.1 Scheduler (used by findings 2, 3, 4)
+
+Each server is still one process, but it now schedules its threads instead of running them inline.
+`nextEvent` (429): if no internal step is enabled, a blocking receive; otherwise a non-blocking
+`Channel.tryRecv`, which reads a pending message or ⊥; on ⊥ one enabled step, chosen by
+`Nondet.chooseIndex`, runs. A *step* is one thread's run from a blocking point to its next blocking
+point (a socket read, a queue take, a monitor wait, leaving a monitor it notified). Inside a step
+nothing else runs, so no preemption inside a source `synchronized` block is introduced. Steps:
+
+| server | step (enabling condition) | lines |
+|---|---|---|
+| n0 | each woken wait continuation, and the notifier's rest after it leaves the monitor (`Threads.readySteps`, `resume`) | 405-420, 1918, 1946, 1970 |
+| n0 | PrepRequestProcessor: take one request, pRequest (zxid, CommitProcessor queue, propose, Sync queue) (request waiting and serving gate open) | 1393-1420 |
+| n0, n1, n2 | SyncRequestProcessor: take and append one request (queue non-empty), or flush and pass all appended requests on (queue empty, toFlush non-empty) | 1261-1330 |
+| n0, n1, n2 | CommitProcessor: one iteration of its `run` loop (a commit waiting) | 1135-1258 |
+| n0 | each LearnerHandler sender thread: write the head of queuedPackets (sending started) | 2216-2224 |
+| n1, n2 | FollowerRequestProcessor: take a client request, queue it in the CommitProcessor, send REQUEST (queue non-empty) | 2454-2490 |
+
+The leader's enabled steps are collected in `Leader.enabledSteps` (1658), the follower's in
+`FollowerZooKeeperServer.enabledSteps` (2397). The follower's reader thread (readPacket +
+processPacket) and the client connection are the receive side of the follower's loop
+(`Follower.followLeader`, 2803).
+
+### 6.2 Finding 1 (learner exceptions): fixed
+
+What the source does: `Follower.followLeader` catches every Exception, closes the socket and
+returns (`quorum/Follower.java` 123-131); `QuorumPeer.run` then runs `follower.shutdown()` and
+`updateServerState()` (LOOKING) (`quorum/QuorumPeer.java` 1556-1562); `Learner.shutdown` closes the
+socket and calls `zk.shutdown(syncMode == SNAP)` (`quorum/Learner.java` 910-925), which
+fast-forwards the database over the logged txns, or clears it after an unfinished SNAP sync
+(`ZooKeeperServer.java` 943-970 in the full tree). The next LOOKING round elects n0 again.
+
+Port:
+- `QuorumPeer.run`/`runLoop` (932-976) is now the source's state loop: LOOKING → (PORT) the fixed
+  vote → FOLLOWING → `makeFollower`, `followLeader`, `follower.shutdown()`, `updateServerState()`
+  (978) → LOOKING → … . The election is still replaced by the interface's fixed vote; with no failure
+  and no time, n0 never leaves LEADING (its only way out is the ping loop's lost-quorum check, which
+  is time-driven and dropped), so every later round has the same outcome. PORT: the `finally` block
+  runs on normal return only, since it sends and must not run while JMC unwinds a blocked process.
+- `followLeader` (2803) catches the exceptions the port can raise on the reader thread:
+  `ZabException` (the source's IOException/Exception: a discontinuous proposal in
+  `enforceContinuousProposal`, an EOF, a bad epoch), `NullPointerException` (a sync COMMIT before
+  any PROPOSAL, `Learner.java` 671-672), `ZabStateException` (`addCommittedProposal`'s
+  IllegalStateException) and `ClassCastException`; then `closeSocket()` (2835-2840).
+- Connection identity: `QuorumPacket` carries `cnx` (228); `connectToLeader` takes a new connection
+  number (2598); `readPacket` (2552) and the follower's loop read only the current connection, so a
+  packet of an older connection never enters a new session; the leader keys its LearnerHandlers by
+  (sid, cnx) (`socketKey`, `serve` 1627) and gives a new connection a new handler.
+- The end of a connection is a packet `CLOSE` (291), sent after the connection's data
+  (`Learner.closeSocket` 2562, `LearnerHandler.shutdown` 2347-2356). Read by the leader it is the
+  handler's EOF/IOException path (2030: `shutdown()`, removed from forwardingFollowers); read by a
+  follower it is an EOFException (`ZabException`).
+- `Learner.shutdown` (2574) and `ZooKeeperServer.shutdown(fullyShutDown)` (1062) as in the source:
+  fast-forward (`ZKDatabase.fastForwardDataBase`, 778) or clear. The fast-forward applies logged
+  txns to the data tree and so (interface adapter, D12) notifies the client.
+- Process-exit branches are separated from caught exceptions: `requestSystemExit` and an exception
+  in a request-processor thread (`critical`, 2416; the source's critical-thread exit) throw
+  `SystemExit` (361), which `QuorumPeer.run` (932-939) turns into a normal end of the process
+  (the server's JVM is gone). No AssertionError is used for a reachable source path any more.
+- The reviewer's schedule (e = 2, late = 1, bag, two PROPOSALs reordered before UPTODATE) now
+  closes n1's session, n1 rejoins n0 on a new connection and is resynchronised (DIFF from its last
+  logged zxid), as the source does.
+
+### 6.3 Finding 2 (commit hand-off): fixed
+
+`CommitProcessor` (1135-1258) now has the source's queuedRequests, queuedWriteRequests,
+per-session pendingRequests and committedRequests; `commit` and `processRequest` only queue
+(as `CommitProcessor.java` 590-617); `run` is one iteration of the source's loop (200-380:
+move queued requests to pendingRequests until a commit is waiting, then one commit,
+maxCommitBatchSize = 1, matched against the earliest local write, then drain the session queue).
+It is a separate step. On the leader `tryToCommit` (1728-1755) adds the proposal to toBeApplied,
+sends COMMIT and hands the request to the CommitProcessor; the proposal stays in toBeApplied until
+the CommitProcessor step applies it (`ToBeAppliedRequestProcessor`, 1794), so `startForwarding`
+can again forward PROPOSAL + COMMIT of committed-unapplied proposals to a syncing learner. The
+application and the `Committed` notification happen in that step, not in the committing step.
+Collapsed: an iteration that only moves queued requests into pendingRequests (no commit waiting) is
+not a step of its own: nothing reads pendingRequests except a commit-handling iteration, which does
+the same moves first, so the states such an iteration produces are not observable by any other
+step. No worker pool (there are no reads; the source processes writes on the CommitProcessor
+thread too).
+
+### 6.4 Finding 3 (logging, ACKs, forwarding, sender queues): fixed except where listed
+
+Now separate steps (6.1): the leader's PrepRequestProcessor; the SyncRequestProcessor of every
+server (append, and flush when its queue is empty: batching as in the source with maxBatchSize
+1000 and no flush delay), so the leader's own ACK can come after both followers' ACKs and a
+follower can read and apply a COMMIT before its own ACK leaves; the FollowerRequestProcessor; the
+CommitProcessor; the LearnerHandler sender threads (LEADERINFO and SNAP are still written directly
+by the handler thread, as in the source). Interleavings still lost, and why the clients cannot see
+them:
+
+1. **The client reply leaves when the CommitProcessor step applies the txn.** In the source
+   `FinalRequestProcessor` hands the reply to the client connection, whose NIO thread writes it
+   later. Lost: a server receiving other messages between applying a txn and writing its reply.
+   Clients cannot see it: the replies of one server leave in application order either way, a
+   reply's later write is matched by a later delivery, and a client sends all its Proposes before
+   it reads any reply, so no client action depends on when a reply was written. (A summary that
+   records cross-process causal order could see it: a later write has more causal predecessors.)
+2. **Receiving a client Propose submits it at once** to the server's first processor queue
+   (LeaderRequestProcessor → Prep queue on n0, FollowerRequestProcessor queue on n1). The source's
+   NIO and RequestThrottler threads add more FIFO hand-offs before that queue. Lost: delays between
+   the receive and the queue insertion. Clients cannot see it: the next thread (Prep / FRP) is a
+   separate step already, so every position of the request's processing relative to other events
+   is still reachable; only the time at which an invisible queue was entered differs.
+3. **A step is atomic.** In particular `LearnerHandler.run4` (syncFollower + startForwarding +
+   the SNAP write + NEWLEADER queueing) is one step; in the source the leader can propose between
+   `startForwarding` (the handler is then a forwarding follower) and queueing NEWLEADER, so a
+   PROPOSAL can precede NEWLEADER on that connection. And the snapshot is copied in that step,
+   whereas the source serializes it while other threads commit ("fuzzy" snapshot). Clients cannot
+   see either: with late = 0 no request is processed before the barrier (both followers have
+   acknowledged UPTODATE, finding 5), so no proposal exists during these syncs; with late = 1 they
+   concern n2, which has no client; n2's ACKs for outstanding proposals are unchanged (startForwarding
+   queues every outstanding proposal in either case, and a proposal seen before NEWLEADER is logged
+   and ACKed after UPTODATE as one seen after it); a COMMIT applied directly before NEWLEADER is of a
+   proposal the leader has already committed, so a missing n2 ACK for it has no effect. After a
+   reconnection (finding 1), n1 (which has a client) can be resynchronised by SNAP (e.g. when its
+   last zxid is makeZxid(1,0) and the leader has committed txns: the txn-log refusal of D8) while
+   proposals are in flight. There the source's fuzzy snapshot can contain a txn that is also queued
+   as PROPOSAL + COMMIT; the port's atomic copy cannot. I have not shown this case invisible to c1;
+   it needs a reconnection, which needs bag.
+4. **The follower's Learner writes are synchronous** (asyncSending is false by default, so this is
+   the source's behaviour, not a loss).
+
+### 6.5 Finding 4 (fixed priority of continuations): fixed except where listed
+
+Woken continuations are now enabled steps in any order with every other step and with the
+receives; the notifier's own rest after its notifyAll is a step too (`threads.resume`, 1918, 1946,
+1970), so after the NEWLEADER-ack quorum the leader can start its server and propose before a
+quorum handler queues UPTODATE (the follower then buffers the PROPOSAL in packetsNotLogged, as in
+the source). Still lost: preemption inside a source `synchronized` method and inside a step
+(6.4 item 3); the review asks for exactly this boundary. A thread that returns from a wait without
+waiting (e.g. `getEpochToPropose` after `waitingForNewEpoch` became false) continues in the same
+step: it did not block, and other threads' steps can still precede or follow that step as a whole.
+`waitForStartup`'s 20 ms poll is a notification from `startZkServer` plus a re-check, which reaches
+every state the poll reaches.
+
+### 6.6 Finding 5 (late = 0 barrier): fixed
+
+The barrier now opens when both followers have *received* UPTODATE: a LearnerHandler records
+`upToDateAcked` when its packet loop reads the first zero-counter ACK (2176), which the learner sends
+right after UPTODATE (`Learner.java` 825-826). `servingGate` (1694-1725) opens when the leader serves
+and both followers have such a handler, and then stays open (a later reconnection does not close
+it again). The flag only observes; `processAck` still ignores the ACK as in the source.
+
+Disagreement (minor): the review warns that under bag the NEWLEADER ACK and the UPTODATE ACK, which
+carry the same zxid, could be confused. They cannot: the learner sends the UPTODATE ACK only after
+reading UPTODATE, which the leader sends only after its handler has read the NEWLEADER ACK, so the
+NEWLEADER ACK has been received before the UPTODATE ACK is sent, under every delivery model. The
+NEWLEADER ACK is read at the handler's NEWLEADER read point; the first zero-counter ACK read in the
+packet loop is therefore the UPTODATE ACK.
+
+### 6.7 Findings 6, 7, 8
+
+6: no change (INTERFACE.md now admits DIFF, TRUNC or SNAP as the source selects). 7: no change to
+the code; the reachability claim in D12 is corrected. 8: no further change; the numeric domain is
+int (values 1 + i + 2j fit for e ≤ 2^30 - 1).
+
+### 6.8 Build and run, round 1
+
+Compile (same command): no output, exit status 0. (The run below used the build made before a
+comment-only fix of the class header; the recompile after that fix also printed nothing and exited 0.)
+
+Before the run I ran three 200-iteration `mp-random` smoke runs (impl,1,0,fifo; impl,1,1,fifo;
+impl,2,1,bag; report directory deleted afterwards) to check that the port does not crash: all
+executions ended blocked; 400, 400 and 358 client completions of 400 (bag stalls, as the source
+does over a non-FIFO network).
+
+Run (same command, once; output in `run-round1.log`): stopped on the 600 s timeout, stack not
+exhausted. 16879 executions, all blocked (servers wait at the end), 0 complete; `observed:` 33758
+client completions = 2 x 16879, so in every explored execution both clients saw their value.
+16879 distinct blocked graphs, max_graph_events 130 (round 0: 73; the added events are the
+non-blocking receives and Nondet choices of the scheduler), peak RSS 434888 kB. Last output line:
+
+```
+max_porf_count: 0
+```
