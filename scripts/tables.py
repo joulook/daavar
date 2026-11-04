@@ -360,9 +360,9 @@ for pre, fname, title in CAMP:
         if _k not in _by or _n > _by[_k][0] or (_n == _by[_k][0] and pin_rank(r) >= pin_rank(_by[_k][1])): _by[_k] = (_n, r)
     if len(_by) < len(rs): print(f"{pre}: {len(rs) - len(_by)} lower-thread-count rows of the same instance left out")
     rs = [v[1] for v in _by.values()]
-    _inst = {}
+    _inst = {}   # instance key: the whole spec case with its directory; a check against another program's specification (omnipaxos-derived) is another instance (2026-11-04)
     for r in rs:
-        _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), "" if r["a"].get("family") in ONE_SPEC else (r["a"].get("spec_case", "") or "")   # the whole spec case, with its directory: a check against another program's specification (omnipaxos-derived) is another instance (2026-11-04), r["a"].get("size", ""), r["a"].get("model", ""))
+        _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), "" if r["a"].get("family") in ONE_SPEC else (r["a"].get("spec_case", "") or ""), r["a"].get("size", ""), r["a"].get("model", ""))
         if _k not in _inst or pin_rank(r) >= pin_rank(_inst[_k]): _inst[_k] = r
     if len(_inst) < len(rs): print(f"{pre}: {len(rs) - len(_inst)} older runs of the same instance left out")
     rs = list(_inst.values())
