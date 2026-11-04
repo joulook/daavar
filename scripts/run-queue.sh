@@ -114,9 +114,14 @@ while [ ${#PENDING[@]} -gt 0 ]; do
     # a row another queue on this node is running right now (state=running, live pid): not ours to launch again (filler queues share a rows file, 2026-11-03)
     if [ -f "$EVAL_OUT/$id/status" ] && grep -q '^state=running' "$EVAL_OUT/$id/status" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$EVAL_OUT/$id/status" | head -1)" 2>/dev/null; then NEXT+=("$line"); continue; fi
     dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
-    if [ -n "$dep" ]; then
-      if [ ! -e "$EVAL_OUT/$dep/done" ]; then NEXT+=("$line"); continue; fi
-      if ! grep -q '^reason=ok' "$EVAL_OUT/$dep/status" 2>/dev/null; then skip_row "$id" "$mem" "$to" "$cmd" "$dep"; continue; fi
+    if [ -n "$dep" ]; then   # needok:a,b,... (2026-11-04): every listed row must be done; any not ok skips this row
+      wait_dep=0; bad_dep=""
+      for d1 in ${dep//,/ }; do
+        if [ ! -e "$EVAL_OUT/$d1/done" ]; then wait_dep=1; break; fi
+        if ! grep -q '^reason=ok' "$EVAL_OUT/$d1/status" 2>/dev/null; then bad_dep=$d1; fi
+      done
+      if [ $wait_dep -eq 1 ]; then NEXT+=("$line"); continue; fi
+      if [ -n "$bad_dep" ]; then skip_row "$id" "$mem" "$to" "$cmd" "$bad_dep"; continue; fi
     fi
     w=$(width_of "$id"); first=$(find_free "$w")
     if [ -z "$first" ]; then NEXT+=("$line"); continue; fi
