@@ -4,9 +4,11 @@
 //!
 //! Visible behaviour allowed (see NOTES.md for the paper sentences):
 //!  - each proposal, when it arrives, is either lost or queued (nondet); a queued value is
-//!    decided at any later point, without waiting for other proposals (nondet step choice);
-//!  - D is an interleaving of the decided subsequence of c0's values and of c1's values,
-//!    each client's decided values in the order the client sent them;
+//!    placed in the log and decided at any later point, without waiting for other proposals;
+//!  - the undecided suffix of the log may be replayed behind itself (Figure 3b P3/P4), so a
+//!    value may be decided more than once (at most t × cand replays per execution: the instance's election budget);
+//!  - the first occurrences in D interleave the decided values of c0 and of c1, each
+//!    client's values in the order the client sent them;
 //!  - every client receives all of D, in D's order (so each client sees a prefix of the same
 //!    sequence at every point: the prefix property); nothing outside D is ever committed.
 //! Usage: `count spec --model fifo -- <variant> <e> <t> [<cand>]` (only `<e>` is used).
@@ -54,12 +56,17 @@ fn client(i: usize, e: usize, target: ThreadId) {
 /// The specification's only internal thread; `e` is the instance parameter (how many
 /// proposals each client sends), which `log` needs to know when every Propose has arrived.
 ///
-/// Each proposal is handled when it arrives, without waiting for any other proposal:
-/// it is lost (nondet) or queued behind its own client's earlier queued values; at any
-/// point `log` may decide the head of either client's queue (nondet), appending it to the
-/// one decided sequence and sending `Committed` to every client, or receive the next
-/// proposal. A decision may thus happen right at arrival or after later arrivals.
-fn spec_log(e: usize) {
+/// State: per client, the queue of arrived, kept values not yet placed in the log; `suffix`,
+/// the placed but undecided part of the one log, in log order. Steps, each a nondet() choice:
+/// receive the next proposal (lost or queued, nondet); place the head of a client's queue at
+/// the end of `suffix`; decide the head of `suffix` (send `Committed` to every client);
+/// replay `suffix` behind itself (suffix <- suffix ++ suffix, at most `max_replays` times).
+///
+/// `max_replays` = t × cand: a replay (P3/P4) happens at a leader change, and the instance
+/// allows at most t election timeouts on each of the cand candidate nodes. The protocol itself
+/// has no bound; one is needed for a finite instance, since a blocked client would otherwise
+/// receive an unbounded number of replayed values.
+fn spec_log(e: usize, max_replays: usize) {
     // 1. Setup. Proposals that arrive before it are buffered, attributed to their client
     //    by value (v(i, j) = 1 + i + 2j), in arrival order (FIFO per client).
     let owner = |v: u64| ((v - 1) as usize) % CLIENTS;
@@ -71,6 +78,8 @@ fn spec_log(e: usize) {
         }
     };
     let mut queue: Vec<VecDeque<u64>> = vec![VecDeque::new(); CLIENTS];
+    let mut suffix: VecDeque<u64> = VecDeque::new();
+    let mut replays = 0usize;
     // Freedom 1, the fate of a proposal, chosen when it arrives: lost or queued.
     let arrive = |v: u64, queue: &mut Vec<VecDeque<u64>>| {
         if nondet() {
@@ -81,17 +90,29 @@ fn spec_log(e: usize) {
     for v in early {
         arrive(v, &mut queue);
     }
-    // 2. Freedom 2, when and in which cross-client order queued values are decided.
+    #[derive(Clone, Copy)]
+    enum Step {
+        Receive,
+        Place(usize),
+        Decide,
+        Replay,
+    }
+    // 2. Freedoms 2-4: when values are placed (cross-client order), when the head of the
+    //    undecided suffix is decided, and whether the undecided suffix is replayed.
     loop {
-        // the possible steps: receive (if a proposal is still to arrive), decide c0's
-        // head, decide c1's head; one nondet() per extra option
-        let mut opts: Vec<usize> = Vec::new();
+        let mut opts: Vec<Step> = Vec::new();
         if remaining > 0 {
-            opts.push(CLIENTS); // receive
+            opts.push(Step::Receive);
         }
         for i in 0..CLIENTS {
             if !queue[i].is_empty() {
-                opts.push(i);
+                opts.push(Step::Place(i));
+            }
+        }
+        if !suffix.is_empty() {
+            opts.push(Step::Decide);
+            if replays < max_replays {
+                opts.push(Step::Replay);
             }
         }
         if opts.is_empty() {
@@ -102,18 +123,27 @@ fn spec_log(e: usize) {
             k += 1;
         }
         match opts[k] {
-            i if i < CLIENTS => {
-                let v = queue[i].pop_front().unwrap();
-                for c in &clients {
-                    send_msg(*c, CIn::Committed(v));
-                }
-            }
-            _ => {
+            Step::Receive => {
                 let NIn::Propose(v) = recv_msg_block::<NIn>() else {
                     unreachable!("Setup is sent once")
                 };
                 remaining -= 1;
                 arrive(v, &mut queue);
+            }
+            Step::Place(i) => {
+                let v = queue[i].pop_front().unwrap();
+                suffix.push_back(v);
+            }
+            Step::Decide => {
+                let v = suffix.pop_front().unwrap();
+                for c in &clients {
+                    send_msg(*c, CIn::Committed(v));
+                }
+            }
+            Step::Replay => {
+                let again: Vec<u64> = suffix.iter().copied().collect();
+                suffix.extend(again);
+                replays += 1;
             }
         }
     }
@@ -125,9 +155,9 @@ fn prog<F: Fn() + Send + Sync + 'static>(f: F) -> Prog {
 fn named<F: FnOnce() + Send + 'static>(n: &str, f: F) -> thread::JoinHandle<()> {
     thread::Builder::new().name(n.to_string()).spawn(f).unwrap()
 }
-fn op_spec(e: usize) -> Prog {
+fn op_spec((e, max_replays): (usize, usize)) -> Prog {
     prog(move || {
-        let log = named("log", move || spec_log(e)).thread().id();
+        let log = named("log", move || spec_log(e, max_replays)).thread().id();
         let clients: Vec<ThreadId> = (0..CLIENTS)
             .map(|i| named(&format!("c{i}"), move || client(i, e, log)).thread().id())
             .collect();
@@ -137,9 +167,11 @@ fn op_spec(e: usize) -> Prog {
     })
 }
 
-/// `<variant> <e> <t> [<cand>]`: only `<e>` is used (default 1).
-fn parse(a: &[String]) -> usize {
-    a.get(1).and_then(|s| s.parse().ok()).unwrap_or(1)
+/// `<variant> <e> <t> [<cand>]` -> (e, t × cand). `<variant>` is ignored; defaults: e = 1,
+/// t = 1, cand = 3.
+fn parse(a: &[String]) -> (usize, usize) {
+    let num = |k: usize, d: usize| a.get(k).and_then(|s| s.parse().ok()).unwrap_or(d);
+    (num(1, 1), num(2, 1) * num(3, 3))
 }
 
 fn main() -> std::process::ExitCode {

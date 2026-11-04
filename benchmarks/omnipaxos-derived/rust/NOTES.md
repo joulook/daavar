@@ -11,20 +11,23 @@ Let P_i = v(i,0) ... v(i,e-1) be the proposals of client c_i, in sending order.
    handled right after it as arrivals.
 2. Fate (nondet, one coin per proposal, at its arrival): the proposal is *lost* (never decided) or *queued*
    behind its own client's earlier queued values.
-3. Steps (nondet at every point): receive the next proposal (while any is still to arrive), or decide the
-   head of c0's queue, or decide the head of c1's queue. Deciding appends the value to the one decided
-   sequence D and sends `Committed(v)` to c0 and to c1. A value can thus be decided right at its arrival
-   or after any number of later arrivals; no decision waits for another proposal.
+3. Steps (nondet at every point, revision 4): receive the next proposal (while any is still to arrive);
+   *place* the head of c0's or of c1's queue at the end of the undecided log suffix S; *decide* the head of
+   S, which appends it to the one decided sequence D and sends `Committed(v)` to c0 and to c1; *replay*
+   S (S <- S ++ S), at most t × cand times per execution (revision 5). A value can be decided right at its
+   arrival or after any number of later arrivals; no decision waits for another proposal.
 
 Allowed: any subset of proposals lost (a client whose value is lost blocks forever); any cross-client
-interleaving of decided entries; the two clients reading the same D at different speeds.
-Forbidden: a value committed that was never proposed; a value committed twice; two clients seeing
-different orders (no client ever sees a sequence that is not a prefix of D); a client's later value
-decided before its earlier one; a committed value retracted (no message can undo a commit).
+interleaving of first occurrences; a value decided twice (and its undecided successors with it, in order)
+after a replay; the two clients reading the same D at different speeds.
+Forbidden: a value committed that was never proposed; two clients seeing different orders (no client ever
+sees a sequence that is not a prefix of D); a client's later value first decided before its earlier one;
+a committed value retracted; more than t × cand replays (an instance bound, not a protocol property).
+(Before revision 4, "a value committed twice" was also forbidden.)
 
 ## Paper sentences each part follows
 
-- One sequence D, sent to every client in order (step 4); no duplicates, no retraction:
+- One sequence D, sent to every client in order (step 3); no retraction (duplicates: see revision 4):
   "P2 for Sequence Paxos is thus modified to: If a proposal with sequence v is chosen, then every
   higher-numbered proposal that is chosen has v as a prefix." and "the corresponding invariant should
   guarantee that the log remains consistent and chosen entries must not be removed at a later time."
@@ -97,6 +100,57 @@ follows from the Accept/Accepted round trip and from P1 "insert C into buffer" i
 
 Count at e = 1 changed from `execs=10 blocked=15` to `execs=16 blocked=22`.
 
+## Revision 4 (owner's ruling, 2026-11-04): replay of the undecided suffix, duplicates allowed
+
+The owner ruled that the specification follows Figure 3b's pseudocode literally, choosing faithfulness to
+the pseudocode over the at-most-once behaviour of the library (the spec of revisions 1-3 decided each
+value at most once, and the "Check against SC1-SC3" section above argued from the figure that duplicates
+cannot occur; that argument missed the case below and is superseded).
+
+Pseudocode sentences (Figure 3b): the leader's own promise is "insert own promise: (acceptedRnd, |log|,
+self, decidedIdx, suffix(decidedIdx)) to promises"; on a majority of promises, "P2. maxProm ← the value
+with highest accRnd in promises (and highest logIdx if equal)", "P3. if maxProm.accRnd ≠ acceptedRnd then
+log ← prefix(decidedIdx)", "P4. append maxProm.sfx to the log". When maxProm is the leader's own promise,
+maxProm.accRnd = acceptedRnd, so P3 does not truncate, and P4 appends suffix(decidedIdx) to a log that
+already ends with it: the undecided suffix is replayed behind itself. SC1-SC3 do not forbid this (a
+duplicate is still a proposed command; the prefix properties hold).
+
+The reviewer's execution (e = 2; c0 proposes 1, 3 and c1 proposes 2, 4): values 3, 2, 4 are lost; [1] is
+accepted by a majority in round n but not yet decided; B becomes leader in a higher round with log [1],
+decidedIdx 0, and selects its own promise; P4 makes the log [1, 1]; both entries are decided, and both
+clients receive Committed(1) twice.
+
+In the spec: a single ordered undecided suffix S (placed values, in log order) replaces the per-client
+decision choice of revision 3; per-client queues keep arrived values until they are placed, so the
+cross-client order of first occurrences stays free and decisions still do not wait. A *replay* step
+appends S to itself. Note the client loop counts any `Committed` of its own values, so after a replay a
+client may terminate having seen one of its values twice and another not at all (at e = 2, D = [1, 1]
+lets c0 stop with `seen = 2`).
+
+Decision (the paper is silent on a bound): the protocol allows one replay per suitable leader change, so
+any number. A finite instance needs a bound, because a client whose own values are all lost would
+otherwise receive an unbounded number of replayed values of the other client. I chose `MAX_REPLAYS = 1`
+per execution (revision 5 replaces it by t × cand); it admits the reviewer's execution. Replays of S after a
+replay (S ++ S ++ S ++ S, …) and replays at several leader changes are not in the instance. This is a
+choice of the instance, not of the paper; it should be raised with the owner if a larger bound is wanted.
+
+Count at e = 1 changed from `execs=16 blocked=22` to `execs=160 blocked=54`. Some executions repeat a
+visible behaviour (e.g. placing a value earlier or later without a decision in between).
+
+## Revision 5 (coordinator, 2026-11-04): the replay bound is the instance's election budget
+
+The constant `MAX_REPLAYS = 1` of revision 4 is replaced by an instance parameter: at most t × cand
+replays per execution, read from the arguments `<variant> <e> <t> [<cand>]` (cand defaults to 3, t and e
+to 1). Reason: a replay (P3/P4) happens only at a leader change, and the instance allows at most t election
+timeouts on each of the cand candidate nodes, so t × cand bounds the leader changes and hence the
+replays. The paper is silent on any bound; this is the instance's election budget, not a protocol
+property. `parse` therefore now reads `<t>` and `<cand>` too (INTERFACE.md said only `<e>` is used; changed
+on the coordinator's instruction). Each replay doubles the current undecided suffix; the spec does not
+check that a given replay corresponds to a distinct leader change beyond this count.
+
+At `correct 1 1 1` the bound is 1 × 1 = 1 replay, as in revision 4; the count is unchanged
+(`execs=160 blocked=54`).
+
 ## Decisions where the paper (excerpt) was silent
 
 1. The excerpt has no section 4 prose. The appendix definitions SC1-SC3 were added later (addendum) and
@@ -111,11 +165,11 @@ Count at e = 1 changed from `execs=10 blocked=15` to `execs=16 blocked=22`.
 4. Every node eventually learns every decided entry (reliable links; Prepare goes "to all peers",
    AcceptSync and Decide go to "all promised followers"), so in the spec each client is sent all of D.
    A protocol run in which a client's node never learns a decided entry (client blocked) is not in the spec.
-5. A proposal is decided at most once and never re-proposed: the client sends each value once and no
-   handler re-submits; the spec decides each value at most once.
-6. `log` must know `e` to know when every Propose has arrived; `Setup`'s shape is fixed, so `e` is passed
-   as `spec_log(e)` through a closure (`named("log", move || spec_log(e))`), the only change to the
-   skeleton. `parse` uses the second argument `<e>` (default 1).
+5. (Superseded by revision 4.) A proposal is never re-proposed by a client; it may be decided more than
+   once only through the P3/P4 replay.
+6. `log` must know `e` (and, since revision 5, the replay bound); `Setup`'s shape is fixed, so they are
+   passed as `spec_log(e, max_replays)` through a closure, the only change to the skeleton besides
+   `op_spec` taking the pair `(e, t × cand)` that `parse` returns.
 7. Proposals arriving before `Setup` are buffered and attributed to their client by value
    (v(i,j) = 1 + i + 2j); they cannot be decided before `Setup` because `log` does not yet know the
    clients (`Setup` is internal, so this costs no visible behaviour). After `Setup`, proposals are
@@ -134,5 +188,5 @@ Count at e = 1 changed from `execs=10 blocked=15` to `execs=16 blocked=22`.
     cargo build --release -j 2        # compiled, 0 warnings
     target/release/bench_omnipaxos_derived count spec --model fifo -- correct 1 1 1
 
-Result line: `execs=16 blocked=22` (revision 3; it was `execs=10 blocked=15` when `log` waited for all
-proposals). The last output line printed is `cache_hits: ` (the end of the measurement block).
+Result line: `execs=160 blocked=54` (revision 4; revision 3 gave `execs=16 blocked=22`, revisions 1-2
+`execs=10 blocked=15`). The last output line printed is `cache_hits: ` (the end of the measurement block).
