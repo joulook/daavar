@@ -219,10 +219,10 @@ Compile (inside this directory):
 
     javac -d java/out -cp "$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt)" $(find java -name '*.java' -not -path '*/out/*')
 
-Result: RESULT_COMPILE
+Result: exit status 0, no output (no warnings, no errors).
 
 Run (inside this directory):
 
     java -Xss4m -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_paxos_v1.CassandraPaxosV1:impl,1,v1,fifo' must 0 1 report - 600 </dev/null
 
-Last output line: RESULT_RUN
+Last output line: `max_porf_count: 0`. The run hit the 600 s timeout and did not finish (exit status 0): `ran: 18396 iterations`, `blocked: 18396`, `completed: 0` (every execution ends with the replicas blocked on receive, as intended), `graphs: 0 distinct complete, 18396 distinct blocked; stack not exhausted`, `stop_reason: timeout`, `max_graph_events: 123`. It ran in counting mode (export `-`, so no roles), which is why `max_visible_events` is 0.
