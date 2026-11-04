@@ -57,3 +57,6 @@ s4	.*	chain	.
 s5	.*	reset	.
 s6	.*	width	.
 omnipaxos	.*	omnipaxos	.
+omnipaxos-derived	.*	omnipaxos-derived	.
+omnipaxos-paper	.*	omnipaxos-paper	.
+omnipaxos-spec	.*	omnipaxos-spec	.
