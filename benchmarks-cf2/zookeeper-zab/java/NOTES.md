@@ -277,7 +277,7 @@ Compile:
 javac -d java/out -cp "$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt)" $(find java -name '*.java' -not -path '*/out/*')
 ```
 
-Result: RESULT_COMPILE
+Result: no output, exit status 0 (JDK 17.0.18).
 
 Run:
 
@@ -285,4 +285,17 @@ Run:
 java -Xss4m -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.zookeeper_zab.ZookeeperZab:impl,1,0,fifo' must 0 1 report - 600 </dev/null
 ```
 
-RESULT_RUN
+Result (2026-11-04): stopped on the 600 s timeout, stack not exhausted. 23739 executions, all
+blocked (the servers wait on a receive at the end, as intended), 0 complete; `observed:` reports
+47478 client completions = 2 x 23739, i.e. in every explored execution both clients saw their
+value. 23739 distinct blocked graphs, max_graph_events 73, peak RSS 449896 kB. The `visible`
+measurements are 0 because without an export file the launcher runs `must` in counting mode
+(no roles). Last output line:
+
+```
+max_porf_count: 0
+```
+
+The exhaustive enumeration of e = 1, late = 0 does not finish in 600 s; D2/D5 already remove
+the pipeline-thread interleavings, so most of the remaining branching is the order of packet
+arrivals at n0 from n1, n2 and c0.
