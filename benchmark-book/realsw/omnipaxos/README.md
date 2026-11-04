@@ -9,7 +9,7 @@ client proposes (`≥ 1`); `t` = the election timeouts each candidate node may f
 nodes (`n0 … n(cand−1)`, default 3); variant `correct` or `reorder`. ARGS `<variant> <e> <t> [<cand>]`; the
 specification reads only `e`. **Source:** OmniPaxos (https://github.com/haraldng/omnipaxos, commit `9c772dc`, crates
 `omnipaxos` 0.2.4 and `omnipaxos_storage` 0.2.4, `OmniPaxos<Val, MemoryStorage<Val>>`, unmodified); specification:
-the replicated log of `../raft/README.md`, unchanged.
+the replicated log of `../raft/README.md`, unchanged (the client-visible content of Raft's TLA+ specification `raft.tla` by Diego Ongaro, PhD thesis, Stanford 2014); a second specification derived from the Omni-Paxos paper (Ng, Haridi, Carbone, EuroSys 2023) by a context-free agent is in `benchmarks/omnipaxos-derived/` and is checked against this one in both directions.
 
 Notation: as in `../../synthetic/naive/README.md`; every receive is blocking and takes any message addressed to the
 executing thread. `v(i, j) = 1 + i + 2·j` is client `c_i`'s `j`-th value (`c0`: 1, 3, …; `c1`: 2, 4, …), and
