@@ -1,2 +1,4 @@
 id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
 C3J.ironlock.impl_20_grant-without-token_bag.f7	C	ironlock	20	bag	grant-without-token	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	ironlock	ironlock.spec_20_bag	ironlock.impl_20_grant-without-token_bag
+XCE.swiftpaxos-paper-sol.impl_2_fifo.w16	X	swiftpaxos-paper-sol	2	fifo	impl	must-split	16			c48h	export	jmc	jmc	java	java	offline-batch	full	swiftpaxos-paper-sol		
+XJ1.swiftpaxos-paper-sol.impl_2_fifo.vs-derived.tfspec-jmcimpl	X	swiftpaxos-paper-sol	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	swiftpaxos-paper-sol	swiftpaxos-derived.spec_2_fifo	swiftpaxos-paper-sol.impl_2_fifo

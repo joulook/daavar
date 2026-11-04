@@ -1,2 +1,3 @@
 id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
 C3J.kv-exactly-once-grove.impl_11_no-request-id_bag.f7	C	kv-exactly-once-grove	11	bag	no-request-id	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	kv-exactly-once-grove	kv-exactly-once-grove.spec_11_bag	kv-exactly-once-grove.impl_11_no-request-id_bag
+C3E.pineapple-paper-rust.impl_3_fifo.t16	C	pineapple-paper-rust	3	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	pineapple-paper-rust		
