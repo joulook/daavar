@@ -3,16 +3,17 @@
 //! node-to-node messages. One internal thread `log` holds the decided sequence D.
 //!
 //! Visible behaviour allowed (see NOTES.md for the paper sentences):
-//!  - each proposal is either decided once or never decided (nondet per proposal);
+//!  - each proposal, when it arrives, is either lost or queued (nondet); a queued value is
+//!    decided at any later point, without waiting for other proposals (nondet step choice);
 //!  - D is an interleaving of the decided subsequence of c0's values and of c1's values,
-//!    each client's decided values in the order the client sent them (nondet merge);
+//!    each client's decided values in the order the client sent them;
 //!  - every client receives all of D, in D's order (so each client sees a prefix of the same
 //!    sequence at every point: the prefix property); nothing outside D is ever committed.
 //! Usage: `count spec --model fifo -- <variant> <e> <t> [<cand>]` (only `<e>` is used).
 use std::collections::VecDeque;
 use std::sync::Arc;
 use traceforge::thread::{self, ThreadId};
-use traceforge::{nondet, recv_msg_block, recv_tagged_msg_block, send_msg};
+use traceforge::{nondet, recv_msg_block, send_msg};
 
 const CLIENTS: usize = 2;
 type Prog = traceforge::program::Entry;
@@ -52,51 +53,68 @@ fn client(i: usize, e: usize, target: ThreadId) {
 
 /// The specification's only internal thread; `e` is the instance parameter (how many
 /// proposals each client sends), which `log` needs to know when every Propose has arrived.
+///
+/// Each proposal is handled when it arrives, without waiting for any other proposal:
+/// it is lost (nondet) or queued behind its own client's earlier queued values; at any
+/// point `log` may decide the head of either client's queue (nondet), appending it to the
+/// one decided sequence and sending `Committed` to every client, or receive the next
+/// proposal. A decision may thus happen right at arrival or after later arrivals.
 fn spec_log(e: usize) {
-    // 1. Setup. Proposals that arrive before it are kept, attributed to their client by
-    //    value (v(i, j) = 1 + i + 2j), in arrival order (FIFO per client).
+    // 1. Setup. Proposals that arrive before it are buffered, attributed to their client
+    //    by value (v(i, j) = 1 + i + 2j), in arrival order (FIFO per client).
     let owner = |v: u64| ((v - 1) as usize) % CLIENTS;
-    let mut pending: Vec<Vec<u64>> = vec![Vec::new(); CLIENTS];
+    let mut early: Vec<u64> = Vec::new();
     let clients: Vec<ThreadId> = loop {
         match recv_msg_block::<NIn>() {
             NIn::Setup(s) => break s.nodes,
-            NIn::Propose(v) => pending[owner(v)].push(v),
+            NIn::Propose(v) => early.push(v),
         }
     };
-    // 2. Every Propose is eventually delivered: receive the rest, one client at a time
-    //    (the order of reception is invisible to the clients).
-    for i in 0..CLIENTS {
-        let src = clients[i];
-        while pending[i].len() < e {
-            let NIn::Propose(v) = recv_tagged_msg_block::<_, NIn>(move |t, _| t == src) else {
-                unreachable!("a client sends only Propose")
-            };
-            pending[i].push(v);
+    let mut queue: Vec<VecDeque<u64>> = vec![VecDeque::new(); CLIENTS];
+    // Freedom 1, the fate of a proposal, chosen when it arrives: lost or queued.
+    let arrive = |v: u64, queue: &mut Vec<VecDeque<u64>>| {
+        if nondet() {
+            queue[owner(v)].push_back(v);
         }
+    };
+    let mut remaining = CLIENTS * e - early.len();
+    for v in early {
+        arrive(v, &mut queue);
     }
-    // 3a. Freedom 1, the fate of each proposal: decided (once) or never decided.
-    let mut kept: Vec<VecDeque<u64>> = pending
-        .iter()
-        .map(|vs| vs.iter().copied().filter(|_| nondet()).collect())
-        .collect();
-    // 3b. Freedom 2, the order of the decided entries across clients: any interleaving that
-    //     keeps each client's own order. Each decided entry goes to every client, in order.
+    // 2. Freedom 2, when and in which cross-client order queued values are decided.
     loop {
-        let i = match (kept[0].is_empty(), kept[1].is_empty()) {
-            (true, true) => break,
-            (false, true) => 0,
-            (true, false) => 1,
-            (false, false) => {
-                if nondet() {
-                    0
-                } else {
-                    1
+        // the possible steps: receive (if a proposal is still to arrive), decide c0's
+        // head, decide c1's head; one nondet() per extra option
+        let mut opts: Vec<usize> = Vec::new();
+        if remaining > 0 {
+            opts.push(CLIENTS); // receive
+        }
+        for i in 0..CLIENTS {
+            if !queue[i].is_empty() {
+                opts.push(i);
+            }
+        }
+        if opts.is_empty() {
+            break;
+        }
+        let mut k = 0;
+        while k + 1 < opts.len() && !nondet() {
+            k += 1;
+        }
+        match opts[k] {
+            i if i < CLIENTS => {
+                let v = queue[i].pop_front().unwrap();
+                for c in &clients {
+                    send_msg(*c, CIn::Committed(v));
                 }
             }
-        };
-        let v = kept[i].pop_front().unwrap();
-        for c in &clients {
-            send_msg(*c, CIn::Committed(v));
+            _ => {
+                let NIn::Propose(v) = recv_msg_block::<NIn>() else {
+                    unreachable!("Setup is sent once")
+                };
+                remaining -= 1;
+                arrive(v, &mut queue);
+            }
         }
     }
 }

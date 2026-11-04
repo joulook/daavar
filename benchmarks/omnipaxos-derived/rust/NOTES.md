@@ -7,12 +7,14 @@ Interface: `plan/twins-contextfree/omnipaxos-derived/INTERFACE.md`. Code: `src/m
 
 Let P_i = v(i,0) ... v(i,e-1) be the proposals of client c_i, in sending order.
 
-1. `log` receives `Setup` and all 2e `Propose` messages.
-2. Fate (nondet, one coin per proposal): each v is either *decided* or *never decided*. K_i = the decided
-   subsequence of P_i.
-3. Order (nondet, one coin whenever both K_0 and K_1 still have entries): the decided sequence D is an
-   interleaving of K_0 and K_1 that keeps each K_i in order.
-4. For each entry of D, in order, `log` sends `Committed(v)` to c0 and to c1.
+1. `log` receives `Setup`; proposals that arrive before it are buffered (per client, in arrival order) and
+   handled right after it as arrivals.
+2. Fate (nondet, one coin per proposal, at its arrival): the proposal is *lost* (never decided) or *queued*
+   behind its own client's earlier queued values.
+3. Steps (nondet at every point): receive the next proposal (while any is still to arrive), or decide the
+   head of c0's queue, or decide the head of c1's queue. Deciding appends the value to the one decided
+   sequence D and sends `Committed(v)` to c0 and to c1. A value can thus be decided right at its arrival
+   or after any number of later arrivals; no decision waits for another proposal.
 
 Allowed: any subset of proposals lost (a client whose value is lost blocks forever); any cross-client
 interleaving of decided entries; the two clients reading the same D at different speeds.
@@ -75,6 +77,26 @@ SC1-SC3:
 If the specification were to follow SC1-SC3 alone, it would also have to allow duplicated and reordered
 own values; I did not do that, because the protocol of Figure 3b cannot show them.
 
+## Revision 3 (coordinator check, 2026-11-04): decisions no longer wait for all proposals
+
+Before: `log` received all 2e proposals, then chose fates and an interleaving. Every `Committed` was then
+causally after every proposal of both clients, which the protocol does not require. Missing behaviours
+were, for instance: (a) c1's value decided and delivered to both clients before c0's proposal reached
+`log`, with c0's value lost; (b) c0's value decided and delivered to both before c1's proposal was received.
+Now each proposal is handled at its arrival (lost or queued), and a queued value may be decided at any
+later point (steps 2-3 above). Each client's order and the single sequence D are kept.
+
+Paper basis: Figure 3b, "Proposal C from client", "If state = (LEADER, ACCEPT) then: A1. append C to the
+log, set accepted[self] ← |log|; A2. send ⟨Accept, currentRnd, C⟩ to all promised followers", and
+"⟨Accepted⟩ from follower f": "if logIdx > decidedIdx AND a majority has accepted logIdx then decidedIdx ←
+logIdx, send ⟨Decide, currentRnd, decidedIdx⟩ to all promised followers". The only condition for a
+decision is a majority of acceptances of the entry's index; no other client's proposal is consulted. The
+paper has no sentence saying "a decision does not wait"; this follows from the handlers having no such
+condition. The delay between arrival and decision (so that later arrivals may come before a decision)
+follows from the Accept/Accepted round trip and from P1 "insert C into buffer" in the Prepare phase.
+
+Count at e = 1 changed from `execs=10 blocked=15` to `execs=16 blocked=22`.
+
 ## Decisions where the paper (excerpt) was silent
 
 1. The excerpt has no section 4 prose. The appendix definitions SC1-SC3 were added later (addendum) and
@@ -94,15 +116,17 @@ own values; I did not do that, because the protocol of Figure 3b cannot show the
 6. `log` must know `e` to know when every Propose has arrived; `Setup`'s shape is fixed, so `e` is passed
    as `spec_log(e)` through a closure (`named("log", move || spec_log(e))`), the only change to the
    skeleton. `parse` uses the second argument `<e>` (default 1).
-7. Reception order inside `log` is invisible. Proposals arriving before `Setup` are buffered and
-   attributed to their client by value (v(i,j) = 1 + i + 2j); after `Setup` the rest are received per
-   client by sender filter (`recv_tagged_msg_block`). The position of `Setup` among receptions still
-   multiplies executions (5x at e = 1) without changing visible behaviour.
+7. Proposals arriving before `Setup` are buffered and attributed to their client by value
+   (v(i,j) = 1 + i + 2j); they cannot be decided before `Setup` because `log` does not yet know the
+   clients (`Setup` is internal, so this costs no visible behaviour). After `Setup`, proposals are
+   received with `recv_msg_block` from either client, in any order the model allows. Some executions are
+   duplicates in visible behaviour (e.g. a lost proposal received before or after a decision).
+   A lost proposal is chosen lost at its arrival; the moment it is dropped is invisible.
 8. Per-client order of `Committed` relies on per-channel FIFO (`--model fifo`); under `bag` the delivery
    order of the `log` → client messages is not enforced, the same as for the protocol's node → client
    channel.
-9. Entries decided are fixed after all proposals are received; when the decision happens relative to the
-   clients' sends is invisible (each client sends all its proposals before its first receive).
+9. (Revised in revision 3.) A decision happens at any point after the value's arrival, in particular
+   before other proposals have arrived.
 
 ## Build and run
 
@@ -110,6 +134,5 @@ own values; I did not do that, because the protocol of Figure 3b cannot show the
     cargo build --release -j 2        # compiled, 0 warnings
     target/release/bench_omnipaxos_derived count spec --model fifo -- correct 1 1 1
 
-Result line: `execs=10 blocked=15` (5 decided sequences [], [1], [2], [1,2], [2,1] times 5 Setup positions;
-the 3 sequences with a lost value block). The last output line printed is `cache_hits: ` (the end of
-the measurement block).
+Result line: `execs=16 blocked=22` (revision 3; it was `execs=10 blocked=15` when `log` waited for all
+proposals). The last output line printed is `cache_hits: ` (the end of the measurement block).
