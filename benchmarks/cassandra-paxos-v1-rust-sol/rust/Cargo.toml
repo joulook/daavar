@@ -1,0 +1,9 @@
+[package]
+name = "bench_cassandra_paxos_v1_sol"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]
