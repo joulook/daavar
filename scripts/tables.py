@@ -67,6 +67,33 @@ PIN_ORDER = ["a3a7e1b", "37f37fd", "af56bae", "088b6db", "2a3f8fd", "9ed1131", "
 CURRENT_TF = {"9a0629e", "367cdc6"}   # 367cdc6 (SORTED-JOIN) changes only the join and the summary-file reader/writer: equivalent to 9a0629e for every other row kind (owner, 2026-11-03 19:00)
 def pin_rank(r): c = (r.get("traceforge_commit") or "")[:7]; return (len(re.findall(r"\.(c1h|c48h|j2|m|r2|p)(?=\.|$)", r["run_id"])), PIN_ORDER.index(c) if c in PIN_ORDER else (len(PIN_ORDER) if c == PIN else -1), r.get("started_at") or "", r.get("_perpin", 0))   # a per-pin results file beats the legacy per-node file
 _allrows = list(rows)   # every record, before the one-per-id choice (the old-vs-merge join comparison reads it)
+# Shared-node contention (owner, 2026-11-04 12:40): a run is "contended" when another run of any queue was on the same host and
+# NUMA node for more than 30 s of its wall time (the overlapping queues of 2026-11-01..03 before the one-row-per-node rule);
+# its times cannot be trusted and the tables show it in orange. Intervals from started_at and wall_ms of every record.
+import datetime as _dt
+def _iv(r):
+    try:
+        t0 = _dt.datetime.fromisoformat(r["started_at"]); w = float(r.get("wall_ms") or 0) / 1000.0
+        k = (r.get("node") or ""); n = str(r.get("numa_node") or "").split("+")[0]
+        if not k or n == "": return None
+        return (k, n, t0, t0 + _dt.timedelta(seconds=w))
+    except Exception: return None
+_slots = {}
+for _r in _allrows:
+    _v = _iv(_r)
+    if _v: _slots.setdefault((_v[0], _v[1]), []).append((_v[2], _v[3], _r["run_id"]))
+POLICY_FROM = "2026-11-03T19:29"   # the first consolidation: one dispatcher per machine, one row per NUMA node (owner, 2026-11-03 evening)
+def contended(r):
+    if (r.get("started_at") or "") < POLICY_FROM and not re.search(r"\.p(?=\.|$)", r.get("run_id", "")): return 99   # before the rule: queues overlapped on every machine (load 150-400), the whole machine was shared; the times are not trusted even when the NUMA node happened to be free (the paxos export of 2026-11-02 05:38 on brain05: 1 629 s on a free NUMA node, 32 s on a quiet machine)
+    v = _iv(r)
+    if not v: return 0
+    n = 0
+    for (s0, e0, i0) in _slots.get((v[0], v[1]), []):
+        if i0 == r["run_id"]: continue
+        ov = (min(v[3], e0) - max(v[2], s0)).total_seconds()
+        if ov > 30: n += 1
+    return n
+for _r in _allrows: _r["_contended"] = contended(_r)
 byid = {}
 for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
@@ -295,6 +322,7 @@ for pre, fname, title in CAMP:
                     return ((x.get("jmc_commit") or "")[:8] == "3c43b2d2") if "jmc-run.sh" in (x.get("command") or "") else ((x.get("traceforge_commit") or "")[:7] in CURRENT_TF)
                 r["_exports_current"] = "yes" if (_cur(sp) and _cur(im)) else "no"
                 r["_join_mode"] = "merge" if "--merge" in (r.get("command") or "") else "in-memory"
+                r["_contended"] = max(r.get("_contended") or 0, (sp or {}).get("_contended") or 0, (im or {}).get("_contended") or 0)
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = max(parts[0], parts[1]) + parts[2]   # the two exports are independent jobs run side by side: T = the longer export plus the join (owner, 2026-11-03 19:40)
                 r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
@@ -412,7 +440,7 @@ for pre, fname, title in CAMP:
     # the same compiled table as CSV (for the owner's Google Sheet)
     with open(OUT + f"/{fname}.csv", "w", newline="") as fh:
         offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"); par_tf = pre in ("C1", "C2")
-        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked", "timeout s", "mem GB", "exports current", "join mode"]
+        EXTRA = ["sweeps", "spec graphs explored", "cache tests", "cache hits", "spec export s", "impl export s", "join s", "spec export bytes", "impl export bytes", "spec export peak MB", "impl export peak MB", "join peak MB", "spec blocked", "impl blocked", "timeout s", "mem GB", "exports current", "join mode", "contended"]
         cols = ["program", "variant", "spec", "size", "model", "spec graphs", "impl graphs", "wall s", "peak MB", "verdict", "expected"] + ([] if (offline or par_tf) else ["first miss iteration"]) + ([] if offline else ["first miss ms"]) + ["uncovered", "directory", "run id", "node", "pin", "started"] + EXTRA
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
@@ -429,7 +457,7 @@ for pre, fname, title in CAMP:
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
             row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", a.get("family", ""), r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
-            row += [r.get("sweeps") or "", r.get("spec_graphs_explored") or "", r.get("cache_tests") or "", r.get("cache_hits") or "", fnum(r.get("spec_export_ms"), 1000, "{:.1f}") if r.get("spec_export_ms") else "", fnum(r.get("impl_export_ms"), 1000, "{:.1f}") if r.get("impl_export_ms") else "", fnum(r.get("join_ms"), 1000, "{:.1f}") if r.get("join_ms") else "", r.get("spec_export_bytes") or "", r.get("impl_export_bytes") or "", fnum(r.get("spec_export_peak_kb"), 1024) if r.get("spec_export_peak_kb") else "", fnum(r.get("impl_export_peak_kb"), 1024) if r.get("impl_export_peak_kb") else "", fnum(r.get("join_peak_kb"), 1024) if r.get("join_peak_kb") else "", r.get("spec_blocked") or "", r.get("impl_blocked") or "", r.get("timeout_s") or "", r.get("mem_limit_gb") or "", r.get("_exports_current") or "", r.get("_join_mode") or ""]
+            row += [r.get("sweeps") or "", r.get("spec_graphs_explored") or "", r.get("cache_tests") or "", r.get("cache_hits") or "", fnum(r.get("spec_export_ms"), 1000, "{:.1f}") if r.get("spec_export_ms") else "", fnum(r.get("impl_export_ms"), 1000, "{:.1f}") if r.get("impl_export_ms") else "", fnum(r.get("join_ms"), 1000, "{:.1f}") if r.get("join_ms") else "", r.get("spec_export_bytes") or "", r.get("impl_export_bytes") or "", fnum(r.get("spec_export_peak_kb"), 1024) if r.get("spec_export_peak_kb") else "", fnum(r.get("impl_export_peak_kb"), 1024) if r.get("impl_export_peak_kb") else "", fnum(r.get("join_peak_kb"), 1024) if r.get("join_peak_kb") else "", r.get("spec_blocked") or "", r.get("impl_blocked") or "", r.get("timeout_s") or "", r.get("mem_limit_gb") or "", r.get("_exports_current") or "", r.get("_join_mode") or "", ("yes" if (r.get("_contended") or 0) > 0 else "no")]
             w.writerow(row)
     ok = sum(1 for r in rs if r["stop_reason"] == "ok"); ruled = [r for r in rs if r.get("expected") and r["expected"] != "undefined"]
     mism = sum(1 for r in ruled if r["stop_reason"] == "ok" and (r.get("verdict") or "").lower() not in ("", r["expected"]))
