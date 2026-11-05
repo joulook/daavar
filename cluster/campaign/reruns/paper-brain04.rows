@@ -176,6 +176,12 @@ C3J.zab-broadcast-remix.impl_4_fifo_correct.p.m 250 172800 needok:C3E.zab-broadc
 C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 4 issue1-propose-to-ackld
 C1.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 4 issue1-propose-to-ackld
 C3J.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.p.m 250 172800 needok:C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.zab-broadcast-remix.spec_4_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p/export.jsonl
+# chan 6 (owner 2026-11-05 09:50)
+C3E.reliable-channel-aneris.spec_6_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export spec --out export.jsonl --threads 16 --model bag -- 6
+C3E.reliable-channel-aneris.impl_6_bag_correct.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris export impl --out export.jsonl --threads 16 --model bag -- 6 correct
+C3J.reliable-channel-aneris.impl_6_bag_correct.p.m 250 172800 needok:C3E.reliable-channel-aneris.impl_6_bag_correct.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.reliable-channel-aneris.spec_6_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.reliable-channel-aneris.impl_6_bag_correct.t16.p/export.jsonl
+C3J.reliable-channel-aneris.impl_6_bag_no-seqno.p.m 250 172800 needok:C3E.reliable-channel-aneris.impl_6_bag_no-seqno.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.reliable-channel-aneris.spec_6_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.reliable-channel-aneris.impl_6_bag_no-seqno.t16.p/export.jsonl
+C1.reliable-channel-aneris.impl_6_bag_correct.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris conf --engine stateful --threads 16 --model bag -- 6 correct
 C2.s3-commit.impl_12_12_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_12_12_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 12 12
 C2.s3-commit.impl_16_16_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_16_16_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 16
 C2.s3-commit.impl_20_20_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_20_20_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 20
@@ -208,3 +214,5 @@ C3E.s2-share.impl_share_24_24_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.s
 C1.s2-share.impl_share_24_24_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
 C3J.s2-share.impl_share_24_24_fifo.p.m 250 172800 needok:C3E.s2-share.impl_share_24_24_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s2-share.spec_share_24_24_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_24_24_fifo.t16.p/export.jsonl
 C2.s2-share.impl_share_24_24_fifo.t16.p 250 172800 needok:C1.s2-share.impl_share_24_24_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
+
+C2.reliable-channel-aneris.impl_6_bag_correct.t16.p 250 172800 needok:C1.reliable-channel-aneris.impl_6_bag_correct.t16.p "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris conf --engine stateless --threads 16 --model bag -- 6 correct
