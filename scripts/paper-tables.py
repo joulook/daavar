@@ -18,6 +18,7 @@ in F; --drop F leaves them out (the dropped-benchmarks document is --keep, the p
 written by tables.py. usage: paper-tables.py <tables-dir> [--full] [--keep F | --drop F] [--out D]"""
 import sys, csv, re, collections, os
 T = sys.argv[1]; FULL = "--full" in sys.argv; SUF = "-full" if FULL else ""
+FALLBACK = "--fallback" in sys.argv   # owner 2026-11-05 09:40: an empty curated cell shows the newest older-pin run (orange/red), a never-run size shows the next smaller size that ran (dagger)
 OUT = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else T
 def listed(flag):
     if flag not in sys.argv: return None
@@ -143,7 +144,7 @@ for fam, tset, modes in FAMS:
                 keys.sort(key=lambda k: (k[0], k[1], k[2], k[3], sz(k[4])))
                 keys = select(keys, inst, "stateful")
                 if not keys: continue
-                body = []; csvrows = []; prev = None
+                body = []; csvrows = []; prev = None; EXTRA = []; DONE_EXTRA = set()
                 for k in keys:
                     m = inst[k]; c2, c1, c3 = m.get("stateless"), m.get("stateful"), m.get("offline")
                     dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
@@ -187,7 +188,7 @@ for fam, tset, modes in FAMS:
             keys.sort(key=lambda k: (k[0], k[1], k[2], k[3], sz(k[4])))
             keys = select(keys, flat, None)
             if not keys: continue
-            body = []; csvrows = []; prev = None
+            body = []; csvrows = []; prev = None; EXTRA = []; DONE_EXTRA = set()
             for k in keys:
                 sides = inst[k]; first = True
                 for sd in ("Java", "Rust"):
@@ -232,7 +233,7 @@ if not FULL and KEEP is None:
         TF_ = os.path.join(DV, "cluster", "campaign", "inputs", tname + ".tsv")
         if not os.path.exists(TF_): continue
         want = [l.rstrip("\n").split("\t") for l in open(TF_) if l.strip() and not l.startswith("#")]
-        body = []; csvrows = []; prev = None
+        body = []; csvrows = []; prev = None; EXTRA = []; DONE_EXTRA = set()
         def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
@@ -247,6 +248,30 @@ if not FULL and KEEP is None:
             k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
             m = inst.get(k, {}) if k else {}
             c2, c1, c3 = fresh(m.get("stateless")), fresh(m.get("stateful")), fresh(m.get("offline"), True)
+            fb_size = ""; fb_note = []
+            if FALLBACK:
+                def older(r):   # level A: the newest run of this cell at any pin, any tier; never blue; orange when it shared its node or ran before the current pins, else red
+                    if r is None or not (decided(r) or limit(r)): return None
+                    r = dict(r); cur = (r.get("pin") or "")[:7] in ("9a0629e", "367cdc6")
+                    r["colour"] = "orange" if (r.get("contended") == "yes" or not cur) else "red"; return r
+                if c2 is None and older(m.get("stateless")) is not None: c2 = older(m.get("stateless")); fb_note.append("stateless:older")
+                if c1 is None and older(m.get("stateful")) is not None: c1 = older(m.get("stateful")); fb_note.append("stateful:older")
+                if c3 is None and older(m.get("offline")) is not None: c3 = older(m.get("offline")); fb_note.append("offline:older")
+                def best(r, offline=False):   # a cell with its true colour: the current-pin rule first (blue/red/orange), else the older-run rule
+                    f = fresh(r, offline); return f if f is not None else older(r)
+                listed_sizes = {w[3] for w in want if w[0] == prog and w[1] == var and w[2] == model}
+                never_ran = (c1 is None and c2 is None and c3 is None)   # owner 2026-11-05 09:50: such a row stays empty; the largest size that ran follows it
+                short = [r for r in (c1, c2, c3) if r is not None and limit(r) and num(r.get("timeout s")) != 172800]
+                if short or never_ran:   # the largest size of the instance at which every engine completed (no limit), below this row's size
+                    shown = sz(size)
+                    import math
+                    cands = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(shown) and all(a <= b for a, b in zip(sz(kk[4]), shown)) and sz(kk[4]) != shown
+                             and any(decided(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))
+                             and not any(limit(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))]   # completed = every engine that ran at that size finished, none hit a limit
+                    if cands:
+                        import math
+                        kk = max(cands, key=lambda x: (math.prod(sz(x[4])), sz(x[4])))   # every parameter at most the listed one, the largest by their product; when it is already a row of the table, the information is there: no extra row
+                        if kk[4] not in listed_sizes: EXTRA.append((prog, var, model, kk[4], "completed"))
             dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
             gi_r = next((r for r in dec if r["impl graphs"]), None); gi = gi_r["impl graphs"] if gi_r else ""
             gs_r = next((r for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
@@ -259,17 +284,27 @@ if not FULL and KEEP is None:
             sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
             cells = [sweeps, expl, cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
             owners = [c2, c2, c2, c2, c1, c1, c3, c3]
-            body.append(f"{nm} & {size} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
-            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", c2), ("stateful", c1), ("offline", c3)) if r is not None)])
+            size_cell = size
+            body.append(f"{nm} & {size_cell} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
+            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", c2), ("stateful", c1), ("offline", c3)) if r is not None)] + ([";".join(fb_note)] if FALLBACK else []))
+            for ex in [e for e in EXTRA if e[:3] == (prog, var, model) and e not in DONE_EXTRA]:
+                DONE_EXTRA.add(ex); kx = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == ex[3]), None); mx = inst.get(kx, {}) if kx else {}
+                x2, x1, x3 = best(mx.get("stateless")), best(mx.get("stateful")), best(mx.get("offline"), True)
+                dx = [r for r in (x1, x3, x2) if decided(r)]; gxi = next((r["impl graphs"] for r in dx if r["impl graphs"]), ""); gxs = next((r["spec graphs"] for r in (x1, x3) if decided(r) and r["spec graphs"]), "")
+                gxx = next((r.get("uncovered", "") for r in dx if r.get("uncovered") not in ("", None)), "") if viol else None
+                xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else "", cell_T(x2), cell_M(x2), cell_T(x1), cell_M(x1), cell_T(x3), cell_M_off(x3)]
+                xown = [x2, x2, x2, x2, x1, x1, x3, x3]
+                body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
+                csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", x2), ("stateful", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
         cap = (what + " $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)"
                + (", $G_x$ = the implementation graphs that no specification graph covers" if viol else "") + "; sweeps = the specification sweeps the stateless engine ran (one per implementation graph its witness cache did not cover; a sweep that finds a covering graph admits it to the cache, a sweep that exhausts the specification is a report), $G_{\\mathit{spec}}^{\\mathit{expl}}$ = the specification graphs explored over all sweeps, repeats counted. "
                "T = wall time in seconds, M = peak resident memory in MiB; an offline row runs its two exports as independent jobs side by side: T = the longer export plus the join, M = the largest of the three. "
-               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; \\textcolor{blue}{blue} cells were measured on one machine reserved for these tables, at most four rows at a time, one per NUMA node; \\textcolor{red}{red} cells are earlier runs that had their NUMA node to themselves, kept until their reserved-machine rerun lands; \\textcolor{orange}{orange} cells are earlier runs that shared their NUMA node with another run (the overlapping queues before 2026-11-03 evening), whose times are not to be trusted; a blank cell is a run not yet finished.")
+               "Every run at 16 threads with a time limit of 48 hours and a memory limit of 250 GB; \\faClock\\ = the time limit was reached, oom = the memory limit was reached; \\textcolor{blue}{blue} cells were measured on one machine reserved for these tables, at most four rows at a time, one per NUMA node; \\textcolor{red}{red} cells are earlier runs that had their NUMA node to themselves, kept until their reserved-machine rerun lands; \\textcolor{orange}{orange} cells are earlier runs that shared their NUMA node with another run (the overlapping queues before 2026-11-03 evening), whose times are not to be trusted; a blank cell is a run not yet finished." + (" Cells from runs at an earlier engine version are orange; a row whose size is marked $^\\ddagger$ (in orange) is the largest size of the instance above it at which every engine that ran completed (none hit a limit), added where the listed size has not been run or shows a time-out below the 48-hour tier." if FALLBACK else ""))
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{stateless}} & \\multicolumn{{2}}{{c}}{{stateful}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", body,
-             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "colour (blue = reserved machine, red = earlier campaign)"], csvrows)
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "colour (blue = reserved machine, red = earlier campaign)"] + (["fallback"] if FALLBACK else []), csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
