@@ -113,8 +113,14 @@ while [ ${#PENDING[@]} -gt 0 ]; do
   for line in "${PENDING[@]}"; do
     read -r id mem to cmd <<< "$line"
     [ -e "$EVAL_OUT/$id/done" ] && continue
-    # a row another queue on this node is running right now (state=running, live pid): not ours to launch again (filler queues share a rows file, 2026-11-03)
-    if [ -f "$EVAL_OUT/$id/status" ] && grep -q '^state=running' "$EVAL_OUT/$id/status" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$EVAL_OUT/$id/status" | head -1)" 2>/dev/null; then NEXT+=("$line"); continue; fi
+    # a row whose status says state=running is never launched again, live pid or not (filler queues share a rows file, 2026-11-03;
+    # 2026-11-05 23:45 brain05: C1.omnipaxos 2,1,1 was relaunched one second after its 48 h timeout killed the binary, while its wrapper
+    # was still writing the done block, and the duplicate's header overwrote the record). A dead pid is an orphan: finalize-orphans.sh
+    # finishes its bookkeeping (done marker); a row is requeued only by a human after that.
+    if [ -f "$EVAL_OUT/$id/status" ] && grep -q '^state=running' "$EVAL_OUT/$id/status" 2>/dev/null; then
+      if ! kill -0 "$(sed -n 's/^pid=//p' "$EVAL_OUT/$id/status" | head -1)" 2>/dev/null; then echo "row $id left alone: state=running with a dead pid (orphan; finalize-orphans.sh) $(date -Is)" >> "$QDIR/queue.log"; fi
+      NEXT+=("$line"); continue
+    fi
     dep=""; case "$cmd" in needok:*) dep=${cmd%% *}; dep=${dep#needok:}; cmd=${cmd#* };; esac
     if [ -n "$dep" ]; then   # needok:a,b,... (2026-11-04): every listed row must be done; any not ok skips this row
       wait_dep=0; bad_dep=""
