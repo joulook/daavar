@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{commit} (s3-commit)}
 \author{}
-\date{generated 2026-11-05 from brain-data 0799b9755 2026-11-05 11:44:26 +0100}
+\date{generated 2026-11-05 from brain-data cfc25f174 2026-11-05 13:40:01 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -27,7 +27,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \color{blue} 8,8 & 256 & 256 & conforms & 1.1 & 6 & 1 h, 250 GB & 256 & 32896 & brain03, 2026-11-02 \\
 \color{blue} 12,0 & 4096 & 4096 & conforms & 604.2 & 160 & 1 h, 250 GB & 4096 & 8390656 & brain03, 2026-11-02 \\
 \color{blue} 12,6 & 4096 & 4096 & conforms & 678.9 & 82 & 1 h, 250 GB & 4096 & 8390656 & brain03, 2026-11-02 \\
-\color{blue} 12,12 & 4096 & 4096 & conforms & 499.6 & 49 & 1 h, 250 GB & 4096 & 8390656 & brain03, 2026-11-02 \\
+\color{blue} 12,12 & 4096 & 4096 & conforms & 532.0 & 49 & 48 h, 250 GB & 4096 & 8390656 & brain04, 2026-11-03 \\
 \color{blue} 16,0 & 65536 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-02 \\
 \bottomrule
 \end{longtable}

@@ -86,8 +86,10 @@ fn object(total: usize, strategy: Strategy) {
             Req::ReadAB(i) => {
                 remaining[i] -= 1;
                 let (a, b) = if strategy == Strategy::Blocking {
-                    // the pair (a, b) comes from one replica's cells after reconciliation: b <= a always, and b < a only when
-                    // a projected read has spread a (a <= the newest value a ReadA returned) without b
+                    // the reconciled pair (a, b): b <= a always (every write sets both cells, a projection repairs only a),
+                    // and b < a only when a projected read has spread a (a <= the newest value a ReadA returned) without b.
+                    // Exact for reads that do not overlap other operations; a read in flight across a later write and a
+                    // later projected read can reconcile a pair this rule forbids (Astra, round 2: q = 5 under bag).
                     let ca: Vec<u64> = applied.iter().copied().filter(|&t| t >= floor_a).collect();
                     let a = ca[choose(ca.len())];
                     let cb: Vec<u64> = applied.iter().copied().filter(|&t| t >= floor_b && (t == a || (t < a && a <= projected))).collect();
