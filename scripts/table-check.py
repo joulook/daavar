@@ -54,8 +54,8 @@ for fn, rs in rows_by_file.items():
         if r.get("verdict") not in ("conforms", "violation"): continue
         w = num(r.get("wall s")); sp, ip = num(r.get("spec phase s")), num(r.get("impl phase s"))
         if w is None: continue
-        if sp and ip and sp > 0 and ip > 0 and abs(sp + ip - w) > 1.0:
-            problems.append(f"{fn}: {r.get('run id')}: spec phase {sp} + impl phase {ip} != wall {w}")
+        if sp and ip and sp > 0 and ip > 0 and sp + ip > w + 1.0:   # the rest of the run (start, index, report, shutdown) is shown as T_oth; the phases can never exceed the wall
+            problems.append(f"{fn}: {r.get('run id')}: spec phase {sp} + impl phase {ip} > wall {w}")
         if ("offline" in fn or fn == "campaign-offline-tf.csv"):
             se, ie, js = num(r.get("spec export s")), num(r.get("impl export s")), num(r.get("join s"))
             if None not in (se, ie, js) and abs(max(se, ie) + js - w) > 0.11:
