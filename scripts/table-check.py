@@ -13,7 +13,7 @@ import csv, os, re, sys, glob, json
 R, ST = sys.argv[1], sys.argv[2]; os.makedirs(ST, exist_ok=True)
 TB = os.path.join(R, "PLDI/tex/tables"); BD = os.path.join(R, "brain-data/results"); DV = os.path.join(R, "daavar")
 problems = []; notes = []
-def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m|\.r2|\.r3|\.p)+$", "", i)
+def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m|\.r\d+|\.p)+$", "", i)
 def num(x):
     try: return float(x)
     except Exception: return None
@@ -47,6 +47,19 @@ for fn, rs in rows_by_file.items():
     for r in rs:
         if (r.get("verdict") or "") == "" and (r.get("wall s") or "").strip() and (r.get("stop reason") or "") in ("", "ok", "no-verdict"):
             problems.append(f"{fn}: {r.get('run id')} has a wall time but no verdict, no limit and no recorded failure")
+# (2c) the time components add up (owner 2026-11-06, raft (1,1,1) in REALSW Table 2): in-process rows spec phase + impl phase = wall (within 1 s);
+# cross-language online rows carry the spec export (their phases are not measured in that mode); offline rows wall = max(exports) + join (within 0.1 s)
+for fn, rs in rows_by_file.items():
+    for r in rs:
+        if r.get("verdict") not in ("conforms", "violation"): continue
+        w = num(r.get("wall s")); sp, ip = num(r.get("spec phase s")), num(r.get("impl phase s"))
+        if w is None: continue
+        if sp and ip and sp > 0 and ip > 0 and abs(sp + ip - w) > 1.0:
+            problems.append(f"{fn}: {r.get('run id')}: spec phase {sp} + impl phase {ip} != wall {w}")
+        if ("offline" in fn or fn == "campaign-offline-tf.csv"):
+            se, ie, js = num(r.get("spec export s")), num(r.get("impl export s")), num(r.get("join s"))
+            if None not in (se, ie, js) and abs(max(se, ie) + js - w) > 0.11:
+                problems.append(f"{fn}: {r.get('run id')}: max(exports) {max(se, ie)} + join {js} != wall {w}")
 # (2b) time components (owner 2026-11-06: a table must never show 0 for a phase that was not measured): a decided row with a wall time
 # must carry its components: in-process rows the spec and impl phases (or the spec export of a cross-language online row), offline rows both exports and the join
 for fn, rs in rows_by_file.items():
