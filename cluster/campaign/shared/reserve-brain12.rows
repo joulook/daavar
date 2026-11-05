@@ -1,2 +1,10 @@
-# reserve rows for brain12 (coordinator, 2026-11-05 04:30): the scaling-next ladders extended by up to six sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes run elsewhere dropped; the watch starts this file when the node's shard is exhausted.
-
+# reserve rows for brain12 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
+C1.replicated-log-aneris.impl_16_correct_fifo.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateful --threads 16 --model fifo -- 16 correct
+C1.replicated-log-esop20.impl_11_early-reply_bag.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 11 early-reply
+C1.replicated-log-esop20.impl_12_correct_bag.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 12 correct
+C1.replicated-log-esop20.impl_12_early-reply_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 12 early-reply
+C1.replicated-log-esop20.impl_13_correct_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 13 correct
+C1.two-pc-trillium.impl_15_correct_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 15 correct
+C1.two-pc-trillium.impl_15_ignore-abort-vote_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 15 ignore-abort-vote
+C1.zab-broadcast-remix.impl_10_correct_fifo.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 10 correct
+C1.zab-broadcast-remix.impl_10_issue1-propose-to-ackld_fifo.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 10 issue1-propose-to-ackld

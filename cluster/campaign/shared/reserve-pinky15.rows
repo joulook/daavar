@@ -1,2 +1,3 @@
-# reserve rows for pinky15 (coordinator, 2026-11-05 04:30): the scaling-next ladders extended by up to six sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes run elsewhere dropped; the watch starts this file when the node's shard is exhausted.
-C1.replicated-log-esop20.impl_8_correct_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 8 correct
+# reserve rows for pinky15 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
+C1.election.impl_ring_conf_12_fifo.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 12
+C1.two-pc-disel.impl_10_skip-ack-loop_bag.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateful --threads 16 --model bag -- 10 skip-ack-loop

@@ -1,2 +1,3 @@
-# reserve rows for volta05 (coordinator, 2026-11-05 04:30): the scaling-next ladders extended by up to six sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes run elsewhere dropped; the watch starts this file when the node's shard is exhausted.
-
+# reserve rows for volta05 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
+C1.replicated-log-aneris.impl_11_asyn-fault_fifo.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateful --threads 16 --model fifo -- 11 asyn-fault
+C1.two-pc-lbinria.impl_9_counting-bug_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 9 counting-bug

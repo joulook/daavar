@@ -1,2 +1,8 @@
-# reserve rows for brain15 (coordinator, 2026-11-05 04:30): the scaling-next ladders extended by up to six sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes run elsewhere dropped; the watch starts this file when the node's shard is exhausted.
-
+# reserve rows for brain15 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
+C1.replicated-log-esop20.impl_11_correct_bag.x4.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-esop20 conf --engine stateful --threads 16 --model bag -- 11 correct
+C1.ring-election-igloo.impl_12_no-compare_bag.x5.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 12 no-compare
+C1.ring-election-igloo.impl_13_correct_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 13 correct
+C1.ring-election-igloo.impl_13_no-compare_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 13 no-compare
+C1.ring-election-igloo.impl_8_correct_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 8 correct
+C1.zab-broadcast-remix.impl_9_correct_fifo.x4.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 9 correct
+C1.zab-broadcast-remix.impl_9_issue1-propose-to-ackld_fifo.x4.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 9 issue1-propose-to-ackld
