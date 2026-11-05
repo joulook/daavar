@@ -121,6 +121,21 @@ for t in ("table2", "table3"):
             if nxt and nxt.get("fallback", "").startswith("completed-size-for:"): notes.append(f"{key}: blank row, dagger row below (allowed by the owner's rule)")
             elif smaller: notes.append(f"{key}: blank row, a smaller size of the pair with results above it (allowed by the owner's rule)")
             else: problems.append(f"{key}: blank in every column, no dagger row below and no smaller size with results above")
+# (5b) real-software violations (owner, 2026-11-05): a violation by code from an existing repository is a bug candidate; a new
+# one (not in the state file known-realsw-violations.txt) is an event for the coordinator, who runs plan/BUG-CANDIDATE-PROTOCOL.md
+RS = [re.compile(l.strip()) for l in open(os.path.join(DV, "cluster/campaign/inputs/real-software.tsv")) if l.strip() and not l.startswith("#")]
+kp = os.path.join(ST, "known-realsw-violations.txt"); known = {l.strip() for l in open(kp)} if os.path.exists(kp) else set()
+newv = []
+for fn, rs in rows_by_file.items():
+    for r in rs:
+        d = r.get("directory", "")
+        if r.get("verdict") == "violation" and any(x.match(d) for x in RS) and r.get("variant", "") in ("correct", "impl", "", d) and ".spec_" not in r.get("run id", ""):   # the implementation side is the code, not a specification program compared with another
+            key = f"{d}|{r.get('variant','')}|{r.get('spec','')}|{r.get('model','')}|{r.get('size','')}|{fn}"
+            if key not in known: newv.append((key, r.get("run id", ""), r.get("uncovered", "")))
+if newv:
+    problems.append("REAL-SOFTWARE VIOLATION (bug candidate, investigate before naming it): " + "; ".join(f"{k} run {rid} uncovered {u}" for k, rid, u in newv[:10]))
+    with open(kp, "a") as fh:
+        for k, _, _ in newv: fh.write(k + "\n")
 # (6) diff against the previous run
 prev = os.path.join(ST, "prev"); os.makedirs(prev, exist_ok=True); diff = []; changed_files = 0
 def keyrow(fn, r):

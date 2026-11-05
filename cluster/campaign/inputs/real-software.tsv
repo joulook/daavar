@@ -1,0 +1,10 @@
+# Benchmark directories whose implementation side is code from an existing repository (a library core or a transliteration
+# of it), as opposed to agent-written ports or hand-written programs. A violation of a specification by one of these is a
+# bug candidate (owner's rule, 2026-11-05): the pipeline raises an event and the investigation protocol
+# (plan/BUG-CANDIDATE-PROTOCOL.md) runs before anything is called a bug. One regular expression per line, on the directory.
+^raft-rs$
+^omnipaxos$
+^zookeeper-zab$
+^cassandra-paxos-v1$
+^cassandra-rr$
+^chainpaxos-code$
