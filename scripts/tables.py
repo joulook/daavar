@@ -96,17 +96,25 @@ def contended(r):
     return n
 for _r in _allrows: _r["_contended"] = contended(_r)
 byid = {}
+DROPPED = []   # (run_id, reason) for every record left out of every table: written to dropped-records.tsv for table-check.py
+def drop(rs, pred, reason):
+    for r in rs:
+        if pred(r): DROPPED.append((r["run_id"], reason))
+    return [r for r in rs if not pred(r)]
 # a record that is no measurement (could not start: exit-127/exit-2, marked invalid) never wins the id over a real run of the same
 # id: the brain04 exit-127 joins of 2026-11-03 hid brain01's conforming commit 12,12 / 16,16 / 20,20 joins (owner, 2026-11-05)
 def _infra(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")
 for r in rows:  # an id run on several pins: a real measurement, then the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
-    if cur is None or (not _infra(r), pin_rank(r)) >= (not _infra(cur), pin_rank(cur)): byid[base_id(r["run_id"])] = r
+    if cur is None or (not _infra(r), pin_rank(r)) >= (not _infra(cur), pin_rank(cur)):
+        if cur is not None: DROPPED.append((cur["run_id"], "same id, superseded by " + r["run_id"]))
+        byid[base_id(r["run_id"])] = r
+    else: DROPPED.append((r["run_id"], "same id, superseded by " + cur["run_id"]))
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
 for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
 # naive(k): the spawn-encoding argument e is dropped (owner, 2026-11-03); the rows recorded as k,1 are the program's rows, size k; k,2 rows are left out
-_n = len(rows); rows = [r for r in rows if not (r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,2", r["a"].get("size", "")))]
+_n = len(rows); rows = drop(rows, lambda r: r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,2", r["a"].get("size", "")), "naive: second spawn encoding")
 for r in rows:
     if r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,1", r["a"].get("size", "")): r["a"] = dict(r["a"], size=r["a"]["size"].split(",")[0])
 print(f"naive: {_n - len(rows)} rows of the second spawn encoding left out; sizes shown as k")
@@ -343,10 +351,12 @@ for pre, fname, title in CAMP:
     if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
         # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)
         Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris", "calculator-disel"}
-        _n = len(rs); rs = [r for r in rs if r["a"].get("family") not in Q27]; print(f"{pre}: {_n - len(rs)} in-process rows of the Q27 programs left out")
+        _n = len(rs); rs = drop(rs, lambda r: r["a"].get("family") in Q27, "Q27: in-process check undecidable"); print(f"{pre}: {_n - len(rs)} in-process rows of the Q27 programs left out")
     if pre in ("C1", "C2"):  # earlier phase-1 ids carried a spec suffix for one and the same command: keep one row per command
         bycmd = {}
         for r in sorted(rs, key=pin_rank): bycmd[r.get("command")] = r   # the newest pin, then the latest start, wins
+        for r in rs:
+            if bycmd[r.get("command")] is not r: DROPPED.append((r["run_id"], "same command, superseded by " + bycmd[r.get("command")]["run_id"]))
         rs = list(bycmd.values())
     # a self-paired variant joined against another variant's specification export (the generator's size-keyed pairing before 2026-11-02) is no measurement
     def _selfbad(r):
@@ -355,42 +365,42 @@ for pre, fname, title in CAMP:
         return re.sub(r"\.[xgf]\d*$", "", sc).split(".spec_")[-1].split("_")[0] != a.get("variant")
     _x = [r for r in rs if _selfbad(r)]
     if _x: print(f"{pre}: {len(_x)} rows of a self-paired variant joined against another specification left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
-    rs = [r for r in rs if not _selfbad(r)]
+    rs = drop(rs, _selfbad, "self-paired variant joined against another specification")
     # a skipped row (its smaller size did not finish) carries no measurement: the tables stop at the size that timed out (owner, 2026-11-02)
-    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("skipped")]
+    rs = drop(rs, lambda r: (r.get("stop_reason") or "").startswith("skipped"), "skipped (a smaller size did not finish)")
     # a refused join (an input file missing or rejected at run time) is no measurement: left out, counted; it is rerun
     _x = [r for r in rs if r.get("stop_reason") == "refused"]
     if _x: print(f"{pre}: {len(_x)} refused rows left out")
-    rs = [r for r in rs if r.get("stop_reason") != "refused"]
+    rs = drop(rs, lambda r: r.get("stop_reason") == "refused", "refused join")
     # the invalid and error-exit rows go first: a later run of an instance that failed (exit-127 on brain04, 2026-11-03) must not
     # hide the earlier good run of the same instance in the one-per-instance choice below (owner, 2026-11-05)
     def _invalid(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith("invalid") or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")   # 2026-11-05: a row that could not start (missing binary, usage error) is an infrastructure failure, never a measurement: an older record of the case must win
     _x = [r for r in rs if _invalid(r)]
     if _x: print(f"{pre}: {len(_x)} rows left out: cut by the thread threshold, killed from outside, or marked invalid by the runner (inputs/invalid-rows.tsv)")
-    rs = [r for r in rs if not _invalid(r)]
+    rs = drop(rs, _invalid, "invalid (thread threshold, killed, or inputs/invalid-rows.tsv)")
     # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
     _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
     if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))
-    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
+    rs = drop(rs, lambda r: (r.get("stop_reason") or "").startswith("exit-"), "tool error exit")
     # one row per instance: the same case run at several thread counts (ids .t1, .t16, ...) keeps the highest
     _by = {}
     for r in rs:
         _m = re.match(r"^(.*)\.t(\d+)$", r["run_id"]); _k = _m.group(1) if _m else r["run_id"]; _n = int(_m.group(2)) if _m else 0
         if _k not in _by or _n > _by[_k][0] or (_n == _by[_k][0] and pin_rank(r) >= pin_rank(_by[_k][1])): _by[_k] = (_n, r)
     if len(_by) < len(rs): print(f"{pre}: {len(rs) - len(_by)} lower-thread-count rows of the same instance left out")
-    rs = [v[1] for v in _by.values()]
+    _keep = {id(v[1]) for v in _by.values()}; rs = drop(rs, lambda r: id(r) not in _keep, "lower thread count of the same instance")
     _inst = {}   # instance key: the whole spec case with its directory; a check against another program's specification (omnipaxos-derived) is another instance (2026-11-04)
     for r in rs:
         _k = (paper_name(r["a"])[0], r["a"].get("variant", ""), "" if r["a"].get("family") in ONE_SPEC else (r["a"].get("spec_case", "") or ""), r["a"].get("size", ""), r["a"].get("model", ""))
         if _k not in _inst or pin_rank(r) >= pin_rank(_inst[_k]): _inst[_k] = r
     if len(_inst) < len(rs): print(f"{pre}: {len(rs) - len(_inst)} older runs of the same instance left out")
-    rs = list(_inst.values())
+    _keep = {id(v) for v in _inst.values()}; rs = drop(rs, lambda r: id(r) not in _keep, "older run of the same instance")
     _u = [r for r in rs if r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")]]
     if _u: print(f"{pre}: {len(_u)} rows of a program whose cross-language twins disagree on a value rendering left out (inputs/undecidable.tsv): " + ", ".join(sorted({r['a'].get('family','') for r in _u})))
-    rs = [r for r in rs if not (r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")])]
+    rs = drop(rs, lambda r: r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")], "undecidable rendering (inputs/undecidable.tsv)")
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
-    rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
+    rs = drop(rs, lambda r: (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY, "exploratory variant")
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2")
@@ -404,7 +414,7 @@ for pre, fname, title in CAMP:
         verdict = {"reports": "violation", "violation (sampled)": "violation"}.get(verdict, verdict)   # JMC says "reports"; conf-join adds "(sampled)"
         r["verdict"] = verdict if st == "ok" else r.get("verdict")
         exp = expected_for(a); r["expected"] = exp if exp else ("undefined" if a.get("family") in {e["dir"] for e in EXP} else None)
-        if exp is None and a.get("family") in {e["dir"] for e in EXP}: continue   # size outside the defined rules (e.g. pair-swap at k=1): not a verdict row
+        if exp is None and a.get("family") in {e["dir"] for e in EXP}: DROPPED.append((r["run_id"], "size outside the defined expectation rules")); continue   # not a verdict row
         r["_mark"] = "$^{\\ast}$" if (exp and st == "ok" and verdict in ("conforms", "violation") and verdict != exp) else ""
         r["_v"] = verdict
         side = verdict if verdict in ("conforms", "violation") else (exp or "conforms")
@@ -502,3 +512,7 @@ try:
     wb2.save(OUT + "/campaign-tables.xlsx"); print("xlsx written")
 except ImportError:
     print("openpyxl missing: no xlsx")
+with open(OUT + "/dropped-records.tsv", "w") as _f:   # every record left out of every table, with the reason (read by table-check.py)
+    _f.write("run_id\treason\n")
+    for _i, _why in DROPPED: _f.write(f"{_i}\t{_why}\n")
+print(f"dropped-records.tsv: {len(DROPPED)} records left out")

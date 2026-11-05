@@ -46,8 +46,14 @@ fams = {i.split(".")[0] for i in csv_ids}
 EXPL = set()
 for f in glob.glob(os.path.join(DV, "cluster/campaign/inputs/exploratory-variants.tsv")) + glob.glob(os.path.join(DV, "benchmarks/exploratory-variants.tsv")):
     EXPL |= {tuple(l.split("\t")[:2]) for l in open(f) if l.strip() and not l.startswith("#")}
+DROPPED = {}
+dp = os.path.join(TB, "dropped-records.tsv")
+if os.path.exists(dp):
+    for l in list(open(dp))[1:]:
+        i, _, why = l.rstrip("\n").partition("\t"); DROPPED[i] = why
 missing = {}; byfam = {}
 for rid, rs in records.items():
+    if rid in DROPPED: continue   # left out by the generator for a stated reason (the ledger)
     b = base_id(rid)
     if b in INVALID or rid in INVALID or b in csv_ids: continue
     fam = rid.split(".")[0]
@@ -58,7 +64,7 @@ for rid, rs in records.items():
             missing.setdefault(r.get("benchmark", "?"), []).append(rid); byfam[fam] = byfam.get(fam, 0) + 1; break
 if missing:
     n = sum(len(v) for v in missing.values())
-    notes.append(f"coverage (by id, until tables.py reports its dropped records): {n} decided record(s) of tabled benchmarks appear in no campaign CSV (by family: {byfam}): " + "; ".join(f"{k}: {', '.join(v[:3])}{' …' if len(v) > 3 else ''}" for k, v in list(missing.items())[:12]))
+    (problems if DROPPED else notes).append(f"coverage: {n} decided record(s) of tabled benchmarks appear in no campaign CSV (by family: {byfam}): " + "; ".join(f"{k}: {', '.join(v[:3])}{' …' if len(v) > 3 else ''}" for k, v in list(missing.items())[:12]))
 # (3) sanity of campaign rows
 VERD = {"conforms", "violation", "t/o", "oom", ""}
 ginst = {}
