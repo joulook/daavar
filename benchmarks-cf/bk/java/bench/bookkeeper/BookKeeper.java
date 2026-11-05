@@ -230,29 +230,8 @@ public final class BookKeeper implements MpProgram {
     record ReadResponse(StatusCode status, long ledgerId, long entryId, EntryBody body, boolean hasMaxLAC,
                         long maxLAC, Tid addr, int ctx) implements MpMessage {}
 
-    /** PendingAddOp.create(lh, ...): the handle hands the op its entry; the handle already sent its write requests. */
-    record PendingAddOpCreate(Tid lh, long entryId, boolean isRecoveryAdd, int pendingWriteRequests)
-            implements MpMessage {}
-
-    /**
-     * PORT: the op's process -> LedgerHandle: a bookie's AddResponse for entry {@code opEntryId}, queued on the
-     * handle's ordered executor (PerChannelBookieClient queues writeComplete on lh.executor), one message per response.
-     */
-    record WriteCompleteCallback(long opEntryId, StatusCode status, long ledgerId, long entryId, Tid addr, int ctx)
-            implements MpMessage {}
-
-    /** new ReadLastConfirmedOp(...) by LedgerRecoveryOp.initiate, then initiateWithFencing(). */
-    record ReadLastConfirmedOpCreate(Tid lh) implements MpMessage {}
-
-    /** ReadLastConfirmedOp -> LedgerRecoveryOp: cb.readLastConfirmedDataComplete(rc, RecoveryData). */
-    record ReadLastConfirmedDataComplete(int rc, long lastAddConfirmed, long length) implements MpMessage {}
-
-    /** new RecoveryReadOp(lh, clientCtx, startEntryId, endEntryId, this, null).initiate(). */
-    record RecoveryReadOpCreate(Tid lh, long startEntryId, long endEntryId) implements MpMessage {}
-
-    /** RecoveryReadOp -> LedgerRecoveryOp: listener.onEntryComplete(rc, lh, entry, ctx); no entry when !hasEntry. */
-    record OnEntryComplete(int rc, boolean hasEntry, long entryId, long length, long data) implements MpMessage {}
-
+    // PORT (fix round 3): no op processes: the bookies answer the handle that sent the request (one channel per
+    // bookie and handle, as PerChannelBookieClient's connection), and every op's state lives on its handle.
 
     /** LedgerManager.readLedgerMetadata(ledgerId). */
     record ReadLedgerMetadata(Tid replyTo, long ledgerId, int loopId) implements MpMessage {}
@@ -280,26 +259,11 @@ public final class BookKeeper implements MpProgram {
         Tid b3 = MpProcess.spawnDaemon(new BookieRequestProcessor(m)).tid();
         Tid zk = MpProcess.spawnDaemon(new LedgerManager(m)).tid();
         final List<Tid> ensemble = List.of(b1, b2, b3);
-        // PORT: one logical task per PendingAddOp / read op the handles can create, keyed by entry id (no pool reuse).
-        // w1h adds entries 0..e-1; w2h reads entries LAC+1..e and writes back entries LAC+1..e-1 (LAC >= -1).
-        List<Tid> w1AddOps = new ArrayList<>();
-        for (int i = 0; i < e; i++) {
-            w1AddOps.add(MpProcess.spawnDaemon(new PendingAddOpTask(m)).tid());
-        }
-        Tid rlc = MpProcess.spawnDaemon(new ReadLastConfirmedOp(m, ensemble)).tid();
-        List<Tid> w2ReadOps = new ArrayList<>();
-        for (int i = 0; i <= e; i++) {
-            w2ReadOps.add(MpProcess.spawnDaemon(new RecoveryReadOp(m, ensemble)).tid());
-        }
-        List<Tid> w2AddOps = new ArrayList<>();
-        for (int i = 0; i < e; i++) {
-            w2AddOps.add(MpProcess.spawnDaemon(new PendingAddOpTask(m)).tid());
-        }
         // PORT: w1 created the ledger (LedgerCreateOp, not in the cut): zk holds it Open at version 0 and w1h's
         // local metadata is that version.
-        Tid w1h = MpProcess.spawnDaemon(new LedgerHandle(m, ensemble, zk, w1AddOps,
+        Tid w1h = MpProcess.spawnDaemon(new LedgerHandle(m, ensemble, zk,
                 new Versioned(new LedgerMetadata(State.OPEN, INVALID_ENTRY_ID, 0L), 0L))).tid();
-        Tid w2h = MpProcess.spawnDaemon(new ReadOnlyLedgerHandle(m, ensemble, zk, w2AddOps, rlc, w2ReadOps)).tid();
+        Tid w2h = MpProcess.spawnDaemon(new ReadOnlyLedgerHandle(m, ensemble, zk)).tid();
         final int entries = e;
         MpProcess.Handle w1 = MpProcess.spawn("w1", () -> writer(m, entries, w1h));
         MpProcess.Handle w2 = MpProcess.spawn("w2", () -> recoverer(m, w2h));
@@ -764,75 +728,35 @@ public final class BookKeeper implements MpProgram {
     // Client side: PendingAddOp (one process per op in flight)
     // ============================================================================================================
 
-    /**
-     * PORT: the logical task of a PendingAddOp in flight: it receives the bookies' answers to the op's write requests
-     * and queues each, one message per answer, on its handle's ordered executor, where PendingAddOp.writeComplete runs
-     * (PendingAddOp l.146-152 passes lh.executor to the bookie client; PerChannelBookieClient l.1542-1546 queues the
-     * response handling on it). The task has no handle effects of its own. Recycling is not modelled: the process ends
-     * when every write request it was sent for has been answered (maybeRecycle's pendingWriteRequests == 0).
-     */
-    static final class PendingAddOpTask implements Runnable {
-        final CommunicationModel m;
-
-        PendingAddOpTask(CommunicationModel m) {
-            this.m = m;
-        }
-
-        @Override
-        public void run() {
-            PendingAddOpCreate c = Channel.recv(m, PendingAddOpCreate.class);
-            int outstanding = c.pendingWriteRequests();
-            while (outstanding > 0) {
-                AddResponse r = Channel.recv(m, AddResponse.class);
-                outstanding--;
-                Channel.send(m, c.lh(), new WriteCompleteCallback(c.entryId(), r.status(), r.ledgerId(), r.entryId(),
-                        r.addr(), r.ctx()));
-            }
-        }
-    }
-
     // ============================================================================================================
     // Client side: ReadLastConfirmedOp (the fencing LAC read)
     // ============================================================================================================
 
     /**
-     * ReadLastConfirmedOp with fencing. PORT: the op's process runs initiateWithFencing() after its creation message
-     * (the source calls it on the creator's thread right after the constructor; it only sends), and its callbacks
-     * (readEntryComplete); the completion is a message to the LedgerRecoveryOp.
+     * ReadLastConfirmedOp with fencing. PORT (fix round 3): an object of the recovery handle; initiateWithFencing()
+     * runs on the creator (the handle), readEntryComplete is a task of the handle's executor queue, and the completion
+     * calls the LedgerRecoveryOp directly in that task, as in the source.
      */
-    static final class ReadLastConfirmedOp implements Runnable {
+    static final class ReadLastConfirmedOp {
         final CommunicationModel m;
         final List<Tid> currentEnsemble;
-        Tid lh;
+        final ReadOnlyLedgerHandle lh; // PORT: the callback target, the LedgerRecoveryOp of this handle
         private int numResponsesPending;
         private long maxLastAddConfirmed = INVALID_ENTRY_ID; // maxRecoveredData = new RecoveryData(INVALID, 0)
         private long maxLength = 0L;
         private boolean completed = false;
         private int lastSeenError = Code.ReadException;
         private final int[] covered = new int[ENSEMBLE_SIZE]; // RRQuorumCoverageSet
-        Tid self;
+        final Tid self;
 
-        ReadLastConfirmedOp(CommunicationModel m, List<Tid> ensemble) {
-            this.m = m;
-            this.currentEnsemble = ensemble;
-        }
-
-        @Override
-        public void run() {
-            self = MpProcess.self();
-            ReadLastConfirmedOpCreate c = Channel.recv(m, ReadLastConfirmedOpCreate.class);
-            this.lh = c.lh();
+        ReadLastConfirmedOp(ReadOnlyLedgerHandle lh) {
+            this.m = lh.m;
+            this.currentEnsemble = lh.currentEnsemble;
+            this.lh = lh;
+            this.self = lh.self; // PORT: the bookies answer the handle (lh.executor runs readEntryComplete)
             this.numResponsesPending = currentEnsemble.size();
             for (int i = 0; i < covered.length; i++) {
                 covered[i] = Code.UNINITIALIZED;
-            }
-            initiateWithFencing();
-            int outstanding = currentEnsemble.size();
-            while (outstanding > 0) {
-                ReadResponse r = Channel.recv(m, ReadResponse.class);
-                outstanding--;
-                readEntryComplete(convertStatus(r.status(), Code.ReadException), r.ledgerId(), r.entryId(), r.body(),
-                        r.ctx());
             }
         }
 
@@ -911,8 +835,8 @@ public final class BookKeeper implements MpProgram {
         }
 
         private void readLastConfirmedDataComplete(int rc) {
-            // cb.readLastConfirmedDataComplete(rc, maxRecoveredData);  PORT: a message to the LedgerRecoveryOp
-            Channel.send(m, lh, new ReadLastConfirmedDataComplete(rc, maxLastAddConfirmed, maxLength));
+            // cb.readLastConfirmedDataComplete(rc, maxRecoveredData);
+            lh.recoveryOp.readLastConfirmedDataComplete(rc, maxLastAddConfirmed, maxLength);
         }
     }
 
@@ -922,45 +846,32 @@ public final class BookKeeper implements MpProgram {
 
     /**
      * LedgerRecoveryOp.RecoveryReadOp (ListenerBasedPendingReadOp, PendingReadOp, ReadOpBase), recovery read, not
-     * parallel (SequenceReadRequest). PORT: the op's process runs initiate() after its creation message (the source
-     * calls it on the creator's thread right after the constructor; it only sends), and its callbacks. No speculative
+     * parallel (SequenceReadRequest). PORT (fix round 3): an object of the recovery handle; initiate() runs on the
+     * creator (the handle), readEntryComplete is a task of the handle's executor queue, and listener.onEntryComplete
+     * is called directly in that task. No speculative
      * reads (they are timer-driven), no reordered read sequence, no sticky reads (the defaults).
      */
-    static final class RecoveryReadOp implements Runnable {
+    static final class RecoveryReadOp {
         final CommunicationModel m;
         final List<Tid> ensemble; // metadataForRecovery's ensemble at every entry: the fixed ensemble
-        Tid lh;
-        long startEntryId;
-        long endEntryId;
+        final ReadOnlyLedgerHandle lh;
+        final long startEntryId;
+        final long endEntryId;
         final boolean isRecoveryRead = true;
         final int requiredBookiesMissingEntryForRecovery = WRITE_QUORUM_SIZE - ACK_QUORUM_SIZE + 1;
         final LinkedList<SequenceReadRequest> seq = new LinkedList<>();
         final Set<Tid> heardFromHosts = new HashSet<>();
         final BitSet heardFromHostsBitSet = new BitSet(ENSEMBLE_SIZE);
         final Set<Tid> sentToHosts = new HashSet<>();
-        int sent = 0;      // PORT: requests sent and
-        int answered = 0;  // responses received, to end the process when nothing is outstanding
-        Tid self;
+        final Tid self;
 
-        RecoveryReadOp(CommunicationModel m, List<Tid> ensemble) {
-            this.m = m;
-            this.ensemble = ensemble;
-        }
-
-        @Override
-        public void run() {
-            self = MpProcess.self();
-            RecoveryReadOpCreate c = Channel.recv(m, RecoveryReadOpCreate.class);
-            this.lh = c.lh();
-            this.startEntryId = c.startEntryId();
-            this.endEntryId = c.endEntryId();
-            initiate();
-            while (answered < sent) {
-                ReadResponse r = Channel.recv(m, ReadResponse.class);
-                answered++;
-                readEntryComplete(convertStatus(r.status(), Code.ReadException), r.ledgerId(), r.entryId(), r.body(),
-                        r.ctx(), r.addr());
-            }
+        RecoveryReadOp(ReadOnlyLedgerHandle lh, long startEntryId, long endEntryId) {
+            this.m = lh.m;
+            this.ensemble = lh.currentEnsemble;
+            this.lh = lh;
+            this.startEntryId = startEntryId;
+            this.endEntryId = endEntryId;
+            this.self = lh.self; // PORT: the bookies answer the handle (sendReadTo passes lh.executor)
         }
 
         void initiate() {
@@ -1021,9 +932,9 @@ public final class BookKeeper implements MpProgram {
                 completedRequests.put(request.eId, request);
                 // callback with completed entry, or none
                 boolean hasEntry = Code.OK == request.getRc();
-                // listener.onEntryComplete(request.getRc(), lh, entry, ctx);  PORT: a message to the LedgerRecoveryOp
-                Channel.send(m, lh, new OnEntryComplete(request.getRc(), hasEntry, request.eId,
-                        hasEntry ? request.entryLength : 0L, hasEntry ? request.entryData : 0L));
+                // listener.onEntryComplete(request.getRc(), lh, entry, ctx);
+                lh.recoveryOp.onEntryComplete(request.getRc(), hasEntry, request.eId,
+                        hasEntry ? request.entryLength : 0L, hasEntry ? request.entryData : 0L);
             }
         }
 
@@ -1034,7 +945,6 @@ public final class BookKeeper implements MpProgram {
             } else {
                 Channel.send(m, to, new ReadRequest(self, LEDGER_ID, entry.eId, FLAG_NONE, false, bookieIndex));
             }
-            sent++;
         }
 
         /** ReadOpBase.LedgerEntryRequest + PendingReadOp.SingleLedgerEntryRequest + SequenceReadRequest. */
@@ -1193,7 +1103,7 @@ public final class BookKeeper implements MpProgram {
      * PendingAddOp: the add's state and writeComplete. PORT: it lives on its handle's process and every writeComplete
      * runs as one turn of the handle's ordered executor, with its synchronous effects (sendAddSuccessCallbacks,
      * notifyWriteFailed, handleUnrecoverableErrorDuringAdd and the close task it queues), as in the source. The
-     * bookies' answers reach it through its PendingAddOpTask. Recycling is not modelled.
+     * bookies answer the handle directly (fix round 3). Recycling is not modelled.
      */
     static final class PendingAddOp {
         final long entryId;
@@ -1323,8 +1233,8 @@ public final class BookKeeper implements MpProgram {
     /**
      * LedgerHandle: the handle's state with its pending-add queue, and the handle's ordered executor (lh.executor,
      * the main worker pool thread chosen by ledger id), as one sequential process. PORT: the application's calls
-     * (asyncAddEntry; for w2, the open) arrive as the client's messages; executeOrdered queues the task on a local
-     * deque drained before every receive; the zk client's callbacks run on this process too.
+     * (asyncAddEntry; for w2, the open) arrive as the client's messages; the handle's process is its executor's queue:
+     * received bookie answers and executeOrdered tasks are appended and run in order (see run()); the zk client's callbacks run on this process too.
      */
     static class LedgerHandle implements Runnable {
         enum HandleState { OPEN, CLOSED }
@@ -1332,7 +1242,6 @@ public final class BookKeeper implements MpProgram {
         final CommunicationModel m;
         final List<Tid> currentEnsemble;
         final Tid zk;
-        final List<Tid> addOps;
         final long ledgerId = LEDGER_ID;
         Tid self;
         Tid client;
@@ -1359,11 +1268,10 @@ public final class BookKeeper implements MpProgram {
         // closePromise.whenComplete(...) handlers: PORT: NoopCloseCallback for every close here
         boolean closePromiseDone = false;
 
-        LedgerHandle(CommunicationModel m, List<Tid> ensemble, Tid zk, List<Tid> addOps, Versioned versionedMetadata) {
+        LedgerHandle(CommunicationModel m, List<Tid> ensemble, Tid zk, Versioned versionedMetadata) {
             this.m = m;
             this.currentEnsemble = ensemble;
             this.zk = zk;
-            this.addOps = addOps;
             if (versionedMetadata != null) {
                 init(versionedMetadata);
             }
@@ -1388,15 +1296,24 @@ public final class BookKeeper implements MpProgram {
             self = MpProcess.self();
             client = Channel.recv(m, Setup.class).client();
             while (true) {
-                // PORT: the handle's ordered executor (lh.executor). Before every receive it runs the tasks the handle
-                // submitted to itself (executeOrdered), in submission order, until none is left; a received callback,
-                // application call or zk completion then runs at once and completely: the receive is its turn.
-                Runnable task;
-                while ((task = executorQueue.poll()) != null) {
-                    task.run();
+                // PORT (fix round 3): the handle's process is its ordered executor's queue (lh.executor, a
+                // SingleThreadExecutor). A received bookie answer is submitted at its receipt: appended to the
+                // queue. The queue runs in order, one task at a time; a task submitted by a running task (the close,
+                // the ensemble-change completion) is appended at that moment, behind the answers received before
+                // it. Between two tasks the process may receive further messages (the non-blocking receive's choice):
+                // the interleaving of submissions and executions. Application calls and zk completions run on
+                // receipt (they run on the caller's thread in the source).
+                MpMessage msg;
+                if (executorQueue.isEmpty()) {
+                    msg = Channel.recv(m);
+                } else {
+                    msg = Channel.tryRecv(m).orElse(null);
                 }
-                MpMessage msg = Channel.recv(m);
-                dispatch(msg);
+                if (msg != null) {
+                    dispatch(msg);
+                } else {
+                    executorQueue.poll().run();
+                }
             }
         }
 
@@ -1405,12 +1322,12 @@ public final class BookKeeper implements MpProgram {
             if (msg instanceof Add a) {
                 // the application: lh.asyncAddEntry(data, cb, ctx) with the entry number as data and context
                 asyncAddEntry(a.entry(), applicationAddCallback(), a.entry());
-            } else if (msg instanceof WriteCompleteCallback w) {
-                // PORT: the bookie client submits the response handling to lh.executor: it runs on receipt, as one
-                // executor turn, after every task the handle submitted to itself earlier (see run())
-                final PendingAddOp op = addOpsByEntryId.get(w.opEntryId());
-                op.writeComplete(convertStatus(w.status(), Code.WriteException), w.ledgerId(), w.entryId(), w.addr(),
-                        w.ctx());
+            } else if (msg instanceof AddResponse w) {
+                // PORT: PerChannelBookieClient submits writeComplete to lh.executor (PendingAddOp l.146-152): one
+                // task, appended at its receipt (see run())
+                final PendingAddOp op = addOpsByEntryId.get(w.entryId());
+                executeOrdered(() -> op.writeComplete(convertStatus(w.status(), Code.WriteException), w.ledgerId(),
+                        w.entryId(), w.addr(), w.ctx()));
             } else if (msg instanceof WriteLedgerMetadataResult w) {
                 loops.get(w.loopId()).writeComplete(w);
             } else if (msg instanceof ReadLedgerMetadataResult r) {
@@ -1437,7 +1354,7 @@ public final class BookKeeper implements MpProgram {
         }
 
         void executeOrdered(Runnable runnable) {
-            // PORT: lh.executor's queue, local to the handle's process; drained before its next receive (see run())
+            // PORT: lh.executor's queue: the task is appended now (see run())
             executorQueue.add(runnable);
         }
 
@@ -1587,10 +1504,6 @@ public final class BookKeeper implements MpProgram {
             // hasRun = true; callbackTriggered is false here (the op was queued just now)
             int flags = isRecoveryAdd ? FLAG_RECOVERY_ADD | FLAG_HIGH_PRIORITY : FLAG_NONE;
             EntryBody toSend = new EntryBody(ledgerId, op.entryId, lastAddConfirmed, currentLedgerLength, payload);
-            Tid opProcess = addOpFor(op.entryId);
-            // PORT: the op's creation reaches its process before its responses (guarded receive)
-            Channel.send(m, opProcess, new PendingAddOpCreate(self, op.entryId, isRecoveryAdd, WRITE_QUORUM_SIZE));
-
             // We are about to send. Check if we need to make an ensemble change because of delayed write errors
             maybeHandleDelayedWriteBookieFailure();
 
@@ -1599,16 +1512,9 @@ public final class BookKeeper implements MpProgram {
                 int bookieIndex = (int) ((op.entryId + i) % ENSEMBLE_SIZE); // getWriteSetBookieIndex(entryId, i)
                 // sendWriteRequest(ensemble, bookieIndex)
                 Channel.send(m, currentEnsemble.get(bookieIndex),
-                        new AddRequest(opProcess, ledgerId, op.entryId, flags, toSend, bookieIndex));
+                        new AddRequest(self, ledgerId, op.entryId, flags, toSend, bookieIndex)); // PORT: answer to lh
                 ++op.pendingWriteRequests;
             }
-        }
-
-        private Tid addOpFor(long entryId) {
-            if (entryId < 0 || entryId >= addOps.size()) {
-                throw new IllegalStateException("no PendingAddOp process for entry " + entryId);
-            }
-            return addOps.get((int) entryId);
         }
 
         // close the ledger and send fails to all the adds in the pipeline
@@ -1849,28 +1755,32 @@ public final class BookKeeper implements MpProgram {
      * replies Closed with the handle's last add confirmed (the closed metadata's last entry id).
      */
     static final class ReadOnlyLedgerHandle extends LedgerHandle {
-        final Tid rlcOp;
-        final List<Tid> readOps;
         LedgerRecoveryOp recoveryOp;
+        ReadLastConfirmedOp rlcop;
+        // PORT: the recovery reads of this handle, by entry id (batch size 1), to route the bookies' answers
+        final Map<Long, RecoveryReadOp> readOpsByEntryId = new HashMap<>();
         final Map<Long, List<Tid>> newEnsemblesFromRecovery = new HashMap<>();
 
-        ReadOnlyLedgerHandle(CommunicationModel m, List<Tid> ensemble, Tid zk, List<Tid> addOps, Tid rlcOp,
-                             List<Tid> readOps) {
-            super(m, ensemble, zk, addOps, null);
-            this.rlcOp = rlcOp;
-            this.readOps = readOps;
+        ReadOnlyLedgerHandle(CommunicationModel m, List<Tid> ensemble, Tid zk) {
+            super(m, ensemble, zk, null);
         }
 
         @Override
         void dispatchMore(MpMessage msg) {
             if (msg instanceof Recover) {
                 new LedgerOpenOp().initiate();
-            } else if (msg instanceof ReadLastConfirmedDataComplete d) {
-                // PORT: the op's callback runs on lh.executor (its callbackExecutor): executed on receipt, one turn
-                recoveryOp.readLastConfirmedDataComplete(d.rc(), d.lastAddConfirmed(), d.length());
-            } else if (msg instanceof OnEntryComplete o) {
-                // PORT: sendReadTo passes lh.executor: the read's callback is executed on receipt, one turn
-                recoveryOp.onEntryComplete(o.rc(), o.hasEntry(), o.entryId(), o.length(), o.data());
+            } else if (msg instanceof ReadResponse r) {
+                // PORT: the read callbacks run on lh.executor (the LAC read's callbackExecutor; sendReadTo's
+                // lh.executor): one task, appended at its receipt
+                if (r.entryId() == LAST_ADD_CONFIRMED) {
+                    final ReadLastConfirmedOp op = rlcop;
+                    executeOrdered(() -> op.readEntryComplete(convertStatus(r.status(), Code.ReadException),
+                            r.ledgerId(), r.entryId(), r.body(), r.ctx()));
+                } else {
+                    final RecoveryReadOp op = readOpsByEntryId.get(r.entryId());
+                    executeOrdered(() -> op.readEntryComplete(convertStatus(r.status(), Code.ReadException),
+                            r.ledgerId(), r.entryId(), r.body(), r.ctx(), r.addr()));
+                }
             } else {
                 super.dispatchMore(msg);
             }
@@ -2013,9 +1923,9 @@ public final class BookKeeper implements MpProgram {
         }
 
         void initiate() {
-            // ReadLastConfirmedOp rlcop = new ReadLastConfirmedOp(...); rlcop.initiateWithFencing();
-            // PORT: the op's process runs initiateWithFencing() on its creation message
-            Channel.send(lh.m, lh.rlcOp, new ReadLastConfirmedOpCreate(lh.self));
+            ReadLastConfirmedOp rlcop = new ReadLastConfirmedOp(lh);
+            lh.rlcop = rlcop; // PORT: to route the bookies' answers
+            rlcop.initiateWithFencing();
         }
 
         /** The LastConfirmedDataCallback given to the ReadLastConfirmedOp. */
@@ -2061,12 +1971,9 @@ public final class BookKeeper implements MpProgram {
             if (!promiseDone) {
                 startEntryToRead = endEntryToRead + 1;
                 endEntryToRead = endEntryToRead + RECOVERY_READ_BATCH_SIZE;
-                // new RecoveryReadOp(lh, clientCtx, startEntryToRead, endEntryToRead, this, null).initiate();
-                if (startEntryToRead < 0 || startEntryToRead >= lh.readOps.size()) {
-                    throw new IllegalStateException("no RecoveryReadOp process for entry " + startEntryToRead);
-                }
-                Channel.send(lh.m, lh.readOps.get((int) startEntryToRead),
-                        new RecoveryReadOpCreate(lh.self, startEntryToRead, endEntryToRead));
+                RecoveryReadOp op = new RecoveryReadOp(lh, startEntryToRead, endEntryToRead);
+                lh.readOpsByEntryId.put(startEntryToRead, op); // PORT: to route the bookies' answers
+                op.initiate();
             }
         }
 

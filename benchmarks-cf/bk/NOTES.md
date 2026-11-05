@@ -13,15 +13,11 @@ EnsembleUtils, LedgerMetadataImpl, BKException codes). Program: `java/bench/book
 | `w2` | visible, role `w2`, awaited | the interface's recoverer: `Recover`, waits for `Closed` |
 | `b1`,`b2`,`b3` | daemon | `BookieRequestProcessor` → `WriteEntryProcessorV3` / `ReadEntryProcessorV3` over `BookieImpl` and an in-memory `LedgerStorage` |
 | `zk` | daemon | `LedgerManager` over ZooKeeper, as a versioned store of the ledger's metadata |
-| `w1h` | daemon | `LedgerHandle` of w1: the handle state, its pending-add queue, and its ordered executor (lh.executor) |
-| `w2h` | daemon | `ReadOnlyLedgerHandle` of w2 opened with recovery (`LedgerOpenOp`), with its `LedgerRecoveryOp` |
-| PendingAddOpTask × e (w1h), × e (w2h) | daemon | a `PendingAddOp` in flight: receives the bookies' answers and queues each on its handle's executor (`WriteCompleteCallback`), one per entry id; no handle effects of its own (fix round 1) |
-| ReadLastConfirmedOp × 1 (w2h) | daemon | the fencing LAC read (`initiateWithFencing`, `readEntryComplete`) |
-| RecoveryReadOp × (e+1) (w2h) | daemon | `LedgerRecoveryOp.RecoveryReadOp` = `ListenerBasedPendingReadOp`/`PendingReadOp` with one `SequenceReadRequest`, one per entry id |
+| `w1h` | daemon | `LedgerHandle` of w1: the handle state, its pending-add queue, and its ordered executor (lh.executor); every PendingAddOp of w1 lives here (fix round 3) |
+| `w2h` | daemon | `ReadOnlyLedgerHandle` of w2 opened with recovery (`LedgerOpenOp`), with its `LedgerRecoveryOp`, its `ReadLastConfirmedOp`, its `RecoveryReadOp`s and its recovery PendingAddOps, all as objects of this process (fix round 3) |
 | init | daemon | sends `Setup(client)` to w1h and w2h (the clients' addresses) |
 
-Main spawns, in this order: b1, b2, b3, zk, w1h's add ops, the LAC-read op, w2h's read ops, w2h's add ops, w1h, w2h, w1,
-w2, init. Then it awaits w1 and w2 and sends or receives nothing. `MpLauncher` runs `run()` under `MpProcess.runMain`,
+Main spawns, in this order: b1, b2, b3, zk, w1h, w2h, w1, w2, init. Then it awaits w1 and w2 and sends or receives nothing. `MpLauncher` runs `run()` under `MpProcess.runMain`,
 so the daemons run until none can move. `rolesInSpawnOrder()` = `visibleRoles()` = `[w1, w2]`: daemons carry no role.
 
 ## Messages
@@ -35,10 +31,8 @@ Invisible:
   `body` = `EntryBody(ledgerId, entryId, lastAddConfirmed, length, data)`, the packaged entry (computeDigestAndPackageForSending without a digest).
   Statuses are the V3 `StatusCode`; the client maps them with `CompletionValue.convertStatus` (default WriteException for adds and ReadException for reads).
 - handle ↔ zk: `ReadLedgerMetadata`/`ReadLedgerMetadataResult`, `WriteLedgerMetadata(metadata, currentVersion)`/`WriteLedgerMetadataResult(OK | MetadataVersionException)`.
-- handle → op: `PendingAddOpCreate(lh, entryId, isRecoveryAdd, pendingWriteRequests)`, `ReadLastConfirmedOpCreate(lh)`, `RecoveryReadOpCreate(lh, start, end)`.
-- op → handle: `WriteCompleteCallback(opEntryId, status, ledgerId, entryId, addr, ctx)`, one per bookie answer (fix round 1),
-  `ReadLastConfirmedDataComplete(rc, lac, length)`, `OnEntryComplete(rc, hasEntry, entryId, length, data)`.
-- (no handle → itself messages since fix round 2: self-submitted executor tasks are a local deque, decision 18)
+- Since fix round 3 there are no op processes: each bookie answers the handle that sent the request, on the one channel bookie → handle.
+- No handle → itself messages: executor tasks are the handle's local queue (decision 18).
 - init → handle: `Setup(client)`.
 
 ## Method mapping
@@ -66,13 +60,14 @@ Invisible:
 
 ## Decisions (where the source leaves something open or the interface replaces it)
 
-1. **Logical tasks.** Each PendingAddOp in flight, each recovery read, and the fencing LAC read is its own process. Each bookie is one process: its request handling over its ledger storage. Each handle is one process: the handle's state, its pending-add queue and its ordered executor. In the source (LedgerHandle constructor, `executor = mainWorkerPool.chooseThread(ledgerId)`), that executor runs every callback of the handle. Initiation runs where it reads or changes state:
-   - `PendingAddOp.initiate` runs on the handle, because it reads `lh.lastAddConfirmed` and calls `lh.maybeHandleDelayedWriteBookieFailure()`. The source calls it synchronously from `doAsyncAddEntry`.
-   - `ReadLastConfirmedOp.initiateWithFencing` and `PendingReadOp.initiate` only send, so they run on the op's process after its creation message. The source calls them on the creator's thread right after construction.
-2. **`completed` flag** (superseded by decision 18, fix round 1). The `completed` flag is the PendingAddOp's own field on the handle. `writeComplete` sets it and calls `sendAddSuccessCallbacks` in the same executor turn, as the source does. The earlier travelling flag (`SendAddSuccessCallbacks`) is removed.
+1. **Processes (fix round 3, owner's contract: a shared data structure is a sequential process whose program order is part of the observation).** Each bookie is one process: its request handling over its ledger storage. Each handle is one process: the handle's state, its pending-add queue and its ordered executor's queue. In the source (LedgerHandle constructor, `executor = mainWorkerPool.chooseThread(ledgerId)`), that executor runs every callback of the handle. The ops (PendingAddOp, ReadLastConfirmedOp, RecoveryReadOp) are objects of their handle:
+   - their initiation (`PendingAddOp.initiate`, `initiateWithFencing`, `PendingReadOp.initiate`) runs on the creator's thread, which is the handle;
+   - their callbacks are tasks of the handle's executor queue (decision 18).
+   The per-op processes of rounds 0-2 are withdrawn. They broke the per-connection order of PerChannelBookieClient and added causality (Astra round 3, findings 1 and 3).
+2. **`completed` flag.** The PendingAddOp's own field on the handle. `writeComplete` sets it and calls `sendAddSuccessCallbacks` in the same executor task, as the source does.
 3. **The zk client's callbacks** (MetadataUpdateLoop's write and read completions) run on the handle's process. The handle state they touch is synchronized in the source (`setLedgerMetadata`), so running them there serialises them, as the source does.
-4. **executeOrdered** (since fix round 2) appends the task to a deque local to the handle's process. The handle drains that deque in submission order before every receive. There are no `OrderedTask` messages any more (decision 18).
-5. **Addresses.** Bookies and zk answer the `replyTo` carried by each request. Ops learn their handle from their creation message. The handles learn their client from `Setup`, sent by an invisible `init` daemon (as the Rust entry's `init`). The spawn order cannot break the handle↔client cycle any other way.
+4. **executeOrdered** appends the task to the handle's executor queue at the moment it is called (decision 18).
+5. **Addresses.** Bookies and zk answer the `replyTo` carried by each request, which is always the requesting handle. The handles learn their client from `Setup`, sent by an invisible `init` daemon (as the Rust entry's `init`). The spawn order cannot break the handle↔client cycle any other way.
 6. **Entry ids.** BookKeeper's ids start at 0: `Add(i)` is entry id `i-1` (`++lastAddPushed` from -1). The payload is `i` and the callback context is `i`, so `Acked(i)`/`Rejected(i)` echo the Add. `Closed(last)` carries the interface's number of the source's last entry id: `lh.getLastAddConfirmed()` after `setLedgerMetadata` of the closed metadata, plus one, and -1 when empty (the specification and the ports number entries from 1; coordinator's fix of 2026-11-06 at `openComplete`). So with e = 1 and the entry recovered, `last = 1`.
 7. **Ledger length.** Every payload is 1 unit, so the ledger length counts entries. It is kept because the close path compares it (`doAsyncCloseInternal`'s conflict check), although no visible message depends on it.
 8. **Fixed ensemble, no spare bookie.**
@@ -95,25 +90,20 @@ Invisible:
    - Authorisation always succeeds. No master-key cache. The request thread pools are not modelled: a bookie handles requests one at a time, in receive order.
 13. **zk** holds `Versioned(LedgerMetadata(state, lastEntryId, length), version)`, starting `Open, -1, 0` at version 0 (LedgerCreateOp is not in the cut; w1h starts with that version). A write succeeds iff its version is current (new version + 1); otherwise MetadataVersionException. `Version.compare == CONCURRENTLY` is read as equal versions (LongVersion; not in the tree).
 14. **Open failure.** If the open/recovery fails (unreachable here), the application's open callback gets an error. The interface defines no message for that, so w2h sends none and w2 stays blocked, which would show as a blocked graph. The client loops are the interface's, verbatim. w2's "nondeterministic moment" is the scheduler's: nothing is chosen explicitly.
-15. **Op pools.** Op processes are pre-spawned per entry id, never reused:
-   - w1h: e add ops (ids 0..e-1);
-   - w2h: e+1 read ops (ids LAC+1..e, LAC ≥ -1) and e recovery-add ops.
-   An unused op stays blocked on its creation message. A daemon blocked on a receive does not make the execution blocked.
+15. **Op routing.** A bookie answer reaches its op by entry id: add ops by entry id, recovery reads by entry id, and the LAC read by entry id -1. Ids are unique per handle; batch size 1.
 16. **Program name** `bookkeeper`; size = `e` as text. These must match the Rust side for a summary comparison; to be checked.
 17. **Delivery model**: `fifo` = `CommunicationModel.P2P`, `bag` = `ASYN`.
 
-18. **The handle's ordered executor (fix rounds 1 and 2; Astra REVIEW-main finding 1-2, REVIEW-main-r2 finding 1).**
-   Source: PendingAddOp l.146-152 gives the bookie client `lh.executor`, and PerChannelBookieClient l.1399-1403 and l.1542-1546 submit the response handling to it. The fencing LAC read (`callbackExecutor`), the recovery reads (`sendReadTo(..., lh.executor)`) and the close tasks (`executeOrdered`, LedgerHandle l.2538-2539) use the same executor.
-   Emulation:
-   - The op processes and read ops only receive their bookies' answers and forward them (`WriteCompleteCallback`, `ReadLastConfirmedDataComplete`, `OnEntryComplete`). They have no handle effects.
-   - The handle process is the executor:
-     - **Execution on receipt.** A received callback runs at once and completely as one executor turn, with all its synchronous effects: `PendingAddOp.writeComplete`, `sendAddSuccessCallbacks`, `notifyWriteFailed`, `handleBookieFailure`, `handleUnrecoverableErrorDuringAdd`, `LedgerRecoveryOp.readLastConfirmedDataComplete` / `onEntryComplete`, and the adds and reads they issue. So do a received application call (Add, Recover) and a zk completion.
-     - **FIFO drain before every receive.** Tasks the handle submits to itself go to an in-process deque: the close task of `doAsyncCloseInternal`, the add-to-closed-ledger callback, and the ensemble-change completion (`whenCompleteAsync(executor)`). Before every receive, that deque is drained completely, in submission order, including tasks submitted while draining.
-   Guarantees:
-   - (a) No received callback runs before a close task submitted earlier. A callback of an add issued later can therefore never overtake a submitted close (Astra round 1).
-   - (b) No premature causality: a callback's effects become causal predecessors of the handle's later actions only when the callback executes, which is the moment of its receipt. Until then it is an undelivered message. The round-1 deferred queue, which made a received but unexecuted callback precede later handle actions, is removed (Astra round 2).
-   - (c) The interleaving of callbacks from different ops stays free (any receive order). That is the source's nondeterminism of submission time.
-   Round 1's `OrderedTask` self-messages are removed. `executeOrdered` only appends to the local deque.
+18. **The handle's ordered executor (fix rounds 1-3; Astra REVIEW-main, -r2, -r3).**
+   Source: PendingAddOp l.146-152 gives the bookie client `lh.executor`. PerChannelBookieClient l.1399-1403 and l.1530-1555 submit the response handling to it, in the channel's order. The fencing LAC read (`callbackExecutor`), the recovery reads (`sendReadTo(..., lh.executor)`) and the close tasks (`executeOrdered`, LedgerHandle l.576-577, l.2538-2539) use the same executor, a SingleThreadExecutor with one FIFO queue (C/SingleThreadExecutor.java:118-125, 229-230, 271-287).
+   **Contract.** The executor queue is the sequential process. Its receive order is the submission order. A dependency created by the receipt of a callback before its execution is part of the observation under the owner's contract (the same ruling as the 3FS metadata process). The drain-before-receive of round 2 is withdrawn because it gave local tasks a priority the source does not have.
+   Emulation (`LedgerHandle.run`):
+   - **Receipt is submission.** A received bookie answer (AddResponse, ReadResponse) is appended to the queue as the task `writeComplete` / `readEntryComplete`.
+   - **In-order execution.** The queue runs in order, one task at a time. A task submitted by a running task (the close of `doAsyncCloseInternal`, the add-to-closed-ledger callback, the ensemble-change completion) is appended at that moment: behind the answers received before it, ahead of those received later. So Fenced, OK, OK followed by the close Fenced queued gives Acked(1), then the close, as in the source (Astra r3 finding 2).
+   - **Free interleaving of submission and execution.** When the queue is non-empty, the handle either receives one more message (a non-blocking receive) or runs the head task. That choice is the strategy's, standing for the source's free interleaving. When the queue is empty, the handle blocks on a receive.
+   - **Application calls and zk completions.** Application calls (Add, Recover) and zk completions run on receipt, as the source runs them on the caller's thread. They are not executor tasks.
+   - **Per-connection order.** Each bookie answers the handle directly, one channel per (bookie, handle). Under fifo that keeps PerChannelBookieClient's per-connection order (Astra r3 finding 3). No intermediate process reorders answers or adds causality (finding 1).
+   - **Unchanged.** Op state (ack set, pendingWriteRequests, completed, the read requests, the coverage set) lives on the handle. The callbacks' synchronous effects (sendAddSuccessCallbacks, notifyWriteFailed, handleBookieFailure, handleUnrecoverableErrorDuringAdd, LedgerRecoveryOp's callbacks with the adds and reads they issue) run in the same task.
 
 ## Compile and run (inside OUT_DIR = daavar/benchmarks-cf2/bk/java)
 
@@ -227,4 +217,38 @@ stop_reason: timeout
 peak_rss_kb: 441836
 max_graph_events: 148
 mean_graph_events: 145.741
+```
+
+### After fix round 3 (decision 18 as revised: executor queue = handle process), 2026-11-06, seed 1
+
+The round-1 and round-2 runs above are superseded. Logs: `run-e1-fix3.log` and `run-e2-fix3.log` in OUT_DIR.
+
+`impl,1,fifo`, `must 0 1 report - 900`:
+```
+ran:        18081 iterations
+blocked:    0 (counted by the strategy)
+completed:  18081
+rate:       20.1 iterations/s
+error:      Halting execution: 18081 due to timeout
+elapsed:    900.280 s
+graphs:     18081 distinct complete, 0 distinct blocked; stack not exhausted
+stop_reason: timeout
+peak_rss_kb: 871124
+max_graph_events: 90
+mean_graph_events: 90.000
+```
+
+`impl,2,fifo`, `must 0 1 report - 300`:
+```
+ran:        8140 iterations
+blocked:    0 (counted by the strategy)
+completed:  8140
+rate:       27.1 iterations/s
+error:      Halting execution: 8140 due to timeout
+elapsed:    300.062 s
+graphs:     8140 distinct complete, 0 distinct blocked; stack not exhausted
+stop_reason: timeout
+peak_rss_kb: 478988
+max_graph_events: 128
+mean_graph_events: 125.673
 ```
