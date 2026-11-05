@@ -3,3 +3,5 @@ C3J.ironlock.impl_20_double-hold_bag.f7	C	ironlock	20	bag	double-hold	join	1			c
 XCE.chainpaxos-code-sol.impl_3_local_fifo.w16	X	chainpaxos-code-sol	3	fifo	local	must-split	16			c48h	export	jmc	jmc	java	java	offline-batch	full	chainpaxos-code-sol		
 C3E.swiftpaxos-paper-rust.impl_2_fifo.t16	C	swiftpaxos-paper-rust	2	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	swiftpaxos-paper-rust		
 C3J.swiftpaxos-paper-rust.impl_2_fifo.vs-derived	C	swiftpaxos-paper-rust	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	swiftpaxos-paper-rust	swiftpaxos-derived.spec_2_fifo	swiftpaxos-paper-rust.impl_2_fifo
+C3E.zookeeper-zab-rust.impl_3_0_fifo.t16	C	zookeeper-zab-rust	3,0	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	zookeeper-zab-rust		
+C3J.zookeeper-zab-rust.impl_3_0_fifo.vs-derived	C	zookeeper-zab-rust	3,0	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	zookeeper-zab-rust	zookeeper-derived.spec_3_0_fifo	zookeeper-zab-rust.impl_3_0_fifo
