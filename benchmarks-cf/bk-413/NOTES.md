@@ -91,6 +91,12 @@ Invisible:
    `doAsyncCloseInternal`'s task (so op responses already delivered can still be acknowledged
    before the close task drains the queue), the closed-ledger callback in `doAsyncAddEntry`, the
    `whenCompleteAsync` of `ensembleChangeLoop`, and `LedgerOpenOp`'s `OrderedGenericCallback`.
+   Self-messages keep the submission order of these tasks only under `fifo` (P2P, one channel
+   from the handle to itself). Under `bag` they may be received in another order, so this is not a
+   general implementation of an ordered executor. In this bounded program the tasks that can
+   compete are the writer's close tasks, and they perform the same drain/close (the second finds
+   the handle CLOSED); no distinct visible outcome from their permutation was found (Astra review,
+   finding 11). No general claim of executor-order preservation is made.
 4. **`completed`** is a field of the op process; the handle's queue needs it in
    `sendAddSuccessCallbacks`. The op sends it with every `SendAddSuccessCallbacksCall` (the op calls
    `lh.sendAddSuccessCallbacks()` only right after `completed` became or was true, l.330, l.409).
@@ -109,12 +115,41 @@ Invisible:
    NoSuchEntry once `Qw - Qa + 1 = 2` bookies answered NoSuchEntry/NoSuchLedger (l.428). The
    coordinator's correction (INTERFACE.md had said two responses) did not affect this code: it was
    written from the source from the start.
-7. **Configuration defaults** (the `conf/` package is not in the cut; 4.13 defaults as I know them):
-   `recoveryReadBatchSize` 1 (also the interface), `delayEnsembleChange` false,
-   `disableEnsembleChangeFeature` unavailable, `enforceMinNumFaultDomainsForWrite` false,
-   `maxAllowedEnsembleChanges` `Integer.MAX_VALUE`, sticky reads and read reordering off,
-   `waitForWriteSetMs` < 0 (no `waitForWritable`), high-priority bookie threads present (so a fence
-   read answers through `fenceThreadPool`), no speculative reads (they are timer-driven).
+7. **Configuration.** Checked against the 4.13 configuration sources fetched to
+   `plan/case-studies/bookkeeper/bk-src/conf-4.13` (`ClientConfiguration.java`,
+   `AbstractConfiguration.java`). Each setting the program fixes:
+   - `recoveryReadBatchSize` = 1: verified at ClientConfiguration.java l.1104 (default 1; the
+     interface also fixes batch size 1).
+   - `reorderReadSequenceEnabled` = false: verified at ClientConfiguration.java l.1125.
+   - `stickyReadsEnabled` = false: verified at ClientConfiguration.java l.1155.
+   - `delayEnsembleChange` = false: verified at ClientConfiguration.java l.1781 (getter l.1780).
+   - The ensemble-change feature is not disabled: the feature name defaults at
+     ClientConfiguration.java l.1870, and its availability comes from the feature provider, which
+     `BookKeeper` sets to `SettableFeatureProvider.DISABLE_ALL` when none is given (code-4.13
+     `client/BookKeeper.java` l.421-422). That DISABLE_ALL reports the feature unavailable is read
+     off its name: `SettableFeatureProvider` is not in the available sources. So: verified as far
+     as the default provider goes.
+   - `maxAllowedEnsembleChanges` = `Integer.MAX_VALUE`: verified at ClientConfiguration.java l.1891.
+   - `enforceMinNumFaultDomainsForWrite` = false: verified at AbstractConfiguration.java l.953.
+   - `waitTimeoutOnBackpressureMillis` (`waitForWriteSetMs`) = -1, so no `waitForWritable`:
+     verified at ClientConfiguration.java l.820.
+   - `addEntryQuorumTimeout` = -1 (no quorum timeout): verified at ClientConfiguration.java l.636.
+     The per-request add/read timeouts (l.612-613, l.660-661, default the read timeout) are
+     dropped: benchmark configuration (no timeouts, interface), not a default.
+   - No speculative reads: benchmark configuration, not a default. The default
+     `speculativeReadTimeout` is 2000 ms (l.912) and `firstSpeculativeReadTimeout` defaults to it
+     (l.937), so 4.13 does install a speculative read policy by default (code-4.13
+     `ClientInternalConf.java` l.86-90). Speculative reads are timer-driven and the interface has no
+     timers.
+   - `enableParallelRecoveryRead` = false: verified at ClientConfiguration.java l.1083 (in 4.13
+     `RecoveryReadOp` does not call `parallelRead` either).
+   - `enableBookieFailureTracking` defaults to true (l.1828); not modelled (benchmark
+     configuration). With read reordering off it only feeds bookie-health bookkeeping, not the
+     replica order.
+   - High-priority bookie threads present (a fence read answers through `fenceThreadPool`):
+     benchmark configuration, not verified: it is a server setting
+     (`ServerConfiguration`), not in the fetched files. With the in-memory journal both paths of
+     `handleReadResultForFenceRead` send the same response.
 8. **In-memory bookie storage.** `getHandle` creates the ledger (`setMasterKey`); `readEntry` of
    `LAST_ADD_CONFIRMED` (-1) returns the stored entry with the highest id (as
    `InterleavedLedgerStorage` via `getLastEntry`), else NoEntry; `getLastAddConfirmed` is the
@@ -124,10 +159,13 @@ Invisible:
    ENOLEDGER). A fence read with entries answers EOK with the last entry: the client's LAC is the
    LAC that entry carried (`verifyDigestAndReturnLastConfirmed`), as in the source.
 9. **Bookie threads.** The write, read and high-priority pools are collapsed into the bookie's
-   one process. Each request is handled atomically on the storage in the source too
-   (`synchronized (handle)`, `setFenced`), and every channel to a bookie carries at most one
-   request (each op/read process sends one request per bookie at a time), so no reordering within
-   a channel is lost.
+   one sequential process. This is the owner's contract (a bookie's request handling and its
+   ledger storage are a sequential process), not a property of the source: in the source only
+   parts are synchronized (`addEntry`'s fence check and store under `synchronized (handle)`,
+   `setFenced`); the fence/read/reply path of `ReadEntryProcessorV3` is not one synchronized
+   operation and can interleave with other requests on other pool threads. Every channel to a
+   bookie carries at most one request at a time (each op/read process sends one request per
+   bookie at a time), so the collapse loses no reordering within a channel.
 10. **zk.** The ledger exists from the start, `Open`, last entry -1, length 0, version 0, and w1h
     starts with that `Versioned` as `asyncCreateLedger` returns it. A write succeeds iff its
     expected version is the current one (then version + 1); otherwise
@@ -141,9 +179,8 @@ Invisible:
 12. **Entry numbers.** BookKeeper's entry ids start at 0 (`++lastAddPushed` from -1); w1's entries
     are 1..e. The payload of entry id k is w1's number k + 1; `Acked`/`Rejected` carry w1's number
     (the add's ctx). `Closed { last }` carries `lh.getLastAddConfirmed()` mapped to w1's numbering:
-    `last = lastEntryId + 1`, and -1 when the ledger is empty (interface: "-1 when empty").
-    **Open question for the interface**: if the other programs report the raw BookKeeper id
-    (0-based) in `Closed`, `clientEntryOf` is the single place to change.
+    `last = lastEntryId + 1`, and -1 when the ledger is empty. This is the convention CONTRACT.md
+    fixes (Closed = id + 1, -1 when empty).
 13. **w2's "nondeterministic moment".** No `Nondet` choice: w2 sends `Recover` at once; when the
     recovery happens relative to w1's writes is the exploration's choice of the order in which
     bookies, zk and handles receive their messages, which is the only thing a moment can change in
@@ -162,6 +199,30 @@ Invisible:
 
 Defect 1 is not fixed: recovery reads go without fencing, so a bookie not fenced by the
 `Qw - Qa + 1` LAC responses can still accept w1's write after the recovery read passed it.
+
+### Recorded witness of Defect 1 at e = 1 (Astra's schedule, hand-derived, not replayed)
+
+My hand derivation said b2 answers the recovery read with NoSuchEntry; that was wrong: b2 has
+never created the ledger at that point (no add, no fence reached it), so it answers
+**NoSuchLedger** (ENOLEDGER), which counts as missing in the same way. The schedule:
+
+1. Admit `Add(1)` and initiate its three ordinary writes, carrying entry id 0, LAC -1.
+2. Mark the metadata `IN_RECOVERY` and issue all fencing LAC requests.
+3. Fence empty b1. Store entry 0 at b3, then fence b3. Their LAC responses both yield -1.
+4. Keep b2's fencing request and ordinary add pending.
+5. Read entry 0 from b1, receiving NoSuchEntry; then read b2, receiving **NoSuchLedger** because
+   b2 has not yet created the ledger.
+6. Those two misses finish recovery; commit the empty closed metadata and deliver `Closed(-1)`.
+7. Deliver the ordinary add to the still unfenced b2. Process its success and b3's success at the
+   add operation, then deliver `Acked(1)`.
+8. Deliver the remaining requests and responses afterwards; in particular, delay b1's fencing
+   error response to the add until after the acknowledgement.
+
+Visible result: `Acked(1)` with `Closed(-1)`. The schedule respects `fifo`, which is FIFO per
+process pair: b2's fence (from the ReadLastConfirmedOp), its recovery read (from the
+RecoveryReadOp) and its add (from the PendingAddOp) come from three different sender processes,
+so `fifo` does not order b2's fence ahead of its recovery read or its add. The two 900 s runs did
+not reach this schedule (their explorations were partial, see below).
 
 ## Compile (inside this directory)
 
