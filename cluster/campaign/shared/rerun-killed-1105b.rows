@@ -1,0 +1,4 @@
+# Exports killed on the voltas at 14:33 (uncapped JVMs; queues restarted with -Xmx24g) and their joins, rerun as .r2 under a capped queue.
+XCE.pineapple-paper.impl_2_fifo.w16.c48h.r2 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-pineapple-paper 'bench.pineapple_paper.PineapplePaper:impl,2,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
+XCE.pineapple-paper.impl_3_fifo.w16.c48h.r2 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-pineapple-paper 'bench.pineapple_paper.PineapplePaper:impl,3,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
+XCE.zookeeper-zab.impl_2_1_fifo.w16.c48h.r2 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-zookeeper-zab 'bench.zookeeper_zab.ZookeeperZab:impl,2,1,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
