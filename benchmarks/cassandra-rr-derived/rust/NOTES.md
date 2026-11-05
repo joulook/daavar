@@ -50,8 +50,19 @@ rust template. Nothing else.
      break write atomicity when data is read at a more granular level than it is written";
      "Provides monotonic quorum reads, but not partition level write atomicity".
    - So after `ReadA` returns a pending v, a later `ReadAB` can return `(v, older)`.
-4. **`blocking` `ReadAB`**: choose `xa` from cell a's candidates, then `xb` from cell b's candidates
-   restricted to `xb <= xa`; set `lo_a = xa`, `lo_b = xb`.
+4. **`blocking` `ReadAB`** (revised after review, round 2): the candidates are *pairs*, built jointly:
+   the floor pair `(lo_a, lo_b)` and, for each pending write v, `(max(lo_a, v), max(lo_b, v))`;
+   deduplicated; one pair is chosen (`nondet()` chain) and both floors are raised to it
+   (`pair_candidates`). A whole-pair write that is newly observed is therefore seen on both cells or on
+   neither; a split `(a > b)` is returned only when it already exists in the floors, i.e. when an
+   earlier `ReadA` repaired cell a alone (`lo_a > lo_b`).
+   - Follows: "read repair can break write atomicity when data is read at a more granular level than it
+     is written" — the page's only cause of a partially applied write is a repair of fewer cells than
+     the write covered; without such a repair every replica holds both cells of one write.
+   - Round 1 chose `a` and `b` independently (subject to floors and `b <= a`); the reviewer showed this
+     admits `c1: A -> 0; AB -> (1,0)` with no preceding `ReadA` that propagated a=1 alone, which the
+     documented mechanism cannot produce. That history is now excluded; the legitimate
+     `c1: A -> 1; AB -> (1,0)` stays admitted.
 5. **`none`**: no floor is raised by reads (only by `Commit`), so `lo_a = lo_b` always. A read picks one
    value x from the candidates; `ReadA` returns x, `ReadAB` returns `(x, x)`.
    - Follows: "the coordinator will reconcile any differences between replicas, but will not attempt to
@@ -63,18 +74,24 @@ rust template. Nothing else.
 
 ## Decisions where the document is silent
 
-- D1. Reads are atomic steps at `n2` (a single point between request and reply). Two overlapping reads
-  can still return any combination, because the order of their steps at `n2` is independent of the order
-  of their replies.
+- D1. Reads are atomic steps at `n2` (a single point between request and reply). The order of two
+  overlapping reads' steps at `n2` is independent of the order of their replies, so overlapping reads may
+  reply in decreasing value order (the successive-read guarantee does not apply to them). This does not
+  mean any combination of values: each read's value is constrained by the floors at its step.
 - D2. A write becomes visible-possibly only once its coordinator has received it (`Begin`), and is
   guaranteed visible from its `Commit`, which precedes its `Ack`. A read overlapping a write whose
   `Commit` has been processed sees it, even if the `Ack` has not reached the client yet.
 - D3. "Two successive quorum reads" is taken across clients too (any read whose step at `n2` comes after
   another read's): the blocking repair makes the value durable on a quorum, which any later reader sees.
-- D4. Under `blocking`, `ReadAB` never returns `b` newer than `a`. The document only names partial
-  repair of the cells read as the source of broken atomicity, and with whole-partition writes and
-  `a`-only repairs, cell a on any replica is never older than cell b. This is my inference, not a sentence
-  of the page. (`a`, `b` are otherwise chosen independently above their floors.)
+- D4. Under `blocking`, `ReadAB` never returns `b` newer than `a`, and its pair is chosen jointly (part 4),
+  not per cell. Reason: initially a=b=0; writes set both cells with one timestamp; a `ReadA` repair advances
+  only a; a `ReadAB` reconciles and repairs both cells from the same replicas; reconciliation never moves
+  a cell back. So every replica keeps a >= b, and a split exists only after an a-only repair. This is an
+  inference from the documented mechanism plus the interface, not a sentence of the page. `b <= a` now
+  holds by construction (`lo_b <= lo_a` is invariant) and is checked by a `debug_assert!`.
+  Possible residual strictness, not shown to matter: with two pending writes v1 < v2 the joint rule offers
+  no pair mixing them on top of the floors other than through `max`; for q <= 2 there is only one write
+  (`c0`'s value 1), so this cannot arise in the four required runs.
 - D5. Under `blocking`, a `ReadAB` raises `lo_b` to the returned `b`, i.e. it repairs b as well
   ("only the data covered by a SELECT statement is repaired").
 - D6. Under `none`, a `ReadAB` returns `a = b` even across several concurrent pending writes (one
@@ -83,15 +100,30 @@ rust template. Nothing else.
 - D7. Writes of two different clients are ordered by value (INTERFACE: the timestamp is the value, last
   writer wins), so a commit raises the floor to `max(floor, v)`; a pending value below the floor is never
   returned.
-- D8. The read-repair example (CL TWO on 5 nodes, digest/full reads, speculative retry, diagnostic
-  events, background repair) does not change what the clients can observe under the interface (no
-  timeouts, QUORUM, 3 replicas) and is not modelled.
+- D8. Not modelled: the CL TWO / 5-node example, digest vs full reads, speculative retry, diagnostic
+  events, background repair. Argument about observable histories (not just "invisible"): digest reads and
+  the full reads after a mismatch only decide *how* the coordinator obtains the reconciled value of the
+  replicas it read, which the page says is "the most up-to-date data" of those replicas — this is what
+  `candidates`/`pair_candidates` return; speculative retry and timeouts never fire under the interface (a
+  reply always arrives), and background repair is removed in 4.0; diagnostic events send nothing to
+  clients. I do not claim this is a proof of correspondence; the execution counts below are not counts
+  of distinct client histories either.
 - D9. Setup: INTERFACE says the main thread sends nothing but also that the replicas get one setup
-  message; I send the `Setup` from the entry closure (the main thread) after spawning, invisible.
+  message; I send the `Setup` from the entry closure (the main thread) after spawning, invisible. This
+  deviates from INTERFACE's literal structure; it has no bearing on the client values (reviewer agrees).
   Coordinator-to-`n2` messages are `(coordinator index, Int)` tuples; every receive of a different-typed
   message is a tagged receive filtered by sender, so no receive can take a message of the wrong type.
-- D10. Internal threads end (the prompt's rule) instead of blocking forever as INTERFACE's replicas do.
+- D10. Internal threads end (the prompt's rule, which I followed over INTERFACE's "replicas never end").
+  Also a deviation from INTERFACE's literal structure, without bearing on the client values.
   For q <= 2 there is a single write (`c0`'s value 1); larger q has more and is supported.
+
+## Revision history
+
+- Round 2 (2026-11-05, after the independent review `plan/case-studies/cassandra/rr/derived-review/REVIEW.md`,
+  verdict TOO LOOSE under `blocking`): ReadAB under `blocking` chooses one jointly built pair (part 4)
+  instead of two independent cells. `none` unchanged; zero as a candidate, cross-client per-cell floors,
+  `b <= a` and the asynchronous ack path kept. NONE's source strategy is `ReadOnlyReadRepair`
+  (reconciles, issues no repair mutations), per the review; this matches part 5.
 
 ## Compile and runs (inside OUT_DIR)
 
@@ -109,10 +141,13 @@ measurement field `cache_hits: ` of program.rs's block in every run):
 |---|---|
 | 1 blocking | `execs=4 blocked=0` |
 | 1 none | `execs=4 blocked=0` |
-| 2 blocking | `execs=18 blocked=0` |
+| 2 blocking | `execs=16 blocked=0` |
 | 2 none | `execs=16 blocked=0` |
 
-(Extra, not required: q=3 blocking 291 / none 212; q=4 blocking 2308 / none 1687; all blocked=0.)
+Also run (revision round): q=3 blocking `execs=212 blocked=0`, q=3 none `execs=212 blocked=0`.
+Round 1 (independent ReadAB choice) had 2 blocking = 18 and 3 blocking = 291. Equal counts for the two
+strategies after the revision are a coincidence of branch counts (one choice per read among the same
+number of candidates), not equal client histories: the values differ (below).
 
 For q=2 the visible difference: under `none`, `c1` may see `ValueA(1,1)` then `ValueAB(1,0,0)`
 (non-monotonic); under `blocking` that is impossible, but `ValueA(1,1)` then `ValueAB(1,1,0)` is

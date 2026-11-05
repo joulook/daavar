@@ -85,6 +85,22 @@ fn candidates(lo: u64, pending: &[u64]) -> Vec<u64> {
     c
 }
 
+/// The (a, b) pairs a blocking QUORUM read of both cells may return: the floor pair, or,
+/// for each pending write v, (max(lo_a, v), max(lo_b, v)); deduplicated. b <= a holds
+/// in every pair (lo_b <= lo_a is an invariant: only cell a is ever raised alone).
+fn pair_candidates(lo_a: u64, lo_b: u64, pending: &[u64]) -> Vec<(u64, u64)> {
+    let mut c = vec![(lo_a, lo_b)];
+    for &v in pending {
+        let p = (lo_a.max(v), lo_b.max(v));
+        if !c.contains(&p) {
+            c.push(p);
+        }
+    }
+    debug_assert!(c.iter().all(|&(a, b)| b <= a));
+    c.sort();
+    c
+}
+
 fn kinds(i: usize, q: usize) -> (usize, usize) {
     // (writes, reads) of client i
     let w = (0..q).filter(|j| (i + j) % 3 == 0).count();
@@ -124,11 +140,11 @@ fn state(q: usize, blocking: bool, main: ThreadId) {
             }
             Int::Read(true) => {
                 if blocking {
-                    let ca = candidates(lo_a, &pending);
-                    let xa = ca[choose(ca.len())];
-                    // b never newer than a: only cell a is ever repaired alone
-                    let cb: Vec<u64> = candidates(lo_b, &pending).into_iter().filter(|&v| v <= xa).collect();
-                    let xb = cb[choose(cb.len())];
+                    // joint candidates: the floor pair, or a pending whole-partition write v
+                    // seen on top of the floors. A split (a newer than b) only comes from an
+                    // earlier ReadA's repair of cell a alone, i.e. from lo_a > lo_b.
+                    let c = pair_candidates(lo_a, lo_b, &pending);
+                    let (xa, xb) = c[choose(c.len())];
                     lo_a = xa;
                     lo_b = xb;
                     send_msg(to, Int::Result(xa, xb));
