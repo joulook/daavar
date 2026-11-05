@@ -6,7 +6,6 @@ reset	reset	bag	20,11
 2pc-ab	off-by-one	bag	8
 2pc-ab	off-by-one	bag	9
 2pc-ds	skip-ack-loop	bag	4
-2pc-ds	skip-ack-loop	bag	5
 2pc-lb	counting-bug	bag	6
 2pc-lb	counting-bug	bag	7
 2pc-le	ring-split	fifo	11

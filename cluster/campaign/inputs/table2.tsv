@@ -10,7 +10,6 @@ share	correct	fifo	24,24
 2pc-ab	correct	bag	8
 2pc-ab	correct	bag	9
 2pc-ds	correct	bag	4
-2pc-ds	correct	bag	5
 2pc-lb	correct	bag	6
 2pc-lb	correct	bag	7
 2pc-le	ring-conf	fifo	10

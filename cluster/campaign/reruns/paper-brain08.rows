@@ -50,7 +50,6 @@ C1.ewd998-termination.impl_5_bag_no-black-on-receive.t16.p 250 172800 needok:C1.
 C3J.ewd998-termination.impl_5_bag_no-black-on-receive.p.m 250 172800 needok:C3E.ewd998-termination.impl_5_bag_no-black-on-receive.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.ewd998-termination.spec_5_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.ewd998-termination.impl_5_bag_no-black-on-receive.t16.p/export.jsonl
 C3E.a3-lock.impl_wrong-round_3_4_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh a3-lock export impl --out export.jsonl --threads 16 --model fifo -- wrong-round 3 4
 C3J.a3-lock.impl_wrong-round_3_4_fifo.vs-fifo.p.m 250 172800 needok:C3E.a3-lock.impl_wrong-round_3_4_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a3-lock.spec_fifo_3_4_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.a3-lock.impl_wrong-round_3_4_fifo.t16.p/export.jsonl
-C3E.two-pc-disel.spec_5_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export spec --out export.jsonl --threads 16 --model bag -- 5
 C3E.election.spec_ring_conf_11_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 11
 C3E.ewd998-termination.spec_4_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export spec --out export.jsonl --threads 16 --model bag -- 4
 C3E.ring-election-igloo.spec_6_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo export spec --out export.jsonl --threads 16 --model bag -- 6
