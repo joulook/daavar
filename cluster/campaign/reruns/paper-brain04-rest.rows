@@ -1,9 +1,4 @@
 # Paper rows (Tables 2/3) split over the reserved paper machines (owner decision pending, 2026-11-05 08:45): one row per NUMA node, nothing else on the machine; an instance's rows stay on one machine (needok).
-C3E.s2-share.spec_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 28
-C3E.s2-share.impl_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 28
-C1.s2-share.impl_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
-C3J.s2-share.impl_share_28_28_fifo.p.m 250 172800 needok:C3E.s2-share.impl_share_28_28_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s2-share.spec_share_28_28_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_28_28_fifo.t16.p/export.jsonl
-C2.s2-share.impl_share_28_28_fifo.t16.p 250 172800 needok:C1.s2-share.impl_share_28_28_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
 C3E.two-pc-abstain-kragl.impl_8_correct_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export impl --out export.jsonl --threads 16 --model bag -- 8 correct
 C1.two-pc-abstain-kragl.impl_8_correct_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateful --threads 16 --model bag -- 8 correct
 C3J.two-pc-abstain-kragl.impl_8_correct_bag.p.m 250 172800 needok:C3E.two-pc-abstain-kragl.impl_8_correct_bag.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-abstain-kragl.spec_8_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.two-pc-abstain-kragl.impl_8_correct_bag.t16.p/export.jsonl

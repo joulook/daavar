@@ -71,10 +71,6 @@ C3J.two-pc-disel.impl_4_bag_skip-ack-loop.p.m 250 172800 needok:C3E.two-pc-disel
 C3E.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel export impl --out export.jsonl --threads 16 --model bag -- 5 skip-ack-loop
 C1.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateful --threads 16 --model bag -- 5 skip-ack-loop
 C3J.two-pc-disel.impl_5_bag_skip-ack-loop.p.m 250 172800 needok:C3E.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-disel.spec_5_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p/export.jsonl
-C3E.s2-share.spec_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 28
-C3E.s2-share.impl_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 28
-C1.s2-share.impl_share_28_28_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
-C3J.s2-share.impl_share_28_28_fifo.p.m 250 172800 needok:C3E.s2-share.impl_share_28_28_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s2-share.spec_share_28_28_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_28_28_fifo.t16.p/export.jsonl
 C3E.two-pc-lbinria.spec_6_bag.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export spec --out export.jsonl --threads 16 --model bag -- 6
 C3E.two-pc-lbinria.impl_6_bag_correct.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 6 correct
 C1.two-pc-lbinria.impl_6_bag_correct.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 6 correct
@@ -196,7 +192,6 @@ C2.two-pc-abstain-kragl.impl_8_off-by-one_bag.t16.p 250 172800 needok:C1.two-pc-
 C2.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p 250 172800 needok:C1.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateless --threads 16 --model bag -- 9 off-by-one
 C2.two-pc-disel.impl_4_bag_skip-ack-loop.t16.p 250 172800 needok:C1.two-pc-disel.impl_4_bag_skip-ack-loop.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateless --threads 16 --model bag -- 4 skip-ack-loop
 C2.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p 250 172800 needok:C1.two-pc-disel.impl_5_bag_skip-ack-loop.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-disel conf --engine stateless --threads 16 --model bag -- 5 skip-ack-loop
-C2.s2-share.impl_share_28_28_fifo.t16.p 250 172800 needok:C1.s2-share.impl_share_28_28_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
 C2.two-pc-lbinria.impl_6_bag_correct.t16.p 250 172800 needok:C1.two-pc-lbinria.impl_6_bag_correct.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateless --threads 16 --model bag -- 6 correct
 C2.two-pc-lbinria.impl_7_bag_correct.t16.p 250 172800 needok:C1.two-pc-lbinria.impl_7_bag_correct.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateless --threads 16 --model bag -- 7 correct
 C2.two-pc-lbinria.impl_6_bag_counting-bug.t16.p 250 172800 needok:C1.two-pc-lbinria.impl_6_bag_counting-bug.t16.p "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateless --threads 16 --model bag -- 6 counting-bug
