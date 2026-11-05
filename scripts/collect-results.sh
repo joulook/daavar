@@ -21,5 +21,6 @@ while true; do
   for i in 1 2 3; do timeout 1200 git push -q origin main 2>/dev/null && break; git pull -q --rebase origin main 2>/dev/null; done
   echo "$(date '+%m-%d %H:%M') pushed: $(git log --oneline -1 | cut -c1-60)"
   for n in "${NODES[@]}"; do timeout 300 $S $n 'cd /local/mkhoshechin/eval/brain-data && flock -w 120 .publish.lock git pull -q --rebase --autostash origin main 2>/dev/null' </dev/null >/dev/null 2>&1 & done; wait
+  [ "$IV" = 0 ] && break   # one pass (the 30-min pipeline of 2026-11-05 runs the collector as its first step)
   sleep "$IV"
 done
