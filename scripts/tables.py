@@ -96,9 +96,12 @@ def contended(r):
     return n
 for _r in _allrows: _r["_contended"] = contended(_r)
 byid = {}
-for r in rows:  # an id run on several pins: the 48 h tier, then the newest pin, wins
+# a record that is no measurement (could not start: exit-127/exit-2, marked invalid) never wins the id over a real run of the same
+# id: the brain04 exit-127 joins of 2026-11-03 hid brain01's conforming commit 12,12 / 16,16 / 20,20 joins (owner, 2026-11-05)
+def _infra(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")
+for r in rows:  # an id run on several pins: a real measurement, then the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
-    if cur is None or pin_rank(r) >= pin_rank(cur): byid[base_id(r["run_id"])] = r
+    if cur is None or (not _infra(r), pin_rank(r)) >= (not _infra(cur), pin_rank(cur)): byid[base_id(r["run_id"])] = r
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
 for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
@@ -354,6 +357,16 @@ for pre, fname, title in CAMP:
     _x = [r for r in rs if r.get("stop_reason") == "refused"]
     if _x: print(f"{pre}: {len(_x)} refused rows left out")
     rs = [r for r in rs if r.get("stop_reason") != "refused"]
+    # the invalid and error-exit rows go first: a later run of an instance that failed (exit-127 on brain04, 2026-11-03) must not
+    # hide the earlier good run of the same instance in the one-per-instance choice below (owner, 2026-11-05)
+    def _invalid(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith("invalid") or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")   # 2026-11-05: a row that could not start (missing binary, usage error) is an infrastructure failure, never a measurement: an older record of the case must win
+    _x = [r for r in rs if _invalid(r)]
+    if _x: print(f"{pre}: {len(_x)} rows left out: cut by the thread threshold, killed from outside, or marked invalid by the runner (inputs/invalid-rows.tsv)")
+    rs = [r for r in rs if not _invalid(r)]
+    # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
+    _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
+    if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))
+    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
     # one row per instance: the same case run at several thread counts (ids .t1, .t16, ...) keeps the highest
     _by = {}
     for r in rs:
@@ -373,14 +386,6 @@ for pre, fname, title in CAMP:
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
     rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
-    def _invalid(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith("invalid") or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")   # 2026-11-05: a row that could not start (missing binary, usage error) is an infrastructure failure, never a measurement: an older record of the case must win
-    _x = [r for r in rs if _invalid(r)]
-    if _x: print(f"{pre}: {len(_x)} rows left out: cut by the thread threshold, killed from outside, or marked invalid by the runner (inputs/invalid-rows.tsv)")
-    rs = [r for r in rs if not _invalid(r)]
-    # a run the tool ended with an error exit (a size the program refuses, a kill) is not a measurement: left out, counted
-    _x = [r for r in rs if (r.get("stop_reason") or "").startswith("exit-")]
-    if _x: print(f"{pre}: {len(_x)} rows with a tool error exit left out: " + ", ".join(sorted({r['run_id'].split('.')[1] + ':' + r['stop_reason'] for r in _x})))
-    rs = [r for r in rs if not (r.get("stop_reason") or "").startswith("exit-")]
     camp_rows[pre] = rs
     rs.sort(key=lambda r: (r["a"].get("family", ""), r["a"].get("variant", ""), sz(r["a"].get("size", "0"))))
     offline = pre in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2")
