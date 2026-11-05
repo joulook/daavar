@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{paxos} (paxos-oopsla25)}
 \author{}
-\date{generated 2026-11-03 from brain-data 48587ddd0 2026-11-03 23:12:27 +0100}
+\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -66,8 +66,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-the tool ended with an error (exit-101): 4 half-majority bag, 4 ignore-max-vote bag, 4 correct bag, 4 1b-none bag, 4 skip-2a-check bag.\par
-skipped: a smaller size had reached its limit: 5 ignore-max-vote bag, 5 correct bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 correct bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 half-majority bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 correct bag, 8 ignore-max-vote bag, 8 half-majority bag, 8 1b-none bag, 8 skip-2a-check bag.\par
+the tool ended with an error (exit-101): 4 ignore-max-vote bag, 4 correct bag, 4 half-majority bag, 4 1b-none bag, 4 skip-2a-check bag.\par
+skipped: a smaller size had reached its limit: 5 ignore-max-vote bag, 5 half-majority bag, 5 correct bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 correct bag, 6 1b-none bag, 6 skip-2a-check bag, 7 half-majority bag, 7 correct bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 ignore-max-vote bag, 8 correct bag, 8 1b-none bag, 8 skip-2a-check bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -125,8 +125,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-the tool ended with an error (exit-101): 4 half-majority bag, 4 ignore-max-vote bag, 4 correct bag, 4 1b-none bag, 4 skip-2a-check bag.\par
-skipped: a smaller size had reached its limit: 5 ignore-max-vote bag, 5 correct bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 correct bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 half-majority bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 correct bag, 8 ignore-max-vote bag, 8 half-majority bag, 8 1b-none bag, 8 skip-2a-check bag.\par
+the tool ended with an error (exit-101): 4 ignore-max-vote bag, 4 correct bag, 4 half-majority bag, 4 1b-none bag, 4 skip-2a-check bag.\par
+skipped: a smaller size had reached its limit: 5 ignore-max-vote bag, 5 half-majority bag, 5 correct bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 correct bag, 6 1b-none bag, 6 skip-2a-check bag, 7 half-majority bag, 7 correct bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 ignore-max-vote bag, 8 correct bag, 8 1b-none bag, 8 skip-2a-check bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -184,7 +184,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 4 ignore-max-vote bag, 4 half-majority bag, 4 correct bag, 4 1b-none bag, 4 skip-2a-check bag, 5 ignore-max-vote bag, 5 correct bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 correct bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 half-majority bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 correct bag, 8 ignore-max-vote bag, 8 half-majority bag, 8 1b-none bag, \ldots\ (25 instances in all).\par
+skipped: a smaller size had reached its limit: 4 ignore-max-vote bag, 4 correct bag, 4 half-majority bag, 4 1b-none bag, 4 skip-2a-check bag, 5 ignore-max-vote bag, 5 half-majority bag, 5 correct bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 half-majority bag, 6 correct bag, 6 1b-none bag, 6 skip-2a-check bag, 7 half-majority bag, 7 correct bag, 7 ignore-max-vote bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 ignore-max-vote bag, 8 correct bag, 8 1b-none bag, \ldots\ (25 instances in all).\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -358,6 +358,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \endhead
 \color{red} 1 & 268992 & 268992 & conforms & 315.3 & 19592 & 10 min, 16 GB & 315.3 & 3.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 455616 & 455616 & conforms & 601.7 & 22698 & 10 min, 16 GB & 601.7 & 6.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 828864 & conforms & 1211.1 & 24622 & 48 h, 250 GB & 1211.1 & 12.7 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{half-majority}, model bag, expected conforms}
@@ -368,6 +369,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \endhead
 \color{red} 1 & 416520 & 416520 & conforms & 398.9 & 26396 & 10 min, 16 GB & 398.9 & 3.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 795600 & 795600 & conforms & 816.7 & 35184 & 10 min, 16 GB & 816.6 & 6.7 & 0.1 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 1553760 & 1553760 & conforms & 1687.1 & 39622 & 48 h, 250 GB & 1687.1 & 16.2 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{ignore-max-vote}, model bag, expected conforms}
@@ -387,6 +389,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \midrule
 \endhead
 \color{red} 1 & 1962432 & 1962432 & conforms & 2189.1 & 45227 & 10 min, 16 GB & 2189.0 & 1629.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 7841088 & 7841088 & conforms & 10195.0 & 81218 & 48 h, 250 GB & 10195.0 & 75.0 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{1b-none}, model bag, expected violation}
@@ -407,6 +410,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 268992 & 416520 &  & conforms$^{\ast}$ & 315.3 & 19592 & 10 min, 16 GB & 315.3 & 3.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 455616 & 795600 & 4 & violation & 601.7 & 22698 & 10 min, 16 GB & 601.7 & 6.7 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 1553760 & 12 & violation & 1211.1 & 24622 & 48 h, 250 GB & 1211.1 & 16.2 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{ignore-max-vote}, model bag, expected violation}
@@ -427,6 +431,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 268992 & 1962432 &  & conforms$^{\ast}$ & 1629.2 & 19592 & 10 min, 16 GB & 315.3 & 1629.2 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 455616 & 3921984 & 2 & violation & 601.7 & 22698 & 10 min, 16 GB & 601.7 & 28.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 7841088 & 6 & violation & 1211.1 & 24622 & 48 h, 250 GB & 1211.1 & 75.0 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
@@ -450,6 +455,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \endhead
 \color{red} 1 & 268992 & 268992 & conforms & 315.3 & 19592 & 10 min, 16 GB & 3.3 & 315.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 455616 & 455616 & conforms & 601.7 & 22698 & 10 min, 16 GB & 6.1 & 601.7 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 828864 & conforms & 1211.1 & 24622 & 48 h, 250 GB & 12.7 & 1211.1 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{half-majority}, model bag, expected conforms}
@@ -460,6 +466,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \endhead
 \color{red} 1 & 416520 & 416520 & conforms & 398.9 & 26396 & 10 min, 16 GB & 3.6 & 398.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 795600 & 795600 & conforms & 816.6 & 35184 & 10 min, 16 GB & 6.7 & 816.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 1553760 & 1553760 & conforms & 1687.1 & 39622 & 48 h, 250 GB & 16.2 & 1687.1 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{ignore-max-vote}, model bag, expected conforms}
@@ -478,16 +485,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 1 & 268992 & 1962432 & conforms$^{\ast}$ & 2189.0 & 45227 & 10 min, 16 GB & 3.3 & 2189.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\bottomrule
-\end{longtable}
-\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{skip-2a-check}, model bag, expected conforms}
-\begin{longtable}{@{}rrrlrrlrrrrl@{}}
-\toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
-\midrule
-\endhead
 \color{red} 1 & 1962432 & 1962432 & conforms & 2189.0 & 45227 & 10 min, 16 GB & 1629.2 & 2189.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 7841088 & 7841088 & conforms & 10195.0 & 81218 & 48 h, 250 GB & 75.0 & 10195.0 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{1b-none}, model bag, expected violation}
@@ -508,6 +507,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 268992 & 416520 &  & conforms$^{\ast}$ & 398.9 & 26396 & 10 min, 16 GB & 3.3 & 398.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 2 & 455616 & 795600 & 4 & violation & 816.6 & 35184 & 10 min, 16 GB & 6.1 & 816.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 1553760 & 12 & violation & 1687.1 & 39622 & 48 h, 250 GB & 12.7 & 1687.1 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{ignore-max-vote}, model bag, expected violation}
@@ -520,8 +520,48 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{red} 2 & 455616 & 455616 & 2 & violation & 660.3 & 26315 & 10 min, 16 GB & 6.1 & 660.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
+\subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{skip-2a-check}, model bag, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 1 & 268992 & 1962432 &  & conforms$^{\ast}$ & 2189.0 & 45227 & 10 min, 16 GB & 3.3 & 2189.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{blue} 3 & 828864 & 7841088 & 6 & violation & 10195.0 & 81218 & 48 h, 250 GB & 12.7 & 10195.0 & 0.0 & merge & brain01, 2026-11-04 \\
+\bottomrule
+\end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
 skipped: a smaller size had reached its limit: 2 bag skip-2a-check.\par
+\section*{twins online, Rust implementation (TraceForge) against the Java twin's export}
+\subsection*{twins online, Rust implementation (TraceForge) against the Java twin's export: pair \textsf{correct}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{blue} 3 & 828864 & 828864 & conforms & 13.3 & 25 & 48 h, 250 GB &  & brain01, 2026-11-04 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins online, Rust implementation (TraceForge) against the Java twin's export: pair \textsf{half-majority}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{blue} 3 & 1553760 & 1553760 & conforms & 18.0 & 25 & 48 h, 250 GB &  & brain01, 2026-11-04 \\
+\bottomrule
+\end{longtable}
+\subsection*{twins online, Rust implementation (TraceForge) against the Java twin's export: pair \textsf{skip-2a-check}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
+\midrule
+\endhead
+\color{blue} 3 & 7841088 & 7841088 & conforms & 86.5 & 33 & 48 h, 250 GB &  & brain01, 2026-11-04 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (twins online, Rust implementation (TraceForge) against the Java twin's export).}
+planned but never scheduled (grid points beyond the ladder): 1 bag half-majority, 1 bag ignore-max-vote, 1 bag correct, 1 bag 1b-none, 1 bag skip-2a-check, 2 bag correct, 2 bag ignore-max-vote, 2 bag half-majority, 2 bag 1b-none, 2 bag skip-2a-check.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

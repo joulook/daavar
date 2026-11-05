@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{2pc-tr} (two-pc-trillium)}
 \author{}
-\date{generated 2026-11-03 from brain-data 48587ddd0 2026-11-03 23:12:27 +0100}
+\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -40,8 +40,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 7 ignore-abort-vote bag, 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct, 8 correct bag, 9 bag correct, 9 bag ignore-abort-vote.\par
-skipped: a smaller size had reached its limit: 8 ignore-abort-vote bag, 9 ignore-abort-vote bag, 9 correct bag, 10 correct bag, 10 ignore-abort-vote bag.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 7 ignore-abort-vote bag, 8 correct bag, 8 bag ignore-abort-vote, 8 bag correct, 9 bag correct, 9 bag ignore-abort-vote.\par
+skipped: a smaller size had reached its limit: 8 ignore-abort-vote bag, 9 correct bag, 9 ignore-abort-vote bag, 10 ignore-abort-vote bag, 10 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -74,10 +74,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-left out by the table rules (ok): 7 ignore-abort-vote bag, 7 correct bag.\par
+left out by the table rules (ok): 7 correct bag, 7 ignore-abort-vote bag.\par
 skipped: a smaller size had reached its limit: 9 correct bag, 9 ignore-abort-vote bag, 10 correct bag, 10 ignore-abort-vote bag.\par
-left out by the table rules (timeout): 8 ignore-abort-vote bag, 9 bag correct, 9 bag ignore-abort-vote.\par
-planned but never scheduled (grid points beyond the ladder): 2 fifo correct, 2 fifo ignore-abort-vote, 3 fifo correct, 3 fifo ignore-abort-vote, 4 fifo correct, 4 fifo ignore-abort-vote, 5 fifo correct, 5 fifo ignore-abort-vote, 6 fifo correct, 6 fifo ignore-abort-vote, 7 fifo ignore-abort-vote, 7 fifo correct, 8 bag correct, 8 fifo correct, 8 fifo ignore-abort-vote, 10 bag correct, 10 bag ignore-abort-vote, 11 bag ignore-abort-vote, 11 bag correct.\par
+left out by the table rules (timeout): 8 ignore-abort-vote bag, 9 bag ignore-abort-vote, 9 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 2 fifo ignore-abort-vote, 2 fifo correct, 3 fifo correct, 3 fifo ignore-abort-vote, 4 fifo correct, 4 fifo ignore-abort-vote, 5 fifo ignore-abort-vote, 5 fifo correct, 6 fifo ignore-abort-vote, 6 fifo correct, 7 fifo ignore-abort-vote, 7 fifo correct, 8 fifo correct, 8 bag correct, 8 fifo ignore-abort-vote, 10 ignore-abort-vote bag, 10 bag correct, 10 bag ignore-abort-vote, 10 correct bag, 11 correct bag, 11 ignore-abort-vote bag, 12 correct bag, 12 ignore-abort-vote bag, 13 correct bag, \ldots\ (29 instances in all).\par
+left out by the table rules (invalid: foreign load): 11 bag ignore-abort-vote, 11 bag correct.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -108,8 +109,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 8 ignore-abort-vote bag, 8 correct bag, 9 ignore-abort-vote bag, 9 correct bag, 10 correct bag, 10 ignore-abort-vote bag.\par
-planned but never scheduled (grid points beyond the ladder): 2 fifo correct, 2 fifo ignore-abort-vote, 3 fifo correct, 3 fifo ignore-abort-vote, 4 fifo correct, 4 fifo ignore-abort-vote, 5 fifo correct, 5 fifo ignore-abort-vote, 6 fifo correct, 6 fifo ignore-abort-vote, 7 fifo ignore-abort-vote, 7 fifo correct, 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 fifo correct, 8 bag ignore-abort-vote, 8 fifo ignore-abort-vote, 9 bag correct, 9 bag ignore-abort-vote.\par
+skipped: a smaller size had reached its limit: 8 correct bag, 8 ignore-abort-vote bag, 9 correct bag, 9 ignore-abort-vote bag, 10 ignore-abort-vote bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 2 fifo ignore-abort-vote, 2 fifo correct, 3 fifo ignore-abort-vote, 3 fifo correct, 4 fifo correct, 4 fifo ignore-abort-vote, 5 fifo ignore-abort-vote, 5 fifo correct, 6 fifo ignore-abort-vote, 6 fifo correct, 7 fifo ignore-abort-vote, 7 bag correct, 7 fifo correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 fifo correct, 8 bag correct, 8 fifo ignore-abort-vote, 9 bag correct, 9 bag ignore-abort-vote.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -192,7 +193,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
 refused (an input missing at run time): 2 bag ignore-abort-vote, 2 bag correct.\par
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -226,7 +227,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
 refused (an input missing at run time): 2 bag ignore-abort-vote, 2 bag correct.\par
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -260,7 +261,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
 refused (an input missing at run time): 2 bag ignore-abort-vote, 2 bag correct.\par
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -294,7 +295,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
 refused (an input missing at run time): 2 bag ignore-abort-vote, 2 bag correct.\par
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -330,7 +331,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Java port (JMC) against the Rust implementation's export).}
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -366,5 +367,5 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag correct, 8 bag ignore-abort-vote.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag ignore-abort-vote, 8 bag ignore-abort-vote, 8 bag correct.\par
 \end{document}

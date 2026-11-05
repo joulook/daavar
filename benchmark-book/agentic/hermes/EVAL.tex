@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{hermes} (hermes)}
 \author{}
-\date{generated 2026-11-03 from brain-data 5deffe563 2026-11-03 22:35:44 +0100}
+\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -28,42 +28,41 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \midrule
 \endhead
 \color{blue} 3,2 & 7200 & 4652 & conforms & 0.5 & 2 & 4 h, 250 GB & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 252865152 & 90010608 & conforms & 2001.3 & 378 & 48 h, 250 GB & brain03, 2026-11-03 \\
 \bottomrule
 \end{longtable}
-\paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 3 3 bag.\par
 \section*{offline}
-\subsection*{offline: pair \textsf{single}, model bag, expected violation}
-\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\subsection*{offline: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 6 & 4652 & 3 & violation & 0.3 & 4 & 1 h, 250 GB & 0.0 & 0.3 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,3 & 252865152 & 90010608 &  & conforms & 1860.6 & 368 & 4 h, 250 GB & 1860.6 & 922.0 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 7200 & 4652 & conforms & 0.3 & 4 & 4 h, 250 GB & 0.2 & 0.3 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 252865152 & 90010608 & conforms & 1583.8 & 372 & 48 h, 250 GB & 1583.8 & 817.2 & 0.0 & merge & brain03, 2026-11-04 \\
 \bottomrule
 \end{longtable}
 \section*{cross offline, Java implementation against the Rust specification}
-\subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{single}, model bag, expected violation}
-\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 6 & 4652 & 3 & violation & 28.6 & 2553 & 4 h, 250 GB & 0.0 & 28.6 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 7200 & 4652 & conforms & 28.6 & 2553 & 4 h, 250 GB & 0.2 & 28.6 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
 refused (an input missing at run time): 3 3 bag.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
-\subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{single}, model bag, expected violation}
-\begin{longtable}{@{}rrrrlrrlrl@{}}
+\subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 6 & 4652 & 2310 & violation & 23.8 & 2647 & 4 h, 250 GB & 136 & brain01, 2026-11-03 \\
-\color{blue} 3,3 & 252865152 &  &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 7200 & 4652 & conforms & 20.3 & 2366 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 252865152 &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \section*{context-free twins offline, Rust implementation against the context-free Java port}

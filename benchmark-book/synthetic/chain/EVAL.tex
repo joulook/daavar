@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{chain} (s4-chain)}
 \author{}
-\date{generated 2026-11-03 from brain-data 5deffe563 2026-11-03 22:35:44 +0100}
+\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms (--threshold 65536 is needed at d>=512). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -45,11 +45,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 2048 & 1 & 1 & conforms & 5.3 & 1199 & 48 h, 250 GB & brain04, 2026-11-03 \\
 \color{blue} 4096 & 1 & 1 & conforms & 21.1 & 4548 & 48 h, 250 GB & brain04, 2026-11-03 \\
 \color{blue} 8192 & 1 & 1 & conforms & 108.9 & 14820 & 48 h, 250 GB & brain04, 2026-11-03 \\
+\color{blue} 32768 &  &  & \faClock\ (48 h) &  &  & 48 h, 250 GB & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
 left out by the table rules (ok): 512 fifo, 16384 fifo.\par
-left out by the table rules (timeout): 32768 fifo.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{single}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -62,9 +62,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \color{blue} 32 & 1 & 1 & conforms & 0.0 & 4 & 1 h, 250 GB & 0.0 & 0.0 & 0.0 & merge & brain01, 2026-11-03 \\
 \color{blue} 128 & 1 & 1 & conforms & 0.2 & 10 & 1 h, 250 GB & 0.2 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
 \color{blue} 512 & 1 & 1 & conforms & 0.5 & 80 & 48 h, 250 GB & 0.2 & 0.4 & 0.1 & merge & brain01, 2026-11-03 \\
+\color{blue} 4096 & 1 & 1 & conforms & 28.5 & 3697 & 48 h, 250 GB & 7.1 & 22.8 & 5.7 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
 skipped: a smaller size had reached its limit: 1024 fifo, 16384 fifo, 32768 fifo.\par
-the tool ended with an error (exit-127): 2048 fifo, 4096 fifo, 8192 fifo.\par
+the tool ended with an error (exit-127): 2048 fifo, 8192 fifo.\par
 \end{document}

@@ -222,7 +222,7 @@ for fam, tset, modes in FAMS:
 
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
-CURATED = [("table2", "tab:table2", False, "TraceForge standalone refinement checking on three synthetic families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side."),
+CURATED = [("table2", "tab:table2", False, "TraceForge standalone refinement checking on the synthetic and application families, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side."),
            ("table3", "tab:table3", True, "TraceForge standalone refinement checking on violating pairs, Rust specification against Rust implementation: the stateless, stateful and offline engines side by side.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
