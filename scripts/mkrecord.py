@@ -218,8 +218,7 @@ cols = read(hdr_path).splitlines()[0].split("\t") if hdr_path.exists() else sort
 # never 'ok' (owner 2026-11-06: the caspaxos (3,2) online run sat in a conforming table with empty cells)
 _f = re.search(r"^FAILED:\s*(.+)$", out, re.M)
 if _f and not rec.get("verdict"):
-    rec["stop_reason"] = "failed"; rec["failure"] = _f.group(1).strip()[:200]
-if "failure" not in cols: cols.append("failure")
+    rec["stop_reason"] = "failed: " + _f.group(1).strip()[:160]   # the text travels in stop_reason: no new column, the schema line is the owner's
 def cell(k):
     v = rec.get(k); 
     if v is None or isinstance(v, (dict, list)): return ""
