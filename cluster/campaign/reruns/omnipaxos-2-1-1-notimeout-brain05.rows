@@ -1,0 +1,2 @@
+# OmniPaxos (library, Rust) vs S_raft at (2,1,1), in-process, no practical time limit (100 days; owner 2026-11-06: "run it without timeout and see how far we can go"); replaces the 48 h timeout row C1.omnipaxos.impl_correct_2_1_1_fifo.t16.c48h on brain05
+C1.omnipaxos.impl_correct_2_1_1_fifo.t16.cinf 250 8640000 "$DAAVAR"/scripts/rust-run.sh omnipaxos conf --engine stateful --threads 16 --model fifo -- correct 2 1 1

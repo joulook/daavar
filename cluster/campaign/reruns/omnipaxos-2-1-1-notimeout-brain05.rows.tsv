@@ -1,0 +1,2 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C1.omnipaxos.impl_correct_2_1_1_fifo.t16.cinf	C	omnipaxos	2,1,1	fifo	correct	stateful-parallel	16	readme	no time limit (100 d)	cinf	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	omnipaxos	omnipaxos.spec_correct_2_1_1_fifo	omnipaxos.impl_correct_2_1_1_fifo
