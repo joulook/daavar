@@ -42,6 +42,18 @@ for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv"))):
         for k in ("spec export s", "impl export s"):   # exports are components of an offline row, named in its directory column only
             pass
 def decided(r): return r.get("verdict") in ("conforms", "violation") or r.get("stop_reason") in ("timeout", "memory")
+# (2b) time components (owner 2026-11-06: a table must never show 0 for a phase that was not measured): a decided row with a wall time
+# must carry its components: in-process rows the spec and impl phases (or the spec export of a cross-language online row), offline rows both exports and the join
+for fn, rs in rows_by_file.items():
+    for r in rs:
+        if r.get("verdict") not in ("conforms", "violation") or not (r.get("wall s") or "").strip(): continue
+        rid = r.get("run id", "")
+        if fn in ("campaign-stateful.csv",) or "online" in fn:
+            if not ((r.get("spec phase s") or "") and (r.get("impl phase s") or "")) and not (r.get("spec export s") or ""):
+                problems.append(f"{fn}: {rid} has a wall time but no spec/impl phase (in-process) and no spec export time (online): the time components are missing")
+        elif "offline" in fn or fn == "campaign-offline-tf.csv":
+            if not ((r.get("spec export s") or "") and (r.get("impl export s") or "") and (r.get("join s") or "")):
+                problems.append(f"{fn}: {rid} has a wall time but not all of spec export, impl export and join times")
 fams = {i.split(".")[0] for i in csv_ids}
 EXPL = set()
 for f in glob.glob(os.path.join(DV, "cluster/campaign/inputs/exploratory-variants.tsv")) + glob.glob(os.path.join(DV, "benchmarks/exploratory-variants.tsv")):
@@ -166,6 +178,13 @@ for f in sorted(glob.glob(os.path.join(R, "plan/twin-tables/*.tex"))):
         if ch: diff.append(f"{fn}: {len(ch)} changed/added table line(s); first: {ch[0][:160]}"); changed_files += 1
     else: diff.append(f"{fn}: baseline recorded")
     open(pf, "w").write(cur)
+# known-problems.txt (state dir): problem lines the coordinator already handles (one prefix per line) become notes until the fix lands
+kpp = os.path.join(ST, "known-problems.txt"); KNOWN = [l.rstrip("\n") for l in open(kpp) if l.strip()] if os.path.exists(kpp) else []
+still = []
+for pr in problems:
+    if any(pr.startswith(k) for k in KNOWN): notes.append("known, being handled: " + pr)
+    else: still.append(pr)
+problems = still
 open(os.path.join(ST, "diff.md"), "w").write("\n".join(diff[:400]) + ("\n… (%d more)\n" % (len(diff) - 400) if len(diff) > 400 else "\n"))
 open(os.path.join(ST, "NEW_DATA"), "w").write("yes\n" if changed_files else "")
 rep = ["# table-check report", f"records: {sum(len(v) for v in records.values())} lines, {len(records)} ids; campaign rows: {sum(len(v) for v in rows_by_file.values())}; changed files: {changed_files}; diff lines: {len(diff)}", ""]
