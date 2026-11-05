@@ -163,7 +163,7 @@ for fam, tset, modes in FAMS:
                 hdr2 = " & " * (base - 1) + " & T & M & T & M & T & M \\\\"
                 fn = f"standalone-{g}-{kind}{SUF}"
                 emit(fn, f"tab:{fn}", cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrr@{}", hdr1, cm, hdr2, body,
-                     ["program", "variant", "spec", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "summary files MB"], csvrows)
+                     ["program", "variant", "spec", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested s", "nested MB", "online s", "online MB", "offline s", "offline MB", "summary files MB"], csvrows)
                 summary.append(f"{fn}: {len({k[:4] for k in keys})} instances, {len(keys)} rows")
         continue
     # cross and twins: rows keyed by (instance, size, side)
@@ -222,7 +222,7 @@ for fam, tset, modes in FAMS:
 
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
-CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification, $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller instance, included because the listed one has unfinished runs."),
+CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs."),
            ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
@@ -254,8 +254,8 @@ if not FULL and KEEP is None:
                     if r is None or not (decided(r) or limit(r)): return None
                     r = dict(r); cur = (r.get("pin") or "")[:7] in ("9a0629e", "367cdc6")
                     r["colour"] = "orange" if (r.get("contended") == "yes" or not cur) else "red"; return r
-                if c2 is None and older(m.get("stateless")) is not None: c2 = older(m.get("stateless")); fb_note.append("stateless:older")
-                if c1 is None and older(m.get("stateful")) is not None: c1 = older(m.get("stateful")); fb_note.append("stateful:older")
+                if c2 is None and older(m.get("stateless")) is not None: c2 = older(m.get("stateless")); fb_note.append("nested:older")
+                if c1 is None and older(m.get("stateful")) is not None: c1 = older(m.get("stateful")); fb_note.append("online:older")
                 if c3 is None and older(m.get("offline")) is not None: c3 = older(m.get("offline")); fb_note.append("offline:older")
                 def best(r, offline=False):   # a cell with its true colour: the current-pin rule first (blue/red/orange), else the older-run rule
                     f = fresh(r, offline); return f if f is not None else older(r)
@@ -276,7 +276,7 @@ if not FULL and KEEP is None:
             gi_r = next((r for r in dec if r["impl graphs"]), None); gi = gi_r["impl graphs"] if gi_r else ""
             gs_r = next((r for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
             gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None) if viol else None; gx = gx_r.get("uncovered", "") if gx_r else ("" if viol else None)
-            CURATED_NAMES = {("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav", ("bcast", "decide-early"): "bcast-de", ("chan", "no-seqno"): "chan-ns", ("ewd998", "no-black-on-receive"): "ewd998-nb", ("lb", "rr-a4b"): "lb", ("lb", "rr-a4a"): "lb-strict", ("lock", "fifo"): "lock", ("lock", "wrong-round"): "lock-wr", ("pbkv", "pb"): "pbkv", ("replog-co", "early-reply"): "replog-co-er", ("ring-el", "no-compare"): "ring-el-nc", ("zab", "issue 1"): "zab-issue1"}   # the owner's names for the curated tables (2026-11-03)
+            CURATED_NAMES = {("lb", "hash-a4a"): "lb-hash", ("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav", ("bcast", "decide-early"): "bcast-de", ("chan", "no-seqno"): "chan-ns", ("ewd998", "no-black-on-receive"): "ewd998-nb", ("lb", "rr-a4b"): "lb", ("lb", "rr-a4a"): "lb-strict", ("lock", "fifo"): "lock", ("lock", "wrong-round"): "lock-wr", ("pbkv", "pb"): "pbkv", ("replog-co", "early-reply"): "replog-co-er", ("ring-el", "no-compare"): "ring-el-nc", ("zab", "issue 1"): "zab-issue1"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm = nm if (prog, var) != prev else ""; prev = (prog, var)
             if nm and body: body.append("\\midrule")
@@ -286,22 +286,22 @@ if not FULL and KEEP is None:
             owners = [c2, c2, c2, c2, c1, c1, c3, c3]
             size_cell = size
             body.append(f"{nm} & {size_cell} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
-            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", c2), ("stateful", c1), ("offline", c3)) if r is not None)] + ([";".join(fb_note)] if FALLBACK else []))
+            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", c2), ("online", c1), ("offline", c3)) if r is not None)] + ([";".join(fb_note)] if FALLBACK else []))
             for ex in [e for e in EXTRA if e[:3] == (prog, var, model) and e not in DONE_EXTRA]:
                 DONE_EXTRA.add(ex); kx = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == ex[3]), None); mx = inst.get(kx, {}) if kx else {}
                 x2, x1, x3 = best(mx.get("stateless")), best(mx.get("stateful")), best(mx.get("offline"), True)
-                dx = [r for r in (x1, x3, x2) if decided(r)]; gxi = next((r["impl graphs"] for r in dx if r["impl graphs"]), ""); gxs = next((r["spec graphs"] for r in (x1, x3) if decided(r) and r["spec graphs"]), "")
-                gxx = next((r.get("uncovered", "") for r in dx if r.get("uncovered") not in ("", None)), "") if viol else None
+                dx = [r for r in (x1, x3, x2) if decided(r)]; gxi_r = next((r for r in dx if r["impl graphs"]), None); gxi = gxi_r["impl graphs"] if gxi_r else ""; gxs_r = next((r for r in (x1, x3) if decided(r) and r["spec graphs"]), None); gxs = gxs_r["spec graphs"] if gxs_r else ""
+                gxx_r = next((r for r in dx if r.get("uncovered") not in ("", None)), None) if viol else None; gxx = gxx_r.get("uncovered", "") if gxx_r else ("" if viol else None)   # the counts of a dagger row carry the colour of the run that supplies them, as in the other rows (reviews r9)
                 xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else "", cell_T(x2), cell_M(x2), cell_T(x1), cell_M(x1), cell_T(x3), cell_M_off(x3)]
                 xown = [x2, x2, x2, x2, x1, x1, x3, x3]
-                body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
-                csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", x2), ("stateful", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
+                body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {paint(gxi_r, gxi)} & {paint(gxs_r, gxs)}" + (f" & {paint(gxx_r, gxx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
+                csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
         cap = what   # the curated caption carries the column definitions (owner, 2026-11-05: short captions)
         base = 5 if viol else 4
         hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{Nested}} & \\multicolumn{{2}}{{c}}{{Online}} & \\multicolumn{{2}}{{c}}{{Offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", body,
-             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "colour (blue = reserved machine, red = earlier campaign)"] + (["fallback"] if FALLBACK else []), csvrows)
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested sweeps", "nested spec graphs explored", "nested s", "nested MB", "online s", "online MB", "offline s", "offline MB", "colour (blue = reserved machine, orange = shared node, earlier engine version or shared-node type, red = earlier campaign at the current pins)"] + (["fallback"] if FALLBACK else []), csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
