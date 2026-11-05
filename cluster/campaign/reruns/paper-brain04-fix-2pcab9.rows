@@ -1,0 +1,7 @@
+# brain04 (reserved machine), 2026-11-05 20:00: the specification export of 2pc-ab(9, bag) (.p) ended with an engine panic at
+# shutdown ("Stopping exploration because max_iterations was reached", then a generator-0.7.5 yield panic in stderr), so its
+# final count block was never written: export.jsonl is complete (1 972 297 summaries, as brain03's export) but the record has
+# no graph counts, and the paper row has no G_spec (table-check event 19:48). Rerun of the export and of the two joins.
+C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --threads 16 --model bag -- 9
+C3J.two-pc-abstain-kragl.impl_9_correct_bag.p.r2.m 250 172800 needok:C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r2,C3E.two-pc-abstain-kragl.impl_9_correct_bag.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r2/export.jsonl "$EVAL_OUT"/C3E.two-pc-abstain-kragl.impl_9_correct_bag.t16.p/export.jsonl
+C3J.two-pc-abstain-kragl.impl_9_off-by-one_bag.p.r2.m 250 172800 needok:C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r2,C3E.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r2/export.jsonl "$EVAL_OUT"/C3E.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p/export.jsonl
