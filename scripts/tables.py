@@ -319,7 +319,7 @@ def export_record(ex, reader):
     if same: return same[-1]
     if cands: return cands[-1]
     if _byexact.get(ex): return _byexact[ex][-1]
-    return byid.get(base_id(ex))
+    return None   # no record of the exact export: never substitute another run's export (pipeline audit 2026-11-05 20:39: the naive(10) .p join had taken brain01's older export, 681.5 s for 616.2 s); the row loses its export measurements and the checker flags it
 camp_rows = {}
 for pre, fname, title in CAMP:
     rs = [r for r in rows if r["run_id"].startswith(pre + ".")]
@@ -338,6 +338,9 @@ for pre, fname, title in CAMP:
                     if not x: return False
                     return ((x.get("jmc_commit") or "")[:8] in CURRENT_JMC) if "jmc-run.sh" in (x.get("command") or "") else ((x.get("traceforge_commit") or "")[:7] in CURRENT_TF)
                 r["_exports_current"] = "yes" if (_cur(sp) and _cur(im)) else "no"
+                if not (sp and im):   # a component without a record: the row's time and memory are not a measurement (BOOK audit D1: never the join alone)
+                    r["wall_ms"] = None; r["peak_rss_kb"] = None; r["_export_missing"] = ",".join(e for e, x in zip(ex, (sp, im)) if not x)
+                    DROPPED.append((r["run_id"], "offline row without the record of its export " + r["_export_missing"] + " (time and memory withheld)"))
                 r["_join_mode"] = "merge" if "--merge" in (r.get("command") or "") else "in-memory"
                 r["_contended"] = max(r.get("_contended") or 0, (sp or {}).get("_contended") or 0, (im or {}).get("_contended") or 0)
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
