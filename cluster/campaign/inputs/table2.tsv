@@ -17,7 +17,6 @@ share	correct	fifo	24,24
 2pc-tr	correct	bag	8
 bcast	correct	bag	5
 chan	correct	bag	6
-chan	correct	bag	7
 ewd998	correct	bag	5
 lb	rr-a4b	fifo	3,3,3
 lb	rr-a4b	fifo	4,4,4
