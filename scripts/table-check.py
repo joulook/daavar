@@ -96,7 +96,7 @@ if missing:
     n = sum(len(v) for v in missing.values())
     (problems if DROPPED else notes).append(f"coverage: {n} decided record(s) of tabled benchmarks appear in no campaign CSV (by family: {byfam}): " + "; ".join(f"{k}: {', '.join(v[:3])}{' …' if len(v) > 3 else ''}" for k, v in list(missing.items())[:12]))
 # (3) sanity of campaign rows
-VERD = {"conforms", "violation", "t/o", "oom", ""}
+VERD = {"conforms", "violation", "t/o", "oom", "", "failed"}
 ginst = {}
 for fn, rs in rows_by_file.items():
     for r in rs:
