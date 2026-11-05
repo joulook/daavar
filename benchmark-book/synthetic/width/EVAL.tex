@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{width} (s6-width)}
 \author{}
-\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
+\date{generated 2026-11-05 from brain-data 0799b9755 2026-11-05 11:44:26 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): (the single pair): expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -62,5 +62,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 4096 fifo, 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
+refused (an input missing at run time): 4096 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 8192 fifo, 16384 fifo, 32768 fifo, 65536 fifo.\par
 \end{document}

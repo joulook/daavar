@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{share} (s2-share)}
 \author{}
-\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
+\date{generated 2026-11-05 from brain-data 0799b9755 2026-11-05 11:44:26 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): share: expected conforms; ctl: expected conforms (control). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -65,7 +65,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, share 2 8 fifo, ctl 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, share 3 2 fifo, ctl 3 2 fifo, share 3 4 fifo, ctl 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (411 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, ctl 2 8 fifo, share 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, ctl 3 2 fifo, share 3 2 fifo, ctl 3 4 fifo, share 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (411 instances in all).\par
 skipped: a smaller size had reached its limit: ctl 17 16 fifo, ctl 18 16 fifo, ctl 19 16 fifo, ctl 20 16 fifo, ctl 21 16 fifo, ctl 22 16 fifo, ctl 23 16 fifo, ctl 24 0 fifo, ctl 24 1 fifo, ctl 24 2 fifo, ctl 24 12 fifo, ctl 24 16 fifo, ctl 24 24 fifo, ctl 25 0 fifo, ctl 25 1 fifo, ctl 25 2 fifo, ctl 25 12 fifo, ctl 25 16 fifo, ctl 25 24 fifo, ctl 26 0 fifo, ctl 26 1 fifo, ctl 26 2 fifo, ctl 26 12 fifo, ctl 26 16 fifo, \ldots\ (31 instances in all).\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model fifo, expected conforms}
@@ -123,7 +123,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, share 2 8 fifo, ctl 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, share 3 2 fifo, ctl 3 2 fifo, share 3 4 fifo, ctl 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (412 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, ctl 2 8 fifo, share 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, ctl 3 2 fifo, share 3 2 fifo, ctl 3 4 fifo, share 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (412 instances in all).\par
 skipped: a smaller size had reached its limit: ctl 17 16 fifo, ctl 18 16 fifo, ctl 19 16 fifo, ctl 20 16 fifo, ctl 21 16 fifo, ctl 22 16 fifo, ctl 23 16 fifo, ctl 24 0 fifo, ctl 24 1 fifo, ctl 24 2 fifo, ctl 24 12 fifo, ctl 24 16 fifo, ctl 24 24 fifo, ctl 25 0 fifo, ctl 25 1 fifo, ctl 25 2 fifo, ctl 25 12 fifo, ctl 25 16 fifo, ctl 25 24 fifo, ctl 26 0 fifo, ctl 26 1 fifo, ctl 26 2 fifo, ctl 26 12 fifo, ctl 26 16 fifo, \ldots\ (31 instances in all).\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct} against \textsf{share}, model fifo, expected conforms}
@@ -180,7 +180,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, share 2 8 fifo, ctl 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, share 3 2 fifo, ctl 3 2 fifo, share 3 4 fifo, ctl 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (442 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): share 2 4 fifo, ctl 2 4 fifo, ctl 2 6 fifo, share 2 6 fifo, ctl 2 8 fifo, share 2 8 fifo, ctl 2 12 fifo, share 2 12 fifo, ctl 2 16 fifo, share 2 16 fifo, share 2 24 fifo, ctl 2 24 fifo, share 3 0 fifo, ctl 3 0 fifo, ctl 3 1 fifo, share 3 1 fifo, ctl 3 2 fifo, share 3 2 fifo, ctl 3 4 fifo, share 3 4 fifo, ctl 3 6 fifo, share 3 6 fifo, ctl 3 8 fifo, share 3 8 fifo, \ldots\ (442 instances in all).\par
 left out by the table rules (ok): ctl 2 0 fifo, ctl 2 1 fifo, ctl 2 2 fifo, ctl 4 0 fifo, ctl 4 2 fifo, ctl 4 4 fifo, ctl 8 0 fifo, ctl 8 4 fifo, ctl 8 8 fifo, ctl 12 0 fifo, ctl 12 6 fifo, ctl 12 12 fifo, ctl 16 0 fifo, ctl 16 8 fifo, ctl 16 16 fifo, ctl 24 0 fifo, ctl 24 12 fifo, ctl 28 0 fifo, ctl 28 14 fifo.\par
 skipped: a smaller size had reached its limit: ctl 24 24 fifo.\par
 \end{document}

@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{zab} (zab-broadcast-remix)}
 \author{}
-\date{generated 2026-11-05 from brain-data 0f578bb07 2026-11-05 11:33:06 +0100}
+\date{generated 2026-11-05 from brain-data 0799b9755 2026-11-05 11:44:26 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -35,7 +35,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 fifo correct, 4 correct fifo, 4 issue1-propose-to-ackld fifo, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
+planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 correct fifo, 4 fifo correct, 4 fifo issue1-propose-to-ackld, 4 issue1-propose-to-ackld fifo, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
 skipped: a smaller size had reached its limit: 5 correct fifo, 5 issue1-propose-to-ackld fifo, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 issue1-propose-to-ackld fifo, 8 correct fifo, 8 issue1-propose-to-ackld fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model fifo, expected conforms}
@@ -126,6 +126,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \endhead
 \color{red} 1 & 2 & 161 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
 \color{red} 2 & 6 & 33161 & conforms & 1.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 20 & 9550181 & conforms & 344.9 & 60 & 48 h, 80 GB &  & pinky28, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{issue 1}, model fifo, expected violation}
@@ -136,10 +137,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \endhead
 \color{red} 1 & 2 & 128 & 10 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
 \color{red} 2 & 6 & 24215 & 70 & violation & 0.7 & 4 & 1 h, 250 GB & 2 & brain01, 2026-11-02 \\
+\color{red} 3 & 20 & 6881334 & 258 & violation & 250.1 & 50 & 48 h, 80 GB & 2 & pinky28, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 fifo correct, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
+planned but never scheduled (grid points beyond the ladder): 4 fifo correct, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
 \section*{twins offline, Rust implementation against its Java twin}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -286,7 +288,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 fifo correct, 4 fifo issue1-propose-to-ackld.\par
+skipped: a smaller size had reached its limit: 3 fifo correct, 3 fifo issue1-propose-to-ackld.\par
+planned but never scheduled (grid points beyond the ladder): 4 fifo correct, 4 fifo issue1-propose-to-ackld.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -352,5 +355,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 fifo correct, 4 fifo issue1-propose-to-ackld.\par
+skipped: a smaller size had reached its limit: 3 fifo correct, 3 fifo issue1-propose-to-ackld.\par
+planned but never scheduled (grid points beyond the ladder): 4 fifo correct, 4 fifo issue1-propose-to-ackld.\par
 \end{document}
