@@ -373,7 +373,7 @@ for pre, fname, title in CAMP:
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
     rs = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) not in EXPLORATORY]
-    def _invalid(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith("invalid")
+    def _invalid(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith("invalid") or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")   # 2026-11-05: a row that could not start (missing binary, usage error) is an infrastructure failure, never a measurement: an older record of the case must win
     _x = [r for r in rs if _invalid(r)]
     if _x: print(f"{pre}: {len(_x)} rows left out: cut by the thread threshold, killed from outside, or marked invalid by the runner (inputs/invalid-rows.tsv)")
     rs = [r for r in rs if not _invalid(r)]
