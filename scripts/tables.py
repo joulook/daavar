@@ -413,7 +413,7 @@ for pre, fname, title in CAMP:
     conf_rows, viol_rows = [], []
     for r in rs:
         a = r["a"]; st = r["stop_reason"]
-        verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else st))
+        verdict = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("failed" if st.startswith("failed") else st)))
         verdict = {"reports": "violation", "violation (sampled)": "violation"}.get(verdict, verdict)   # JMC says "reports"; conf-join adds "(sampled)"
         r["verdict"] = verdict if st == "ok" else r.get("verdict")
         exp = expected_for(a); r["expected"] = exp if exp else ("undefined" if a.get("family") in {e["dir"] for e in EXP} else None)
@@ -469,7 +469,7 @@ for pre, fname, title in CAMP:
         w = csv.writer(fh); w.writerow(cols)
         for r in rs:
             a = r["a"]; st = r["stop_reason"]
-            v = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else st)))
+            v = (r.get("verdict") or "").lower() if st == "ok" else ("t/o" if st == "timeout" else ("oom" if st == "memory" else ("skipped" if st.startswith("skipped") else ("failed" if st.startswith("failed") else st))))
             def t(c, b, tt, e=None):  # complete + blocked; else the run's own total (blocked included); else the block's explored count
                 vc, vb = num(r.get(c)), num(r.get(b))
                 if vc is None and vb is None:
