@@ -9,17 +9,8 @@
 # replog-co 5 fifo and ring-el 6 (Table 2), replog-co-er 5 fifo and ring-el-nc 6 (Table 3), owner 2026-11-03 23:10; stateless after the stateful (replog-co bag 5 stateless took 4.9 h at 48 h; ring-el 5 stateless 178 s)
 # zab 4 (Table 2) and zab-issue1 4 (Table 3), owner 2026-11-03 23:20: the last application rows; stateless after the stateful (size 3 stateless 150 s)
 # Order (owner, 2026-11-04 10:05): every stateful and offline row of every instance first; the stateless rows (needok on their stateful row) at the end
-C3E.s4-chain.spec_2048_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 2048
-C3E.s4-chain.impl_2048_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 2048
-C1.s4-chain.impl_2048_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo --threshold 65536 -- 2048
-C3J.s4-chain.impl_2048_fifo.p.m 250 172800 needok:C3E.s4-chain.impl_2048_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s4-chain.spec_2048_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_2048_fifo.t16.p/export.jsonl
-C3E.s4-chain.spec_4096_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 4096
-C3E.s4-chain.impl_4096_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 4096
-C1.s4-chain.impl_4096_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo --threshold 65536 -- 4096
-C3J.s4-chain.impl_4096_fifo.p.m 250 172800 needok:C3E.s4-chain.impl_4096_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s4-chain.spec_4096_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_4096_fifo.t16.p/export.jsonl
 C3E.s4-chain.spec_8192_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export spec --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 8192
 C3E.s4-chain.impl_8192_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain export impl --out export.jsonl --threads 16 --model fifo --threshold 65536 -- 8192
-C1.s4-chain.impl_8192_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateful --threads 16 --model fifo --threshold 65536 -- 8192
 C3J.s4-chain.impl_8192_fifo.p.m 250 172800 needok:C3E.s4-chain.impl_8192_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s4-chain.spec_8192_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s4-chain.impl_8192_fifo.t16.p/export.jsonl
 C3E.s3-commit.spec_12_12_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s3-commit export spec --out export.jsonl --threads 16 --model fifo -- 12 12
 C3E.s3-commit.impl_12_12_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s3-commit export impl --out export.jsonl --threads 16 --model fifo -- 12 12
@@ -189,9 +180,6 @@ C3J.zab-broadcast-remix.impl_4_fifo_correct.p.m 250 172800 needok:C3E.zab-broadc
 C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix export impl --out export.jsonl --threads 16 --model fifo -- 4 issue1-propose-to-ackld
 C1.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 4 issue1-propose-to-ackld
 C3J.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.p.m 250 172800 needok:C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.zab-broadcast-remix.spec_4_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p/export.jsonl
-C2.s4-chain.impl_2048_fifo.t16.p 250 172800 needok:C1.s4-chain.impl_2048_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo --threshold 65536 -- 2048
-C2.s4-chain.impl_4096_fifo.t16.p 250 172800 needok:C1.s4-chain.impl_4096_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo --threshold 65536 -- 4096
-C2.s4-chain.impl_8192_fifo.t16.p 250 172800 needok:C1.s4-chain.impl_8192_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s4-chain conf --engine stateless --threads 16 --model fifo --threshold 65536 -- 8192
 C2.s3-commit.impl_12_12_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_12_12_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 12 12
 C2.s3-commit.impl_16_16_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_16_16_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 16
 C2.s3-commit.impl_20_20_fifo.t16.p 250 172800 needok:C1.s3-commit.impl_20_20_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 20 20
