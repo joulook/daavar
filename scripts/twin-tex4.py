@@ -17,7 +17,7 @@ def short(prog,var):
     if (prog,var) in NAMES: return NAMES[(prog,var)]
     if var in ("correct","impl",prog,""): return prog
     w=[x for x in re.split(r"[-_ ]",var) if x]; return prog+"-"+("".join(x[0] for x in w) if len(w)>1 else var[:6])
-def esc(s): return s.replace('_','\\_').replace('%','\\%')
+def esc(s): return s.replace('_','\\_').replace('%','\\%').replace('&','\\&').replace('#','\\#').replace('$','\\$')
 def fnum(x):   # seconds: 1 decimal from 10 s, 2 decimals below, 3 below 0.1 s; a true zero prints as 0 (never a rounded one)
     try: v=float(x)
     except Exception: return '--'
@@ -35,7 +35,8 @@ AGENTIC={'hermes','vrr','ricart-agrawala','chain-replication','caspaxos','flexib
 ONAME={'omnipaxos-paper':'OmniPaxos paper port (Opus, Java)','omnipaxos-paper-sol':'OmniPaxos paper port (Codex, Java)','omnipaxos-rust':'OmniPaxos source port (Opus, Java)','omnipaxos-rust-sol':'OmniPaxos source port (Codex, Java)','omnipaxos-derived-impl':r'S$_{\mathrm{paper}}$ port (Opus, Java)','omnipaxos-derived-sol':r'S$_{\mathrm{paper}}$ port (Codex, Java)','omnipaxos-spec':r'S$_{\mathrm{raft}}$ port (Opus, Java)','omnipaxos-spec-sol':r'S$_{\mathrm{raft}}$ port (Codex, Java)','omnipaxos-derived':r'S$_{\mathrm{paper}}$ (derived, Rust)'}
 def spec_of(P,r):   # the specification a real-software row is checked against (the vs- word of the run id, else the hand-written one)
     if P.startswith('omnipaxos') or P=='raft':
-        vs=re.search(r'\.vs-([a-z-]+)', r['run id']); return r'S$_{\mathrm{paper}}$' if vs and vs.group(1)=='derived' else r'S$_{\mathrm{raft}}$'
+        vs=re.search(r'\.vs-([a-z-]+)', r['run id']); w=vs.group(1) if vs else 'hand'
+        return {'derived':r'S$_{\mathrm{paper}}$ (derived, Rust)','zkderived':r'S$_{\mathrm{zab}}$ (derived, Rust)','swiftderived':r'S$_{\mathrm{swift}}$ (derived, Rust)'}.get(w, r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
     return r'S$_{\mathrm{'+esc(P)+'}}$'
 def pair(r,f):   # the two components of a check, as the paper's Table 7 names them: implementation $\sqsubseteq$ specification, each with its origin and language
     P=r['program']; v=r['variant'] or ''; sv=r.get('spec') or v
@@ -46,8 +47,8 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
     if 'twin-offline-rust-spec' in f or 'twin-online-java-impl' in f: return (port(v), hand(sv)) if 'cftwin' in f else (twin(v), hand(sv))
     realsw = P in REAL
     if f in ('campaign-offline-rust-spec.csv','campaign-online-java-impl.csv'):   # a Java implementation against the Rust specification's export
-        if P=='raft': return ('MicroRaft (library, Java)', spec_of(P,r)+' (hand-written, Rust)')
-        if P.startswith('omnipaxos'): return (ONAME.get(P,P), spec_of(P,r)+' (hand-written, Rust)' if 'raft' in spec_of(P,r) else spec_of(P,r)+' (derived, Rust)')
+        if P=='raft': return ('MicroRaft (library, Java)', spec_of(P,r))
+        if P.startswith('omnipaxos'): return (ONAME.get(P,P), spec_of(P,r))
         if P in AGENTIC: return (esc(P)+' (context-free agent, Java)', SR)
         return (twin(v), SR)
     if f in ('campaign-offline-java-spec.csv','campaign-online-rust-impl.csv'):   # a Rust implementation against the Java specification's export
@@ -56,7 +57,9 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
         return (hand(v), SJ)
     if f in ('campaign-offline-tf.csv','campaign-stateful.csv'):   # Rust against Rust
         if P=='raft': return ('raft-rs (library, Rust)', r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
-        if P=='omnipaxos': return ('OmniPaxos (library, Rust)', spec_of(P,r)+(' (hand-written, Rust)' if 'raft' in spec_of(P,r) else ' (derived, Rust)'))
+        if P=='omnipaxos' and '.spec_' in r['run id']: return (r'S$_{\mathrm{raft}}$ (hand-written, Rust)', spec_of(P,r))   # the two specifications against each other
+        if P=='omnipaxos': return ('OmniPaxos (library, Rust)', spec_of(P,r))
+        if P=='omnipaxos-derived': return (r'S$_{\mathrm{paper}}$ (derived, Rust)', spec_of(P,r))
         if P in AGENTIC: return (esc(P)+' (context-free agent, Rust)', SR)
         return (hand(v), SR+vv(sv))
     return (esc(short(P,v)), '?')
