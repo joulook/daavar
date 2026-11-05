@@ -234,14 +234,12 @@ public final class BookKeeper implements MpProgram {
     record PendingAddOpCreate(Tid lh, long entryId, boolean isRecoveryAdd, int pendingWriteRequests)
             implements MpMessage {}
 
-    /** PendingAddOp -> LedgerHandle: lh.sendAddSuccessCallbacks(), from an op whose {@code completed} is true. */
-    record SendAddSuccessCallbacks(long entryId) implements MpMessage {}
-
-    /** PendingAddOp -> LedgerHandle: lh.notifyWriteFailed(bookieIndex, addr). */
-    record NotifyWriteFailed(int index, Tid addr) implements MpMessage {}
-
-    /** PendingAddOp -> LedgerHandle: lh.handleUnrecoverableErrorDuringAdd(rc). */
-    record HandleUnrecoverableErrorDuringAdd(int rc) implements MpMessage {}
+    /**
+     * PORT: the op's process -> LedgerHandle: a bookie's AddResponse for entry {@code opEntryId}, queued on the
+     * handle's ordered executor (PerChannelBookieClient queues writeComplete on lh.executor), one message per response.
+     */
+    record WriteCompleteCallback(long opEntryId, StatusCode status, long ledgerId, long entryId, Tid addr, int ctx)
+            implements MpMessage {}
 
     /** new ReadLastConfirmedOp(...) by LedgerRecoveryOp.initiate, then initiateWithFencing(). */
     record ReadLastConfirmedOpCreate(Tid lh) implements MpMessage {}
@@ -288,7 +286,7 @@ public final class BookKeeper implements MpProgram {
         // w1h adds entries 0..e-1; w2h reads entries LAC+1..e and writes back entries LAC+1..e-1 (LAC >= -1).
         List<Tid> w1AddOps = new ArrayList<>();
         for (int i = 0; i < e; i++) {
-            w1AddOps.add(MpProcess.spawnDaemon(new PendingAddOp(m, ensemble)).tid());
+            w1AddOps.add(MpProcess.spawnDaemon(new PendingAddOpTask(m)).tid());
         }
         Tid rlc = MpProcess.spawnDaemon(new ReadLastConfirmedOp(m, ensemble)).tid();
         List<Tid> w2ReadOps = new ArrayList<>();
@@ -297,7 +295,7 @@ public final class BookKeeper implements MpProgram {
         }
         List<Tid> w2AddOps = new ArrayList<>();
         for (int i = 0; i < e; i++) {
-            w2AddOps.add(MpProcess.spawnDaemon(new PendingAddOp(m, ensemble)).tid());
+            w2AddOps.add(MpProcess.spawnDaemon(new PendingAddOpTask(m)).tid());
         }
         // PORT: w1 created the ledger (LedgerCreateOp, not in the cut): zk holds it Open at version 0 and w1h's
         // local metadata is that version.
@@ -769,122 +767,29 @@ public final class BookKeeper implements MpProgram {
     // ============================================================================================================
 
     /**
-     * PendingAddOp: the in-flight part of an add (writeComplete for each bookie's response). PORT: the op is created
-     * and initiated by its handle (doAsyncAddEntry calls op.initiate() on the handle's thread, and initiate reads and
-     * changes the handle's state); the handle hands the op its entry with PendingAddOpCreate. The op's {@code
-     * completed} flag, read by the handle's sendAddSuccessCallbacks, travels with SendAddSuccessCallbacks, which the
-     * op sends only once {@code completed} is true. Recycling is not modelled: the process ends when every write
-     * request it was sent for has been answered (maybeRecycle's condition pendingWriteRequests == 0).
+     * PORT: the logical task of a PendingAddOp in flight: it receives the bookies' answers to the op's write requests
+     * and queues each, one message per answer, on its handle's ordered executor, where PendingAddOp.writeComplete runs
+     * (PendingAddOp l.146-152 passes lh.executor to the bookie client; PerChannelBookieClient l.1542-1546 queues the
+     * response handling on it). The task has no handle effects of its own. Recycling is not modelled: the process ends
+     * when every write request it was sent for has been answered (maybeRecycle's pendingWriteRequests == 0).
      */
-    static final class PendingAddOp implements Runnable {
+    static final class PendingAddOpTask implements Runnable {
         final CommunicationModel m;
-        final List<Tid> ensemble;
-        Tid lh;
-        long entryId;
-        boolean isRecoveryAdd;
-        final BitSet ackSet = new BitSet(ENSEMBLE_SIZE); // DistributionSchedule.AckSet (RoundRobin)
-        boolean completed = false;
-        int pendingWriteRequests;
-        final Set<Tid> addEntrySuccessBookies = new HashSet<>();
 
-        PendingAddOp(CommunicationModel m, List<Tid> ensemble) {
+        PendingAddOpTask(CommunicationModel m) {
             this.m = m;
-            this.ensemble = ensemble;
         }
 
         @Override
         public void run() {
             PendingAddOpCreate c = Channel.recv(m, PendingAddOpCreate.class);
-            this.lh = c.lh();
-            this.entryId = c.entryId();
-            this.isRecoveryAdd = c.isRecoveryAdd();
-            this.pendingWriteRequests = c.pendingWriteRequests();
-            while (pendingWriteRequests > 0) {
+            int outstanding = c.pendingWriteRequests();
+            while (outstanding > 0) {
                 AddResponse r = Channel.recv(m, AddResponse.class);
-                // PerChannelBookieClient: the status converted with WriteException as the default
-                writeComplete(convertStatus(r.status(), Code.WriteException), r.ledgerId(), r.entryId(), r.addr(),
-                        r.ctx());
+                outstanding--;
+                Channel.send(m, c.lh(), new WriteCompleteCallback(c.entryId(), r.status(), r.ledgerId(), r.entryId(),
+                        r.addr(), r.ctx()));
             }
-            // maybeRecycle(): hasRun && toSend == null && pendingWriteRequests == 0 -> recyclePendAddOpObject()
-        }
-
-        /** RoundRobinDistributionSchedule.AckSetImpl.completeBookieAndCheck. */
-        private boolean completeBookieAndCheck(int bookieIndexHeardFrom) {
-            ackSet.set(bookieIndexHeardFrom);
-            return ackSet.cardinality() >= ACK_QUORUM_SIZE;
-        }
-
-        void writeComplete(int rc, long ledgerId, long entryId, Tid addr, int ctx) {
-            int bookieIndex = ctx;
-            --pendingWriteRequests;
-
-            if (!ensemble.get(bookieIndex).equals(addr)) {
-                // ensemble has already changed, failure of this addr is immaterial
-                return;
-            }
-
-            // must record all acks, even if complete (completion can be undone by an ensemble change)
-            boolean ackQuorum = false;
-            if (Code.OK == rc) {
-                ackQuorum = completeBookieAndCheck(bookieIndex);
-                addEntrySuccessBookies.add(ensemble.get(bookieIndex));
-            }
-
-            if (completed) {
-                if (rc != Code.OK) {
-                    // Got an error after satisfying AQ. This means we are under replicated at the create itself.
-                    // PORT: disableEnsembleChangeFeature unavailable and delayEnsembleChange false (the defaults).
-                    lhNotifyWriteFailed(bookieIndex, addr);
-                }
-                // even the add operation is completed, ... so do a check here to complete again.
-                sendAddSuccessCallbacks();
-                // I am already finished, ignore incoming responses.
-                return;
-            }
-
-            switch (rc) {
-                case Code.OK:
-                    // continue
-                    break;
-                case Code.ClientClosedException:
-                    // PORT: lh.errorOutPendingAdds(rc) (never: the bookie client is never closed)
-                    lhHandleUnrecoverableErrorDuringAdd(rc);
-                    return;
-                case Code.IllegalOpException:
-                    lhHandleUnrecoverableErrorDuringAdd(rc);
-                    return;
-                case Code.LedgerFencedException:
-                    lhHandleUnrecoverableErrorDuringAdd(rc);
-                    return;
-                case Code.UnauthorizedAccessException:
-                    lhHandleUnrecoverableErrorDuringAdd(rc);
-                    return;
-                default:
-                    // PORT: delayEnsembleChange false: lh.handleBookieFailure(...) -> ensembleChangeLoop, which with
-                    // no spare bookie closes the handle with the error (never produced by these bookies).
-                    lhHandleUnrecoverableErrorDuringAdd(rc);
-                    return;
-            }
-
-            if (ackQuorum && !completed) {
-                // PORT: enforceMinNumFaultDomainsForWrite false (the default)
-                completed = true;
-                sendAddSuccessCallbacks();
-            }
-        }
-
-        void sendAddSuccessCallbacks() {
-            // lh.sendAddSuccessCallbacks();  PORT: a message to the handle, carrying completed == true
-            Channel.send(m, lh, new SendAddSuccessCallbacks(entryId));
-        }
-
-        private void lhNotifyWriteFailed(int bookieIndex, Tid addr) {
-            Channel.send(m, lh, new NotifyWriteFailed(bookieIndex, addr)); // PORT: lh.notifyWriteFailed as a message
-        }
-
-        private void lhHandleUnrecoverableErrorDuringAdd(int rc) {
-            // PORT: lh.handleUnrecoverableErrorDuringAdd(rc) as a message
-            Channel.send(m, lh, new HandleUnrecoverableErrorDuringAdd(rc));
         }
     }
 
@@ -1287,11 +1192,12 @@ public final class BookKeeper implements MpProgram {
     }
 
     /**
-     * The handle's view of a PendingAddOp in its pending-add queue. PORT: the op's process holds the in-flight state;
-     * the queue holds the entry id, the op's {@code completed} (set by its SendAddSuccessCallbacks), its callback, its
-     * context and length, and submitCallback (which the source calls on the queue's thread).
+     * PendingAddOp: the add's state and writeComplete. PORT: it lives on its handle's process and every writeComplete
+     * runs as one turn of the handle's ordered executor, with its synchronous effects (sendAddSuccessCallbacks,
+     * notifyWriteFailed, handleUnrecoverableErrorDuringAdd and the close task it queues), as in the source. The
+     * bookies' answers reach it through its PendingAddOpTask. Recycling is not modelled.
      */
-    static final class QueuedPendingAddOp {
+    static final class PendingAddOp {
         final long entryId;
         boolean completed = false;
         boolean callbackTriggered = false;
@@ -1299,13 +1205,91 @@ public final class BookKeeper implements MpProgram {
         final Object ctx;
         final long entryLength;
         final LedgerHandle lh;
+        final boolean isRecoveryAdd;
+        final List<Tid> ensemble;
+        final BitSet ackSet = new BitSet(ENSEMBLE_SIZE); // DistributionSchedule.AckSet (RoundRobin)
+        int pendingWriteRequests = 0;
+        final Set<Tid> addEntrySuccessBookies = new HashSet<>();
 
-        QueuedPendingAddOp(LedgerHandle lh, long entryId, AddCallback cb, Object ctx, long entryLength) {
+        PendingAddOp(LedgerHandle lh, List<Tid> ensemble, long entryId, AddCallback cb, Object ctx, long entryLength,
+                     boolean isRecoveryAdd) {
             this.lh = lh;
+            this.ensemble = ensemble;
             this.entryId = entryId;
             this.cb = cb;
             this.ctx = ctx;
             this.entryLength = entryLength;
+            this.isRecoveryAdd = isRecoveryAdd;
+        }
+
+        /** RoundRobinDistributionSchedule.AckSetImpl.completeBookieAndCheck. */
+        private boolean completeBookieAndCheck(int bookieIndexHeardFrom) {
+            ackSet.set(bookieIndexHeardFrom);
+            return ackSet.cardinality() >= ACK_QUORUM_SIZE;
+        }
+
+        void writeComplete(int rc, long ledgerId, long entryId, Tid addr, int ctx) {
+            int bookieIndex = ctx;
+            --pendingWriteRequests;
+
+            if (!ensemble.get(bookieIndex).equals(addr)) {
+                // ensemble has already changed, failure of this addr is immaterial
+                return;
+            }
+
+            // must record all acks, even if complete (completion can be undone by an ensemble change)
+            boolean ackQuorum = false;
+            if (Code.OK == rc) {
+                ackQuorum = completeBookieAndCheck(bookieIndex);
+                addEntrySuccessBookies.add(ensemble.get(bookieIndex));
+            }
+
+            if (completed) {
+                if (rc != Code.OK) {
+                    // Got an error after satisfying AQ. This means we are under replicated at the create itself.
+                    // PORT: disableEnsembleChangeFeature unavailable and delayEnsembleChange false (the defaults).
+                    lh.notifyWriteFailed(bookieIndex, addr);
+                }
+                // even the add operation is completed, ... so do a check here to complete again.
+                sendAddSuccessCallbacks();
+                // I am already finished, ignore incoming responses.
+                return;
+            }
+
+            switch (rc) {
+                case Code.OK:
+                    // continue
+                    break;
+                case Code.ClientClosedException:
+                    // bookie client is closed.
+                    lh.errorOutPendingAdds(rc);
+                    return;
+                case Code.IllegalOpException:
+                    lh.handleUnrecoverableErrorDuringAdd(rc);
+                    return;
+                case Code.LedgerFencedException:
+                    lh.handleUnrecoverableErrorDuringAdd(rc);
+                    return;
+                case Code.UnauthorizedAccessException:
+                    lh.handleUnrecoverableErrorDuringAdd(rc);
+                    return;
+                default:
+                    // delayEnsembleChange false (the default): lh.handleBookieFailure(ImmutableMap.of(bookieIndex, addr))
+                    Map<Integer, Tid> failed = new HashMap<>();
+                    failed.put(bookieIndex, addr);
+                    lh.handleBookieFailure(failed);
+                    return;
+            }
+
+            if (ackQuorum && !completed) {
+                // PORT: enforceMinNumFaultDomainsForWrite false (the default)
+                completed = true;
+                sendAddSuccessCallbacks();
+            }
+        }
+
+        void sendAddSuccessCallbacks() {
+            lh.sendAddSuccessCallbacks();
         }
 
         void submitCallback(final int rc) {
@@ -1363,8 +1347,10 @@ public final class BookKeeper implements MpProgram {
         HandleState handleState = HandleState.OPEN;
         boolean changingEnsemble = false;
         int numEnsembleChanges = 0;
-        final ArrayDeque<QueuedPendingAddOp> pendingAddOps = new ArrayDeque<>();
+        final ArrayDeque<PendingAddOp> pendingAddOps = new ArrayDeque<>();
         final Map<Integer, Tid> delayedWriteFailedBookies = new HashMap<>();
+        // PORT: every PendingAddOp this handle created, by entry id (an op drained from the queue still gets answers)
+        final Map<Long, PendingAddOp> addOpsByEntryId = new HashMap<>();
         final boolean deferredSync = false; // writeFlags.contains(WriteFlag.DEFERRED_SYNC)
 
         // PORT: the executor's queue
@@ -1420,17 +1406,12 @@ public final class BookKeeper implements MpProgram {
             } else if (msg instanceof Add a) {
                 // the application: lh.asyncAddEntry(data, cb, ctx) with the entry number as data and context
                 asyncAddEntry(a.entry(), applicationAddCallback(), a.entry());
-            } else if (msg instanceof SendAddSuccessCallbacks s) {
-                for (QueuedPendingAddOp op : pendingAddOps) {
-                    if (op.entryId == s.entryId()) {
-                        op.completed = true; // PORT: the op's completed flag, carried by its message
-                    }
-                }
-                sendAddSuccessCallbacks();
-            } else if (msg instanceof NotifyWriteFailed n) {
-                notifyWriteFailed(n.index(), n.addr());
-            } else if (msg instanceof HandleUnrecoverableErrorDuringAdd h) {
-                handleUnrecoverableErrorDuringAdd(h.rc());
+            } else if (msg instanceof WriteCompleteCallback w) {
+                // PORT: the bookie client queues the response handling on lh.executor: one ordered turn, after every
+                // task queued before it (a close task in particular)
+                final PendingAddOp op = addOpsByEntryId.get(w.opEntryId());
+                executeOrdered(() -> op.writeComplete(convertStatus(w.status(), Code.WriteException), w.ledgerId(),
+                        w.entryId(), w.addr(), w.ctx()));
             } else if (msg instanceof WriteLedgerMetadataResult w) {
                 loops.get(w.loopId()).writeComplete(w);
             } else if (msg instanceof ReadLedgerMetadataResult r) {
@@ -1511,7 +1492,7 @@ public final class BookKeeper implements MpProgram {
         void doAsyncCloseInternal(final int rc) {
             executeOrdered(() -> {
                 final HandleState prevHandleState;
-                final List<QueuedPendingAddOp> pendingAdds;
+                final List<PendingAddOp> pendingAdds;
                 final long lastEntry;
                 final long finalLength;
 
@@ -1574,13 +1555,15 @@ public final class BookKeeper implements MpProgram {
         protected void doAsyncAddEntry(long payload, AddCallback cb, Object ctx, boolean isRecoveryAdd) {
             // PORT: no throttler
             boolean wasClosed = false;
-            QueuedPendingAddOp op = null;
+            PendingAddOp op = null;
             long currentLedgerLength = -1;
             // synchronized on this to ensure that the ledger isn't closed between checking and updating lastAddPushed
             if (isHandleWritable()) {
                 long entryId = ++lastAddPushed;
                 currentLedgerLength = addToLength(PAYLOAD_LENGTH);
-                op = new QueuedPendingAddOp(this, entryId, cb, ctx, PAYLOAD_LENGTH); // op.setEntryId(entryId)
+                op = new PendingAddOp(this, currentEnsemble, entryId, cb, ctx, PAYLOAD_LENGTH,
+                        isRecoveryAdd); // PendingAddOp.create(...); op.setEntryId(entryId)
+                addOpsByEntryId.put(entryId, op); // PORT: see addOpsByEntryId
                 pendingAddOps.add(op);
             } else {
                 wasClosed = true;
@@ -1601,7 +1584,7 @@ public final class BookKeeper implements MpProgram {
         }
 
         /** PendingAddOp.initiate(), on the handle's process (PORT: see PendingAddOp). */
-        private void initiate(QueuedPendingAddOp op, long payload, long currentLedgerLength, boolean isRecoveryAdd) {
+        private void initiate(PendingAddOp op, long payload, long currentLedgerLength, boolean isRecoveryAdd) {
             // hasRun = true; callbackTriggered is false here (the op was queued just now)
             int flags = isRecoveryAdd ? FLAG_RECOVERY_ADD | FLAG_HIGH_PRIORITY : FLAG_NONE;
             EntryBody toSend = new EntryBody(ledgerId, op.entryId, lastAddConfirmed, currentLedgerLength, payload);
@@ -1618,7 +1601,7 @@ public final class BookKeeper implements MpProgram {
                 // sendWriteRequest(ensemble, bookieIndex)
                 Channel.send(m, currentEnsemble.get(bookieIndex),
                         new AddRequest(opProcess, ledgerId, op.entryId, flags, toSend, bookieIndex));
-                // ++pendingWriteRequests: counted by the op (PendingAddOpCreate)
+                ++op.pendingWriteRequests;
             }
         }
 
@@ -1644,9 +1627,9 @@ public final class BookKeeper implements MpProgram {
             errorOutPendingAdds(rc, drainPendingAddsAndAdjustLength());
         }
 
-        List<QueuedPendingAddOp> drainPendingAddsAndAdjustLength() {
-            QueuedPendingAddOp pendingAddOp;
-            List<QueuedPendingAddOp> opsDrained = new ArrayList<>(pendingAddOps.size());
+        List<PendingAddOp> drainPendingAddsAndAdjustLength() {
+            PendingAddOp pendingAddOp;
+            List<PendingAddOp> opsDrained = new ArrayList<>(pendingAddOps.size());
             while ((pendingAddOp = pendingAddOps.poll()) != null) {
                 addToLength(-pendingAddOp.entryLength);
                 opsDrained.add(pendingAddOp);
@@ -1654,8 +1637,8 @@ public final class BookKeeper implements MpProgram {
             return opsDrained;
         }
 
-        void errorOutPendingAdds(int rc, List<QueuedPendingAddOp> ops) {
-            for (QueuedPendingAddOp op : ops) {
+        void errorOutPendingAdds(int rc, List<PendingAddOp> ops) {
+            for (PendingAddOp op : ops) {
                 op.submitCallback(rc);
             }
         }
@@ -1663,7 +1646,7 @@ public final class BookKeeper implements MpProgram {
         void sendAddSuccessCallbacks() {
             // Start from the head of the queue and proceed while there are
             // entries that have had all their responses come back
-            QueuedPendingAddOp pendingAddOp;
+            PendingAddOp pendingAddOp;
 
             while ((pendingAddOp = pendingAddOps.peek()) != null
                     && !changingEnsemble) {
@@ -1884,9 +1867,12 @@ public final class BookKeeper implements MpProgram {
             if (msg instanceof Recover) {
                 new LedgerOpenOp().initiate();
             } else if (msg instanceof ReadLastConfirmedDataComplete d) {
-                recoveryOp.readLastConfirmedDataComplete(d.rc(), d.lastAddConfirmed(), d.length());
+                // PORT: the op's callback runs on lh.executor (its callbackExecutor): one ordered turn
+                executeOrdered(() -> recoveryOp.readLastConfirmedDataComplete(d.rc(), d.lastAddConfirmed(), d.length()));
             } else if (msg instanceof OnEntryComplete o) {
-                recoveryOp.onEntryComplete(o.rc(), o.hasEntry(), o.entryId(), o.length(), o.data());
+                // PORT: sendReadTo passes lh.executor: the read's callback is one ordered turn
+                executeOrdered(() -> recoveryOp.onEntryComplete(o.rc(), o.hasEntry(), o.entryId(), o.length(),
+                        o.data()));
             } else {
                 super.dispatchMore(msg);
             }
