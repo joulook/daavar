@@ -8,6 +8,9 @@ differs from the source carries `// PORT:` and the reason.
 
 ## Observation contract (owner's ruling for this evaluation)
 
+The full contract, including the treatment of shared memory as a sequential process, is
+`daavar/benchmarks-cf/craq/CONTRACT.md`.
+
 The concurrency inside a storage node is modelled as **logical tasks**: one process per concurrent activity of the
 source (an update in flight that waits for its successor, a read, the chunk lock as explicit synchronisation), the
 source's dependencies as messages, and no other program order between tasks. The reuse of pool workers
@@ -181,6 +184,9 @@ Invisible:
   lookups at `nk` (decision 2); the receive window dropped (decision 4); decision 5 reworded as the adopted
   interface rule. Messages `MetaSet`/`MetaSetAck` removed, `MetaGet`/`MetaRsp` added. Logs of the first version:
   `logs-r0/`.
+- Round 2 (Astra REVIEW-r2.md: faithful under the contract): the two retry-cut comments in the source updated (no
+  behaviour change); the remaining read-before-update order documented as the owner-accepted abstraction of
+  CONTRACT.md; artifact locations listed; the complete q = 1 bag export added.
 
 ## Compile and run (inside this directory)
 
@@ -190,8 +196,20 @@ java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-j
 java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.craq.ChainReplication:impl,2,fifo' must 0 1 report - 600 </dev/null
 ```
 
-Fix round 1 runs (2026-11-05; the machine carried foreign load, load average about 25 on 16 cores). Logs in this
-directory; the first version's logs are in `logs-r0/`.
+### Artifact locations
+
+All logs and exports are in OUT_DIR = `/local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks-cf2/craq/java`
+(the staged copy under `daavar/benchmarks-cf/craq` holds only the source, NOTES.md and CONTRACT.md):
+- `logs-r0/run-impl1.log`, `logs-r0/run-impl2.log`: the first version (publish-and-acknowledge metadata), q = 1 and
+  q = 2, 600 s, both timed out (superseded).
+- `run-r1-impl1-fifo-1200.log`: fix round 1, q = 1, fifo, counting mode.
+- `run-r1-export-impl1-fifo-30.log` + `export-r1-impl1-fifo.jsonl`, `run-r1-export-impl1-bag-30.log` +
+  `export-r1-impl1-bag.jsonl`: the 30 s export checks (aborted by the time limit).
+- `run-r1-export-impl1-fifo-1200.log` + `export-r1-impl1-fifo-full.jsonl`: the complete q = 1 fifo export.
+- `run-r2-export-impl1-bag-1200.log` + `export-r2-impl1-bag-full.jsonl`: the complete q = 1 bag export (round 2).
+- `report*/`: the launcher's report directories of these runs.
+
+Fix round 1 runs (2026-11-05; the machine carried foreign load, load average about 25 on 16 cores).
 
 Compile: no errors, no warnings (javac 17.0.18).
 
@@ -231,14 +249,18 @@ c0's word is always `[s Write(0,1), r Ack(0)]`; c1's word, counts and multiplici
 (Counts in the format's order: for c0's Write and Ack, the c1 events porf-before; for c1's Read and Value, the c0
 events porf-before.)
 
-**Open point: finding 1 is not closed by this fix.** Astra's counterexample history (c1 reads 0 and there is no
-causal path from c1's Read to c0's Ack, i.e. a Value(1,0) summary with counts `[0,0,...]`) is still absent from the
-complete q = 1 enumeration: every `Value(1,0)` summary has count 1 at c0's Ack. The reason is the same order through
-a different process. A read that returns 0 must make both of its lookups at some target before that target's
-update job (otherwise `aioFinishRead` or `aioPrepareRead` fails). Both the lookups and the job are received by
-`nk`, so `nk`'s program order puts the read before `JobDone`, and from there before the head's Ack. The publish-ack
-scheme ordered read before write through the read task; the lookup scheme orders it through `nk`. In this API a
-read meets a later write only through some process's program order, so any process that owns the metadata produces
-this edge. The source's read-before-write relation is an anti-dependency, not a message path, and I see no way to
-model it with messages without making stale reads possible.
+Complete export of q = 1, bag (round 2; `run-r2-export-impl1-bag-1200.log`, file `export-r2-impl1-bag-full.jsonl`,
+compiled from the round-2 source): ran 1348, blocked 524, completed 824, elapsed 243.6 s, `graphs: 824 distinct
+complete, 524 distinct blocked; stack exhausted`, `"model":"asyn","enumeration":"complete"`, 5 summaries: the same
+five patterns as fifo, with the same multiplicities (792, 524, 26, 3, 3).
+
+**Remaining order: the owner-accepted causal abstraction** (`daavar/benchmarks-cf/craq/CONTRACT.md`, item 2; Astra
+round 2, REVIEW-r2.md). Every `Value(1,0)` summary has count 1 at c0's Ack: a read that returns 0 makes both lookups
+at some target before that target's update job, and `nk`'s program order then places the read before `JobDone` and
+the head's Ack. In 3FS the metadata lives in a lock-free concurrent map (ChunkStore.h l.38), so there such a read is
+not causally before the update. The contract makes this explicit: a shared memory location is modelled as a
+sequential process, and its program order is part of the observation. The specifications are one sequential object
+with the same edge, and the Rust ports route the metadata through the node process too, so the refinement checks
+compare like with like. What is not claimed is that the port's causal order equals the source's at the memory
+level. This is an accepted abstraction of the contract, not an unresolved defect of the reference.
 

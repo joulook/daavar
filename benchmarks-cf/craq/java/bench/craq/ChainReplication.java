@@ -149,10 +149,10 @@ public final class ChainReplication implements MpProgram {
     private final String modelName;
     private final List<String> roles;
     /**
-     * PORT: which unproductive read retries are cut (NOTES.md). false (default): an answer equal to the
-     * preceding answer of the same read from the same target; true (fourth argument "consecutive"): only an
-     * answer equal to the immediately preceding attempt's, from the same target (the clarification read
-     * literally; the exploration is then infinite, since a read can alternate between two targets).
+     * PORT: which unproductive read retries are cut (NOTES.md decision 5). false (default, the interface rule):
+     * an answer equal to an earlier answer of the same read from the same target. true (fourth argument
+     * "consecutive"): only an answer equal to the immediately preceding attempt's, from the same target; an
+     * unbounded diagnostic mode (a read can alternate between two unchanged targets), never used in study runs.
      */
     private final boolean cutConsecutiveOnly;
 
@@ -407,8 +407,9 @@ public final class ChainReplication implements MpProgram {
                     ReadRsp compareWith = cutConsecutiveOnly ? previous : previousAt[rsp.target()];
                     if (compareWith != null && compareWith.target() == rsp.target()
                             && compareWith.updateVer() == rsp.updateVer() && compareWith.commitVer() == rsp.commitVer()) {
-                        // PORT (coordinator's clarification, INTERFACE.md): the same not-committed answer from the
-                        // same target as the immediately preceding attempt: the execution is cut as unproductive.
+                        // PORT (interface rule, INTERFACE.md last paragraph): a not-committed answer equal to an earlier
+                        // answer of this read from the same target (by default; the immediately preceding attempt's
+                        // with "consecutive"): the execution is cut as unproductive.
                         // The API has no assume(false): this process waits for a message nobody sends, and the
                         // client stays blocked on its Value, so the execution counts as blocked.
                         recv(Never.class);
