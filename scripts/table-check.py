@@ -13,7 +13,7 @@ import csv, os, re, sys, glob, json
 R, ST = sys.argv[1], sys.argv[2]; os.makedirs(ST, exist_ok=True)
 TB = os.path.join(R, "PLDI/tex/tables"); BD = os.path.join(R, "brain-data/results"); DV = os.path.join(R, "daavar")
 problems = []; notes = []
-def base_id(i): return re.sub(r"(\.c(1|48)h|\.j2|\.m|\.r\d+|\.p)+$", "", i)
+def base_id(i): return re.sub(r"(\.c(1|48)h|\.cinf|\.j2|\.m|\.r\d+|\.p)+$", "", i)
 def num(x):
     try: return float(x)
     except Exception: return None
