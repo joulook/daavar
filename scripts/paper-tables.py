@@ -222,7 +222,7 @@ for fam, tset, modes in FAMS:
 
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
-CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs."),
+CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs or runs at a limit."),
            ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
@@ -250,18 +250,21 @@ if not FULL and KEEP is None:
             c2, c1, c3 = fresh(m.get("stateless")), fresh(m.get("stateful")), fresh(m.get("offline"), True)
             fb_size = ""; fb_note = []
             if FALLBACK:
-                def older(r):   # level A: the newest run of this cell at any pin, any tier; never blue; orange when it shared its node or ran before the current pins, else red
+                def older(r, offline=False):   # level A: the newest run of this cell at any pin; never blue; orange when it shared its node or ran before the current pins, else red
                     if r is None or not (decided(r) or limit(r)): return None
+                    # the owner's eligibility rules hold on this path too (data audit 3, 2026-11-05): a limit marker only at the 48 h tier, an offline cell only with current exports and a merge join
+                    if limit(r) and num(r.get("timeout s")) != 172800: return None
+                    if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
                     r = dict(r); cur = (r.get("pin") or "")[:7] in ("9a0629e", "367cdc6")
                     r["colour"] = "orange" if (r.get("contended") == "yes" or not cur) else "red"; return r
                 if c2 is None and older(m.get("stateless")) is not None: c2 = older(m.get("stateless")); fb_note.append("nested:older")
                 if c1 is None and older(m.get("stateful")) is not None: c1 = older(m.get("stateful")); fb_note.append("online:older")
-                if c3 is None and older(m.get("offline")) is not None: c3 = older(m.get("offline")); fb_note.append("offline:older")
+                if c3 is None and older(m.get("offline"), True) is not None: c3 = older(m.get("offline"), True); fb_note.append("offline:older")
                 def best(r, offline=False):   # a cell with its true colour: the current-pin rule first (blue/red/orange), else the older-run rule
-                    f = fresh(r, offline); return f if f is not None else older(r)
+                    f = fresh(r, offline); return f if f is not None else older(r, offline)
                 listed_sizes = {w[3] for w in want if w[0] == prog and w[1] == var and w[2] == model}
                 never_ran = (c1 is None and c2 is None and c3 is None)   # owner 2026-11-05 09:50: such a row stays empty; the largest size that ran follows it
-                short = [r for r in (c1, c2, c3) if r is not None and limit(r) and num(r.get("timeout s")) != 172800]
+                short = [r for r in (c1, c2, c3) if r is not None and limit(r)]   # any limit (data audit 3: the 48 h tier too): the largest completed smaller size follows
                 if short or never_ran:   # the largest size of the instance at which every engine completed (no limit), below this row's size
                     shown = sz(size)
                     import math
