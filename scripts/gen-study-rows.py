@@ -9,6 +9,10 @@ STUDIES = {
     "craq": dict(hand="craq-lin", derived="craq-derived", rust=["craq-rust", "craq-rust-sol"],
                  java=[("craq", "bench.craq.ChainReplication", "transliteration"), ("craq-sol", "bench.craq_sol.ChainReplication", "")],
                  model="fifo", expected="readme", bench="craq"),
+    "bk": dict(hand="bk-ledger", derived="bk-derived", rust=["bk-rust", "bk-rust-sol"],
+               java=[("bk", "bench.bookkeeper.BookKeeper", "transliteration"), ("bk-413", "bench.bookkeeper413.BookKeeper413", "transliteration-4.13"),
+                     ("bk-sol", "bench.bookkeeper_sol.BookKeeper", "")],
+               model="fifo", expected="readme", bench="bk"),
 }
 study, sizes, out = sys.argv[1], sys.argv[2].split(","), sys.argv[3]
 S = STUDIES[study]; M = S["model"]; rows = []; tsv = []
