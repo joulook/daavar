@@ -27,7 +27,11 @@ for f in sorted(glob.glob(os.path.join(BD, "*.tsv"))):
             cols = line.rstrip("\n").split("\t")
             if len(cols) != len(hdr): malformed.append(f"{os.path.basename(f)}:{ln} has {len(cols)} columns, header {len(hdr)}"); continue
             r = dict(zip(hdr, cols)); records.setdefault(r["run_id"], []).append(r)
-if malformed: problems.append(f"malformed record lines: {len(malformed)}; first: " + "; ".join(malformed[:5]))
+KNOWN_MALFORMED = set()
+if os.path.exists(os.path.join(ST, "known-malformed.txt")): KNOWN_MALFORMED = {l.strip() for l in open(os.path.join(ST, "known-malformed.txt")) if l.strip()}
+newm = [m for m in malformed if m.split(" ")[0] not in KNOWN_MALFORMED]
+if newm: problems.append(f"malformed record lines: {len(newm)}; first: " + "; ".join(newm[:5]))
+elif malformed: notes.append(f"malformed record lines already reported to the owner: {len(malformed)} ({'; '.join(m.split(' ')[0] for m in malformed[:5])})")
 # (2) coverage
 csv_ids = set(); csv_dirs = set(); rows_by_file = {}
 for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv"))):
@@ -125,7 +129,10 @@ for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv")) + [os.path.join(TB
         for k, r in cur.items():
             if k not in old: diff.append(f"{fn}: + {k}: run id {r.get('run id', '')} verdict {r.get('verdict', '')} wall {r.get('wall s', r.get('online s', ''))}"); fchg += 1; continue
             for c, v in r.items():
-                if old[k].get(c, "") != v and c not in ("started", "directory"): diff.append(f"{fn}: ~ {k}: {c}: '{old[k].get(c, '')}' -> '{v}' (run id {r.get('run id', '')})"); fchg += 1
+                def same(a, b):   # a change of formatting only (e.g. 0.0 -> 0.040 when the phase columns went to ms precision) is no change
+                    if a == b: return True
+                    x, y = num(a), num(b); return x is not None and y is not None and round(x, 1) == round(y, 1)
+                if not same(old[k].get(c, ""), v) and c not in ("started", "directory"): diff.append(f"{fn}: ~ {k}: {c}: '{old[k].get(c, '')}' -> '{v}' (run id {r.get('run id', '')})"); fchg += 1
         for k in old:
             if k not in cur: diff.append(f"{fn}: - {k} (row gone)"); fchg += 1
         if fchg: changed_files += 1
