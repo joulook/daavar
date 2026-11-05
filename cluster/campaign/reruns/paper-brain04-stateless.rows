@@ -1,0 +1,4 @@
+# calibrated stateless rows (scripts/stateless-calibrate.py): time limit = the slower of the stateful and offline runs of the instance, rounded up to minutes, at least 600 s
+C2.s3-commit.impl_12_12_fifo.t16.p 250 600 needok:C1.s3-commit.impl_12_12_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 12 12
+C2.s3-commit.impl_16_16_fifo.t16.p 250 960 needok:C1.s3-commit.impl_16_16_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s3-commit conf --engine stateless --threads 16 --model fifo -- 16 16
+C2.s1-naive.impl_naive_10_bag.t16.p 250 780 needok:C1.s1-naive.impl_naive_10_bag.t16.p "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 10

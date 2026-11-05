@@ -5,7 +5,7 @@ set -uo pipefail
 . "$(dirname "$0")/env.sh"
 h=$(hostname); rows=${1:-$DAAVAR/cluster/campaign/shared/$h.rows}; [ -f "$rows" ] || { echo "no rows file $rows"; exit 1; }
 case $h in
-  brain*) NUMA=0,1,2,3; SLOTS=4; CAP=250; JTO="";;
+  brain*) NUMA=0,1,2,3; SLOTS=4; CAP=250; JTO="-Xmx12g";;   # 17 JVMs x 12 GB = 204 GB per JMC export, four at a time under 2 TB (brain01 thrashed uncapped, 2026-11-05)
   volta*) NUMA=0; SLOTS=1; CAP=200; JTO="-Xmx24g";;   # a JMC export runs 17 JVMs; the default heap (1/4 of RAM each) would let one row take the whole machine
   pinky*) NUMA=0; SLOTS=1; CAP=80;  JTO="-Xmx8g";;    # pinky: 251 GB, 17 x 8 GB stays under half of it
   *) echo "unknown host class $h"; exit 1;;

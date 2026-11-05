@@ -300,7 +300,12 @@ print(f"join-compare: {len(_jc)} joins with both an old and a merge record; verd
 _byexact = collections.defaultdict(list)
 for _r in _allrows: _byexact[_r["run_id"]].append(_r)
 for _k in _byexact: _byexact[_k].sort(key=lambda r: r.get("started_at") or "")
+# an export imported under a short name (the S_raft log specification = the Omni-Paxos specification exports of brain05,
+# copied as $EVAL_OUT/imports/sraft-e{1,2}; zookeeper study, 2026-11-04) resolves to its source record, so that the join
+# row carries the specification's graph count and export time (owner, 2026-11-05: no row without its counts)
+IMPORTS = {"sraft-e1": "C3E.omnipaxos.spec_correct_1_1_1_fifo.t16.c48h", "sraft-e2": "C3E.omnipaxos.spec_correct_2_1_1_fifo.t16.c48h"}
 def export_record(ex, reader):
+    ex = IMPORTS.get(ex, ex)
     cands = [r for r in _byexact.get(ex, []) if (r.get("started_at") or "") <= (reader.get("started_at") or "~")]
     same = [r for r in cands if r.get("node") == reader.get("node")]   # the reader read the file on its own node
     if same: return same[-1]

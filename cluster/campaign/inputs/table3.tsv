@@ -19,4 +19,4 @@ lock	wrong-round	fifo	3,4
 lock	wrong-round	fifo	3,5
 replog-co	early-reply	fifo	5
 ring-el	no-compare	bag	6
-zab	issue 1	fifo	4
+zab	issue 1	fifo	3

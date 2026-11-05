@@ -127,6 +127,10 @@ while [ ${#PENDING[@]} -gt 0 ]; do
     fi
     w=$(width_of "$id"); first=$(find_free "$w")
     if [ -z "$first" ]; then NEXT+=("$line"); continue; fi
+    # memory guard (owner, 2026-11-05, after brain01 and two pinkys thrashed under uncapped JMC exports): never launch a row
+    # while less than MIN_AVAIL_PCT (default 25) % of the machine's memory is available; the node keeps room for ssh and for us
+    _ma=$(free -g | awk '/Mem:/ {print $7}'); _mt=$(free -g | awk '/Mem:/ {print $2}')
+    if [ -n "$_ma" ] && [ "$_mt" -gt 0 ] && [ $((_ma*100/_mt)) -lt "${MIN_AVAIL_PCT:-25}" ]; then echo "$(date -Is) waiting: memory ${_ma} of ${_mt} GB available" >> "$QDIR/queue.log"; sleep 60; continue; fi
     if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
     ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
     ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done; launched_any=1
