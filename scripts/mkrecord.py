@@ -214,6 +214,12 @@ if isinstance(rec.get("verdict"), str): rec["verdict"] = rec["verdict"].lower()
 # tsv line in brain-data's column order
 hdr_path = pathlib.Path(env.get("BRAIN_DATA", "")) / "results.tsv"
 cols = read(hdr_path).splitlines()[0].split("\t") if hdr_path.exists() else sorted(k for k in rec if not isinstance(rec[k], dict))
+# a run whose tool printed a FAILED line (JMC's split mode: a lost worker, an unencodable payload) ended by itself without a verdict:
+# never 'ok' (owner 2026-11-06: the caspaxos (3,2) online run sat in a conforming table with empty cells)
+_f = re.search(r"^FAILED:\s*(.+)$", out, re.M)
+if _f and not rec.get("verdict"):
+    rec["stop_reason"] = "failed"; rec["failure"] = _f.group(1).strip()[:200]
+if "failure" not in cols: cols.append("failure")
 def cell(k):
     v = rec.get(k); 
     if v is None or isinstance(v, (dict, list)): return ""

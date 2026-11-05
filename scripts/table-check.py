@@ -42,6 +42,11 @@ for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv"))):
         for k in ("spec export s", "impl export s"):   # exports are components of an offline row, named in its directory column only
             pass
 def decided(r): return r.get("verdict") in ("conforms", "violation") or r.get("stop_reason") in ("timeout", "memory")
+# (2a) a run that ended by itself without a verdict and without a limit or a recorded failure (owner 2026-11-06, caspaxos (3,2) online)
+for fn, rs in rows_by_file.items():
+    for r in rs:
+        if (r.get("verdict") or "") == "" and (r.get("wall s") or "").strip() and (r.get("stop reason") or "") in ("", "ok", "no-verdict"):
+            problems.append(f"{fn}: {r.get('run id')} has a wall time but no verdict, no limit and no recorded failure")
 # (2b) time components (owner 2026-11-06: a table must never show 0 for a phase that was not measured): a decided row with a wall time
 # must carry its components: in-process rows the spec and impl phases (or the spec export of a cross-language online row), offline rows both exports and the join
 for fn, rs in rows_by_file.items():
