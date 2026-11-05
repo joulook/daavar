@@ -253,8 +253,6 @@ public final class BookKeeper implements MpProgram {
     /** RecoveryReadOp -> LedgerRecoveryOp: listener.onEntryComplete(rc, lh, entry, ctx); no entry when !hasEntry. */
     record OnEntryComplete(int rc, boolean hasEntry, long entryId, long length, long data) implements MpMessage {}
 
-    /** PORT: a task queued on the handle's ordered executor (lh.executor), run in queue order. */
-    record OrderedTask(long seq) implements MpMessage {}
 
     /** LedgerManager.readLedgerMetadata(ledgerId). */
     record ReadLedgerMetadata(Tid replyTo, long ledgerId, int loopId) implements MpMessage {}
@@ -1325,8 +1323,8 @@ public final class BookKeeper implements MpProgram {
     /**
      * LedgerHandle: the handle's state with its pending-add queue, and the handle's ordered executor (lh.executor,
      * the main worker pool thread chosen by ledger id), as one sequential process. PORT: the application's calls
-     * (asyncAddEntry; for w2, the open) arrive as the client's messages; executeOrdered queues the task and sends
-     * the handle an OrderedTask, run in queue order; the zk client's callbacks run on this process too.
+     * (asyncAddEntry; for w2, the open) arrive as the client's messages; executeOrdered queues the task on a local
+     * deque drained before every receive; the zk client's callbacks run on this process too.
      */
     static class LedgerHandle implements Runnable {
         enum HandleState { OPEN, CLOSED }
@@ -1355,8 +1353,6 @@ public final class BookKeeper implements MpProgram {
 
         // PORT: the executor's queue
         final ArrayDeque<Runnable> executorQueue = new ArrayDeque<>();
-        long executorSent = 0;
-        long executorNext = 0;
         // PORT: MetadataUpdateLoops waiting for zk, by loop id
         final Map<Integer, MetadataUpdateLoop> loops = new HashMap<>();
         int nextLoopId = 0;
@@ -1392,26 +1388,29 @@ public final class BookKeeper implements MpProgram {
             self = MpProcess.self();
             client = Channel.recv(m, Setup.class).client();
             while (true) {
-                final long expected = executorNext;
-                MpMessage msg = Channel.recv(m, x -> !(x instanceof OrderedTask t) || t.seq() == expected);
+                // PORT: the handle's ordered executor (lh.executor). Before every receive it runs the tasks the handle
+                // submitted to itself (executeOrdered), in submission order, until none is left; a received callback,
+                // application call or zk completion then runs at once and completely: the receive is its turn.
+                Runnable task;
+                while ((task = executorQueue.poll()) != null) {
+                    task.run();
+                }
+                MpMessage msg = Channel.recv(m);
                 dispatch(msg);
             }
         }
 
         /** The messages the handle answers. */
         void dispatch(MpMessage msg) {
-            if (msg instanceof OrderedTask) {
-                executorNext++;
-                executorQueue.poll().run();
-            } else if (msg instanceof Add a) {
+            if (msg instanceof Add a) {
                 // the application: lh.asyncAddEntry(data, cb, ctx) with the entry number as data and context
                 asyncAddEntry(a.entry(), applicationAddCallback(), a.entry());
             } else if (msg instanceof WriteCompleteCallback w) {
-                // PORT: the bookie client queues the response handling on lh.executor: one ordered turn, after every
-                // task queued before it (a close task in particular)
+                // PORT: the bookie client submits the response handling to lh.executor: it runs on receipt, as one
+                // executor turn, after every task the handle submitted to itself earlier (see run())
                 final PendingAddOp op = addOpsByEntryId.get(w.opEntryId());
-                executeOrdered(() -> op.writeComplete(convertStatus(w.status(), Code.WriteException), w.ledgerId(),
-                        w.entryId(), w.addr(), w.ctx()));
+                op.writeComplete(convertStatus(w.status(), Code.WriteException), w.ledgerId(), w.entryId(), w.addr(),
+                        w.ctx());
             } else if (msg instanceof WriteLedgerMetadataResult w) {
                 loops.get(w.loopId()).writeComplete(w);
             } else if (msg instanceof ReadLedgerMetadataResult r) {
@@ -1438,8 +1437,8 @@ public final class BookKeeper implements MpProgram {
         }
 
         void executeOrdered(Runnable runnable) {
+            // PORT: lh.executor's queue, local to the handle's process; drained before its next receive (see run())
             executorQueue.add(runnable);
-            Channel.send(m, self, new OrderedTask(executorSent++));
         }
 
         LedgerMetadata getLedgerMetadata() {
@@ -1867,12 +1866,11 @@ public final class BookKeeper implements MpProgram {
             if (msg instanceof Recover) {
                 new LedgerOpenOp().initiate();
             } else if (msg instanceof ReadLastConfirmedDataComplete d) {
-                // PORT: the op's callback runs on lh.executor (its callbackExecutor): one ordered turn
-                executeOrdered(() -> recoveryOp.readLastConfirmedDataComplete(d.rc(), d.lastAddConfirmed(), d.length()));
+                // PORT: the op's callback runs on lh.executor (its callbackExecutor): executed on receipt, one turn
+                recoveryOp.readLastConfirmedDataComplete(d.rc(), d.lastAddConfirmed(), d.length());
             } else if (msg instanceof OnEntryComplete o) {
-                // PORT: sendReadTo passes lh.executor: the read's callback is one ordered turn
-                executeOrdered(() -> recoveryOp.onEntryComplete(o.rc(), o.hasEntry(), o.entryId(), o.length(),
-                        o.data()));
+                // PORT: sendReadTo passes lh.executor: the read's callback is executed on receipt, one turn
+                recoveryOp.onEntryComplete(o.rc(), o.hasEntry(), o.entryId(), o.length(), o.data());
             } else {
                 super.dispatchMore(msg);
             }

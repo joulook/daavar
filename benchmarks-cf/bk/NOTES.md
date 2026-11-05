@@ -38,7 +38,7 @@ Invisible:
 - handle → op: `PendingAddOpCreate(lh, entryId, isRecoveryAdd, pendingWriteRequests)`, `ReadLastConfirmedOpCreate(lh)`, `RecoveryReadOpCreate(lh, start, end)`.
 - op → handle: `WriteCompleteCallback(opEntryId, status, ledgerId, entryId, addr, ctx)`, one per bookie answer (fix round 1),
   `ReadLastConfirmedDataComplete(rc, lac, length)`, `OnEntryComplete(rc, hasEntry, entryId, length, data)`.
-- handle → itself: `OrderedTask(seq)`, a task on the handle's ordered executor. The guarded receive accepts only the next seq, so tasks run in queue order under `bag` too.
+- (no handle → itself messages since fix round 2: self-submitted executor tasks are a local deque, decision 18)
 - init → handle: `Setup(client)`.
 
 ## Method mapping
@@ -71,7 +71,7 @@ Invisible:
    - `ReadLastConfirmedOp.initiateWithFencing` and `PendingReadOp.initiate` only send, so they run on the op's process after its creation message. The source calls them on the creator's thread right after construction.
 2. **`completed` flag** (superseded by decision 18, fix round 1). The `completed` flag is the PendingAddOp's own field on the handle. `writeComplete` sets it and calls `sendAddSuccessCallbacks` in the same executor turn, as the source does. The earlier travelling flag (`SendAddSuccessCallbacks`) is removed.
 3. **The zk client's callbacks** (MetadataUpdateLoop's write and read completions) run on the handle's process. The handle state they touch is synchronized in the source (`setLedgerMetadata`), so running them there serialises them, as the source does.
-4. **executeOrdered** queues the task locally and sends the handle an `OrderedTask(seq)`. The handle's receive admits only the next seq, so tasks run in FIFO order whatever the delivery model. Since fix round 1, every callback the source runs on lh.executor goes through it (decision 18).
+4. **executeOrdered** (since fix round 2) appends the task to a deque local to the handle's process. The handle drains that deque in submission order before every receive. There are no `OrderedTask` messages any more (decision 18).
 5. **Addresses.** Bookies and zk answer the `replyTo` carried by each request. Ops learn their handle from their creation message. The handles learn their client from `Setup`, sent by an invisible `init` daemon (as the Rust entry's `init`). The spawn order cannot break the handle↔client cycle any other way.
 6. **Entry ids.** BookKeeper's ids start at 0: `Add(i)` is entry id `i-1` (`++lastAddPushed` from -1). The payload is `i` and the callback context is `i`, so `Acked(i)`/`Rejected(i)` echo the Add. `Closed(last)` carries the interface's number of the source's last entry id: `lh.getLastAddConfirmed()` after `setLedgerMetadata` of the closed metadata, plus one, and -1 when empty (the specification and the ports number entries from 1; coordinator's fix of 2026-11-06 at `openComplete`). So with e = 1 and the entry recovered, `last = 1`.
 7. **Ledger length.** Every payload is 1 unit, so the ledger length counts entries. It is kept because the close path compares it (`doAsyncCloseInternal`'s conflict check), although no visible message depends on it.
@@ -102,16 +102,18 @@ Invisible:
 16. **Program name** `bookkeeper`; size = `e` as text. These must match the Rust side for a summary comparison; to be checked.
 17. **Delivery model**: `fifo` = `CommunicationModel.P2P`, `bag` = `ASYN`.
 
-18. **The ordered executor carries every executor callback (fix round 1, Astra REVIEW-main findings 1-2).**
-   Source: PendingAddOp l.146-152 gives the bookie client `lh.executor`, and PerChannelBookieClient l.1399-1403 and l.1542-1546 queue the response handling on it. The fencing LAC read (`callbackExecutor = lh.executor`), the recovery reads (`sendReadTo(..., lh.executor)`) and the close tasks (`executeOrdered`, LedgerHandle l.2538-2539) use the same executor.
-   Now:
-   - The op's process only receives the bookie answers and forwards each one as a `WriteCompleteCallback`. It has no handle effects.
-   - On arrival, the handle queues `PendingAddOp.writeComplete` for that answer as one `OrderedTask`. That turn includes its synchronous effects: `sendAddSuccessCallbacks`, `notifyWriteFailed`, `handleBookieFailure`, and `handleUnrecoverableErrorDuringAdd` together with the close task it queues.
-   - The completions of the LAC-read op and the read ops (`readLastConfirmedDataComplete`, `onEntryComplete`, with the recovery adds and reads they issue) are queued the same way.
-   - The handle drains the queue strictly in arrival order (decision 4).
-   What this guarantees: a callback runs only after every task queued before it. A close task queued by a Fenced answer therefore runs before any callback of an add issued later. In Astra's e=2 counterexample, Acked(2) can no longer precede the queued close.
-   The application's calls (Add, Recover) and the zk completions (decision 3) are not executor tasks in the source, so they are handled on arrival.
-   The op-local and read-op-local processing that precedes the forward touches only that op's state. Queueing its effect when the forward arrives is the same as the bookie's answer arriving at that moment.
+18. **The handle's ordered executor (fix rounds 1 and 2; Astra REVIEW-main finding 1-2, REVIEW-main-r2 finding 1).**
+   Source: PendingAddOp l.146-152 gives the bookie client `lh.executor`, and PerChannelBookieClient l.1399-1403 and l.1542-1546 submit the response handling to it. The fencing LAC read (`callbackExecutor`), the recovery reads (`sendReadTo(..., lh.executor)`) and the close tasks (`executeOrdered`, LedgerHandle l.2538-2539) use the same executor.
+   Emulation:
+   - The op processes and read ops only receive their bookies' answers and forward them (`WriteCompleteCallback`, `ReadLastConfirmedDataComplete`, `OnEntryComplete`). They have no handle effects.
+   - The handle process is the executor:
+     - **Execution on receipt.** A received callback runs at once and completely as one executor turn, with all its synchronous effects: `PendingAddOp.writeComplete`, `sendAddSuccessCallbacks`, `notifyWriteFailed`, `handleBookieFailure`, `handleUnrecoverableErrorDuringAdd`, `LedgerRecoveryOp.readLastConfirmedDataComplete` / `onEntryComplete`, and the adds and reads they issue. So do a received application call (Add, Recover) and a zk completion.
+     - **FIFO drain before every receive.** Tasks the handle submits to itself go to an in-process deque: the close task of `doAsyncCloseInternal`, the add-to-closed-ledger callback, and the ensemble-change completion (`whenCompleteAsync(executor)`). Before every receive, that deque is drained completely, in submission order, including tasks submitted while draining.
+   Guarantees:
+   - (a) No received callback runs before a close task submitted earlier. A callback of an add issued later can therefore never overtake a submitted close (Astra round 1).
+   - (b) No premature causality: a callback's effects become causal predecessors of the handle's later actions only when the callback executes, which is the moment of its receipt. Until then it is an undelivered message. The round-1 deferred queue, which made a received but unexecuted callback precede later handle actions, is removed (Astra round 2).
+   - (c) The interleaving of callbacks from different ops stays free (any receive order). That is the source's nondeterminism of submission time.
+   Round 1's `OrderedTask` self-messages are removed. `executeOrdered` only appends to the local deque.
 
 ## Compile and run (inside OUT_DIR = daavar/benchmarks-cf2/bk/java)
 
@@ -191,4 +193,38 @@ stop_reason: timeout
 peak_rss_kb: 568124
 max_graph_events: 178
 mean_graph_events: 176.053
+```
+
+### After fix round 2 (decision 18 as revised), 2026-11-06, seed 1
+
+The round-1 runs above are superseded. Logs: `run-e1-fix2.log` and `run-e2-fix2.log` in OUT_DIR.
+
+`impl,1,fifo`, `must 0 1 report - 900`:
+```
+ran:        19494 iterations
+blocked:    0 (counted by the strategy)
+completed:  19494
+rate:       21.7 iterations/s
+error:      Halting execution: 19494 due to timeout
+elapsed:    900.047 s
+graphs:     19494 distinct complete, 0 distinct blocked; stack not exhausted
+stop_reason: timeout
+peak_rss_kb: 551844
+max_graph_events: 122
+mean_graph_events: 117.345
+```
+
+`impl,2,fifo`, `must 0 1 report - 300`:
+```
+ran:        5035 iterations
+blocked:    0 (counted by the strategy)
+completed:  5035
+rate:       16.8 iterations/s
+error:      Halting execution: 5035 due to timeout
+elapsed:    300.038 s
+graphs:     5035 distinct complete, 0 distinct blocked; stack not exhausted
+stop_reason: timeout
+peak_rss_kb: 441836
+max_graph_events: 148
+mean_graph_events: 145.741
 ```
