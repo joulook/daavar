@@ -19,13 +19,18 @@ for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"
 # latest record per id wins (reruns append)
 import subprocess
 PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
+DROPPED = []   # (run_id, reason) for every record left out of every table: written to dropped-records.tsv for table-check.py
+def drop(rs, pred, reason):
+    for r in rs:
+        if pred(r): DROPPED.append((r["run_id"], reason))
+    return [r for r in rs if not pred(r)]
 def mispaired(r):  # an id ".vs-<spec variant>" whose command loads another specification's export
     m = re.search(r"\.vs-([a-z0-9-]+)\.", r["run_id"] + ".")
     if not m or not r["run_id"].startswith(("XON2.", "XJ2.")): return False
     ex = re.findall(r"/([A-Za-z0-9._-]+)/export\.jsonl", r.get("command", ""))
     spec = ex[0] if ex else ""
     return spec != "" and ("spec_" + m.group(1).replace("-", "_") + "_") not in spec
-_n = len(rows); rows = [r for r in rows if not mispaired(r)]; print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
+_n = len(rows); rows = drop(rows, mispaired, "mispaired: the command loads another specification's export"); print(f"mispaired rows dropped (Java spec export of another variant): {_n - len(rows)}")
 # the paper's Table 1 names for the benchmark directories (cluster/campaign/inputs/paper-names.tsv)
 NAMES = []
 for _l in open(DV + "/cluster/campaign/inputs/paper-names.tsv"):
@@ -96,11 +101,6 @@ def contended(r):
     return n
 for _r in _allrows: _r["_contended"] = contended(_r)
 byid = {}
-DROPPED = []   # (run_id, reason) for every record left out of every table: written to dropped-records.tsv for table-check.py
-def drop(rs, pred, reason):
-    for r in rs:
-        if pred(r): DROPPED.append((r["run_id"], reason))
-    return [r for r in rs if not pred(r)]
 # a record that is no measurement (could not start: exit-127/exit-2, marked invalid) never wins the id over a real run of the same
 # id: the brain04 exit-127 joins of 2026-11-03 hid brain01's conforming commit 12,12 / 16,16 / 20,20 joins (owner, 2026-11-05)
 def _infra(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")
