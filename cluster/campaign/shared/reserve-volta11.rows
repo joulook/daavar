@@ -1,2 +1,2 @@
-# reserve rows for volta11 (coordinator, 2026-11-05 02:30): the scaling-next ladders extended by up to four sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; the watch starts this file when the node's shard is exhausted.
+# reserve rows for volta11 (coordinator, 2026-11-05 02:35): the scaling-next ladders extended by up to four sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes that ran elsewhere dropped; the watch starts this file when the node's shard is exhausted.
 

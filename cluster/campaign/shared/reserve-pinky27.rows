@@ -1,2 +1,5 @@
-# reserve rows for pinky27 (coordinator, 2026-11-05 02:30): the scaling-next ladders extended by up to four sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; the watch starts this file when the node's shard is exhausted.
-
+# reserve rows for pinky27 (coordinator, 2026-11-05 02:35): the scaling-next ladders extended by up to four sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes that ran elsewhere dropped; the watch starts this file when the node's shard is exhausted.
+C1.zab-broadcast-remix.impl_6_correct_fifo.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 6 correct
+C1.zab-broadcast-remix.impl_8_correct_fifo.x3.t16 250 172800 needok:C1.zab-broadcast-remix.impl_7_correct_fifo.x2.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 8 correct
+C1.zab-broadcast-remix.impl_9_correct_fifo.x4.t16 250 172800 needok:C1.zab-broadcast-remix.impl_8_correct_fifo.x3.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 9 correct
+C1.zab-broadcast-remix.impl_7_correct_fifo.x2.t16 250 172800 needok:C1.zab-broadcast-remix.impl_6_correct_fifo.x1.t16 "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateful --threads 16 --model fifo -- 7 correct
