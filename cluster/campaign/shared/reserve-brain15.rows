@@ -1,3 +1,2 @@
-# reserve rows for brain15 (coordinator, 2026-11-05 02:35): the scaling-next ladders extended by up to four sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes that ran elsewhere dropped; the watch starts this file when the node's shard is exhausted.
-C1.election.impl_ring_conf_14_fifo.x3.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 14
-C1.election.impl_ring_conf_15_fifo.x4.t16 250 172800 needok:C1.election.impl_ring_conf_14_fifo.x3.t16 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 15
+# reserve rows for brain15 (coordinator, 2026-11-05 04:30): the scaling-next ladders extended by up to six sizes (applications and twins; no synthetic, no stateless), never recorded and not queued anywhere; ladder gates on sizes run elsewhere dropped; the watch starts this file when the node's shard is exhausted.
+
