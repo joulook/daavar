@@ -183,7 +183,7 @@ for r in T3:
     pts[key][col] = r
 cols = [("Stateful", "1"), ("SverifyP", "16"), ("SverifyP", "32"), ("SverifyP", "64"), ("CompleteFirst", "1"), ("CFirstP", "16")]
 lines = ["\\begin{tabular}{@{}ll" + "r" * len(cols) + "r@{}}", "\\toprule",
-         "family & size & \\multicolumn{4}{c}{stateful, threads 1 / 16 / 32 / 64} & \\multicolumn{2}{c}{stateless, 1 / 16} & peak RSS \\\\", "\\midrule"]
+         "family & size & \\multicolumn{4}{c}{Online, threads 1 / 16 / 32 / 64} & \\multicolumn{2}{c}{Nested, 1 / 16} & peak RSS \\\\", "\\midrule"]
 def sz(s):
     m = re.findall(r"\d+", s); return tuple(int(x) for x in m)
 for key in sorted(pts, key=lambda k: (k[0], sz(k[1]))):
@@ -263,7 +263,7 @@ def expected_for(a):
         except Exception: ok = False
         if ok: return e["verdict"]
     return None
-CAMP = [("C1", "campaign-stateful", "Stateful check, TraceForge, parallel"), ("C2", "campaign-stateless", "Stateless check, TraceForge, parallel"),
+CAMP = [("C1", "campaign-stateful", "Online, TraceForge, parallel"), ("C2", "campaign-stateless", "Nested, TraceForge, parallel"),
         ("C3J", "campaign-offline-tf", "Offline mode, TraceForge specification and implementation"),
         ("XON1", "campaign-online-java-impl", "Online: Java implementation (JMC) against Rust specification export"),
         ("XON2", "campaign-online-rust-impl", "Online: Rust implementation (TraceForge) against Java specification export"),

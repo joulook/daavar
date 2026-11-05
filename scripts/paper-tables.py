@@ -158,7 +158,7 @@ for fam, tset, modes in FAMS:
                 base = 5 if viol else 4
                 cap = (f"TraceForge standalone refinement checking, Rust specification against Rust implementation: the {'violating' if viol else 'conforming'} pairs of {GROUP_TXT[g]}"
                        + (", every size run" if FULL else ", the two largest sizes that finished and the sizes that reached a limit") + ". " + COMMON + (GX if viol else "") + "." + LIMITS)
-                hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{nested}} & \\multicolumn{{2}}{{c}}{{online}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
+                hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{Nested}} & \\multicolumn{{2}}{{c}}{{Online}} & \\multicolumn{{2}}{{c}}{{Offline}} \\\\"
                 cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(3))
                 hdr2 = " & " * (base - 1) + " & T & M & T & M & T & M \\\\"
                 fn = f"standalone-{g}-{kind}{SUF}"
@@ -213,7 +213,7 @@ for fam, tset, modes in FAMS:
                 sidetxt = "impl = the twin explored as the implementation (the other twin is the specification; a second word in the instance names the twin variant used as the specification when it is another variant). Offline: the two exports and the join; online: the twin explored against the other twin's export."
                 fn = f"twins-{tset}-{kind}{SUF}"
             cap = what + (", every size run" if FULL else ", the two largest sizes that finished and the sizes that reached a limit") + ". " + COMMON + (GX if viol else "") + ". " + sidetxt + LIMITS
-            hdr1 = f"instance & size & impl & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{offline}} & \\multicolumn{{2}}{{c}}{{online}} \\\\"
+            hdr1 = f"instance & size & impl & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{Offline}} & \\multicolumn{{2}}{{c}}{{Online}} \\\\"
             cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(2))
             hdr2 = " & " * (base - 1) + " & T & M & T & M \\\\"
             emit(fn, f"tab:{fn}", cap, "@{}lrlrr" + ("r" if viol else "") + "rrrr@{}", hdr1, cm, hdr2, body,
@@ -222,8 +222,8 @@ for fam, tset, modes in FAMS:
 
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
-CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust specification against Rust implementation, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification, $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached."),
-           ("table3", "tab:table3", True, "Violating pairs, as \\Cref{tab:table2}, with $G_x$: the uncovered implementation graphs (Nested, Online) or distinct uncovered summaries (Offline).")]
+CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification, $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the largest of the three. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller instance, included because the listed one has unfinished runs."),
+           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
@@ -298,7 +298,7 @@ if not FULL and KEEP is None:
                 csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("stateless", x2), ("stateful", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
         cap = what   # the curated caption carries the column definitions (owner, 2026-11-05: short captions)
         base = 5 if viol else 4
-        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{nested}} & \\multicolumn{{2}}{{c}}{{online}} & \\multicolumn{{2}}{{c}}{{offline}} \\\\"
+        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{4}}{{c}}{{Nested}} & \\multicolumn{{2}}{{c}}{{Online}} & \\multicolumn{{2}}{{c}}{{Offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + 4}}}\\cmidrule(lr){{{base + 5}-{base + 6}}}\\cmidrule(lr){{{base + 7}-{base + 8}}}"
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "rrrrrrrr@{}", hdr1, cm, " & " * (base - 1) + " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\", body,
              ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["stateless sweeps", "stateless spec graphs explored", "stateless s", "stateless MB", "stateful s", "stateful MB", "offline s", "offline MB", "colour (blue = reserved machine, red = earlier campaign)"] + (["fallback"] if FALLBACK else []), csvrows)
