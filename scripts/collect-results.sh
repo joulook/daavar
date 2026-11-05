@@ -11,6 +11,10 @@ while true; do
   git pull -q --rebase origin main 2>/dev/null
   for n in "${NODES[@]}"; do
     if timeout 900 git fetch -q "ssh://$n/local/mkhoshechin/eval/brain-data" main 2>/dev/null; then
+      # guard (2026-11-05): a node commit may only add or change files under runs/<node>/ and results/<node>.*; a commit that
+      # deletes anything else (a broken clone) is never merged (it would delete the repository's content)
+      bad=$(git diff --name-only --diff-filter=D "$(git merge-base HEAD FETCH_HEAD)" FETCH_HEAD 2>/dev/null | grep -v "^runs/$n/\|^results/$n\." | head -3)
+      if [ -n "$bad" ]; then echo "$(date '+%m-%d %H:%M') $n: REFUSED (deletes outside its own paths: $(echo $bad | cut -c1-120))"; continue; fi
       git merge -q --no-edit -X theirs FETCH_HEAD >/dev/null 2>&1 && echo "$(date '+%m-%d %H:%M') $n: merged $(git log --oneline -1 FETCH_HEAD | cut -c1-60)" || { git merge --abort 2>/dev/null; echo "$(date '+%m-%d %H:%M') $n: merge failed"; }
     else echo "$(date '+%m-%d %H:%M') $n: fetch failed (node not reachable)"; fi
   done
