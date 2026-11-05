@@ -207,3 +207,9 @@ C2.ring-election-igloo.impl_6_correct_bag.t16.p 250 172800 needok:C1.ring-electi
 C2.ring-election-igloo.impl_6_no-compare_bag.t16.p 250 172800 needok:C1.ring-election-igloo.impl_6_no-compare_bag.t16.p "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateless --threads 16 --model bag -- 6 no-compare
 C2.zab-broadcast-remix.impl_4_fifo_correct.t16.p 250 172800 needok:C1.zab-broadcast-remix.impl_4_fifo_correct.t16.p "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateless --threads 16 --model fifo -- 4 correct
 C2.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p 250 172800 needok:C1.zab-broadcast-remix.impl_4_fifo_issue1-propose-to-ackld.t16.p "$DAAVAR"/scripts/rust-run.sh zab-broadcast-remix conf --engine stateless --threads 16 --model fifo -- 4 issue1-propose-to-ackld
+# share 24,24 (owner 2026-11-05 09:40): the one-step-smaller size of 28,28, listed in Table 2
+C3E.s2-share.spec_share_24_24_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 28 28
+C3E.s2-share.impl_share_24_24_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 28 28
+C1.s2-share.impl_share_24_24_fifo.t16.p 250 172800 "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateful --threads 16 --model fifo -- share 28 28
+C3J.s2-share.impl_share_24_24_fifo.p.m 250 172800 needok:C3E.s2-share.impl_share_24_24_fifo.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s2-share.spec_share_24_24_fifo.t16.p/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_24_24_fifo.t16.p/export.jsonl
+C2.s2-share.impl_share_24_24_fifo.t16.p 250 172800 needok:C1.s2-share.impl_share_24_24_fifo.t16.p "$DAAVAR"/scripts/rust-run.sh s2-share conf --engine stateless --threads 16 --model fifo -- share 28 28
