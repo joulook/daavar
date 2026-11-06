@@ -1,0 +1,2 @@
+# rerun of a join whose record has no peak (time -v reported 0 kB for a sub-10 ms run; pipeline audit 1107-0005)
+C3J.chainpaxos-derived.spec_1_mixed_fifo.vs-hand.c48h.r2.m 250 172800 needok:C3E.pineapple-lin.spec_1_fifo.t16.c48h,C3E.chainpaxos-derived.spec_1_mixed_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.pineapple-lin.spec_1_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.chainpaxos-derived.spec_1_mixed_fifo.t16.c48h/export.jsonl

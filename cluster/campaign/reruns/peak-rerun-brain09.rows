@@ -1,0 +1,2 @@
+# rerun of a join whose record has no peak (time -v reported 0 kB for a sub-10 ms run; pipeline audit 1107-0005)
+C3J.craq-rust.impl_1_fifo.vs-hand.c48h.r3.m 250 172800 needok:C3E.craq-lin.spec_1_fifo.t16.c48h.r2,C3E.craq-rust.impl_1_fifo.t16.c48h.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.craq-lin.spec_1_fifo.t16.c48h.r2/export.jsonl "$EVAL_OUT"/C3E.craq-rust.impl_1_fifo.t16.c48h.r2/export.jsonl

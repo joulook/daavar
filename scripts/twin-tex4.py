@@ -38,8 +38,22 @@ def spec_of(P,r):   # the specification a real-software row is checked against (
         vs=re.search(r'\.vs-([a-z-]+)', r['run id']); w=vs.group(1) if vs else 'hand'
         return {'derived':r'S$_{\mathrm{paper}}$ (derived, Rust)','zkderived':r'S$_{\mathrm{zab}}$ (derived, Rust)','swiftderived':r'S$_{\mathrm{swift}}$ (derived, Rust)'}.get(w, r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
     return r'S$_{\mathrm{'+esc(P)+'}}$'
+_st_src=open(__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)),'study-tables.py')).read()
+_ST={}; exec(compile(_st_src[:_st_src.index('\nCOMMON = ')],'study-tables.py','exec'),_ST)   # the case studies' role names (2026-11-07, audit 1107-0005: CROSS/TWIN mislabelled craq and chainpaxos rows); omnipaxos keeps its own names below
+STUDY_TITLE={'pineapple':'Pineapple','swiftpaxos':'SwiftPaxos','chainpaxos':'ChainPaxos','cassandra':'Cassandra LWT','cassandra-rr':'Cassandra RR','zookeeper':'ZooKeeper','craq':'3FS CRAQ','bk':'BookKeeper','crdb':'CockroachDB','scalardb':'ScalarDB'}
+def study_pair(r):
+    for k,S in _ST['STUDIES'].items():
+        if k=='omnipaxos': continue
+        try:
+            if not S['sel'](r): continue
+            ro=S['roles'](r['run id'])
+        except Exception: continue
+        if ro: t=STUDY_TITLE.get(k,k); return (t+' '+ro[0], ro[1])
+    return None
 def pair(r,f):   # the two components of a check, as the paper's Table 7 names them: implementation $\sqsubseteq$ specification, each with its origin and language
     P=r['program']; v=r['variant'] or ''; sv=r.get('spec') or v
+    sp=study_pair(r)
+    if sp: return sp
     vv=lambda x: '' if x in ('correct','impl','',P) else ', '+esc(x)
     hand=lambda x: esc(P)+' (hand-written, Rust'+vv(x)+')'; twin=lambda x: esc(P)+' Java twin (context-aware agent'+vv(x)+')'; port=lambda x: esc(P)+' Java port (context-free agent'+vv(x)+')'
     SR=r'S$_{\mathrm{'+esc(P)+'}}$ (hand-written, Rust)'; SJ=r'S$_{\mathrm{'+esc(P)+'}}$ Java twin (context-aware agent)'
@@ -65,7 +79,10 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
     return (esc(short(P,v)), '?')
 def inst(r,f):
     m={'bag':'B','fifo':'F','p2p':'F','asyn':'B','causal':'C'}.get(r['model'],'')
-    a,b=pair(r,f); return a+r' $\sqsubseteq$ '+b+(r'$^{\mathrm{'+m+'}}$' if m else '')+'('+r['size']+')'
+    a,b=pair(r,f); sz=r['size']
+    if study_pair(r):   # a case-study row: the size with its variant, as the study tables print it (chainpaxos mixed/local)
+        v=r.get('variant') or ''; sz+=(' '+esc(v)) if v and v not in ('impl','spec','correct','v1') and v not in r['size'] else ''
+    return a+r' $\sqsubseteq$ '+b+(r'$^{\mathrm{'+m+'}}$' if m else '')+'('+sz+')'
 NEW_FROM='2026-11-03T23:30'
 def paint(r,cells): c='blue' if (r.get('started') or '')>=NEW_FROM else ('orange' if r.get('contended')=='yes' else 'red'); return [r'\textcolor{'+c+'}{'+x+'}' for x in cells]
 def status(r):
