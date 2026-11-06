@@ -1,0 +1,5 @@
+# Phase C/D Offline rows (owner 2026-11-06 20:00): every C/D instance without a decided Offline result; plan in plan/phaseCD-offline/PLAN.md
+# node brain03: C3J ricart-agrawala 4: the impl export (killed, exit-143, 2026-11-04) again; the spec export of brain03 is reused
+# 48 h tier (172800 s) everywhere; merge joins with needok on both exports; no Online rows
+C3E.ricart-agrawala.impl_4_bag.t16.c48h.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh ricart-agrawala export impl --out export.jsonl --threads 16 --model bag -- 4
+C3J.ricart-agrawala.impl_4_bag.c48h.r2.m 250 172800 needok:C3E.ricart-agrawala.spec_4_bag.t16.c48h,C3E.ricart-agrawala.impl_4_bag.t16.c48h.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.ricart-agrawala.spec_4_bag.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.ricart-agrawala.impl_4_bag.t16.c48h.r2/export.jsonl
