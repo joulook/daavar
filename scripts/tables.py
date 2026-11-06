@@ -345,12 +345,17 @@ for pre, fname, title in CAMP:
                 r["_contended"] = max(r.get("_contended") or 0, (sp or {}).get("_contended") or 0, (im or {}).get("_contended") or 0)
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = max(parts[0], parts[1]) + parts[2]   # the two exports are independent jobs run side by side: T = the longer export plus the join (owner, 2026-11-03 19:40)
-                r["peak_rss_kb"] = max([num(x) or 0 for x in ((sp or {}).get("peak_rss_kb"), (im or {}).get("peak_rss_kb"), r.get("peak_rss_kb"))]) or r.get("peak_rss_kb")
+                # M of an offline row (owner 2026-11-06): the two exports run side by side, so the machine holds both peaks at once: their sum,
+                # or the join's peak if that is larger (the join runs after the exports, alone)
+                _sp, _im, _jn = (num((sp or {}).get("peak_rss_kb")) or 0), (num((im or {}).get("peak_rss_kb")) or 0), (num(r.get("peak_rss_kb")) or 0)
+                r["peak_rss_kb"] = max(_sp + _im, _jn) or r.get("peak_rss_kb")
     if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = export_record(ex[0], r) if ex else None
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = (sp.get("impl_complete") or sp.get("iterations") or sp.get("graphs_complete")), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
+            if sp:   # M of a cross-language online row (owner 2026-11-06): the specification's export ran earlier, alone; the run loads its file: the larger of the two peaks
+                r["spec_export_peak_kb"] = sp.get("peak_rss_kb"); r["peak_rss_kb"] = max(num(r.get("peak_rss_kb")) or 0, num(sp.get("peak_rss_kb")) or 0) or r.get("peak_rss_kb")
     if pre in ("C1", "C2"):  # ruling Q27 (2026-10-31): five programs carry a thread identity inside visible values; the in-process
         # check compares typed values and cannot decide them, so their in-process rows are not verdict rows (offline and online only)
         Q27 = {"bank-grove", "fencing-grove", "kv-exactly-once-grove", "kv-snapshot-isolation-tla", "rpc-at-most-once-aneris", "calculator-disel"}
