@@ -103,7 +103,7 @@ for _r in _allrows: _r["_contended"] = contended(_r)
 byid = {}
 # a record that is no measurement (could not start: exit-127/exit-2, marked invalid) never wins the id over a real run of the same
 # id: the brain04 exit-127 joins of 2026-11-03 hid brain01's conforming commit 12,12 / 16,16 / 20,20 joins (owner, 2026-11-05)
-def _infra(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "") in ("exit-127", "exit-2")
+def _infra(r): return base_id(r["run_id"]) in INVALID or r["run_id"] in INVALID or (r["run_id"], r.get("started_at") or "") in INVALID_STARTS or (r.get("valid") or "yes") == "no" or str(r.get("stop_reason") or "").startswith(("exit-", "skipped", "refused"))   # 2026-11-06: every row the instance filter below drops as no measurement (error exits incl. exit-143 kills, skipped joins, refused joins) must not win the id over an earlier real run: brain04 naive(11) exit-143 hid brain01's violation and oom
 for r in rows:  # an id run on several pins: a real measurement, then the 48 h tier, then the newest pin, wins
     cur = byid.get(base_id(r["run_id"]))
     if cur is None or (not _infra(r), pin_rank(r)) >= (not _infra(cur), pin_rank(cur)):
