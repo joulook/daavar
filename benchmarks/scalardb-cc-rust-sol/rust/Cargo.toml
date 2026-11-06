@@ -1,0 +1,8 @@
+[package]
+name = "bench_scalardb_sol"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]
