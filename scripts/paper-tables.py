@@ -83,6 +83,9 @@ def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's fir
         v = sp + fm / 1000
     else: v = fm / 1000
     return f"{v:.3f}" if v < 0.1 else (f"{v:.2f}" if v < 10 else f"{v:.1f}")   # small first-violation times at ms precision, so a short specification phase is visible
+def cell_Tp(r):   # T below 0.1 s to the millisecond (Table 3, beside T_1)
+    c = cell_T(r); v = num((r or {}).get("wall s"))
+    return f"{v:.3f}" if (c and v is not None and not c.startswith("\\") and not c.startswith("oom") and v < 0.1) else c
 def cell_M(r):
     if not decided(r): return ""
     v = num(r.get("peak MB")); return "" if v is None else f"{v:.0f}"
@@ -234,7 +237,7 @@ for fam, tset, modes in FAMS:
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
 CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the larger of the sum of the two export peaks and the join peak. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs or runs at a limit."),
-           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. T$_1$ is given to the millisecond below 0.1\\,s. Offline has no T$_1$: its join reports only after reading both exports completely.")]
+           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. T$_1$ and T are given to the millisecond below 0.1\\,s. Offline has no T$_1$: its join reports only after reading both exports completely.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
@@ -296,7 +299,8 @@ if not FULL and KEEP is None:
             if nm and body: body.append("\\midrule")
             expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""   # the stateless engine's own counts: sweeps kept in the witness cache, specification graphs explored (repeats counted)
             sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
-            cells = [sweeps, expl] + ([cell_T1(c2, False)] if viol else []) + [cell_T(c2), cell_M(c2)] + ([cell_T1(c1, True)] if viol else []) + [cell_T(c1), cell_M(c1), cell_T(c3), cell_M_off(c3)]
+            cT = cell_Tp if viol else cell_T
+            cells = [sweeps, expl] + ([cell_T1(c2, False)] if viol else []) + [cT(c2), cell_M(c2)] + ([cell_T1(c1, True)] if viol else []) + [cT(c1), cell_M(c1), cT(c3), cell_M_off(c3)]
             owners = [c2, c2] + ([c2] if viol else []) + [c2, c2] + ([c1] if viol else []) + [c1, c1, c3, c3]
             size_cell = size
             body.append(f"{nm} & {size_cell} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
@@ -306,7 +310,7 @@ if not FULL and KEEP is None:
                 x2, x1, x3 = best(mx.get("stateless")), best(mx.get("stateful")), best(mx.get("offline"), True)
                 dx = [r for r in (x1, x3, x2) if decided(r)]; gxi_r = next((r for r in dx if r["impl graphs"]), None); gxi = gxi_r["impl graphs"] if gxi_r else ""; gxs_r = next((r for r in (x1, x3) if decided(r) and r["spec graphs"]), None); gxs = gxs_r["spec graphs"] if gxs_r else ""
                 gxx_r = next((r for r in dx if r.get("uncovered") not in ("", None)), None) if viol else None; gxx = gxx_r.get("uncovered", "") if gxx_r else ("" if viol else None)   # the counts of a dagger row carry the colour of the run that supplies them, as in the other rows (reviews r9)
-                xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else ""] + ([cell_T1(x2, False)] if viol else []) + [cell_T(x2), cell_M(x2)] + ([cell_T1(x1, True)] if viol else []) + [cell_T(x1), cell_M(x1), cell_T(x3), cell_M_off(x3)]
+                xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else ""] + ([cell_T1(x2, False)] if viol else []) + [(cell_Tp if viol else cell_T)(x2), cell_M(x2)] + ([cell_T1(x1, True)] if viol else []) + [(cell_Tp if viol else cell_T)(x1), cell_M(x1), (cell_Tp if viol else cell_T)(x3), cell_M_off(x3)]
                 xown = [x2, x2] + ([x2] if viol else []) + [x2, x2] + ([x1] if viol else []) + [x1, x1, x3, x3]
                 body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {paint(gxi_r, gxi)} & {paint(gxs_r, gxs)}" + (f" & {paint(gxx_r, gxx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
                 csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])

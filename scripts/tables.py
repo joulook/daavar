@@ -347,19 +347,22 @@ for pre, fname, title in CAMP:
                 if all(x is not None for x in parts): r["wall_ms"] = max(parts[0], parts[1]) + parts[2]   # the two exports are independent jobs run side by side: T = the longer export plus the join (owner, 2026-11-03 19:40)
                 # M of an offline row (owner 2026-11-06): the two exports run side by side, so the machine holds both peaks at once: their sum,
                 # or the join's peak if that is larger (the join runs after the exports, alone)
-                _sp, _im, _jn = (num((sp or {}).get("peak_rss_kb")) or 0), (num((im or {}).get("peak_rss_kb")) or 0), (num(r.get("peak_rss_kb")) or 0)
-                r["peak_rss_kb"] = max(_sp + _im, _jn) or r.get("peak_rss_kb")
+                _sp, _im, _jn = num((sp or {}).get("peak_rss_kb")), num((im or {}).get("peak_rss_kb")), num(r.get("peak_rss_kb"))
+                # a component without a measured peak leaves M unknown (Astra audit 11-06: 12 joins without peak_rss_kb), never a partial maximum
+                r["peak_rss_kb"] = max(_sp + _im, _jn) if None not in (_sp, _im, _jn) else None
     if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
             sp = export_record(ex[0], r) if ex else None
             if sp: r["spec_complete"], r["spec_blocked"], r["spec_graphs_total"], r["spec_export_ms"] = (sp.get("impl_complete") or sp.get("iterations") or sp.get("graphs_complete")), sp.get("impl_blocked"), sp.get("impl_graphs_total"), sp.get("wall_ms")
             if sp:   # M of a cross-language online row (owner 2026-11-06): the specification's export ran earlier, alone; the run loads its file: the larger of the two peaks
-                r["spec_export_peak_kb"] = sp.get("peak_rss_kb"); r["peak_rss_kb"] = max(num(r.get("peak_rss_kb")) or 0, num(sp.get("peak_rss_kb")) or 0) or r.get("peak_rss_kb")
+                r["spec_export_peak_kb"] = sp.get("peak_rss_kb")
+                _rp, _ep = num(r.get("peak_rss_kb")), num(sp.get("peak_rss_kb"))
+                r["peak_rss_kb"] = max(_rp, _ep) if None not in (_rp, _ep) else None   # an unknown run peak leaves M unknown (Astra 11-06)
             # T of a cross-language online row (owner 2026-11-06): the check costs the specification's enumeration (its export) plus the online run
             # (implementation exploration and one query per graph): wall = export + run; the run alone stays in "run s"
             r["run_ms"] = r.get("wall_ms")
-            if sp and num(r.get("wall_ms")) is not None and num(sp.get("wall_ms")) is not None and r.get("stop_reason") == "ok":
+            if sp and num(r.get("wall_ms")) is not None and num(sp.get("wall_ms")) is not None:   # every outcome, limits and failures included (Astra 11-06)
                 r["wall_ms"] = num(r["wall_ms"]) + num(sp["wall_ms"])
             elif r.get("stop_reason") == "ok" and not sp:
                 DROPPED.append((r["run_id"], "online row without the record of its specification export: T is the run alone"))
