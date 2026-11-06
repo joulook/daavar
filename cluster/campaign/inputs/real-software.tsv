@@ -8,3 +8,8 @@
 ^cassandra-paxos-v1$
 ^cassandra-rr$
 ^chainpaxos-code$
+^craq$
+^bk$
+^bk-413$
+^crdb-pc$
+^scalardb-cc$
