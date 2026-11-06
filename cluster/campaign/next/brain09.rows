@@ -1,0 +1,4 @@
+# brain09, 2026-11-06 23:xx: Phase B-D Offline next sizes (owner 2026-11-06 23:20; plan/phaseCD-offline/NEXT-SIZES.md)
+# exports (C3E TraceForge, XCE/XJE JMC) then merge joins with needok on both exports; 48 h tier (.c48h, 172800 s); JMC heap -Xmx12g per JVM; after the node's live queue
+C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16.c48h.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh omnipaxos export impl --out export.jsonl --threads 16 --model fifo -- reorder 1 1 1
+C3J.omnipaxos.impl_reorder_1_1_1_fifo.c48h.r2.m 250 172800 needok:C3E.omnipaxos.spec_correct_1_1_1_fifo.t16.c48h,C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16.c48h.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.omnipaxos.spec_correct_1_1_1_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.omnipaxos.impl_reorder_1_1_1_fifo.t16.c48h.r2/export.jsonl
