@@ -53,12 +53,20 @@ def sz(s): return [int(x) for x in re.findall(r"\d+", s)]
 def esc(s): return s.replace("_", "\\_")
 def spec_norm(prog, var, spec):   # the specification word, empty when it is the program's own specification
     s = (spec or "").strip()
-    if s in ("", "spec", "correct", var) or s in CORRECT.get(prog, ()): return ""
+    if s in ("", "spec", var): return ""   # Opus audit 11-06: "correct" is a specification of its own (a faulty variant against the correct program), never merged with the twin check
     return s
-def key_of(r): return (r["program"], r["variant"], spec_norm(r["program"], r["variant"], r.get("spec", "")), r["model"], r["size"])
+def key_of(r): return (r["program"], r["variant"] + ("@spec" if ".spec_" in r.get("run id", "") else ""), spec_norm(r["program"], r["variant"], r.get("spec", "")), r["model"], r["size"])   # a check of the specification side (".spec_" in the id) is its own instance (Opus audit 11-06)
+def pref(r):   # among runs of one cell: the reserved machine (.p), then an uncontended run, then the latest start (Opus audit 11-06: 2pc-ds(4))
+    import re as _re
+    return (bool(_re.search(r"\.p(?=\.|$)", r.get("run id", ""))), r.get("contended") != "yes", r.get("started") or "")
+def put(inst, k, m, r):
+    cur = inst.setdefault(k, {}).get(m)
+    if cur is None or pref(r) >= pref(cur): inst[k][m] = r
 def name(k):
     prog, var, spec, model, _ = k
+    side = var.endswith("@spec"); var = var[:-5] if side else var
     sub = var if var not in ("", "spec", "impl", "correct") else ""
+    if side: sub = (sub + "/" if sub else "") + "spec side"
     if spec: sub = (sub + "/" if sub else "") + spec
     return f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(sub)}}}}}^{{\\mathit{{{model}}}}}$" if sub else f"$^{{\\mathit{{{model}}}}}$")
 def decided(r): return r is not None and r["verdict"] in ("conforms", "violation")
@@ -84,7 +92,7 @@ def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's fir
     else: v = fm / 1000
     return f"{v:.3f}" if v < 0.1 else (f"{v:.2f}" if v < 10 else f"{v:.1f}")   # small first-violation times at ms precision, so a short specification phase is visible
 def cell_Tp(r):   # T below 0.1 s to the millisecond (Table 3, beside T_1)
-    c = cell_T(r); v = num((r or {}).get("wall s"))
+    c = cell_T(r); ms = num((r or {}).get("wall ms")); v = ms / 1000 if ms is not None else num((r or {}).get("wall s"))   # the exact wall, not the CSV's 0.1 s rounding (Opus audit 11-06)
     return f"{v:.3f}" if (c and v is not None and not c.startswith("\\") and not c.startswith("oom") and v < 0.1) else c
 def cell_M(r):
     if not decided(r): return ""
@@ -145,7 +153,7 @@ for fam, tset, modes in FAMS:
         data = {m: load(c) for m, c in modes}
         inst = collections.OrderedDict()
         for m, rs in data.items():
-            for r in rs: inst.setdefault(key_of(r), {})[m] = r
+            for r in rs: put(inst, key_of(r), m, r)
         for k, m in inst.items():   # the graph counts must agree across the engines (stateless reports the spec graphs explored, not the count)
             gi = {md: r["impl graphs"] for md, r in m.items() if decided(r) and r["impl graphs"]}
             gs = {md: r["spec graphs"] for md, r in m.items() if decided(r) and r["spec graphs"] and md != "stateless"}
@@ -242,7 +250,7 @@ if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
     for m, rs in data.items():
-        for r in rs: inst.setdefault(key_of(r), {})[m] = r
+        for r in rs: put(inst, key_of(r), m, r)
     for tname, tlabel, viol, what in CURATED:
         TF_ = os.path.join(DV, "cluster", "campaign", "inputs", tname + ".tsv")
         if not os.path.exists(TF_): continue
