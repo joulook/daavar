@@ -97,3 +97,46 @@ return this program; `visible` = `c0`, `c1`; the argument is `<q>` (the model co
 The counts are the binomials C(2q, q): the interleavings of the two clients' q operations (each served
 atomically by the object). Each run's output ends with the measurement block (wall_ms 0, 1, 2 respectively;
 its last lines are `uncovered_distinct: 0`, `spec_graphs_explored:`, `sweeps:`, `cache_tests:`, `cache_hits:`).
+
+## Coordinator harness change (2026-11-06)
+
+This is a coordinator harness change made on the owner's decision (plan/case-studies/3fs/craq/INTERFACE.md, revision 2026-11-06), not part of this program's own design; its author did not make this change.
+
+The object may now answer any read with `Rep::Unavailable(c)` instead of `Rep::Value(c, chunk)` (one `nondet()` choice per read); such a read leaves the chunk unchanged and constrains no later read, and the client loop accepts `Value` or `Unavailable` as the end of a read. The derived object is otherwise unchanged; the state counts above (C(2q, q)) predate the change (now 4 and 24 executions at q=1 and q=2).
+
+## Coordinator change: process structure (owner decision, 2026-11-06 19:55)
+
+This is a coordinator change made on the owner's decision (plan/case-studies/3fs/craq/PROMPT-spec-fix.md; design
+and argument in plan/case-studies/3fs/craq/SPEC-FIX-DESIGN.md), not part of this program's own derivation; its
+author did not make this change. It changes only the process structure and hence the causal shape of the
+specification; the rules taken from the sources (parts 1-6 above: one total write order, the head's version order;
+a write acknowledged only after its commit along the chain; a read answers only committed content, the last
+committed write) are unchanged, and so is the owner's harness revision of 2026-11-06 (`Unavailable` for any
+read, with no effect on the state), which is not from the sources.
+
+Why: the one object served every request in one receive loop, so any two operations it served were causally
+ordered (op A -> obj -> op B), also two reads of one committed version, which the atomic register does not order.
+The conformance check compares causal orders (a specification summary covers an implementation summary when its
+per-event counts are coordinatewise <=), so the object's extra edge made a linearizable implementation history
+(two concurrent reads both returning 1) uncovered at q=2 (plan/case-studies/3fs/craq/cut-reply-review/REVIEW-astra.md).
+
+The program now (supersedes the "The program:" paragraph, the last sentence of part 6, the "No `nondet()`" and
+"Termination" decisions, and the execution counts above):
+- `obj` (write serialiser; the clients' `head`): takes the pending `Write`s one at a time (the order taken is the
+  write order); for each, sends `Prepare` to `p0` and `p1`, waits for both `Released`, sends `Install(v)` to both,
+  then `Ack(c)` to the writer.
+- `p<i>` (client i's committed-state holder): holds the last installed value (initially 0); takes a forwarded read
+  or a `Prepare`, in either order; answers a read `Value(c, chunk)`; on `Prepare` answers `Released` and serves no
+  read until `Install`.
+- `f<i>` (client i's front end; the only element of client i's `targets`): receives client i's reads only; answers
+  `Unavailable(c)` itself or forwards the read to `p<i>` (one `nondet()` per read).
+- `init` sends each of `obj`, `p<i>`, `f<i>` one tagged `Setup` with the addresses. `obj`, `p<i>`, `f<i>` never end
+  (like the implementations' nodes), so TraceForge classes every graph as blocked; both clients end `done` in every
+  graph. The main thread joins `init` and the clients.
+
+Causal shape: the cross-client causal order produced is exactly program order plus, for operations A before B in the
+linearization, A.inv -> B.resp unless A and B are two reads of one version; an `Unavailable` read is causally
+independent of the other client. Runs (fifo): q=1 6 graphs, 3 distinct summaries; q=2 52 graphs, 13 distinct
+summaries; the summaries are identical to the hand-written S_lin's (same change).
+
+Note (coordinator, 2026-11-06 23:00, Astra spec-fix review): `obj` sends both `Install`s and then the `Ack` without waiting for the installs to be received; a read after the Ack cannot see the old value because each holder serves no read between its `Released` and its `Install`. The internal processes now end blocked (the clients end `done`), so TraceForge classes every graph as blocked; the old object terminated. Conformance is decided against the causal contract of plan/case-studies/3fs/craq/INTERFACE.md (revision 2026-11-06 23:00).

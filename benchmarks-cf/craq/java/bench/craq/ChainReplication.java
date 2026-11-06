@@ -42,6 +42,8 @@ public final class ChainReplication implements MpProgram {
     @Tag("Read") public record Read(int client) implements MpMessage {}
     @Tag("Ack") public record Ack(int client) implements MpMessage {}
     @Tag("Value") public record Value(int client, long value) implements MpMessage {}
+    // COORDINATOR (owner, 2026-11-06): the visible reply that ends a read at the study's retry cut.
+    @Tag("Unavailable") public record Unavailable(int client) implements MpMessage {}
 
     // ------------------------------------------------------------------------------------------
     // Status codes (fbs/ StorageCode, StorageClientCode; numeric values are this port's).
@@ -375,8 +377,10 @@ public final class ChainReplication implements MpProgram {
         void batchReadWithRetry() {
             batchReadWithoutRetry(0);
             // PORT: the retries of sendOpsWithRetry run in the process ci.retry (invisible), see NOTES.md.
-            Value v = recv(Value.class);
-            if (v.client() != i) {
+            // COORDINATOR (owner, 2026-11-06): the read ends with Value, or with Unavailable at the retry cut.
+            MpMessage reply = Channel.recv(model, x -> x instanceof Value || x instanceof Unavailable);
+            int replyClient = reply instanceof Value v ? v.client() : ((Unavailable) reply).client();
+            if (replyClient != i) {
                 throw new AssertionError("Value for another client");
             }
         }
@@ -410,9 +414,11 @@ public final class ChainReplication implements MpProgram {
                         // PORT (interface rule, INTERFACE.md last paragraph): a not-committed answer equal to an earlier
                         // answer of this read from the same target (by default; the immediately preceding attempt's
                         // with "consecutive"): the execution is cut as unproductive.
-                        // The API has no assume(false): this process waits for a message nobody sends, and the
-                        // client stays blocked on its Value, so the execution counts as blocked.
-                        recv(Never.class);
+                        // COORDINATOR (owner, 2026-11-06): the cut ends the read with the visible reply
+                        // Unavailable(i) to the client (no longer a receive nobody matches); this loop then
+                        // waits for the next read's first answer.
+                        send(tid(ChainReplication.client(i)), new Unavailable(i));
+                        continue;
                     }
                     previous = rsp;
                     previousAt[rsp.target()] = rsp;

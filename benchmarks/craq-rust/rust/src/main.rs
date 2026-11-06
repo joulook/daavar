@@ -14,7 +14,7 @@ use traceforge::*;
 // The visible messages (INTERFACE.md, verbatim).
 // ---------------------------------------------------------------------------
 #[derive(Clone, Debug, PartialEq)] enum Req { Write(usize, u64), Read(usize) }   // client -> node: (client, value) / (client)
-#[derive(Clone, Debug, PartialEq)] enum Rep { Ack(usize), Value(usize, u64) }    // node -> client: (client) / (client, value)
+#[derive(Clone, Debug, PartialEq)] enum Rep { Ack(usize), Value(usize, u64), Unavailable(usize) }    // node -> client: (client) / (client, value) / (client)
 
 // ---------------------------------------------------------------------------
 // Constants of the instance.
@@ -389,12 +389,18 @@ fn client(i: usize, q: usize, head: ThreadId, targets: Vec<ThreadId>) {
                             // a repeated answer (same target, same versions) is a stutter:
                             // nothing changed in between; cut it (NOTES.md, D7).
                             let key = (t, commit_ver, update_ver);
-                            assume!(!seen.contains(&key));
+                            if seen.contains(&key) {
+                                // COORDINATOR (owner, 2026-11-06): the cut ends the read with the
+                                // visible reply Unavailable(i), sent (invisibly) by this retry loop
+                                // to the reading client, instead of assume(false).
+                                send_msg_as(thread::current().id(), Visibility::Invisible, Rep::Unavailable(i));
+                                break;
+                            }
                             seen.push(key);
                         }
                     }
                 }
-                let Rep::Value(..) = recv_msg_block::<Rep>() else { panic!("Value expected") };
+                let (Rep::Value(..) | Rep::Unavailable(_)) = recv_msg_block::<Rep>() else { panic!("Value or Unavailable expected") };
             }
         }
     }

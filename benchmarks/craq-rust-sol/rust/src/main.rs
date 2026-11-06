@@ -8,7 +8,7 @@ use traceforge::{nondet, recv_msg_block, recv_tagged_msg_block, send_msg, send_m
 #[derive(Clone, Debug, PartialEq)]
 enum Req { Write(usize, u64), Read(usize) }
 #[derive(Clone, Debug, PartialEq)]
-enum Rep { Ack(usize), Value(usize, u64) }
+enum Rep { Ack(usize), Value(usize, u64), Unavailable(usize) }
 
 const CLIENTS: usize = 2;
 const EVENT: u32 = 1;
@@ -150,12 +150,18 @@ fn client(i: usize, q: usize, head: ThreadId, targets: Vec<ThreadId>) {
                         ReadStatus::Ready => break,
                         ReadStatus::NotCommit { update, commit } => {
                             let answer = (update, commit);
-                            traceforge::assume(!seen[target].contains(&answer));
+                            if seen[target].contains(&answer) {
+                                // COORDINATOR (owner, 2026-11-06): the cut ends the read with the
+                                // visible reply Unavailable(i), sent (invisibly) by this retry loop
+                                // to the reading client, instead of assume(false).
+                                send_msg_as(thread::current().id(), Visibility::Invisible, Rep::Unavailable(i));
+                                break;
+                            }
                             seen[target].push(answer);
                         }
                     }
                 }
-                let Rep::Value(..) = recv_msg_block::<Rep>() else { panic!("Value expected") };
+                let (Rep::Value(..) | Rep::Unavailable(_)) = recv_msg_block::<Rep>() else { panic!("Value or Unavailable expected") };
             }
         }
     }

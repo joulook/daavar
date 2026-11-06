@@ -377,3 +377,17 @@ mean_visible_events: 0.000
 max_summary_bytes: 0
 max_porf_count: 0
 ```
+
+## Coordinator harness change (2026-11-06)
+
+This is a coordinator harness change made on the owner's decision (plan/case-studies/3fs/craq/INTERFACE.md, revision
+2026-11-06), not part of this port's own design; the port was written sealed and its author did not make this change.
+
+At the per-target retry cut (a read attempt receives from a target the same not-committed answer, same update and
+commit versions, that an earlier attempt of the same read already got from that target; the `seen` set), the retry
+worker no longer blocks on an unmatchable receive (`Channel.recv(communication, m -> false)`): it sends the visible
+reply `Unavailable(client)` to the reading client and continues with the next read's first answer. A new visible
+record `@Tag("Unavailable") Unavailable(int client)`; the client accepts `Value` or `Unavailable` as the end of a
+read. The cut condition and the retry are otherwise unchanged; the counts recorded above predate the change. Runs
+after the change (local, fifo, `--split 16 --k 1`): q=1 29 iterations, q=2 1546 iterations (JMC classes them as
+blocked: the nodes never end), 5 and 46 distinct summaries, every client `done`.

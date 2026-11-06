@@ -264,3 +264,18 @@ with the same edge, and the Rust ports route the metadata through the node proce
 compare like with like. What is not claimed is that the port's causal order equals the source's at the memory
 level. This is an accepted abstraction of the contract, not an unresolved defect of the reference.
 
+
+## Coordinator harness change (2026-11-06)
+
+This is a coordinator harness change made on the owner's decision (plan/case-studies/3fs/craq/INTERFACE.md, revision
+2026-11-06), not part of this transliteration's own design; its author did not make this change.
+
+At the per-target retry cut (a read attempt receives from a target the same not-committed answer, same update and
+commit versions, that an earlier attempt of the same read already got from that target), the retry process `ci.retry`
+no longer waits on a receive nobody matches (`recv(Never.class)`): it sends the visible reply `Unavailable(i)` to the
+client and the read ends; the process then waits for the next read's first answer. A new visible record
+`@Tag("Unavailable") Unavailable(int client)` (tagged like `Value`); `batchReadWithRetry` accepts `Value` or
+`Unavailable` as the end of a read. The cut condition, the retry and the optional `consecutive` diagnostic mode are
+otherwise unchanged; the counts recorded above predate the change. (CONTRACT.md is not updated by this note.)
+Runs after the change (local, fifo, `--split 16 --k 1`): q=1 1348 iterations, all complete, 5 distinct summaries; q=2
+see plan/case-studies/3fs/craq/SPEC-FIX-REPORT.md.

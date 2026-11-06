@@ -11,6 +11,7 @@ public final class ChainReplication implements MpProgram { // PORT: Java syntax 
     @Tag("Read") public record Read(int client) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
     @Tag("Ack") public record Ack(int client) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
     @Tag("Value") public record Value(int client, long value) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
+    @Tag("Unavailable") public record Unavailable(int client) implements MpMessage {} // COORDINATOR (owner, 2026-11-06): visible reply that ends a read at the study cut
     @Tag("UpdateReq") public record UpdateReq(int client, long value, long updateVer, long chainVer, boolean fromClient) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
     @Tag("UpdateRsp") public record UpdateRsp(long updateVer, long commitVer, long chainVer, long checksum) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
     @Tag("RetryRead") public record RetryRead(int client) implements MpMessage {} // PORT: Java syntax and message-passing representation of the fixed one-chunk study
@@ -74,8 +75,8 @@ public final class ChainReplication implements MpProgram { // PORT: Java syntax 
                 if ((client + j) % 2 == 0) batchWriteWithoutRetry(1L + client + 2L * j); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
                 else { // PORT: Java syntax and message-passing representation of the fixed one-chunk study
                     batchReadWithoutRetry(true); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
-                    Value value = Channel.recv(communication, Value.class); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
-                    check(value.client() == client, "read client"); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
+                    MpMessage reply = Channel.recv(communication, m -> m instanceof Value || m instanceof Unavailable); // COORDINATOR (owner, 2026-11-06): a read ends with Value or Unavailable
+                    check(reply instanceof Value value ? value.client() == client : ((Unavailable) reply).client() == client, "read client"); // COORDINATOR (owner, 2026-11-06): either reply names this client
                 } // PORT: Java syntax and message-passing representation of the fixed one-chunk study
             } // PORT: Java syntax and message-passing representation of the fixed one-chunk study
         } // PORT: Java syntax and message-passing representation of the fixed one-chunk study
@@ -98,8 +99,8 @@ public final class ChainReplication implements MpProgram { // PORT: Java syntax 
                 NotCommit answer = Channel.recv(communication, NotCommit.class); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
                 if (answer.first()) seen.clear(); // PORT: never compare failed answers from different reads
                 if (!seen.add(new NotCommitAnswer(answer.target(), answer.updateVer(), answer.commitVer()))) { // PORT: cut a repeated version pair from any earlier attempt at this target, including alternating targets
-                    Channel.recv(communication, m -> false); // PORT: interface repeated-answer cut; API has no assume
-                    throw new AssertionError("unmatchable receive resumed"); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
+                    send(clients[answer.client()], new Unavailable(answer.client())); // COORDINATOR (owner, 2026-11-06): the cut ends the read with a visible Unavailable reply instead of an unmatchable receive
+                    continue; // COORDINATOR (owner, 2026-11-06): this read ends; wait for the next read's first answer
                 } // PORT: Java syntax and message-passing representation of the fixed one-chunk study
                 batchReadWithoutRetry(false); // PORT: Java syntax and message-passing representation of the fixed one-chunk study
             } // PORT: Java syntax and message-passing representation of the fixed one-chunk study
