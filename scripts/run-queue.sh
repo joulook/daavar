@@ -94,7 +94,8 @@ ext_busy() {  # $1 numa node -> 0 if a row of another queue runs on it (state=ru
   done; return 1
 }
 find_free() {  # $1 width -> a comma list of width free allowed numa nodes (not necessarily consecutive), or empty
-  local w=$1 k out="" c=0; for ((k=0; k<SLOTS; k++)); do { [ -z "${BUSY[$k]:-}" ] && allowed $k && ! ext_busy $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
+  # over the ALLOWED nodes, not 0..SLOTS-1 (2026-11-06: brain04's one-slot queue on node 4 never launched, because the scan stopped at node 0)
+  local w=$1 k out="" c=0; for k in "${ALLOWED[@]}"; do { [ -z "${BUSY[$k]:-}" ] && ! ext_busy $k; } && { out="$out${out:+,}$k"; c=$((c+1)); [ $c -eq $w ] && { echo "$out"; return; }; }; done
 }
 # dispatch: rows are launched in file order as slots free up; a row whose needok dependency has not
 # finished is deferred (not blocking the rows behind it) and re-checked on every pass
