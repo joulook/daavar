@@ -80,8 +80,9 @@ def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's fir
     if online:
         sp = num(r.get("spec phase s"))
         if sp is None: return ""   # a measured zero is a valid short phase (Astra, 11-06)
-        return f"{sp + fm / 1000:.1f}"
-    return f"{fm / 1000:.1f}"
+        v = sp + fm / 1000
+    else: v = fm / 1000
+    return f"{v:.3f}" if v < 0.1 else (f"{v:.2f}" if v < 10 else f"{v:.1f}")   # small first-violation times at ms precision, so a short specification phase is visible
 def cell_M(r):
     if not decided(r): return ""
     v = num(r.get("peak MB")); return "" if v is None else f"{v:.0f}"
@@ -233,7 +234,7 @@ for fam, tset, modes in FAMS:
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
 CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{spec}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the larger of the sum of the two export peaks and the join peak. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs or runs at a limit."),
-           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. Offline has no T$_1$: its join reports only after reading both exports completely.")]
+           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. T$_1$ is given to the millisecond below 0.1\\,s. Offline has no T$_1$: its join reports only after reading both exports completely.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
