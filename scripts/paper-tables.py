@@ -123,7 +123,7 @@ def emit(fn, label, cap, colspec, hdr1, cm, hdr2, body, csvhdr, csvrows):
 COMMON = ("Instance = program$_{\\mathit{variant}}^{\\mathit{model}}$ (no subscript for the program's correct variant; a second word names the specification variant when the program has several). "
           "$G_{\\mathit{impl}}$, $G_{\\mathit{spec}}$ = the graphs of the implementation and of the specification (the plain exploration counts; they agree across the engines)")
 GX = ", $G_x$ = the implementation graphs that no specification graph covers"
-LIMITS = (" T = wall time in seconds, M = peak resident memory in MiB; an offline row runs its two exports as independent jobs side by side: T = the longer export plus the join, M = the sum of the two exports' peaks (both are resident at once), or the join's peak if larger; an online row against the other language's export: M = the larger of the export's peak and the run's. "
+LIMITS = (" T = wall time in seconds, M = peak resident memory in MiB; an offline row runs its two exports as independent jobs side by side: T = the longer export plus the join, M = the sum of the two exports' peaks (both are resident at once), or the join's peak if larger; an online row against the other language's export: T = that export plus the online run (the specification must be enumerated for the check), M = the larger of the export's peak and the run's; an in-process online row: T = the run, which enumerates the specification itself. "
           "Every run at 16 threads. \\faClock\\ = the row's time tier was reached (subscript: the tier), oom = the row's memory limit was reached (subscript: the limit when below 250 GB); "
           "a blank cell = not run, because a smaller size had reached a limit.")
 for fam, tset, modes in FAMS:

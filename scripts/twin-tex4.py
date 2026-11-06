@@ -86,7 +86,7 @@ def on_cells(r):  # M of the online run; T_exp = the specification side (in-proc
         if float(r.get('spec phase s') or 0) > 0 and float(r.get('impl phase s') or 0) > 0:   # in-process: the phases are measured; an online run against an export records 0 phases
             te=float(r['spec phase s']); tr=float(r['impl phase s']); tot=float(r['wall s']); oth=fnum(tot-te-tr) if tot-te-tr>=0.005 else '$<$0.01'
         elif (r.get('spec export s') or '') != '':
-            te=float(r['spec export s']); tr=float(r['wall s']); tot=te+tr; oth='--'   # two runs: T is their sum by definition
+            te=float(r['spec export s']); tr=float(r.get('run s') or r['wall s']); tot=float(r['wall s']); oth='--'   # tables.py: wall = export + run
         else: te=tr=tot=oth=None   # the components are not recorded: never print a zero for a missing measurement
     except Exception: te=tr=tot=oth=None
     if te is None and not st: return [M, '--', '--', '--', fnum(r['wall s'])]

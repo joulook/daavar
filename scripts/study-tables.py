@@ -38,7 +38,7 @@ def on_cells(r):  # in-process: the two phases and the rest (T_oth) of one run; 
         if float(r.get('spec phase s') or 0) > 0 and float(r.get('impl phase s') or 0) > 0:
             te = float(r['spec phase s']); tr = float(r['impl phase s']); tot = float(r['wall s']); oth = fnum(tot - te - tr) if tot - te - tr >= 0.005 else '$<$0.01'
         elif (r.get('spec export s') or '') != '':
-            te = float(r['spec export s']); tr = float(r['wall s']); tot = te + tr; oth = '--'
+            te = float(r['spec export s']); tr = float(r.get('run s') or r['wall s']); tot = float(r['wall s']); oth = '--'   # tables.py: wall = export + run
         else: te = tr = tot = oth = None
     except Exception: te = tr = tot = oth = None
     if te is None and not st: return [M, '--', '--', '--', fnum(r['wall s'])]
