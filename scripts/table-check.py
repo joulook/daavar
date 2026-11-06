@@ -108,7 +108,8 @@ for fn, rs in rows_by_file.items():
         if v in ("conforms", "violation"):
             w = num(r.get("wall s")); m = num(r.get("peak MB"))
             if w is None or w < 0: problems.append(f"{key}: wall s '{r.get('wall s')}' not a non-negative number")
-            if m is None or m <= 0: problems.append(f"{key}: peak MB '{r.get('peak MB')}' not positive")
+            if (r.get("peak MB") or "").strip() in ("--", ""): notes.append(f"{key}: peak MB unknown (a component without a measured peak, shown as --)")
+            elif m is None or m <= 0: problems.append(f"{key}: peak MB '{r.get('peak MB')}' not positive")
             gi = r.get("impl graphs", ""); gs = r.get("spec graphs", "")
             if not re.fullmatch(r"\d+", gi or "") or int(gi) < 1: problems.append(f"{key}: impl graphs '{gi}' not a positive integer")
             if gs and not re.fullmatch(r"\d+", gs): problems.append(f"{key}: spec graphs '{gs}' not an integer")
