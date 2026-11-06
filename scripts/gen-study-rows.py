@@ -16,6 +16,9 @@ STUDIES = {
     "crdb": dict(hand="crdb-pc", derived="crdb-pc-derived", rust=["crdb-pc-rust", "crdb-pc-rust-sol"],
                  java=[("crdb-pc", "bench.cockroach.ParallelCommits", "transliteration"), ("crdb-pc-sol", "bench.cockroach_sol.ParallelCommits", "")],
                  model="fifo", expected="readme", bench="crdb-pc"),   # sizes n_p_m_a (underscores in the id, commas in the Java argument string and the size column, spaces in the Rust args)
+    "scalardb": dict(hand="scalardb-cc", derived="scalardb-cc-derived", rust=["scalardb-cc-rust", "scalardb-cc-rust-sol"],
+                     java=[("scalardb-cc", "bench.scalardb.ConsensusCommit", "transliteration"), ("scalardb-cc-sol", "bench.scalardb_sol.ConsensusCommit", "")],
+                     model="fifo", expected="readme", bench="scalardb-cc"),   # sizes pattern_k_iso, e.g. lost_1_snapshot
 }
 study, sizes, out = sys.argv[1], sys.argv[2].split(","), sys.argv[3]   # a multi-number size (crdb: n,p,m,a) is written with underscores (1_1_1_1), as in every run id
 S = STUDIES[study]; M = S["model"]; rows = []; tsv = []
