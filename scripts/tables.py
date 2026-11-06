@@ -287,6 +287,10 @@ CAMP = [("C1", "campaign-stateful", "Online, TraceForge, parallel"), ("C2", "cam
         ("XCON2", "campaign-cftwin-online-rust-impl", "Context-free twins, online: Rust implementation (TraceForge) against Java port export")]
 def fnum(x, div=1.0, fmt="{:.0f}"):
     v = num(x); return "--" if v is None else fmt.format(v / div)
+def wsec(ms):   # 2026-11-07 (audit 1107-0034): wall seconds in the campaign CSVs: 1 decimal from 10 s, 2 from 0.1 s, 3 below, so a 20 ms run prints 0.020 and never 0.0
+    v = num(ms)
+    if v is None: return "--"
+    s = v / 1000; return "{:.1f}".format(s) if s >= 10 else ("{:.2f}".format(s) if s >= 0.1 else "{:.3f}".format(s))
 # ---- old join versus merge join (SORTED-JOIN 367cdc6, 2026-11-03): the same join id with and without the .m suffix ----
 _jc = {}
 for r in _allrows:
@@ -492,7 +496,7 @@ for pre, fname, title in CAMP:
                 return int((vc or 0) + (vb or 0))
             prog, var = paper_name(a)
             row = [prog, var, spec_of(r), a.get("size", ""), a.get("model", ""), t("spec_complete", "spec_blocked", "spec_graphs_total", "spec_graphs_explored"), t("impl_complete", "impl_blocked", "impl_graphs_total"),
-                   fnum(r.get("wall_ms"), 1000, "{:.1f}"), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
+                   wsec(r.get("wall_ms")), fnum(r.get("peak_rss_kb"), 1024), v, r.get("expected") or ""]
             if not (offline or par_tf): row.append(r.get("first_miss_iteration") or "")
             if not offline: row.append((r.get("first_miss_wall_ms") or "") if v.startswith("violation") else "")
             row += [r.get("uncovered_total") or r.get("uncovered_distinct") or "", a.get("family", ""), r["run_id"], r.get("node", ""), r.get("traceforge_commit", ""), r.get("started_at", "")]
