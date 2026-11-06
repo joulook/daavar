@@ -79,7 +79,7 @@ def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's fir
     if fm is None: return ""
     if online:
         sp = num(r.get("spec phase s"))
-        if sp is None or sp <= 0: return ""
+        if sp is None: return ""   # a measured zero is a valid short phase (Astra, 11-06)
         return f"{sp + fm / 1000:.1f}"
     return f"{fm / 1000:.1f}"
 def cell_M(r):
