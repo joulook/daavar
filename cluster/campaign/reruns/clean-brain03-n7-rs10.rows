@@ -1,0 +1,6 @@
+# Clean rerun of ring-split(10) (Astra r3; owner 2026-11-06: run on brain03 although brain04 paper-v3 also queues the ring-conf(10) spec export)
+# brain03 NUMA 7, one slot, started after clean-n7 finishes; equal 48 h limits; merge join over exports of the same run
+C3E.election.spec_ring_conf_10_fifo.x6.t16.c48h.r7 250 172800 "$DAAVAR"/scripts/rust-run.sh election export spec --out export.jsonl --threads 16 --model fifo -- ring conf 10
+C3E.election.impl_ring_split_10_fifo.x6.t16.c48h.r7 250 172800 "$DAAVAR"/scripts/rust-run.sh election export impl --out export.jsonl --threads 16 --model fifo -- ring split 10
+C3J.election.impl_ring_split_10_fifo.x6.vs-ring-conf.m.c48h.r7 250 172800 needok:C3E.election.spec_ring_conf_10_fifo.x6.t16.c48h.r7,C3E.election.impl_ring_split_10_fifo.x6.t16.c48h.r7 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.election.spec_ring_conf_10_fifo.x6.t16.c48h.r7/export.jsonl "$EVAL_OUT"/C3E.election.impl_ring_split_10_fifo.x6.t16.c48h.r7/export.jsonl
+C1.election.impl_ring_split_10_fifo.t16.c48h.r7 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring split 10

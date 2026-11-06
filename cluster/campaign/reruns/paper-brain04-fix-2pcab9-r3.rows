@@ -1,0 +1,5 @@
+# brain04 NUMA 4, 2026-11-06: rerun of the 2pc-ab(9, bag) specification export and its two joins; the .p.r2 runs (07:27-11:16) overlapped
+# the /local stall (hung DISCARDs, 09:06-14:58). The implementation exports (.p) finished before the stall and are reused.
+C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl export spec --out export.jsonl --threads 16 --model bag -- 9
+C3J.two-pc-abstain-kragl.impl_9_correct_bag.p.r3.m 250 172800 needok:C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r3,C3E.two-pc-abstain-kragl.impl_9_correct_bag.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.two-pc-abstain-kragl.impl_9_correct_bag.t16.p/export.jsonl
+C3J.two-pc-abstain-kragl.impl_9_off-by-one_bag.p.r3.m 250 172800 needok:C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r3,C3E.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-abstain-kragl.spec_9_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.two-pc-abstain-kragl.impl_9_off-by-one_bag.t16.p/export.jsonl
