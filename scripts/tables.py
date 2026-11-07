@@ -354,6 +354,7 @@ for pre, fname, title in CAMP:
                 _sp, _im, _jn = num((sp or {}).get("peak_rss_kb")), num((im or {}).get("peak_rss_kb")), num(r.get("peak_rss_kb"))
                 # a component without a measured peak leaves M unknown (Astra audit 11-06: 12 joins without peak_rss_kb), never a partial maximum
                 r["peak_rss_kb"] = max(_sp + _im, _jn) if None not in (_sp, _im, _jn) else None
+        rs = [r for r in rs if not r.get("_export_missing")]   # 2026-11-07: a row without one of its export records is not a row (its record returns with the next collect)
     if pre in ("XON1", "XON2", "XTON1", "XTON2", "XCON1", "XCON2"):  # an online row's specification side is the export it loaded
         for r in rs:
             ex = re.findall(r'--spec\s+\S*/([A-Za-z0-9._-]+)/export\.jsonl', r.get("command", ""))
