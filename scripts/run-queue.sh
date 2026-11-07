@@ -141,6 +141,9 @@ while [ ${#PENDING[@]} -gt 0 ]; do
     # disk guard (owner, 2026-11-07: the node protects itself): never launch a row while less than MIN_DISK_FREE_GB (default 150) is free
     _df=$(df -BG --output=avail "$EVAL_OUT" 2>/dev/null | tail -1 | tr -dc 0-9)
     if [ -n "$_df" ] && [ "$_df" -lt "${MIN_DISK_FREE_GB:-150}" ]; then [ $hold -eq 0 ] && echo "$(date -Is) waiting: disk ${_df} GB free (MIN_DISK_FREE_GB ${MIN_DISK_FREE_GB:-150})" >> "$QDIR/queue.log"; hold=1; NEXT+=("$line"); continue; fi
+    # JMC cap (owner, 2026-11-07): a JMC export is 17 JVMs at ~1.7x the heap; never more than JMC_MAX (brain 3, else 1) at once on the node
+    case "$cmd" in *jmc-run.sh*) _jm=0; for _s in /local/mkhoshechin/eval/out*/*/status; do grep -q '^state=running' "$_s" 2>/dev/null && grep -q 'jmc-run.sh' "$(dirname "$_s")/cmd.txt" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$_s" | head -1)" 2>/dev/null && _jm=$((_jm+1)); done
+      if [ "$_jm" -ge "${JMC_MAX:-$(case "$(hostname -s)" in brain*) echo 3;; *) echo 1;; esac)}" ]; then NEXT+=("$line"); continue; fi;; esac
     if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
     ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
     ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done; launched_any=1

@@ -8,15 +8,17 @@
 #     first (their excerpts are in brain-data already; exports and summaries are never touched); below DISK_KILL_GB (40)
 #     GB free after that, the running row with the largest directory is killed (marker killed=disk-guard: recorded
 #     "invalid: disk guard" by run-queue.sh, so a dispatcher can rerun it under a new id).
-#  3. memory: below MEM_KILL_PCT (6) % of the machine available, the running row with the largest resident process
-#     tree is killed (killed=memory-guard).
+#  3. memory: below MEM_KILL_PCT (8) % of the machine available, the youngest of the big running rows (resident tree at
+#     least a quarter of the largest) is killed (killed=memory-guard): the least work lost. Never more than JMC_MAX
+#     (brain 3, else 1) JMC exports at once: the youngest beyond the cap is killed (killed=jmc-cap).
 #  4. brain-data clone: stale git lock files (older than an hour, no git running) and tmp_pack_* garbage older than a
 #     day are removed; .git above GC_GB (40) GB -> git gc --prune=now under the publish lock, at most once a day.
 # Every action is one line in $EVAL/guard.log and in the row's guard.log; a heartbeat line every hour.
 # stop: touch $EVAL/.stop-guard
 . "$(dirname "$0")/env.sh"
 EVAL=$(dirname "$EVAL_OUT"); INTERVAL="${1:-30}"
-: "${LOG_CAP_GB:=2}" "${DISK_TRIM_GB:=300}" "${DISK_KILL_GB:=40}" "${MEM_KILL_PCT:=6}" "${GC_GB:=40}"
+: "${LOG_CAP_GB:=2}" "${DISK_TRIM_GB:=300}" "${DISK_KILL_GB:=40}" "${MEM_KILL_PCT:=8}" "${GC_GB:=40}"
+case "$(hostname -s)" in brain*) : "${JMC_MAX:=3}";; *) : "${JMC_MAX:=1}";; esac   # JMC exports at once per node: 17 JVMs each, ~1.7x the heap resident (brain03 2026-11-07: five at 320-420 GB = 1.8 of 2 TB)
 LOG="$EVAL/guard.log"; HEAD_BYTES=2097152
 say() { echo "$(date -Is) $*" >> "$LOG"; }
 real_bytes() { local b; b=$(stat -c %b "$1" 2>/dev/null || echo 0); echo $((b * 512)); }
@@ -68,11 +70,23 @@ disk_guard() {
   while read -r d p; do [ -n "$d" ] || continue; u=$(du -s "$d" 2>/dev/null | cut -f1); [ "${u:-0}" -gt "$big" ] && { big=$u; bigd=$d; bigp=$p; }; done < <(running_rows)
   [ -n "$bigd" ] && kill_row "$bigd" "$bigp" "disk-guard" || say "DISK ${fr} GB free and no running row to kill"
 }
+start_of() { sed -n 's/^start_epoch=//p' "$1/status" 2>/dev/null | head -1; }
+youngest_big() {  # among the running rows holding at least a quarter of the largest resident tree, the one started last (least work lost)
+  local d p r big=0 list="" y="" ye=0 e
+  while read -r d p; do [ -n "$d" ] || continue; r=$(tree_rss_kb "$p"); list="$list$r $d $p\n"; [ "$r" -gt "$big" ] && big=$r; done < <(running_rows)
+  [ "$big" -gt 0 ] || return
+  while read -r r d p; do [ -n "$d" ] || continue; [ $((r * 4)) -ge "$big" ] || continue; e=$(start_of "$d"); e=${e:-0}; [ "$e" -ge "$ye" ] && { ye=$e; y="$d $p"; }; done < <(printf "$list")
+  echo "$y"
+}
 memory_guard() {
-  local a d p big=0 bigd="" bigp="" r
+  local a y
   a=$(avail_pct); [ "${a:-100}" -lt "$MEM_KILL_PCT" ] || return
-  while read -r d p; do [ -n "$d" ] || continue; r=$(tree_rss_kb "$p"); [ "$r" -gt "$big" ] && { big=$r; bigd=$d; bigp=$p; }; done < <(running_rows)
-  [ -n "$bigd" ] && kill_row "$bigd" "$bigp" "memory-guard" || say "MEMORY ${a}% available and no running row to kill"
+  y=$(youngest_big); [ -n "$y" ] && kill_row ${y% *} ${y##* } "memory-guard" || say "MEMORY ${a}% available and no running row to kill"
+}
+jmc_cap() {  # never more than JMC_MAX JMC exports at once: the youngest beyond the cap is killed (a dispatcher with the launch hold never gets here)
+  local d p n=0 y="" ye=0 e
+  while read -r d p; do [ -n "$d" ] || continue; grep -q 'jmc-run.sh' "$d/cmd.txt" 2>/dev/null || continue; n=$((n+1)); e=$(start_of "$d"); e=${e:-0}; [ "$e" -ge "$ye" ] && { ye=$e; y="$d $p"; }; done < <(running_rows)
+  [ "$n" -gt "$JMC_MAX" ] && [ -n "$y" ] && { say "JMC $n exports running, cap $JMC_MAX"; kill_row ${y% *} ${y##* } "jmc-cap"; }
 }
 clone_guard() {
   local g="$BRAIN_DATA/.git" sz stamp="$EVAL/.guard-gc"
@@ -89,10 +103,10 @@ clone_guard() {
   ( cd "$BRAIN_DATA" && flock -w 60 9 && git gc -q --prune=now ) 9>"$BRAIN_DATA/.publish.lock" 2>>"$LOG"
   say "GC done: .git now $(du -sBG "$g" 2>/dev/null | cut -f1)"
 }
-say "guard started: LOG_CAP_GB=$LOG_CAP_GB DISK_TRIM_GB=$DISK_TRIM_GB DISK_KILL_GB=$DISK_KILL_GB MEM_KILL_PCT=$MEM_KILL_PCT GC_GB=$GC_GB every ${INTERVAL}s"
+say "guard started: LOG_CAP_GB=$LOG_CAP_GB DISK_TRIM_GB=$DISK_TRIM_GB DISK_KILL_GB=$DISK_KILL_GB MEM_KILL_PCT=$MEM_KILL_PCT JMC_MAX=$JMC_MAX GC_GB=$GC_GB every ${INTERVAL}s"
 i=0
 while [ ! -e "$EVAL/.stop-guard" ]; do
-  cap_running_logs; disk_guard; memory_guard
+  cap_running_logs; disk_guard; memory_guard; jmc_cap
   [ $((i % 20)) -eq 0 ] && clone_guard
   [ $((i % 120)) -eq 0 ] && say "heartbeat: free $(free_gb) GB, mem $(avail_pct)% available, running $(running_rows | wc -l)"
   i=$((i + 1)); sleep "$INTERVAL"
