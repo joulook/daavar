@@ -109,7 +109,7 @@ for name, d in GROUPS[GROUP]:
          f"Expected verdicts (the rule file): {expected_text(d)}. "
          f"\\textcolor{{blue}}{{Blue}} rows are at the current pins (TraceForge {TF_PIN}, whose predecessor 9a0629e is equivalent for every engine but the join; merge join {JOIN_PIN}; JMC {JMC_PIN}): a rerun gives the same result. "
          f"\\textcolor{{red}}{{Red}} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. "
-         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{spec}}$, $G_{\\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{spec}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; "
+         "A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\\mathit{ref}}$, $G_{\\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\\mathit{ref}}^{\\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; "
          "$^{\\ast}$ marks a verdict other than the expected one; \\faClock\\ = the time tier was reached; oom = the memory limit was reached.",
          ""]
     seen_ids = set()
@@ -138,7 +138,7 @@ for name, d in GROUPS[GROUP]:
             rs.sort(key=lambda r: sz(r["size"]))
             label = esc(var if var not in ("", "impl") else "single")
             L.append(f"\\subsection*{{{ename}: pair \\textsf{{{label}}}" + (f" against \\textsf{{{esc(spec)}}}" if spec and spec not in (var, "spec", "correct") else "") + f", model {model}, expected {side}}}")
-            extra_hdr = " & sweeps & $G_{\\mathit{spec}}^{\\mathit{expl}}$" if kind == "C2" else (" & export spec & export impl & join & join kind" if kind in OFFLINE else (" & first miss ms" if kind in ONLINE else ""))
+            extra_hdr = " & sweeps & $G_{\\mathit{ref}}^{\\mathit{expl}}$" if kind == "C2" else (" & export spec & export impl & join & join kind" if kind in OFFLINE else (" & first miss ms" if kind in ONLINE else ""))
             ncol = 2 if kind == "C2" else (4 if kind in OFFLINE else (1 if kind in ONLINE else 0))
             gx_hdr = " & $G_x$" if viol else ""
             L += [f"\\begin{{longtable}}{{@{{}}rrr{'r' if viol else ''}lrrl{'r' * ncol}l@{{}}}}", "\\toprule",

@@ -463,7 +463,7 @@ for pre, fname, title in CAMP:
         multi = {pn for pn in {paper_name(r["a"])[0] for r in rs} if len({spec_word(r["a"]) for r in rs if paper_name(r["a"])[0] == pn}) > 1}
         def spec_of(r):  # the specification's variant word, shown only for a program (paper name) that has several specifications
             return esc(spec_word(r["a"])) if paper_name(r["a"])[0] in multi else ""
-        hdr = "program(size) & variant & spec & model & $G_{\\mathit{spec}}$ & $G_{\\mathit{impl}}$ & s & MB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
+        hdr = "program(size) & variant & spec & model & $G_{\\mathit{ref}}$ & $G_{\\mathit{cand}}$ & s & MB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
         spec = "@{}llllrrrr" + (("r" if not offline else "") + "r" if viol else "") + "@{}"
         cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory (for a run that reached its tier, the largest 10-second sample)"
                + ("; miss ms = wall time to the first uncovered graph" if (viol and not offline) else "")
