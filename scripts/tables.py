@@ -466,7 +466,7 @@ for pre, fname, title in CAMP:
             return esc(spec_word(r["a"])) if paper_name(r["a"])[0] in multi else ""
         hdr = "program(size) & variant & spec & model & $G_{\\mathit{ref}}$ & $G_{\\mathit{cand}}$ & s & MiB" + ((" & miss ms" if not offline else "") + " & $G_{\\faGhost}$" if viol else "") + " \\\\"
         spec = "@{}llllrrrr" + (("r" if not offline else "") + "r" if viol else "") + "@{}"
-        cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time; MB = peak resident memory (for a run that reached its tier, the largest 10-second sample)"
+        cap = (f"{title}: {kind} pairs. One cluster run per row; $G$ = graphs explored; s = wall time; MiB = peak resident memory (for a run that reached its tier, the largest 10-second sample)"
                + ("; miss ms = wall time to the first uncovered graph" if (viol and not offline) else "")
                + ("; $G_{\\faGhost}$ = uncovered implementation graphs" if viol else "")
                + "; a program marked $^{\\ast}$ gave a verdict other than its expected one; \\faClock\\ = the time tier was reached, larger sizes of that ladder are not run.")
