@@ -180,7 +180,7 @@ for fam, tset, modes in FAMS:
                 base = 5 if viol else 4
                 cap = (f"TraceForge standalone refinement checking, Rust specification against Rust implementation: the {'violating' if viol else 'conforming'} pairs of {GROUP_TXT[g]}"
                        + (", every size run" if FULL else ", the two largest sizes that finished and the sizes that reached a limit") + ". " + COMMON + (GX if viol else "") + "." + LIMITS)
-                hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{Nested}} & \\multicolumn{{2}}{{c}}{{Online}} & \\multicolumn{{2}}{{c}}{{Offline}} \\\\"
+                hdr1 = f"instance & size & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{\\nested}} & \\multicolumn{{2}}{{c}}{{\\online}} & \\multicolumn{{2}}{{c}}{{\\offline}} \\\\"
                 cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(3))
                 hdr2 = " & " * (base - 1) + " & T & M & T & M & T & M \\\\"
                 fn = f"standalone-{g}-{kind}{SUF}"
@@ -235,7 +235,7 @@ for fam, tset, modes in FAMS:
                 sidetxt = "impl = the twin explored as the implementation (the other twin is the specification; a second word in the instance names the twin variant used as the specification when it is another variant). Offline: the two exports and the join; online: the twin explored against the other twin's export."
                 fn = f"twins-{tset}-{kind}{SUF}"
             cap = what + (", every size run" if FULL else ", the two largest sizes that finished and the sizes that reached a limit") + ". " + COMMON + (GX if viol else "") + ". " + sidetxt + LIMITS
-            hdr1 = f"instance & size & impl & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{Offline}} & \\multicolumn{{2}}{{c}}{{Online}} \\\\"
+            hdr1 = f"instance & size & impl & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{2}}{{c}}{{\\offline}} & \\multicolumn{{2}}{{c}}{{\\online}} \\\\"
             cm = "".join(f"\\cmidrule(lr){{{base + 1 + 2 * i}-{base + 2 + 2 * i}}}" for i in range(2))
             hdr2 = " & " * (base - 1) + " & T & M & T & M \\\\"
             emit(fn, f"tab:{fn}", cap, "@{}lrlrr" + ("r" if viol else "") + "rrrr@{}", hdr1, cm, hdr2, body,
@@ -244,8 +244,8 @@ for fam, tset, modes in FAMS:
 
 # ---- the paper's curated tables (owner, 2026-11-03): inputs/table<N>.tsv lists the rows in order (program, variant, model,
 # size); standalone columns, no model superscript; a violating table adds G_x; a row without results shows empty cells ----
-CURATED = [("table2", "tab:table2", False, "Conforming pairs, Rust implementation against Rust specification, under Nested, Online and Offline at 16 threads. $G_{\\mathit{cand}}$, $G_{\\mathit{ref}}$: the graphs of the two programs; sweeps: Nested's explorations of the specification; $G_{\\mathit{ref}}^{\\mathit{expl}}$: the specification graphs they explored; T: wall time (s); M: peak memory (MiB); for Offline, T is the longer export plus the join and M the larger of the sum of the two export peaks and the join peak. \\faClock: the time limit (48 hours, or the one named) was reached; oom: the memory limit was reached; blank: no finished run; 0.0: under 0.05 s; $^\\ddagger$: a smaller size of the same pair, included because the size above it has unfinished runs or runs at a limit."),
-           ("table3", "tab:table3", True, "Violating pairs, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. T$_1$ and T are given to the millisecond below 0.1\\,s. Offline has no T$_1$: its join reports only after reading both exports completely.")]
+CURATED = [("table2", "tab:table2", False, "Results of the refinement checking over conforming pairs, Rust implementation against Rust specification, under \\nested, \\online and \\offline engines. We use \\faClock~ to show timeout and oom for memory limit was reached."),   # the owner's wording from Overleaf (2026-11-07 17:50); the generator reproduces it so that regeneration does not revert it
+           ("table3", "tab:table3", True, "Results of the refinement checking over violating pairs, Rust implementation against Rust specification, under \\nested, \\online and \\offline engines, as \\tabtworef, with $G_x$: the uncovered implementation graphs where Nested or Online finished, otherwise Offline's distinct uncovered summaries; T$_1$: the time to the first violation, for Nested from the run's start, for Online the specification phase plus the implementation exploration up to the first uncovered graph. T$_1$ and T are given to the millisecond below 0.1\\,s. Offline has no T$_1$: its join reports only after reading both exports completely. We use \\faClock~ to show timeout and oom for memory limit was reached.")]
 if not FULL and KEEP is None:
     data = {m: load(c) for m, c in [("stateless", "campaign-stateless"), ("stateful", "campaign-stateful"), ("offline", "campaign-offline-tf")]}
     inst = collections.OrderedDict()
@@ -325,10 +325,10 @@ if not FULL and KEEP is None:
         cap = what   # the curated caption carries the column definitions (owner, 2026-11-05: short captions)
         base = 5 if viol else 4
         nN, nO = (5, 3) if viol else (4, 2)
-        hdr1 = f"instance & size & $G_{{\\mathit{{impl}}}}$ & $G_{{\\mathit{{spec}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{{nN}}}{{c}}{{Nested}} & \\multicolumn{{{nO}}}{{c}}{{Online}} & \\multicolumn{{2}}{{c}}{{Offline}} \\\\"
+        hdr1 = f"instance & size & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{{nN}}}{{c}}{{\\nested}} & \\multicolumn{{{nO}}}{{c}}{{\\online}} & \\multicolumn{{2}}{{c}}{{\\offline}} \\\\"
         cm = f"\\cmidrule(lr){{{base + 1}-{base + nN}}}\\cmidrule(lr){{{base + nN + 1}-{base + nN + nO}}}\\cmidrule(lr){{{base + nN + nO + 1}-{base + nN + nO + 2}}}"
         T1 = "T$_1$ & " if viol else ""
-        emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "r" * (nN + nO + 2) + "@{}", hdr1, cm, " & " * (base - 1) + f" & sweeps & $G_{{\\mathit{{spec}}}}^{{\\mathit{{expl}}}}$ & {T1}T & M & {T1}T & M & T & M \\\\", body,
+        emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "r" * (nN + nO + 2) + "@{}", hdr1, cm, " & " * (base - 1) + f" & sweeps & $G_{{\\mathit{{ref}}}}^{{\\mathit{{expl}}}}$ & {T1}T & M & {T1}T & M & T & M \\\\", body,
              ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested sweeps", "nested spec graphs explored"] + (["nested first violation s"] if viol else []) + ["nested s", "nested MB"] + (["online first violation s"] if viol else []) + ["online s", "online MB", "offline s", "offline MB", "colour (blue = reserved machine, orange = shared node, earlier engine version or shared-node type, red = earlier campaign at the current pins)"] + (["fallback"] if FALLBACK else []), csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
