@@ -72,7 +72,7 @@ run_row() {  # id memGB timeoutS numa-list width cmd...
   if [ $st -eq 137 ]; then   # SIGKILL: the row's own `timeout` (a timeout) or a kill from outside (not a measurement; 2026-11-03: 19 killed rows were published as 48 h timeouts)
     if [ $(( $(date +%s) - start )) -ge $((to - 5)) ]; then reason=timeout; else reason="invalid: killed after $(( $(date +%s) - start )) s of $to"; fi
   fi
-  [ -f "$d/killed" ] && reason="invalid: foreign load"
+  [ -f "$d/killed" ] && reason="invalid: $(head -1 "$d/killed" | tr '-' ' ')"   # foreign-load, disk-guard, memory-guard (node-guard.sh, 2026-11-07)
   { [ $st -ne 0 ] && [ $st -ne 1 ] && [ "$reason" = ok ]; } && reason="exit-$st"
   grep -qi "out of memory\|memory allocation of\|Cannot allocate\|OutOfMemoryError" "$d/stderr.log" "$d/stdout.log" 2>/dev/null && reason=memory
   { echo "state=done"; echo "end=$(date -Is)"; echo "exit=$st"; echo "reason=$reason"; echo "wall_s=$(( $(date +%s) - start ))"; } >> "$d/status"
@@ -110,7 +110,7 @@ skip_row() {  # id mem to cmd dep
 }
 while [ ${#PENDING[@]} -gt 0 ]; do
   free_finished
-  NEXT=(); launched_any=0
+  NEXT=(); launched_any=0; hold=0   # hold=1: memory or disk below the guard, no launch this pass (the rows stay pending: before 2026-11-07 the memory guard's `continue` dropped the row from the list)
   for line in "${PENDING[@]}"; do
     read -r id mem to cmd <<< "$line"
     [ -e "$EVAL_OUT/$id/done" ] && continue
@@ -137,13 +137,17 @@ while [ ${#PENDING[@]} -gt 0 ]; do
     # memory guard (owner, 2026-11-05, after brain01 and two pinkys thrashed under uncapped JMC exports): never launch a row
     # while less than MIN_AVAIL_PCT (default 25) % of the machine's memory is available; the node keeps room for ssh and for us
     _ma=$(free -g | awk '/Mem:/ {print $7}'); _mt=$(free -g | awk '/Mem:/ {print $2}')
-    if [ -n "$_ma" ] && [ "$_mt" -gt 0 ] && [ $((_ma*100/_mt)) -lt "${MIN_AVAIL_PCT:-25}" ]; then echo "$(date -Is) waiting: memory ${_ma} of ${_mt} GB available" >> "$QDIR/queue.log"; sleep 60; continue; fi
+    if [ -n "$_ma" ] && [ "$_mt" -gt 0 ] && [ $((_ma*100/_mt)) -lt "${MIN_AVAIL_PCT:-25}" ]; then [ $hold -eq 0 ] && echo "$(date -Is) waiting: memory ${_ma} of ${_mt} GB available" >> "$QDIR/queue.log"; hold=1; NEXT+=("$line"); continue; fi
+    # disk guard (owner, 2026-11-07: the node protects itself): never launch a row while less than MIN_DISK_FREE_GB (default 150) is free
+    _df=$(df -BG --output=avail "$EVAL_OUT" 2>/dev/null | tail -1 | tr -dc 0-9)
+    if [ -n "$_df" ] && [ "$_df" -lt "${MIN_DISK_FREE_GB:-150}" ]; then [ $hold -eq 0 ] && echo "$(date -Is) waiting: disk ${_df} GB free (MIN_DISK_FREE_GB ${MIN_DISK_FREE_GB:-150})" >> "$QDIR/queue.log"; hold=1; NEXT+=("$line"); continue; fi
     if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
     ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
     ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done; launched_any=1
     echo "$(date -Is) launched $id on numa $first (w=$w) pid $p" >> "$QDIR/queue.log"
   done
   PENDING=("${NEXT[@]}")
+  [ $hold -eq 1 ] && sleep 60
   [ ${#PENDING[@]} -gt 0 ] && [ $launched_any -eq 0 ] && sleep 10
 done
 wait
