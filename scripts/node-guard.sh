@@ -90,6 +90,13 @@ jmc_cap() {  # never more than JMC_MAX JMC exports at once: the youngest beyond 
   while read -r d p; do [ -n "$d" ] || continue; grep -q 'jmc-run.sh' "$d/cmd.txt" 2>/dev/null || continue; n=$((n+1)); e=$(start_of "$d"); e=${e:-0}; [ "$e" -ge "$ye" ] && { ye=$e; y="$d $p"; }; done < <(running_rows)
   [ "$n" -gt "$JMC_MAX" ] && [ -n "$y" ] && { say "JMC $n exports running, cap $JMC_MAX"; kill_row ${y% *} ${y##* } "jmc-cap"; }
 }
+drain_spool() {  # rows whose publish could not take the lock: publish them here with a long wait (this loop holds no NUMA slot)
+  local sp="$BRAIN_DATA/.publish-spool" d
+  [ -s "$sp" ] || return; mv "$sp" "$sp.work" 2>/dev/null || return
+  while read -r d; do [ -d "$d" ] || continue
+    if PUBLISH_LOCK_WAIT=900 bash "$(dirname "$0")/publish.sh" "$d" >> "$LOG" 2>&1; then say "SPOOL published $(basename "$d")"; else printf '%s\n' "$d" >> "$sp"; fi
+  done < "$sp.work"; rm -f "$sp.work"
+}
 sample_rows() {  # the dispatcher's sampler writes mem.log every 10 s; if that wrapper is gone the row would have no peak: sample here too (mkrecord takes the max)
   local d p; while read -r d p; do [ -n "$d" ] || continue; echo "$(date +%s) $(tree_rss_kb "$p")" >> "$d/mem.log"; done < <(running_rows)
 }
@@ -111,7 +118,7 @@ clone_guard() {
 say "guard started: LOG_CAP_GB=$LOG_CAP_GB DISK_TRIM_GB=$DISK_TRIM_GB DISK_KILL_GB=$DISK_KILL_GB MEM_KILL_PCT=$MEM_KILL_PCT JMC_MAX=$JMC_MAX GC_GB=$GC_GB every ${INTERVAL}s"
 i=0
 while [ ! -e "$EVAL/.stop-guard" ]; do
-  cap_running_logs; disk_guard; memory_guard; jmc_cap; sample_rows
+  cap_running_logs; disk_guard; memory_guard; jmc_cap; sample_rows; drain_spool
   [ $((i % 2)) -eq 0 ] && bash "$(dirname "$0")/finalize-orphans.sh" >> "$LOG" 2>&1   # a row whose wrapper died still gets its record
   [ $((i % 20)) -eq 0 ] && clone_guard
   [ $((i % 120)) -eq 0 ] && say "heartbeat: free $(free_gb) GB, mem $(avail_pct)% available, running $(running_rows | wc -l)"

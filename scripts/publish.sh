@@ -48,10 +48,7 @@ find "$dest" -type f -size +50M | while read -r big; do
   printf '%s\t%s\t%s\n' "${big#$dest/}" "$(stat -c %s "$big")" "$(hostname):$d/$(basename "${big%.zst}")" >> "$dest/bulk.txt"; rm -f "$big"
 done
 (
-  flock -w 120 9 || {   # the flusher can hold the lock for a long push: retry detached, up to 6 times 10 min apart (2026-11-07: six rows on brain02/03 lost their record line this way)
-    echo "publish: lock timeout for $id"
-    if [ "${PUBLISH_RETRY:-0}" -lt 6 ]; then PUBLISH_RETRY=$(( ${PUBLISH_RETRY:-0} + 1 )) setsid nohup bash -c "sleep 600; exec bash '$0' '$d'" >/dev/null 2>&1 & echo "publish: retry $(( ${PUBLISH_RETRY:-0} + 1 )) in 10 min for $id"; fi
-    exit 1; }
+  flock -w "${PUBLISH_LOCK_WAIT:-120}" 9 || exit 3   # the lock can be held for long (a git fetch under it, 2026-11-07): the caller spools the row and node-guard.sh retries with a longer wait
   cd "$BRAIN_DATA"
   mkdir -p results; hdr=$(head -1 results.tsv)
   [ -f "results/$node.$TF_PIN.tsv" ] || printf '%s\n' "$hdr" > "results/$node.$TF_PIN.tsv"
@@ -73,5 +70,7 @@ open(f,"w").write("\n".join(out)+"\n")' "$hdr" "results/$node.$TF_PIN.tsv"
     printf '%s\n' "$line" >> "$f"
   fi
   # no git here: flush-results.sh commits and pushes every 30 min (one commit per batch)
-) 9>"$BRAIN_DATA/.publish.lock"
+) 9>"$BRAIN_DATA/.publish.lock"; rc=$?
+if [ "$rc" -eq 3 ]; then echo "publish: lock timeout for $id, spooled for node-guard"; printf '%s\n' "$d" >> "$BRAIN_DATA/.publish-spool"; exit 1; fi
+[ "$rc" -eq 0 ] || { echo "publish: record step failed ($rc) for $id, spooled"; printf '%s\n' "$d" >> "$BRAIN_DATA/.publish-spool"; exit 1; }
 echo "published $id $(date -Is)"
