@@ -329,7 +329,7 @@ if not FULL and KEEP is None:
         cm = f"\\cmidrule(lr){{{base + 1}-{base + nN}}}\\cmidrule(lr){{{base + nN + 1}-{base + nN + nO}}}\\cmidrule(lr){{{base + nN + nO + 1}-{base + nN + nO + 2}}}"
         T1 = "T$_1$ & " if viol else ""
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "r" * (nN + nO + 2) + "@{}", hdr1, cm, " & " * (base - 1) + f" & sweeps & $G_{{\\mathit{{ref}}}}^{{\\mathit{{expl}}}}$ & {T1}T & M & {T1}T & M & T & M \\\\", body,
-             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested sweeps", "nested spec graphs explored"] + (["nested first violation s"] if viol else []) + ["nested s", "nested MB"] + (["online first violation s"] if viol else []) + ["online s", "online MB", "offline s", "offline MB", "colour (blue = reserved machine, orange = shared node, earlier engine version or shared-node type, red = earlier campaign at the current pins)"] + (["fallback"] if FALLBACK else []), csvrows)
+             ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested sweeps", "nested spec graphs explored"] + (["nested first violation s"] if viol else []) + ["nested s", "nested MB"] + (["online first violation s"] if viol else []) + ["online s", "online MB", "offline s", "offline MB", "colour (blue = paper run (.p) on a brain node with one row per NUMA node, orange = shared node, earlier engine version or shared-node type, red = earlier campaign at the current pins)"] + (["fallback"] if FALLBACK else []), csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
