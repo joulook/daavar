@@ -1,0 +1,12 @@
+# brain04 (paper machine): the eight rows its full disk killed on 2026-11-07 (02:38 / 09:29, 'No space left on device'), rerun as .p.r2, with the joins that depend on them. Owner to approve before start.
+C1.a1-commit.impl_correct_5_3_fifo.x2.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- correct 5 3
+C1.a1-commit.impl_early-abort_5_3_fifo.x2.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- early-abort 5 3
+C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria export impl --out export.jsonl --threads 16 --model bag -- 7 counting-bug
+C1.two-pc-lbinria.impl_7_bag_counting-bug.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 7 counting-bug
+C3J.two-pc-lbinria.impl_7_bag_counting-bug.p.r2.m 250 172800 needok:C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-lbinria.spec_7_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.two-pc-lbinria.impl_7_bag_counting-bug.t16.p/export.jsonl
+C1.election.impl_ring_conf_10_fifo.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateful --threads 16 --model fifo -- ring conf 10
+C3E.two-pc-trillium.impl_8_bag_ignore-abort-vote.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium export impl --out export.jsonl --threads 16 --model bag -- 8 ignore-abort-vote
+C1.two-pc-trillium.impl_8_bag_ignore-abort-vote.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 8 ignore-abort-vote
+C3J.two-pc-trillium.impl_8_bag_ignore-abort-vote.p.r2.m 250 172800 needok:C3E.two-pc-trillium.impl_8_bag_ignore-abort-vote.t16.p.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.two-pc-trillium.spec_8_bag.t16.p/export.jsonl "$EVAL_OUT"/C3E.two-pc-trillium.impl_8_bag_ignore-abort-vote.t16.p/export.jsonl
+C3E.ewd998-termination.spec_4_bag.t16.p.r2 250 172800 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export spec --out export.jsonl --threads 16 --model bag -- 4
+C3E.ewd998-termination.spec_5_bag.t16.p.r2 250 172800 needok:C3E.ewd998-termination.spec_4_bag.t16.p.r2 "$DAAVAR"/scripts/rust-run.sh ewd998-termination export spec --out export.jsonl --threads 16 --model bag -- 5

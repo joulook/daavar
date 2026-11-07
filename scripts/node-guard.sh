@@ -10,8 +10,8 @@
 #     "invalid: disk guard" by run-queue.sh, so a dispatcher can rerun it under a new id).
 #  3. memory: below MEM_KILL_PCT (6) % of the machine available, the running row with the largest resident process
 #     tree is killed (killed=memory-guard).
-#  4. brain-data clone: .git above GC_GB (40) GB -> git gc --prune=now under the publish lock, at most once a day;
-#     tmp_pack_* garbage older than a day (dead fetches) is removed.
+#  4. brain-data clone: stale git lock files (older than an hour, no git running) and tmp_pack_* garbage older than a
+#     day are removed; .git above GC_GB (40) GB -> git gc --prune=now under the publish lock, at most once a day.
 # Every action is one line in $EVAL/guard.log and in the row's guard.log; a heartbeat line every hour.
 # stop: touch $EVAL/.stop-guard
 . "$(dirname "$0")/env.sh"
@@ -78,6 +78,11 @@ clone_guard() {
   local g="$BRAIN_DATA/.git" sz stamp="$EVAL/.guard-gc"
   [ -d "$g" ] || return
   find "$g/objects/pack" -maxdepth 1 -name 'tmp_pack_*' -mtime +1 -delete 2>/dev/null
+  # a lock file older than an hour with no git process alive is the leftover of a git that died (brain04, 2026-11-02:
+  # refs/remotes/origin/main.lock made every fetch re-download the whole repository, 100 GB of packs a day)
+  if ! pgrep -u "$(id -un)" -x git >/dev/null 2>&1; then
+    local l; while read -r l; do rm -f "$l"; say "LOCK removed stale $l"; done < <(find "$g" -name '*.lock' -mmin +60 2>/dev/null)
+  fi
   sz=$(du -sBG "$g" 2>/dev/null | cut -f1 | tr -dc 0-9); [ "${sz:-0}" -gt "$GC_GB" ] || return
   [ -f "$stamp" ] && [ "$(( $(date +%s) - $(stat -c %Y "$stamp") ))" -lt 86400 ] && return
   touch "$stamp"; say "GC brain-data clone .git ${sz} GB"
