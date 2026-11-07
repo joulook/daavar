@@ -59,6 +59,11 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
     vv=lambda x: '' if x in ('correct','impl','',P) else ', '+esc(x)
     hand=lambda x: esc(P)+' (hand-written, Rust'+vv(x)+')'; twin=lambda x: esc(P)+' Java twin (context-aware agent'+vv(x)+')'; port=lambda x: esc(P)+' Java port (context-free agent'+vv(x)+')'
     SR=r'S$_{\mathrm{'+esc(P)+'}}$ (hand-written, Rust)'; SJ=r'S$_{\mathrm{'+esc(P)+'}}$ Java twin (context-aware agent)'
+    if P.startswith('omnipaxos') and 'twin-' in f:   # 2026-11-07 (audit 1107-1727): the OmniPaxos rows of the context-free twin files are Java ports against each other (jimpl-jimpl, the vs- word names the reference port) or against the Rust side they port
+        RS={'omnipaxos-paper':'OmniPaxos (library, Rust)','omnipaxos-paper-sol':'OmniPaxos (library, Rust)','omnipaxos-rust':'OmniPaxos (library, Rust)','omnipaxos-rust-sol':'OmniPaxos (library, Rust)','omnipaxos-spec':r'S$_{\mathrm{raft}}$ (hand-written, Rust)','omnipaxos-spec-sol':r'S$_{\mathrm{raft}}$ (hand-written, Rust)','omnipaxos-derived-impl':r'S$_{\mathrm{paper}}$ (derived, Rust)','omnipaxos-derived-sol':r'S$_{\mathrm{paper}}$ (derived, Rust)'}
+        if 'jimpl-jimpl' in r.get('run id','') and _vs: return (ONAME.get(P,P), ONAME.get('omnipaxos-'+_vs.group(1), 'omnipaxos-'+_vs.group(1)+' port (Java)'))
+        if 'twin-offline-java-spec' in f or 'twin-online-rust-impl' in f: return (RS.get(P,esc(P)+' (Rust)'), ONAME.get(P,P))
+        return (ONAME.get(P,P), RS.get(P,esc(P)+' (Rust)'))
     if 'twin-offline-java-spec' in f or 'twin-online-rust-impl' in f: return (port(v) if 'cftwin' in f else hand(v), port(sv)) if 'cftwin' in f and False else ((hand(v), port(sv)) if 'cftwin' in f else (hand(v), twin(sv)))
     if 'twin-offline-rust-spec' in f or 'twin-online-java-impl' in f: return (port(v), hand(sv)) if 'cftwin' in f else (twin(v), hand(sv))
     realsw = P in REAL
@@ -79,6 +84,9 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
         if P in AGENTIC: return (esc(P)+' (context-free agent, Rust)', SR)
         return (hand(v), SR+vv(sv))
     return (esc(short(P,v)), '?')
+def ekey(r):   # 2026-11-07 (audit 1107-1727): the reference named by the vs- word and the Java-against-Java marker are part of the instance; the online Rust-against-Java-port row must not merge with a port-against-port offline row
+    rid=r.get('run id','')+'.'; vs=re.search(r'\.vs-([a-z0-9-]+)\.', rid)
+    return (r.get('spec','') or '')+'|'+(vs.group(1) if vs else '')+('|jj' if 'jimpl-jimpl' in rid else '')
 def inst(r,f):
     m={'bag':'B','fifo':'F','p2p':'F','asyn':'B','causal':'C'}.get(r['model'],'')
     a,b=pair(r,f); sz=r['size']
@@ -129,7 +137,7 @@ leftover=[]
 for off_f,on_f,title in PAIRS:
     off=load(off_f); on=load(on_f)
     if not off and not on: continue
-    key=lambda r:(r['program'],r['variant'],r.get('spec',''),r['size'],r['model'])
+    key=lambda r:(r['program'],r['variant'],ekey(r),r['size'],r['model'])
     offd={key(r):r for r in off}; ond={key(r):r for r in on}
     both=set(offd)&set(ond)
     for viol in (False,True):
@@ -161,7 +169,7 @@ for title,kind,rest,name in leftover:
         for r in rest:
             if viol_of(r)!=viol: continue
             if r['verdict'] in ('t/o','oom') and (r.get('timeout s') or '') != '172800': continue
-            pk=(r['program'],r['variant'],r.get('spec',''),r['model']); g=tuple(int(t) if t.isdigit() else 0 for t in r['size'].split(','))
+            pk=(r['program'],r['variant'],ekey(r),r['model']); g=tuple(int(t) if t.isdigit() else 0 for t in r['size'].split(','))
             if pk not in best or g>best[pk][0]: best[pk]=(g,r)
         rows=[r for _,r in best.values()]
         if not rows: continue
