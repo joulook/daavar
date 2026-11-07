@@ -118,7 +118,8 @@ clone_guard() {
 say "guard started: LOG_CAP_GB=$LOG_CAP_GB DISK_TRIM_GB=$DISK_TRIM_GB DISK_KILL_GB=$DISK_KILL_GB MEM_KILL_PCT=$MEM_KILL_PCT JMC_MAX=$JMC_MAX GC_GB=$GC_GB every ${INTERVAL}s"
 i=0
 while [ ! -e "$EVAL/.stop-guard" ]; do
-  cap_running_logs; disk_guard; memory_guard; jmc_cap; sample_rows; drain_spool
+  cap_running_logs; disk_guard; memory_guard; jmc_cap; sample_rows
+  ( flock -n 7 || exit 0; drain_spool ) 7>"$EVAL/.spool-drain.lock" &   # one drain at a time, in the background: its publish may wait 15 min for the lock
   [ $((i % 2)) -eq 0 ] && bash "$(dirname "$0")/finalize-orphans.sh" >> "$LOG" 2>&1   # a row whose wrapper died still gets its record
   [ $((i % 20)) -eq 0 ] && clone_guard
   [ $((i % 120)) -eq 0 ] && say "heartbeat: free $(free_gb) GB, mem $(avail_pct)% available, running $(running_rows | wc -l)"
