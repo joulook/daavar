@@ -74,7 +74,7 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
     if f in ('campaign-offline-tf.csv','campaign-stateful.csv'):   # Rust against Rust
         if P=='raft': return ('raft-rs (library, Rust)', r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
         if P=='omnipaxos' and '.spec_' in r['run id']: return (r'S$_{\mathrm{raft}}$ (hand-written, Rust)', spec_of(P,r))   # the two specifications against each other
-        if P=='omnipaxos': return ('OmniPaxos (library, Rust)', spec_of(P,r))
+        if P=='omnipaxos': return ('OmniPaxos (library, Rust'+vv(v)+')', spec_of(P,r))   # the variant (reorder) after the comma, as for every program (audit 1107-1409)
         if P=='omnipaxos-derived': return (r'S$_{\mathrm{paper}}$ (derived, Rust)', spec_of(P,r))
         if P in AGENTIC: return (esc(P)+' (context-free agent, Rust)', SR)
         return (hand(v), SR+vv(sv))
