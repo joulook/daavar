@@ -112,7 +112,7 @@ for r in rows:  # an id run on several pins: a real measurement, then the 48 h t
     else: DROPPED.append((r["run_id"], "same id, superseded by " + cur["run_id"]))
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
-for r in rows: r["a"] = attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
+for r in rows: r["a"] = attrs.get(r["run_id"]) or attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})   # exact id first: sidecars written since 11-06 key a row by its full id (tier suffix included); older ones by the base id
 # naive(k): the spawn-encoding argument e is dropped (owner, 2026-11-03); the rows recorded as k,1 are the program's rows, size k; k,2 rows are left out
 _n = len(rows); rows = drop(rows, lambda r: r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,2", r["a"].get("size", "")), "naive: second spawn encoding")
 for r in rows:
