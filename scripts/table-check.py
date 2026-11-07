@@ -117,7 +117,7 @@ for fn, rs in rows_by_file.items():
             u = r.get("uncovered", "")
             if v == "violation" and u not in ("",) and not (re.fullmatch(r"\d+", u) and int(u) >= 1): problems.append(f"{key}: violation with uncovered '{u}'")
             if v == "conforms" and u not in ("", "0"): problems.append(f"{key}: conforms with uncovered '{u}'")
-            ik = (r.get("program"), r.get("variant"), r.get("spec"), r.get("model"), r.get("size"))
+            _vs = re.search(r"\.vs-([a-z0-9-]+)", r.get("run id", "")); ik = (r.get("program"), r.get("variant"), r.get("spec"), r.get("model"), r.get("size"), _vs.group(1) if _vs else "")   # the vs- word names which program of a family (cassandra-rr vs-rust / vs-rust-sol, 2026-11-07)
             side = "java-impl" if ("java-impl" in fn or "rust-spec" in fn) else "rust-impl"   # cftwin-offline-rust-spec = the Java twin against the Rust export
             if gi: ginst.setdefault(ik + (side,), {})[fn] = gi
         if v == "t/o" and r.get("timeout s") not in ("3600", "14400", "172800"): problems.append(f"{key}: t/o with timeout s '{r.get('timeout s')}'")
