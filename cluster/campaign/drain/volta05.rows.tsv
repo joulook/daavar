@@ -1,0 +1,6 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XJ1.cassandra-paxos-v1-sol.impl_3_v1_fifo.vs-hand.tfspec-jmcimpl	X	cassandra-paxos-v1-sol	3	fifo	v1	join	1	readme		c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	cassandra-paxos-v1-sol	cassandra-cas.spec_3_v1_fifo	cassandra-paxos-v1-sol.impl_3_v1_fifo
+XJ1.cassandra-paxos-v1-sol.impl_3_v1_fifo.vs-derived.tfspec-jmcimpl	X	cassandra-paxos-v1-sol	3	fifo	v1	join	1	readme		c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	cassandra-paxos-v1-sol	cassandra-derived.spec_3_v1_fifo	cassandra-paxos-v1-sol.impl_3_v1_fifo
+C3E.two-pc-trillium.spec_9_bag.t16	C	two-pc-trillium	9	bag	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	two-pc-trillium		
+XON1.two-pc-trillium.impl_9_bag_ignore-abort-vote.w16	X	two-pc-trillium	9	bag	ignore-abort-vote	stateful-online	16	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	two-pc-trillium	two-pc-trillium.spec_9_bag	two-pc-trillium.impl_9_bag_ignore-abort-vote
+XON1.two-pc-trillium.impl_9_bag_correct.w16	X	two-pc-trillium	9	bag	correct	stateful-online	16	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	two-pc-trillium	two-pc-trillium.spec_9_bag	two-pc-trillium.impl_9_bag_correct

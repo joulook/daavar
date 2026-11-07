@@ -15,6 +15,8 @@ while true; do
       # deletes anything else (a broken clone) is never merged (it would delete the repository's content)
       bad=$(git diff --name-only --diff-filter=D "$(git merge-base HEAD FETCH_HEAD)" FETCH_HEAD 2>/dev/null | grep -v "^runs/$n/\|^results/$n\." | head -3)
       if [ -n "$bad" ]; then echo "$(date '+%m-%d %H:%M') $n: REFUSED (deletes outside its own paths: $(echo $bad | cut -c1-120))"; continue; fi
+      big=$(git rev-list --objects "$(git merge-base HEAD FETCH_HEAD)..FETCH_HEAD" 2>/dev/null | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' | awk '$1=="blob" && $2>94371840 {print $3}' | head -2)
+      if [ -n "$big" ]; then echo "$(date '+%m-%d %H:%M') $n: NOT merged, a file above GitHub's 100 MB limit: $big"; continue; fi   # 2026-11-07: a 239 GB headtail from brain02 blocked every push for hours
       git merge -q --no-edit -X theirs FETCH_HEAD >/dev/null 2>&1 && echo "$(date '+%m-%d %H:%M') $n: merged $(git log --oneline -1 FETCH_HEAD | cut -c1-60)" || { git merge --abort 2>/dev/null; echo "$(date '+%m-%d %H:%M') $n: merge failed"; }
     else echo "$(date '+%m-%d %H:%M') $n: fetch failed (node not reachable)"; fi
   done

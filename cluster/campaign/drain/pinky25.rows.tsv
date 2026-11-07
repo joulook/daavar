@@ -1,0 +1,6 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.swiftpaxos-paper-rust.impl_2_fifo.vs-derived	C	swiftpaxos-paper-rust	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	swiftpaxos-paper-rust	swiftpaxos-derived.spec_2_fifo	swiftpaxos-paper-rust.impl_2_fifo
+C3E.replicated-log-aneris.spec_10_fifo.t16	C	replicated-log-aneris	10	fifo	spec	export	16			c1h	export	traceforge	traceforge	rust	rust	offline-batch	full	replicated-log-aneris		
+XON1.replicated-log-aneris.impl_10_fifo_asyn-fault.w16	X	replicated-log-aneris	10	fifo	asyn-fault	stateful-online	16	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	replicated-log-aneris	replicated-log-aneris.spec_10_fifo	replicated-log-aneris.impl_10_fifo_asyn-fault
+XON1.replicated-log-aneris.impl_10_fifo_correct.w16	X	replicated-log-aneris	10	fifo	correct	stateful-online	16	readme		c1h	cross-language	traceforge	jmc	rust	java	online	full	replicated-log-aneris	replicated-log-aneris.spec_10_fifo	replicated-log-aneris.impl_10_fifo_correct
+C1.vrr.impl_4_3_bag.t16	C	vrr	4,3	bag	impl	stateful-parallel	16	readme		c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	vrr	vrr.spec_4_3_bag	vrr.impl_4_3_bag

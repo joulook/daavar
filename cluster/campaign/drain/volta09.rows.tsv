@@ -1,0 +1,9 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XJ1.cassandra-paxos-v1.impl_3_v1_fifo.vs-derived.tfspec-jmcimpl	X	cassandra-paxos-v1	3	fifo	v1	join	1	readme		c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	cassandra-paxos-v1	cassandra-derived.spec_3_v1_fifo	cassandra-paxos-v1.impl_3_v1_fifo
+XJ1.cassandra-paxos-v1.impl_3_v1_fifo.vs-hand.tfspec-jmcimpl	X	cassandra-paxos-v1	3	fifo	v1	join	1	readme		c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	cassandra-paxos-v1	cassandra-cas.spec_3_v1_fifo	cassandra-paxos-v1.impl_3_v1_fifo
+XCE.election.impl_ring_conf_9_fifo.w16	X	election	9	fifo	ring-conf	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	election		
+XC2.election.impl_ring_conf_9_fifo.tfimpl-jimpl	X	election	9	fifo	ring-conf	join	1	twin	twin-spec=ring-conf	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	election	election.impl_ring_conf_9_fifo	election.impl_ring_conf_9_fifo
+XC2.election.impl_ring_conf_10_fifo.tfimpl-jimpl	X	election	10	fifo	ring-conf	join	1	twin	twin-spec=ring-conf	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	election	election.impl_ring_conf_10_fifo	election.impl_ring_conf_10_fifo
+XCE.election.impl_ring_conf_10_fifo.w16	X	election	10	fifo	ring-conf	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	election		
+XCON2.election.impl_ring_conf_9_fifo.t16	X	election	9	fifo	ring-conf	stateful-online	16	twin	twin-spec=ring-conf	c1h	twin-cf	jmc	traceforge	java	rust	online	full	election	election.impl_ring_conf_9_fifo	election.impl_ring_conf_9_fifo
+XCON2.election.impl_ring_conf_10_fifo.t16	X	election	10	fifo	ring-conf	stateful-online	16	twin	twin-spec=ring-conf	c1h	twin-cf	jmc	traceforge	java	rust	online	full	election	election.impl_ring_conf_10_fifo	election.impl_ring_conf_10_fifo

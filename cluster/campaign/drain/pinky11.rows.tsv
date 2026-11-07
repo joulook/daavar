@@ -1,0 +1,4 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XJE.two-pc-abstain-kragl.spec_10_bag.w16	X	two-pc-abstain-kragl	10	bag	spec	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	two-pc-abstain-kragl		
+XON2.two-pc-abstain-kragl.impl_10_off-by-one_bag.t16	X	two-pc-abstain-kragl	10	bag	off-by-one	stateful-online	16	readme		c1h	cross-language	jmc	traceforge	java	rust	online	full	two-pc-abstain-kragl	two-pc-abstain-kragl.spec_10_bag	two-pc-abstain-kragl.impl_10_off-by-one_bag
+XON2.two-pc-abstain-kragl.impl_10_correct_bag.t16	X	two-pc-abstain-kragl	10	bag	correct	stateful-online	16	readme		c1h	cross-language	jmc	traceforge	java	rust	online	full	two-pc-abstain-kragl	two-pc-abstain-kragl.spec_10_bag	two-pc-abstain-kragl.impl_10_correct_bag
