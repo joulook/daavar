@@ -171,7 +171,7 @@ if newv:
 prev = os.path.join(ST, "prev"); os.makedirs(prev, exist_ok=True); diff = []; changed_files = 0
 def keyrow(fn, r):
     ks = [k for k in ("program", "variant", "spec", "model", "size") if k in r]; m = re.search(r"\.vs-([a-z0-9-]+)", r.get("run id", ""))
-    return ",".join(r.get(k, "") for k in ks) + ("," + m.group(1) if m else "")   # 2026-11-07 (audit 1107-0020): the vs- word names the specification side; without it a vs-hand and a vs-derived row of one program and size shared a key
+    return ",".join(r.get(k, "") for k in ks) + ("," + m.group(1) if m else "") + (",reserved" if re.search(r"\.p(\.m)?$", r.get("run id", "")) else "")   # 2026-11-07 (audit 1107-0240): a brain04 reserved run (.p) sits beside the older row of the same instance   # 2026-11-07 (audit 1107-0020): the vs- word names the specification side; without it a vs-hand and a vs-derived row of one program and size shared a key
 for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv")) + [os.path.join(TB, "table2.csv"), os.path.join(TB, "table3.csv")]):
     fn = os.path.basename(f); pf = os.path.join(prev, fn)
     cur = {keyrow(fn, r): r for r in csv.DictReader(open(f))} if os.path.exists(f) else {}

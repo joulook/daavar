@@ -52,6 +52,8 @@ def study_pair(r):
     return None
 def pair(r,f):   # the two components of a check, as the paper's Table 7 names them: implementation $\sqsubseteq$ specification, each with its origin and language
     P=r['program']; v=r['variant'] or ''; sv=r.get('spec') or v
+    _vs=re.search(r'\.vs-([a-z0-9-]+)\.', r.get('run id','')+'.')   # 2026-11-07 (audit 1107-0240): a twin row checked against another variant's export (.vs-correct) names that variant as its specification
+    if _vs and _vs.group(1) not in ('hand','derived','zkderived','swiftderived'): sv=_vs.group(1)
     sp=study_pair(r)
     if sp: return sp
     vv=lambda x: '' if x in ('correct','impl','',P) else ', '+esc(x)
