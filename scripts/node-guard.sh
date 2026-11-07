@@ -13,6 +13,8 @@
 #     (brain 3, else 1) JMC exports at once: the youngest beyond the cap is killed (killed=jmc-cap).
 #  4. brain-data clone: stale git lock files (older than an hour, no git running) and tmp_pack_* garbage older than a
 #     day are removed; .git above GC_GB (40) GB -> git gc --prune=now under the publish lock, at most once a day.
+#  5. every running row's resident tree is sampled into its mem.log each pass, and rows whose wrapper died are finalized
+#     (finalize-orphans.sh), so no row ends without a record.
 # Every action is one line in $EVAL/guard.log and in the row's guard.log; a heartbeat line every hour.
 # stop: touch $EVAL/.stop-guard
 . "$(dirname "$0")/env.sh"
@@ -88,6 +90,9 @@ jmc_cap() {  # never more than JMC_MAX JMC exports at once: the youngest beyond 
   while read -r d p; do [ -n "$d" ] || continue; grep -q 'jmc-run.sh' "$d/cmd.txt" 2>/dev/null || continue; n=$((n+1)); e=$(start_of "$d"); e=${e:-0}; [ "$e" -ge "$ye" ] && { ye=$e; y="$d $p"; }; done < <(running_rows)
   [ "$n" -gt "$JMC_MAX" ] && [ -n "$y" ] && { say "JMC $n exports running, cap $JMC_MAX"; kill_row ${y% *} ${y##* } "jmc-cap"; }
 }
+sample_rows() {  # the dispatcher's sampler writes mem.log every 10 s; if that wrapper is gone the row would have no peak: sample here too (mkrecord takes the max)
+  local d p; while read -r d p; do [ -n "$d" ] || continue; echo "$(date +%s) $(tree_rss_kb "$p")" >> "$d/mem.log"; done < <(running_rows)
+}
 clone_guard() {
   local g="$BRAIN_DATA/.git" sz stamp="$EVAL/.guard-gc"
   [ -d "$g" ] || return
@@ -106,7 +111,8 @@ clone_guard() {
 say "guard started: LOG_CAP_GB=$LOG_CAP_GB DISK_TRIM_GB=$DISK_TRIM_GB DISK_KILL_GB=$DISK_KILL_GB MEM_KILL_PCT=$MEM_KILL_PCT JMC_MAX=$JMC_MAX GC_GB=$GC_GB every ${INTERVAL}s"
 i=0
 while [ ! -e "$EVAL/.stop-guard" ]; do
-  cap_running_logs; disk_guard; memory_guard; jmc_cap
+  cap_running_logs; disk_guard; memory_guard; jmc_cap; sample_rows
+  [ $((i % 2)) -eq 0 ] && bash "$(dirname "$0")/finalize-orphans.sh" >> "$LOG" 2>&1   # a row whose wrapper died still gets its record
   [ $((i % 20)) -eq 0 ] && clone_guard
   [ $((i % 120)) -eq 0 ] && say "heartbeat: free $(free_gb) GB, mem $(avail_pct)% available, running $(running_rows | wc -l)"
   i=$((i + 1)); sleep "$INTERVAL"
