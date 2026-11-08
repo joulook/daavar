@@ -1,0 +1,16 @@
+# pbkv-ea (a2-store early-ack against the pb specification) paper rows (owner 2026-11-08 21:00: pbkv-ea joins Table 2 at (2,7) and (3,5)). 48 h tier, one row per NUMA node.
+# Sizes (replicas, operations): 2,7 and 3,5 as paper rows (.p.r3); 3,6 is new and runs only when 3,5 finished (needok ladder; Online reached the 1 h limit there in the grid campaign).
+C1.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- early-ack 2 7
+C2.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 2 7
+C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 2 7
+C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 2 7
+C3J.a2-store.impl_early-ack_2_7_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3/export.jsonl
+C1.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- early-ack 3 5
+C2.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 3 5
+C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 3 5
+C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 3 5
+C3J.a2-store.impl_early-ack_3_5_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3/export.jsonl
+C1.a2-store.impl_early-ack_3_6_fifo.t16.p.r3 250 172800 needok:C1.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- early-ack 3 6
+C3E.a2-store.spec_pb_3_6_fifo.t16.p.r3 250 172800 needok:C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 3 6
+C3E.a2-store.impl_early-ack_3_6_fifo.t16.p.r3 250 172800 needok:C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 3 6
+C3J.a2-store.impl_early-ack_3_6_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_3_6_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_3_6_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_3_6_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_3_6_fifo.t16.p.r3/export.jsonl

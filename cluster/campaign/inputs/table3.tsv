@@ -17,6 +17,8 @@ lb	rr-a4a	fifo	3,3,3
 lb	rr-a4a	fifo	4,4,4
 lock	wrong-round	fifo	3,4
 lock	wrong-round	fifo	3,5
+pbkv	early-ack	fifo	2,7
+pbkv	early-ack	fifo	3,5
 replog-co	early-reply	fifo	5
 ring-el	no-compare	bag	6
 zab	issue 1	fifo	3
