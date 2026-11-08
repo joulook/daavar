@@ -98,13 +98,17 @@ def inst(r,f):
 NEW_FROM='2026-11-03T23:30'
 def paint(r,cells): c='blue' if (r.get('started') or '')>=NEW_FROM else ('orange' if r.get('contended')=='yes' else 'red'); return [r'\textcolor{'+c+'}{'+x+'}' for x in cells]
 def status(r):
-    v=r['verdict']; return r'\faClock' if v=='t/o' else ('oom' if v=='oom' else ('--' if v=='' else None))
+    v=r['verdict']
+    if v in ('t/o','oom') and (r.get('timeout s') or '') != '172800': return '--'   # a limit marker only at the 48 h tier (audit 1108-1716: a 1 h timeout printed a clock in CROSS)
+    return r'\faClock' if v=='t/o' else ('oom' if v=='oom' else ('--' if v=='' else None))
 def off_cells(r):  # M = max of the three peaks; T_exp = longer export; T_join; T = T_exp + T_join
     st=status(r)
     M=mib(r['peak MB'])   # tables.py composes it: the two exports' peaks summed (they run side by side), or the join's peak if larger
     try:
         if (r.get('spec export s') or '') == '' or (r.get('impl export s') or '') == '' or (r.get('join s') or '') == '': te=tj=tot=None   # a component without a measurement: no zero
-        else: te=max(float(r['spec export s']), float(r['impl export s'])); tj=float(r['join s']); tot=te+tj
+        else:
+            from decimal import Decimal   # exact sums of the CSV's decimal texts (audit 1108-1716: 559.550 + 2.300 printed 561.8 under float addition)
+            te=max(Decimal(r['spec export s']), Decimal(r['impl export s'])); tj=Decimal(r['join s']); tot=te+tj
     except Exception: te=tj=tot=None
     if te is None and not st: return [M, '--', '--', '--']
     if st: return [M, fnum(te) if te is not None else '--', st, st]
@@ -113,7 +117,10 @@ def on_cells(r):  # M of the online run; T_exp = the specification side (in-proc
     st=status(r); M=mib(r['peak MB'])
     try:
         if float(r.get('spec phase s') or 0) > 0 and float(r.get('impl phase s') or 0) > 0:   # in-process: the phases are measured; an online run against an export records 0 phases
-            te=float(r['spec phase s']); tr=float(r['impl phase s']); tot=float(r['wall s']); oth=fnum(tot-te-tr) if tot-te-tr>=0.005 else '$<$0.01'
+            from decimal import Decimal   # the remainder from the exact milliseconds, not from the rounded wall s (audit 1108-1716: 0.017 s printed as <0.01)
+            te=Decimal(r['spec phase s']); tr=Decimal(r['impl phase s']); tot=Decimal(r['wall s'])
+            wall=(Decimal(r['wall ms'])/1000) if (r.get('wall ms') or '') != '' else tot
+            rem=wall-te-tr; oth=fnum(rem) if rem>=Decimal('0.0005') else '$<$0.01'
         elif (r.get('spec export s') or '') != '':
             te=float(r['spec export s']); tr=float(r.get('run s') or r['wall s']); tot=float(r['wall s']); oth='--'   # tables.py: wall = export + run
         else: te=tr=tot=oth=None   # the components are not recorded: never print a zero for a missing measurement
