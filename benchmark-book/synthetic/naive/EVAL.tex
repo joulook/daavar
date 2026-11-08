@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{naive} (s1-naive)}
 \author{}
-\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
+\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): naive: expected violation; self: expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -39,8 +39,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): self 8 1 bag, naive 8 1 bag, naive 8 2 bag, self 8 2 bag, self 9 1 bag, naive 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, naive 10 bag.t16.p.r3.\par
-left out by the table rules (ok): self 2 2 bag, naive 2 2 bag, self 3 2 bag, naive 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, self 7 2 bag, naive 7 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): self 8 1 bag, naive 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, naive 9 2 bag, self 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, naive 10 bag.t16.p.r3.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, self 3 2 bag, naive 3 2 bag, self 4 2 bag, naive 4 2 bag, naive 5 2 bag, self 5 2 bag, naive 6 2 bag, self 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
 left out by the table rules (invalid: foreign load): naive 10 bag, naive 11 bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
@@ -77,8 +77,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, self 14 2 bag, naive 14 2 bag.\par
-left out by the table rules (ok): self 2 2 bag, naive 2 2 bag, self 3 2 bag, naive 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, self 7 2 bag, naive 7 2 bag, naive 8 2 bag, naive 9 2 bag, naive 10 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): self 8 1 bag, naive 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, naive 9 2 bag, self 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, self 14 2 bag, naive 14 2 bag.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, self 3 2 bag, naive 3 2 bag, self 4 2 bag, naive 4 2 bag, naive 5 2 bag, self 5 2 bag, naive 6 2 bag, self 6 2 bag, naive 7 2 bag, self 7 2 bag, naive 8 2 bag, naive 9 2 bag, naive 10 2 bag.\par
 the tool ended with an error (exit-101): self 8 1 bag.\par
 skipped: a smaller size had reached its limit: self 8 2 bag, self 9 1 bag, self 9 2 bag.\par
 \section*{offline}
@@ -113,6 +113,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): self 8 1 bag, naive 8 1 bag, naive 8 2 bag, self 8 2 bag, self 9 1 bag, naive 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag.\par
-left out by the table rules (ok): self 2 2 bag, naive 2 2 bag, self 3 2 bag, naive 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, self 7 2 bag, naive 7 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): self 8 1 bag, naive 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, naive 9 2 bag, self 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, self 3 2 bag, naive 3 2 bag, self 4 2 bag, naive 4 2 bag, naive 5 2 bag, self 5 2 bag, naive 6 2 bag, self 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
 \end{document}

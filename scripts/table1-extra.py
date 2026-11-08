@@ -98,7 +98,7 @@ for k in keep:
     lim = [s for s in order if s not in fin and any(limit(r) for r in cells_by_size[s])]
     sel = [s for s in order if s in fin[-2:] or s in lim[:1]]   # the smallest size that reached a limit stands for the larger ones
     if not sel: continue
-    nm = f"\\textsf{{{esc(CURATED_NAMES[(p, v)])}}}" if (p, v) in CURATED_NAMES else f"\\textsf{{{esc(p)}}}" + (f"$_{{\\mathit{{{esc(v)}}}}}$" if v not in ("", "impl", "correct", p) else "")
+    nm = f"\\textsf{{{esc(CURATED_NAMES[(p, v)])}}}" if (p, v) in CURATED_NAMES else f"\\textsf{{{esc(p)}}}" + (f"$_{{\\textit{{{esc(v)}}}}}$" if v not in ("", "impl", "correct", p) else "")
     if multi[(p, v)] > 1: nm += f"$^{{\\mathit{{{m}}}}}$"
     if body: body.append("\\midrule")
     first = True

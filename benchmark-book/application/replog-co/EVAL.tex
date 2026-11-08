@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{replog-co} (replicated-log-esop20)}
 \author{}
-\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
+\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -33,7 +33,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \color{blue} 2 & 4 & 128 & conforms & 0.0 & 4 & 1 h, 250 GB & 4 & 10 & brain03, 2026-11-03 \\
 \color{blue} 3 & 36 & 4608 & conforms & 0.6 & 4 & 1 h, 250 GB & 36 & 666 & brain03, 2026-11-03 \\
 \color{blue} 4 & 576 & 294912 & conforms & 26.0 & 25 & 1 h, 250 GB & 576 & 166176 & brain03, 2026-11-03 \\
-\color{blue} 5 & 14400 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-03 \\
+\color{blue} 5 & 14400 & 29491200 & conforms & 6331.0 & 118 & 48 h, 250 GB & 14700 & 104766661 & brain02, 2026-11-08 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateless: pair \textsf{early-reply}, model bag, expected violation}
@@ -61,8 +61,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 correct bag, 5 early-reply bag, 5 early-reply fifo, 5 correct fifo.t16.p.r3, 5 early-reply fifo.t16.p.r3, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
-skipped: a smaller size had reached its limit: 5 early-reply bag, 5 early-reply fifo, 6 early-reply fifo, 6 correct fifo, 6 early-reply bag, 6 correct bag, 7 early-reply bag, 7 correct fifo, 7 early-reply fifo, 7 correct bag, 8 correct fifo, 8 early-reply fifo, 8 early-reply bag, 8 correct bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag, 9 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 correct bag, 5 early-reply fifo, 5 early-reply bag, 5 early-reply fifo.t16.p.r3, 6 correct bag, 6 early-reply bag, 7 correct bag.\par
+skipped: a smaller size had reached its limit: 5 early-reply fifo, 5 early-reply bag, 6 correct bag, 6 early-reply fifo, 6 correct fifo, 6 early-reply bag, 7 correct fifo, 7 correct bag, 7 early-reply bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 early-reply bag, 9 early-reply fifo, 9 correct bag, 9 correct fifo.\par
+left out by the table rules (timeout): 5 correct fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -88,7 +89,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 2 & 4 & 128 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3 & 36 & 4608 & conforms & 0.6 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 4 & 576 & 294912 & conforms & 20.7 & 27 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 5 & 14400 & 29491200 & conforms & 1049.8 & 116 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 5 & 14400 & 29491200 & conforms & 882.8 & 100 & 48 h, 250 GB & brain02, 2026-11-08 \\
 \color{blue} 6 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -116,15 +117,15 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{blue} 2 & 4 & 512 & 384 & violation & 0.1 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3 & 36 & 18432 & 13824 & violation & 2.0 & 6 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 4 & 576 & 1179648 & 884736 & violation & 49.8 & 30 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 5 & 14400 & 117964800 & 88473600 & violation & 3571.1 & 619 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 5 & 14400 & 117964800 & 88473600 & violation & 2858.8 & 609 & 48 h, 250 GB & brain02, 2026-11-08 \\
 \color{blue} 6 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 early-reply fifo, 5 correct fifo.t16.p.r3, 5 early-reply fifo.t16.p.r3, 8 correct bag, 9 early-reply bag, 10 correct bag, 10 early-reply bag, 11 correct bag, 11 early-reply bag, 12 early-reply bag, 12 correct bag, 13 correct bag.\par
-left out by the table rules (ok): 5 correct bag, 5 early-reply bag, 6 correct bag.\par
-skipped: a smaller size had reached its limit: 7 early-reply bag, 7 correct bag, 7 correct fifo, 7 early-reply fifo, 8 correct fifo, 8 early-reply fifo, 8 correct bag, 8 early-reply bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag, 9 correct bag.\par
-the tool ended with an error (exit-101): 7 early-reply bag, 7 correct bag, 8 correct bag, 8 early-reply bag, 9 correct bag.\par
+left out by the table rules (ok): 5 correct fifo, 5 correct bag, 5 early-reply fifo, 5 early-reply bag, 6 correct bag.\par
+skipped: a smaller size had reached its limit: 7 correct fifo, 7 correct bag, 7 early-reply bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 early-reply bag, 9 early-reply fifo, 9 correct bag, 9 correct fifo.\par
+the tool ended with an error (exit-101): 7 correct bag, 7 early-reply bag, 8 correct bag, 8 early-reply bag, 9 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 early-reply fifo, 8 correct bag, 9 early-reply bag, 10 correct bag, 10 early-reply bag, 11 early-reply bag, 11 correct bag, 12 correct bag, 12 early-reply bag, 13 correct bag.\par
 left out by the table rules (timeout): 6 early-reply bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
@@ -150,6 +151,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \color{blue} 2 & 4 & 128 & conforms & 0.1 & 8 & 4 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-05 \\
 \color{blue} 3 & 36 & 4608 & conforms & 0.8 & 12 & 4 h, 250 GB & 0.1 & 0.8 & 0.0 & merge & brain01, 2026-11-05 \\
 \color{blue} 4 & 576 & 294912 & conforms & 29.7 & 29 & 4 h, 250 GB & 0.1 & 29.6 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 5 & 14400 & 29491200 & conforms & 801.9 & 148 & 48 h, 250 GB & 2.1 & 800.6 & 1.3 & merge & brain02, 2026-11-08 \\
 \color{red} 5 & 14400 & 29491200 & conforms & 736.4 & 170 & 1 h, 250 GB & 1.8 & 734.9 & 1.5 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -176,12 +178,13 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{blue} 2 & 4 & 512 & 12 & violation & 0.2 & 8 & 4 h, 250 GB & 0.1 & 0.2 & 0.0 & merge & brain01, 2026-11-05 \\
 \color{blue} 3 & 36 & 18432 & 108 & violation & 3.0 & 8 & 4 h, 250 GB & 0.1 & 3.0 & 0.0 & merge & brain01, 2026-11-05 \\
 \color{blue} 4 & 576 & 1179648 & 1728 & violation & 76.4 & 34 & 4 h, 250 GB & 0.1 & 76.3 & 0.1 & merge & brain01, 2026-11-05 \\
+\color{blue} 5 & 14400 & 117964800 & 43200 & violation & 2626.0 & 573 & 48 h, 250 GB & 2.1 & 2622.9 & 3.1 & merge & brain02, 2026-11-08 \\
 \color{red} 5 & 14400 & 117964800 & 43200 & violation & 1960.9 & 602 & 1 h, 250 GB & 1.8 & 1957.3 & 3.6 & merge & brain05, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 correct bag, 5 early-reply bag, 5 early-reply fifo, 5 correct fifo.p.r3, 5 early-reply fifo.p.r3, 6 early-reply fifo, 6 early-reply bag, 6 correct bag.\par
-skipped: a smaller size had reached its limit: 6 early-reply fifo, 6 correct fifo, 6 early-reply bag, 6 correct bag, 7 early-reply bag, 7 correct fifo, 7 early-reply fifo, 7 correct bag, 8 correct fifo, 8 early-reply fifo, 8 early-reply bag, 8 correct bag, 9 correct fifo, 9 early-reply fifo, 9 early-reply bag, 9 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 correct fifo, 5 correct bag, 5 early-reply fifo, 5 early-reply bag, 6 correct bag, 6 early-reply fifo, 6 early-reply bag.\par
+skipped: a smaller size had reached its limit: 6 correct bag, 6 early-reply fifo, 6 correct fifo, 6 early-reply bag, 7 correct fifo, 7 correct bag, 7 early-reply bag, 7 early-reply fifo, 8 correct bag, 8 early-reply fifo, 8 correct fifo, 8 early-reply bag, 9 early-reply bag, 9 early-reply fifo, 9 correct bag, 9 correct fifo.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -232,7 +235,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): 5 correct bag, 5 early-reply bag, 6 early-reply bag, 6 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 correct bag, 5 early-reply bag, 6 correct bag, 6 early-reply bag.\par
 skipped: a smaller size had reached its limit: 7 correct bag.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
@@ -282,7 +285,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 4 early-reply fifo, 4 correct fifo, 5 correct bag, 5 early-reply bag, 6 early-reply bag, 6 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 4 early-reply fifo, 4 correct fifo, 5 correct bag, 5 early-reply bag, 6 correct bag, 6 early-reply bag.\par
 skipped: a smaller size had reached its limit: 7 correct bag.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model bag, expected conforms}
@@ -330,7 +333,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 1 correct bag, 1 early-reply fifo, 1 correct fifo, 1 early-reply bag, 2 correct fifo, 2 early-reply fifo, 2 correct bag, 2 early-reply bag, 3 early-reply fifo, 3 correct bag, 3 early-reply bag, 3 correct fifo, 5 correct bag, 5 early-reply bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 1 early-reply bag, 1 early-reply fifo, 1 correct fifo, 1 correct bag, 2 early-reply bag, 2 correct fifo, 2 early-reply fifo, 2 correct bag, 3 early-reply fifo, 3 early-reply bag, 3 correct fifo, 3 correct bag, 5 correct bag, 5 early-reply bag, 6 correct bag, 6 early-reply bag, 7 correct bag.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -377,6 +380,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): 1 correct bag, 1 early-reply fifo, 1 correct fifo, 1 early-reply bag, 2 correct fifo, 2 early-reply fifo, 2 correct bag, 2 early-reply bag, 3 early-reply fifo, 3 correct bag, 3 early-reply bag, 3 correct fifo.\par
-planned but never scheduled (grid points beyond the ladder): 5 correct bag, 5 early-reply bag, 6 early-reply bag, 6 correct bag, 7 correct bag.\par
+left out by the table rules (ok): 1 early-reply bag, 1 early-reply fifo, 1 correct fifo, 1 correct bag, 2 early-reply bag, 2 correct fifo, 2 early-reply fifo, 2 correct bag, 3 early-reply fifo, 3 early-reply bag, 3 correct fifo, 3 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 correct bag, 5 early-reply bag, 6 correct bag, 6 early-reply bag, 7 correct bag.\par
 \end{document}

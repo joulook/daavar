@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{zab} (zab-broadcast-remix)}
 \author{}
-\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
+\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -177,7 +177,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \midrule
 \endhead
 \color{blue} 1 & 161 & 128 & 2 & violation & 8.2 & 160 & 10 min, 250 GB & 8.1 & 0.1 & 0.2 & merge & brain01, 2026-11-03 \\
-\color{blue} 2 & 33161 & 24215 & 5 & violation & 199.3 & 14649 & 10 min, 250 GB & 199.3 & 0.8 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2 & 33161 & 24215 & 5 & violation & 199.4 & 14649 & 10 min, 250 GB & 199.3 & 0.8 & 0.0 & merge & brain01, 2026-11-03 \\
 \color{blue} 3 & 9550181 & 6881334 & 9 & violation & 73347.0 & 107919 & 48 h, 250 GB & 73347.0 & 128.9 & 0.0 & merge & brain01, 2026-11-04 \\
 \bottomrule
 \end{longtable}
@@ -358,7 +358,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \midrule
 \endhead
 \color{red} 1 & 128 & 128 & conforms & 4.0 & 193 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
-\color{red} 2 & 24215 & 24215 & conforms & 268.6 & 5133 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 2 & 24215 & 24215 & conforms & 268.7 & 5133 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{issue 1}, model fifo, expected violation}

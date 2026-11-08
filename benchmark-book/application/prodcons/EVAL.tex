@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{prodcons} (producer-consumer-civl)}
 \author{}
-\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
+\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -76,7 +76,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{blue} 5 & 6 & 415 & 409 & violation & 0.1 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 6 & 7 & 2372 & 2365 & violation & 0.2 & 16 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 7 & 8 & 16072 & 16064 & violation & 2.3 & 142 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 8 & 9 & 125673 & 125664 & violation & 374.6 & 1249 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 8 & 9 & 125673 & 125664 & violation & 374.7 & 1249 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 9 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -138,7 +138,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2 & 3 & 8 & 5 & violation & 10.3 & 298 & 4 h, 250 GB & 0.1 & 10.3 & 0.1 & merge & brain02, 2026-11-03 \\
+\color{blue} 2 & 3 & 8 & 5 & violation & 10.4 & 298 & 4 h, 250 GB & 0.1 & 10.3 & 0.1 & merge & brain02, 2026-11-03 \\
 \color{red} 3 & 4 & 24 & 20 & violation & 3.4 & 168 & 10 min, 16 GB & 0.1 & 3.3 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 4 & 5 & 89 & 84 & violation & 7.2 & 167 & 10 min, 16 GB & 0.1 & 3.3 & 3.9 & in-memory & brain01, 2026-11-02 \\
 \color{red} 5 & 6 & 415 & 409 & violation & 4.6 & 191 & 48 h, 200 GB & 0.0 & 4.6 & 0.0 & merge & volta05, 2026-11-07 \\
@@ -196,7 +196,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 2 fifo, 2 bag, 3 fifo, 3 bag, 4 bag, 4 fifo.\par
+planned but never scheduled (grid points beyond the ladder): 2 fifo, 2 bag, 3 bag, 3 fifo, 4 fifo, 4 bag.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{single}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -221,7 +221,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): 2 fifo, 2 bag, 3 fifo, 3 bag, 4 bag, 4 fifo.\par
+left out by the table rules (ok): 2 fifo, 2 bag, 3 bag, 3 fifo, 4 fifo, 4 bag.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{single}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
