@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{ewd998} (ewd998-termination)}
 \author{}
-\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
+\date{generated 2026-11-08 from brain-data 8a2534d6f 2026-11-08 20:14:59 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -32,9 +32,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-black-on-receive.t16.p.r3, 5 bag correct.t16.p.r3.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct.t16.p.r3, 5 bag no-black-on-receive.t16.p.r3.\par
 left out by the table rules (ok): 2 bag no-black-on-receive, 3 bag correct.\par
-skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 5 no-black-on-receive bag, 5 correct bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -59,10 +59,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-black-on-receive, 5 bag correct, 5 bag no-black-on-receive.t16.p.r3.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag no-black-on-receive, 5 bag no-black-on-receive.t16.p.r3.\par
 left out by the table rules (ok): 2 bag no-black-on-receive, 3 bag correct.\par
-left out by the table rules (timeout): 4 no-black-on-receive bag, 4 correct bag.\par
-skipped: a smaller size had reached its limit: 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
+left out by the table rules (timeout): 4 correct bag, 4 no-black-on-receive bag.\par
+skipped: a smaller size had reached its limit: 5 no-black-on-receive bag, 5 correct bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -85,10 +85,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-black-on-receive, 5 bag correct, 5 bag correct.p.r3, 5 bag no-black-on-receive.p.r3.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag no-black-on-receive, 5 bag correct.p.r3, 5 bag no-black-on-receive.p.r3.\par
 left out by the table rules (ok): 2 bag no-black-on-receive, 3 bag correct.\par
-skipped: a smaller size had reached its limit: 4 correct bag, 4 no-black-on-receive bag, 5 correct bag, 5 no-black-on-receive bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
-refused (an input missing at run time): 4 bag no-black-on-receive, 4 bag correct.\par
+skipped: a smaller size had reached its limit: 4 no-black-on-receive bag, 4 correct bag, 5 no-black-on-receive bag, 5 correct bag, 6 correct bag, 6 no-black-on-receive bag, 7 no-black-on-receive bag, 7 correct bag, 8 correct bag, 8 no-black-on-receive bag, 9 no-black-on-receive bag, 9 correct bag.\par
+refused (an input missing at run time): 4 bag correct, 4 bag no-black-on-receive.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

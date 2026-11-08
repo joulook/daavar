@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{chan} (reliable-channel-aneris)}
 \author{}
-\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
+\date{generated 2026-11-08 from brain-data 8a2534d6f 2026-11-08 20:14:59 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -37,7 +37,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-seqno, 5 no-seqno bag, 5 bag correct, 6 bag no-seqno, 6 bag correct, 6 bag no-seqno.t16.p.r3, 7 bag no-seqno, 7 correct bag, 7 bag correct, 7 bag no-seqno.t16.p.r3.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag no-seqno, 5 bag correct, 5 no-seqno bag, 6 bag correct, 6 bag no-seqno, 6 bag no-seqno.t16.p.r3, 7 bag correct, 7 bag no-seqno, 7 correct bag, 7 bag no-seqno.t16.p.r3.\par
 left out by the table rules (ok): 6 correct bag.\par
 skipped: a smaller size had reached its limit: 6 no-seqno bag, 7 no-seqno bag, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag.\par
 \section*{stateful}
@@ -74,12 +74,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 6 no-seqno bag, 7 correct bag, 7 bag no-seqno.t16.p.r3, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag, 10 no-seqno bag, 10 correct bag, 11 no-seqno bag, 12 correct bag, 12 no-seqno bag.\par
-left out by the table rules (ok): 5 no-seqno bag, 5 correct bag, 6 bag no-seqno, 6 correct bag, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 6 no-seqno bag, 7 correct bag, 7 bag no-seqno.t16.p.r3, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag, 10 no-seqno bag, 10 correct bag, 11 no-seqno bag, 12 no-seqno bag, 12 correct bag.\par
+left out by the table rules (ok): 5 correct bag, 5 no-seqno bag, 6 correct bag, 6 bag correct, 6 bag no-seqno.\par
 left out by the table rules (timeout): 6 no-seqno bag, 7 correct bag.\par
-skipped: a smaller size had reached its limit: 7 no-seqno bag, 8 correct bag, 8 no-seqno bag, 9 correct bag, 9 no-seqno bag.\par
+skipped: a smaller size had reached its limit: 7 no-seqno bag, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag.\par
 the tool ended with an error (exit-101): 8 bag correct.\par
-left out by the table rules (invalid: foreign load): 9 bag correct, 9 bag no-seqno.\par
+left out by the table rules (invalid: foreign load): 9 bag no-seqno, 9 bag correct.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -109,8 +109,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 no-seqno bag, 6 bag correct, 7 bag no-seqno, 7 correct bag, 7 bag correct, 7 bag no-seqno.p.r3.\par
-skipped: a smaller size had reached its limit: 6 no-seqno bag, 7 correct bag, 7 no-seqno bag, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag no-seqno, 5 bag correct, 6 no-seqno bag, 6 bag correct, 6 bag no-seqno, 7 bag correct, 7 bag no-seqno, 7 correct bag, 7 bag no-seqno.p.r3.\par
+skipped: a smaller size had reached its limit: 6 no-seqno bag, 7 no-seqno bag, 7 correct bag, 8 correct bag, 8 no-seqno bag, 9 no-seqno bag, 9 correct bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -133,7 +133,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct, 7 bag no-seqno, 7 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno, 7 bag correct, 7 bag no-seqno.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -158,7 +158,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -181,7 +181,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-planned but never scheduled (grid points beyond the ladder): 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct, 7 bag no-seqno, 7 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno, 7 bag correct, 7 bag no-seqno.\par
 \section*{twins offline, Rust implementation against its Java twin}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -214,7 +214,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
-planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -247,7 +247,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
-planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -280,7 +280,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 5 bag no-seqno, 5 bag correct, 6 bag no-seqno, 6 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 5 bag correct, 5 bag no-seqno, 6 bag correct, 6 bag no-seqno.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -313,7 +313,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-planned but never scheduled (grid points beyond the ladder): 4 bag no-seqno, 4 bag correct, 6 bag no-seqno.\par
+planned but never scheduled (grid points beyond the ladder): 4 bag correct, 4 bag no-seqno, 6 bag no-seqno.\par
 skipped: a smaller size had reached its limit: 5 bag correct, 5 bag no-seqno, 6 bag correct.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}

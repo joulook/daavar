@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""A twin of the paper's Table 1 (owner, 2026-11-08 evening) for the conforming pairs it leaves out: Rust implementation
-against its own Rust specification, under Nested, Online and Offline, over the instances (program, variant, model) that
-inputs/table2.tsv does not list and brain-data has decided. Same columns, same caption, same cell rules and colours as
+"""A twin of the paper's Table 1 (owner, 2026-11-08 evening) for the conforming pairs it leaves out, and with --viol a
+twin of Table 2 for the violating pairs it leaves out: Rust implementation against its own Rust specification, under
+Nested, Online and Offline, over the instances (program, variant, model) that inputs/table2.tsv (table3.tsv) does not
+list and brain-data has decided. Same columns, same caption, same cell rules and colours as
 paper-tables.py's curated Table 1 (current-pin cells blue/red/orange, older-pin cells orange/red, limit markers only at
 the 48 h tier, offline cells only with current exports and a merge join). Per instance the two largest sizes with a
 result from any of the three algorithms and the smallest size that reached a limit; no dagger rows. Scope: the benchmark
 collection (paper-names.tsv) and the agent-written classical protocols; the real-software case studies and the
 specification-side checks are left out. Violating pairs and pairs with a violating verdict at any size are left out.
-usage: table1-extra.py <tables-dir> <out-dir>   (reads campaign-{stateless,stateful,offline-tf}.csv, writes
-       table1-extra.tex, table1-extra.csv, table1-extra-note.tex)"""
+usage: table1-extra.py <tables-dir> <out-dir> [--viol]   (reads campaign-{stateless,stateful,offline-tf}.csv, writes
+       table1-extra.{tex,csv}, table1-extra-note.tex; with --viol table2-extra.* with the G_x and T_1 columns)"""
 import sys, csv, re, os, math, collections
 from decimal import Decimal, ROUND_HALF_UP
-T, OUT = sys.argv[1], sys.argv[2]
+T, OUT = sys.argv[1], sys.argv[2]; VIOL = "--viol" in sys.argv; NAME = "table2-extra" if VIOL else "table1-extra"
 DV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 INP = os.path.join(DV, "cluster", "campaign", "inputs")
 def rows(name):
@@ -45,6 +46,20 @@ def cell_T(r):
     if r["verdict"] == "oom":
         g = num(r.get("mem GB")); return "oom" + (f"$_{{\\mathrm{{{int(g)}G}}}}$" if g and g < 250 else "")
     v = num(r.get("wall s")); return "" if v is None else ("$<$0.1" if v < 0.05 else rnd(v, 1))   # never a printed zero (owner 2026-11-06)
+def cell_T1(r, online):   # the first violation: Nested from the run's start; Online including the specification phase (paper-tables.py)
+    if r is None or r.get("verdict") != "violation": return ""
+    fm = num(r.get("first miss ms"))
+    if fm is None: return ""
+    if online:
+        sp = num(r.get("spec phase s"))
+        if sp is None: return ""
+        v = sp + fm / 1000
+    else: v = fm / 1000
+    return rnd(v, 3) if v < 0.1 else (rnd(v, 2) if v < 10 else rnd(v, 1))
+def cell_Tp(r):   # T below 0.1 s to the millisecond (Table 2, beside T_1)
+    c = cell_T(r); ms = num((r or {}).get("wall ms")); v = ms / 1000 if ms is not None else num((r or {}).get("wall s"))
+    return f"{v:.3f}" if (c and v is not None and not c.startswith("\\") and not c.startswith("oom") and v < 0.1) else c
+def exported(r): return r is not None and bool(r.get("spec export s")) and bool(r.get("impl export s"))
 def cell_M(r):
     if not decided(r): return ""
     v = num(r.get("peak MB")); return "" if v is None else f"{v:.0f}"
@@ -79,10 +94,13 @@ for k in sorted(inst, key=lambda k: (k[0] not in SYN, k)):
     p, v, m = k
     if k in T1: left["in Table 1"] += 1; continue
     if k in T2: left["in Table 2"] += 1; continue
+    if k in T1 or k in T2: continue
     if p in REAL or (p not in BENCH and p not in AGENT): left["case study / real software"] += 1; continue
     verd = {r["verdict"] for sm in inst[k].values() for r in sm.values() if decided(r)}
     if not verd: left["no decided run"] += 1; continue
-    if "violation" in verd: left["violating at some size"] += 1; continue
+    if VIOL:
+        if "violation" not in verd: left["conforming at every size"] += 1; continue
+    elif "violation" in verd: left["violating at some size"] += 1; continue
     keep.append(k)
 # ---- select sizes: the two largest with a result from any algorithm, plus the smallest size that reached a 48 h limit ----
 body, csvrows, note_rows = [], [], []
@@ -94,7 +112,7 @@ for k in keep:
         c2, c1, c3 = best(sm.get("nested")), best(sm.get("online")), best(sm.get("offline"), True)
         if any(decided(r) or limit(r) for r in (c1, c2, c3)): cells_by_size[size] = (c2, c1, c3)
     order = sorted(cells_by_size, key=lambda s: (math.prod(sz(s)) if sz(s) else 0, sz(s)))
-    fin = [s for s in order if any(decided(r) for r in cells_by_size[s])]
+    fin = [s for s in order if any(decided(r) and (not VIOL or r["verdict"] == "violation") for r in cells_by_size[s])]   # --viol: sizes with a violating verdict
     lim = [s for s in order if s not in fin and any(limit(r) for r in cells_by_size[s])]
     sel = [s for s in order if s in fin[-2:] or s in lim[:1]]   # the smallest size that reached a limit stands for the larger ones
     if not sel: continue
@@ -109,24 +127,38 @@ for k in keep:
         gs_r = next((r for r in (c1, c3) if decided(r) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
         sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
         expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""
-        cells = [sweeps, expl, cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M(c3)]
-        owners = [c2, c2, c2, c2, c1, c1, c3, c3]
-        body.append(f"{nm if first else ''} & {size} & {paint(gi_r, gi)} & {paint(gs_r, gs)} & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
-        csvrows.append([p, v, m, size, gi, gs] + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", c2), ("online", c1), ("offline", c3)) if r is not None), "dropped" if dropped(p, v) else ""])
+        if VIOL:
+            gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None); gx = gx_r.get("uncovered", "") if gx_r else ""
+            cells = [sweeps, expl, cell_T1(c2, False), cell_Tp(c2), cell_M(c2), cell_T1(c1, True), cell_Tp(c1), cell_M(c1), cell_Tp(c3), cell_M(c3)]
+            owners = [c2, c2, c2, c2, c2, c1, c1, c1, c3, c3]
+        else:
+            gx_r, gx = None, None
+            cells = [sweeps, expl, cell_T(c2), cell_M(c2), cell_T(c1), cell_M(c1), cell_T(c3), cell_M(c3)]
+            owners = [c2, c2, c2, c2, c1, c1, c3, c3]
+        body.append(f"{nm if first else ''} & {size} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if VIOL else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
+        csvrows.append([p, v, m, size, gi, gs] + ([gx] if VIOL else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", c2), ("online", c1), ("offline", c3)) if r is not None), "dropped" if dropped(p, v) else ""])
         first = False
     note_rows.append((nm, dropped(p, v)))
-cap = "Results of the refinement checking over conforming pairs, Rust implementation against Rust specification, under \\nested, \\online and \\offline engines. We use \\faClock~ to show timeout and oom for memory limit was reached."
-hdr1 = "instance & size & $G_{\\mathit{cand}}$ & $G_{\\mathit{ref}}$ & \\multicolumn{4}{c}{\\nested} & \\multicolumn{2}{c}{\\online} & \\multicolumn{2}{c}{\\offline} \\\\"
-cm = "\\cmidrule(lr){5-8}\\cmidrule(lr){9-10}\\cmidrule(lr){11-12}"
-hdr2 = " &  &  &  & sweeps & $G_{\\mathit{ref}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\"
-L = ["\\begin{longtable}{@{}lrrrrrrrrrrr@{}}", f"\\caption{{{cap}}}\\label{{tab:table1-extra}}\\\\", "\\toprule", hdr1, cm, hdr2, "\\midrule", "\\endfirsthead",
+if VIOL:
+    cap = "Results of the refinement checking over violating pairs, Rust implementation against Rust specification, under \\nested, \\online and \\offline engines, with $G_x$ and T$_1$, the time to the first potential violation; \\offline has no T$_1$. We use \\faClock~ to show timeout and oom for memory limit was reached."
+    hdr1 = "instance & size & $G_{\\mathit{cand}}$ & $G_{\\mathit{ref}}$ & $G_x$ & \\multicolumn{5}{c}{\\nested} & \\multicolumn{3}{c}{\\online} & \\multicolumn{2}{c}{\\offline} \\\\"
+    cm = "\\cmidrule(lr){6-10}\\cmidrule(lr){11-13}\\cmidrule(lr){14-15}"
+    hdr2 = " &  &  &  &  & sweeps & $G_{\\mathit{ref}}^{\\mathit{expl}}$ & T$_1$ & T & M & T$_1$ & T & M & T & M \\\\"
+    colspec = "@{}lrrrrrrrrrrrrrr@{}"
+else:
+    cap = "Results of the refinement checking over conforming pairs, Rust implementation against Rust specification, under \\nested, \\online and \\offline engines. We use \\faClock~ to show timeout and oom for memory limit was reached."
+    hdr1 = "instance & size & $G_{\\mathit{cand}}$ & $G_{\\mathit{ref}}$ & \\multicolumn{4}{c}{\\nested} & \\multicolumn{2}{c}{\\online} & \\multicolumn{2}{c}{\\offline} \\\\"
+    cm = "\\cmidrule(lr){5-8}\\cmidrule(lr){9-10}\\cmidrule(lr){11-12}"
+    hdr2 = " &  &  &  & sweeps & $G_{\\mathit{ref}}^{\\mathit{expl}}$ & T & M & T & M & T & M \\\\"
+    colspec = "@{}lrrrrrrrrrrr@{}"
+L = [f"\\begin{{longtable}}{{{colspec}}}", f"\\caption{{{cap}}}\\label{{tab:{NAME}}}\\\\", "\\toprule", hdr1, cm, hdr2, "\\midrule", "\\endfirsthead",
      "\\toprule", hdr1, cm, hdr2, "\\midrule", "\\endhead"] + body + ["\\bottomrule", "\\end{longtable}"]
 os.makedirs(OUT, exist_ok=True)
-open(f"{OUT}/table1-extra.tex", "w").write("\n".join(L) + "\n")
-with open(f"{OUT}/table1-extra.csv", "w", newline="") as f:
-    w = csv.writer(f); w.writerow(["program", "variant", "model", "size", "G impl", "G spec", "nested sweeps", "nested spec graphs explored", "nested s", "nested MB", "online s", "online MB", "offline s", "offline MB", "colour (blue = paper run (.p) on a brain node with one row per NUMA node, orange = shared node or earlier engine version, red = earlier campaign at the current pins)", "left out of the paper (dropped.keep)"]); w.writerows(csvrows)
+open(f"{OUT}/{NAME}.tex", "w").write("\n".join(L) + "\n")
+with open(f"{OUT}/{NAME}.csv", "w", newline="") as f:
+    w = csv.writer(f); w.writerow(["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if VIOL else []) + ["nested sweeps", "nested spec graphs explored"] + (["nested first violation s"] if VIOL else []) + ["nested s", "nested MB"] + (["online first violation s"] if VIOL else []) + ["online s", "online MB", "offline s", "offline MB", "colour (blue = paper run (.p) on a brain node with one row per NUMA node, orange = shared node or earlier engine version, red = earlier campaign at the current pins)", "left out of the paper (dropped.keep)"]); w.writerows(csvrows)
 dr = [n for n, d in note_rows if d]
-open(f"{OUT}/table1-extra-note.tex", "w").write(
+open(f"{OUT}/{NAME}-note.tex", "w").write(
     f"\\noindent {len(note_rows)} instances, {len(csvrows)} rows. " +
     (f"The reviews of 2026-11-02 left {len(dr)} of these instances out of the paper's tables (\\texttt{{dropped.keep}}): " + ", ".join(dr) + ". " if dr else "") +
     "Instances left out of this table: " + "; ".join(f"{n} {w}" for w, n in sorted(left.items())) + ".\n")
