@@ -1,95 +1,86 @@
 #!/usr/bin/env python3
-"""The time-components figure of the evaluation (owner, 2026-11-08 23:00: Table 3 was too fine-grained for a paper;
-show the shape instead). Reads paper-tables.py's table4.csv and writes a TikZ picture: one row per pair that Online
-and Offline both finished, two horizontal bars per row, both scaled by Online's T. The Online bar is T_ref then T_cand
-(then the remainder of T, if any). The Offline bar is the longer export's E and W, then the join J (then the remainder):
-the two exports run side by side, so the longer one is Offline's critical path, as in the tables' T. Rows are sorted by
-the share of the reference in Online's T, so the reference-dominated pairs are at the top and the candidate-dominated
-ones at the bottom. A bar longer than the axis is cut and its ratio printed; ratios far from 1 are printed as well.
+"""The Online-versus-Offline figure of the evaluation (owner, 2026-11-08 23:20: Table 3 was too fine-grained for the
+paper, and a stacked-bar rendering of it was too hard to read). Reads paper-tables.py's table4.csv and writes a TikZ
+scatter plot: one point per pair that both algorithms finished, x = Online's T, y = Offline's T, both on a log scale,
+with the diagonal (equal time) and the lines at half and twice Online's time. A point below the diagonal is a pair on
+which Offline was faster; its vertical distance from the diagonal is the factor. Colour says where Online spent its time:
+on the reference (T_ref at least twice T_cand), on the candidate (T_cand at least twice T_ref), or on both. Circles are
+conforming pairs, triangles violating ones. The points far from the diagonal are named.
 usage: fig-components.py <table4.csv> <out.tex>"""
-import sys, csv
-from decimal import Decimal, ROUND_HALF_UP
+import sys, csv, math
 SRC, OUT = sys.argv[1], sys.argv[2]
 def num(x):
     x = (x or "").strip()
     if x in ("", "--"): return None
-    if x.startswith("$<$"): return 0.0   # below the timer's resolution: drawn as nothing
+    if x.startswith("$<$"): return 0.0
     try: return float(x)
     except ValueError: return None
-rows = []
+pts = []
 for r in csv.DictReader(open(SRC)):
     T, To = num(r["online T s"]), num(r["offline T s"])
     if not T or not To: continue
-    on = [num(r["online T_ref s"]) or 0.0, num(r["online T_cand s"]) or 0.0]
-    e_r, w_r, e_c, w_c, j = (num(r[k]) or 0.0 for k in ("offline E_ref s", "offline W_ref s", "offline E_cand s", "offline W_cand s", "offline join s"))
-    side = "ref" if e_r + w_r >= e_c + w_c else "cand"
-    off = [(e_r if side == "ref" else e_c), (w_r if side == "ref" else w_c), j]
-    rows.append(dict(name=r["instance"], size=r["size"], pair=r["pair"], T=T, To=To, on=on, off=off, side=side, ratio=To / T, refshare=on[0] / T))
-XMAX = 2.0                      # bars are scaled by Online's T; the axis ends at twice Online's time
-W, H = 1.55, 0.062             # panel width in inches (bars), row pitch per bar in inches; two panels fit acmsmall's 5 in text width
-GAP = 0.03                     # gap between the two bars of a pair... in inches
-LEFT = 0.72                    # label column
-PANEL_GAP = 0.3
-COL = {"ref": "figRef", "cand": "figCand", "refx": "figRef!45!white", "candx": "figCand!45!white", "w": "black!45", "j": "black!75", "rest": "black!15"}
-def rnd(v, nd=1): return str(Decimal(repr(v)).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
+    tr, tc = num(r["online T_ref s"]) or 0.0, num(r["online T_cand s"]) or 0.0
+    dom = "ref" if tr >= 2 * tc else ("cand" if tc >= 2 * tr else "both")
+    pts.append(dict(name=r["instance"], size=r["size"], pair=r["pair"], T=T, To=To, dom=dom, ratio=To / T))
+# ---- geometry: a square plot, log10 axes from 10^lo to 10^hi seconds ----
+SIDE = 2.9                                  # inches
+lo = min(-1, math.floor(math.log10(min(min(p["T"], p["To"]) for p in pts))))
+hi = math.ceil(math.log10(max(max(p["T"], p["To"]) for p in pts)))
+def X(v): return (math.log10(v) - lo) / (hi - lo) * SIDE
+COL = {"ref": "figRef", "cand": "figCand", "both": "figBoth"}
+LABEL = {"ref": "reference-dominated", "cand": "candidate-dominated", "both": "both sides"}
 def esc(s): return s.replace("_", "\\_")
-def panel(rs, x0, title):
-    rs = sorted(rs, key=lambda r: -r["refshare"])
-    L = [f"\\node[anchor=south west,font=\\scriptsize\\bfseries,inner sep=1pt] at ({x0 + LEFT:.3f}in,{0.03:.3f}in) {{{title}}};"]
-    y = 0.0
-    def seg(x, segs, y, h):
-        out = []; cur = x
-        for frac, col in segs:
-            if frac <= 0: continue
-            w = min(frac, XMAX - (cur - x) / W * 1.0) * W / XMAX if False else frac * W / XMAX
-            end = min(cur + w, x + W)
-            if end <= cur: break
-            out.append(f"\\fill[{col}] ({cur:.3f}in,{y:.3f}in) rectangle ({end:.3f}in,{y + h:.3f}in);")
-            cur = end
-        return out
-    for r in rs:
-        y -= 2 * H + GAP
-        T = r["T"]; x = x0 + LEFT
-        on_fr = [r["on"][0] / T, r["on"][1] / T]; rest_on = max(0.0, 1.0 - sum(on_fr))
-        L.append(f"\\node[anchor=east,font=\\tiny,inner sep=1pt] at ({x - 0.04:.3f}in,{y + H + GAP / 2:.3f}in) {{\\textsf{{{esc(r['name'])}}}({r['size']})}};")
-        L += seg(x, [(on_fr[0], COL["ref"]), (on_fr[1], COL["cand"]), (rest_on, COL["rest"])], y + H + GAP, H * 0.92)
-        off_fr = [v / T for v in r["off"]]; rest_off = max(0.0, r["ratio"] - sum(off_fr))
-        ex = COL["refx"] if r["side"] == "ref" else COL["candx"]
-        L += seg(x, [(off_fr[0], ex), (off_fr[1], COL["w"]), (off_fr[2], COL["j"]), (rest_off, COL["rest"])], y, H * 0.92)
-        if r["ratio"] > XMAX:   # cut bar: a break mark and the ratio
-            L.append(f"\\draw[white,line width=1.2pt] ({x + W - 0.05:.3f}in,{y - 0.01:.3f}in) -- ({x + W - 0.02:.3f}in,{y + H:.3f}in);")
-            L.append(f"\\node[anchor=west,font=\\tiny,inner sep=1pt] at ({x + W + 0.02:.3f}in,{y + H / 2:.3f}in) {{{rnd(r['ratio'])}}};")
-        elif r["ratio"] < 0.8 or r["ratio"] > 1.25:
-            L.append(f"\\node[anchor=west,font=\\tiny,inner sep=1pt] at ({x + r['ratio'] * W / XMAX + 0.02:.3f}in,{y + H / 2:.3f}in) {{{rnd(r['ratio'], 2)}}};")
-    # axis: the line at 1 (Online's T) and ticks
-    x = x0 + LEFT; yb = y - 0.05
-    L.append(f"\\draw[black!60,dashed,line width=0.4pt] ({x + W / XMAX:.3f}in,{yb:.3f}in) -- ({x + W / XMAX:.3f}in,0in);")
-    L.append(f"\\draw[black!60,line width=0.4pt] ({x:.3f}in,{yb:.3f}in) -- ({x + W:.3f}in,{yb:.3f}in);")
-    for t in (0, 0.5, 1, 1.5, 2):
-        xt = x + t * W / XMAX
-        L.append(f"\\draw[black!60,line width=0.4pt] ({xt:.3f}in,{yb:.3f}in) -- ({xt:.3f}in,{yb - 0.03:.3f}in);")
-        L.append(f"\\node[anchor=north,font=\\tiny,inner sep=1pt] at ({xt:.3f}in,{yb - 0.03:.3f}in) {{{t:g}}};")
-    return L, yb - 0.16
-C = [r for r in rows if r["pair"] == "C"]; V = [r for r in rows if r["pair"] == "V"]
+def tick(e): return {-1: "0.1", 0: "1", 1: "10", 2: "100", 3: "1000"}.get(e, f"10^{{{e}}}")
 L = ["% generated by daavar/scripts/fig-components.py from tex/tables/table4.csv; do not edit",
-     "\\definecolor{figRef}{HTML}{0072B2}\\definecolor{figCand}{HTML}{E69F00}",
-     "\\begin{tikzpicture}"]
-l1, yb1 = panel(C, 0.0, "conforming pairs"); l2, yb2 = panel(V, LEFT + W + PANEL_GAP, "violating pairs")
-L += l1 + l2
-yb = min(yb1, yb2)
-TOTAL = 2 * LEFT + 2 * W + PANEL_GAP
-L.append(f"\\node[anchor=north,font=\\tiny] at ({LEFT + W / 2:.3f}in,{yb1 - 0.12:.3f}in) {{time, as a multiple of \\online's T}};")
-L.append(f"\\node[anchor=north,font=\\tiny] at ({LEFT + W + PANEL_GAP + LEFT + W / 2:.3f}in,{yb2 - 0.12:.3f}in) {{time, as a multiple of \\online's T}};")
-# legend: two rows at fixed positions
-ly = yb - 0.34; lx = LEFT
-rows_ = [[("figRef", "\\online: T$_{\\mathit{ref}}$", 0.0), ("figCand", "\\online: T$_{\\mathit{cand}}$", 0.95), ("black!15", "remainder of T", 1.95)],
-         [("figRef!45!white", "\\offline: E, reference export", 0.0), ("figCand!45!white", "E, candidate export", 1.55), ("black!45", "W", 2.75), ("black!75", "J", 3.05)]]
-for row in rows_:
-    for col, lab, dx in row:
-        x = lx + dx
-        L.append(f"\\fill[{col}] ({x:.3f}in,{ly:.3f}in) rectangle ({x + 0.12:.3f}in,{ly + 0.08:.3f}in);")
-        L.append(f"\\node[anchor=west,font=\\tiny,inner sep=1pt] at ({x + 0.14:.3f}in,{ly + 0.04:.3f}in) {{{lab}}};")
-    ly -= 0.14
+     "\\definecolor{figRef}{HTML}{0072B2}\\definecolor{figCand}{HTML}{E69F00}\\definecolor{figBoth}{HTML}{009E73}",
+     "\\begin{tikzpicture}[x=1in,y=1in]"]
+d = math.log10(2) / (hi - lo) * SIDE           # the offset of a factor of two
+L.append(f"\\draw[black!70,line width=0.5pt] (0,0) -- ({SIDE:.3f},{SIDE:.3f});")
+L.append(f"\\draw[black!40,dashed,line width=0.4pt] ({d:.3f},0) -- ({SIDE:.3f},{SIDE - d:.3f});")
+L.append(f"\\draw[black!40,dashed,line width=0.4pt] (0,{d:.3f}) -- ({SIDE - d:.3f},{SIDE:.3f});")
+xs = 0.22 * SIDE; L.append(f"\\node[anchor=south,font=\\tiny,black!60,rotate=45,inner sep=1pt] at ({xs:.3f},{xs + d:.3f}) {{\\offline\\ twice as slow}};")
+xf = 0.58 * SIDE; L.append(f"\\node[anchor=north,font=\\tiny,black!60,rotate=45,inner sep=1pt] at ({xf:.3f},{xf - d:.3f}) {{\\offline\\ twice as fast}};")
+L.append(f"\\draw[black!60,line width=0.4pt] (0,0) rectangle ({SIDE:.3f},{SIDE:.3f});")
+for e in range(lo, hi + 1):
+    t = X(10 ** e)
+    L.append(f"\\draw[black!60,line width=0.4pt] ({t:.3f},0) -- ({t:.3f},-0.04);")
+    L.append(f"\\node[anchor=north,font=\\tiny,inner sep=2pt] at ({t:.3f},-0.04) {{${tick(e)}$}};")
+    L.append(f"\\draw[black!60,line width=0.4pt] (0,{t:.3f}) -- (-0.04,{t:.3f});")
+    L.append(f"\\node[anchor=east,font=\\tiny,inner sep=2pt] at (-0.04,{t:.3f}) {{${tick(e)}$}};")
+L.append(f"\\node[anchor=north,font=\\scriptsize] at ({SIDE / 2:.3f},-0.2) {{T of \\online\\ (s)}};")
+L.append(f"\\node[anchor=south,font=\\scriptsize,rotate=90] at (-0.4,{SIDE / 2:.3f}) {{T of \\offline\\ (s)}};")
+def mark(x, y, c, pair):
+    if pair == "C": return f"\\fill[{c},draw=white,line width=0.4pt] ({x:.3f},{y:.3f}) circle (1.8pt);"
+    return f"\\fill[{c},draw=white,line width=0.4pt] ({x:.3f},{y + 0.03:.3f}) -- ({x - 0.028:.3f},{y - 0.02:.3f}) -- ({x + 0.028:.3f},{y - 0.02:.3f}) -- cycle;"
+for p in sorted(pts, key=lambda p: -p["T"]):
+    L.append(mark(X(p["T"]), X(p["To"]), COL[p["dom"]], p["pair"]))
+# names for the points at least a factor 1.5 off the diagonal, placed on their side of the line and away from the
+# labels already placed (a greedy choice among a few positions; boxes are estimated from the label's length)
+boxes = []
+def overlaps(b): return any(not (b[2] < o[0] or o[2] < b[0] or b[3] < o[1] or o[3] < b[1]) for o in boxes)
+for p in sorted(pts, key=lambda p: p["To"]):
+    if 1 / 1.5 < p["ratio"] < 1.5: continue
+    x, y = X(p["T"]), X(p["To"]); below = p["ratio"] < 1
+    txt = f"{p['name']}({p['size']})"; w, h = 0.036 * len(txt) + 0.04, 0.1
+    cands = [("north west", 0.03, -0.02), ("west", 0.05, 0.0), ("north", 0.0, -0.04), ("south west", 0.03, 0.02)] if below else \
+            [("south east", -0.03, 0.02), ("east", -0.05, 0.0), ("south", 0.0, 0.04), ("north east", -0.03, -0.02)]
+    for anchor, dx, dy in cands:
+        ax, ay = x + dx, y + dy
+        x0 = ax if "west" in anchor else (ax - w if "east" in anchor else ax - w / 2)
+        y0 = ay if "south" in anchor else (ay - h if "north" in anchor else ay - h / 2)
+        b = (x0, y0, x0 + w, y0 + h)
+        if not overlaps(b): break
+    boxes.append(b)
+    L.append(f"\\node[anchor={anchor},font=\\tiny,inner sep=0.5pt] at ({ax:.3f},{ay:.3f}) {{\\textsf{{{esc(p['name'])}}}({p['size']})}};")
+# legend above the plot: the three colours, then the two marks
+ly = SIDE + 0.26
+for i, (k, lab) in enumerate(LABEL.items()):
+    x = i * 1.0
+    L.append(f"\\fill[{COL[k]}] ({x:.3f},{ly:.3f}) circle (1.8pt);\\node[anchor=west,font=\\tiny,inner sep=1pt] at ({x + 0.05:.3f},{ly:.3f}) {{{lab}}};")
+y = ly - 0.14
+L.append(mark(0.0, y, "black!60", "C") + f"\\node[anchor=west,font=\\tiny,inner sep=1pt] at (0.05,{y:.3f}) {{conforming pair}};")
+L.append(mark(1.0, y, "black!60", "V") + f"\\node[anchor=west,font=\\tiny,inner sep=1pt] at (1.05,{y:.3f}) {{violating pair}};")
 L.append("\\end{tikzpicture}")
 open(OUT, "w").write("\n".join(L) + "\n")
-print(f"{len(C)} conforming and {len(V)} violating pairs")
+n = {k: sum(1 for p in pts if p["dom"] == k) for k in COL}
+print(f"{len(pts)} pairs; {n}; Offline faster on {sum(1 for p in pts if p['ratio'] < 1)}, within 25% on {sum(1 for p in pts if 0.8 < p['ratio'] < 1.25)}")
