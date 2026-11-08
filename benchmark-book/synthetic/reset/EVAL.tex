@@ -139,7 +139,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): reset 10 8 bag, ctl 10 8 bag, twin 10 8 bag, ctl 10 9 bag, reset 10 9 bag, ctl 10 10 bag, reset 10 10 bag, twin 11 1 bag, ctl 11 1 bag, reset 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, ctl 11 4 bag, twin 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, twin 12 3 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 4 bag, ctl 12 4 bag, \ldots\ (38 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, ctl 10 8 bag, reset 10 8 bag, reset 10 9 bag, ctl 10 9 bag, reset 10 10 bag, ctl 10 10 bag, ctl 11 1 bag, twin 11 1 bag, reset 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 3 bag, twin 12 4 bag, reset 12 4 bag, \ldots\ (38 instances in all).\par
 left out by the table rules (invalid: foreign load): reset 20 11 bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
@@ -275,7 +275,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): reset 10 8 bag, ctl 10 8 bag, twin 10 8 bag, twin 11 1 bag, ctl 11 1 bag, reset 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, ctl 11 4 bag, twin 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, twin 12 3 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 4 bag, ctl 12 4 bag, reset 12 4 bag, ctl 13 1 bag, reset 13 1 bag, twin 13 1 bag, \ldots\ (34 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): twin 10 8 bag, ctl 10 8 bag, reset 10 8 bag, ctl 11 1 bag, twin 11 1 bag, reset 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 3 bag, twin 12 4 bag, reset 12 4 bag, ctl 12 4 bag, reset 13 1 bag, ctl 13 1 bag, twin 13 1 bag, \ldots\ (34 instances in all).\par
 the tool ended with an error (exit-101): reset 20 11 bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
@@ -408,6 +408,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): twin 11 1 bag, ctl 11 1 bag, reset 11 1 bag, ctl 11 3 bag, twin 11 3 bag, reset 11 3 bag, ctl 11 4 bag, twin 11 4 bag, reset 11 4 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 1 bag, twin 12 3 bag, ctl 12 3 bag, reset 12 3 bag, twin 12 4 bag, ctl 12 4 bag, reset 12 4 bag, ctl 13 1 bag, reset 13 1 bag, twin 13 1 bag, ctl 13 3 bag, twin 13 3 bag, reset 13 3 bag, \ldots\ (27 instances in all).\par
-refused (an input missing at run time): ctl 10 9 bag, reset 10 9 bag, ctl 10 10 bag, reset 10 10 bag.\par
+planned but never scheduled (grid points beyond the ladder): ctl 11 1 bag, twin 11 1 bag, reset 11 1 bag, twin 11 3 bag, ctl 11 3 bag, reset 11 3 bag, reset 11 4 bag, ctl 11 4 bag, twin 11 4 bag, twin 12 1 bag, reset 12 1 bag, ctl 12 1 bag, twin 12 3 bag, reset 12 3 bag, ctl 12 3 bag, twin 12 4 bag, reset 12 4 bag, ctl 12 4 bag, reset 13 1 bag, ctl 13 1 bag, twin 13 1 bag, ctl 13 3 bag, twin 13 3 bag, reset 13 3 bag, \ldots\ (27 instances in all).\par
+refused (an input missing at run time): reset 10 9 bag, ctl 10 9 bag, reset 10 10 bag, ctl 10 10 bag.\par
 \end{document}

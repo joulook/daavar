@@ -121,7 +121,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 20 memo bag, 20 batched bag, 20 delegating-prev bag, 20 batched-swap bag, 20 delegating bag, 20 memo-ignore-args bag.\par
+planned but never scheduled (grid points beyond the ladder): 20 memo bag, 20 delegating bag, 20 batched bag, 20 delegating-prev bag, 20 batched-swap bag, 20 memo-ignore-args bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -181,8 +181,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
-refused (an input missing at run time): 1 bag delegating-prev, 1 bag batched, 1 bag batched-swap, 1 bag memo, 1 bag delegating, 1 bag memo-ignore-args, 2 bag delegating-prev, 2 bag delegating, 2 bag memo, 2 bag batched, 2 bag memo-ignore-args, 2 bag batched-swap, 3 bag batched-swap, 3 bag delegating, 3 bag batched.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
+refused (an input missing at run time): 1 bag delegating-prev, 1 bag delegating, 1 bag batched, 1 bag memo, 1 bag batched-swap, 1 bag memo-ignore-args, 2 bag batched-swap, 2 bag batched, 2 bag delegating-prev, 2 bag memo, 2 bag memo-ignore-args, 2 bag delegating, 3 bag batched-swap, 3 bag delegating, 3 bag batched.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -257,7 +257,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -332,7 +332,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 1 bag delegating-prev, 1 bag delegating, 1 bag batched, 1 bag batched-swap, 1 bag memo, 1 bag memo-ignore-args, 2 bag delegating-prev, 2 bag delegating, 2 bag batched-swap, 2 bag memo-ignore-args, 2 bag memo, 2 bag batched, 3 bag delegating-prev, 3 bag batched, 3 bag batched-swap, 3 bag delegating, 3 bag memo, 3 bag memo-ignore-args, 4 bag memo, 4 bag batched-swap, 4 bag delegating-prev, 4 bag memo-ignore-args, 4 bag delegating, 4 bag batched.\par
+planned but never scheduled (grid points beyond the ladder): 1 bag batched-swap, 1 bag memo-ignore-args, 1 bag delegating-prev, 1 bag memo, 1 bag delegating, 1 bag batched, 2 bag batched-swap, 2 bag memo, 2 bag delegating-prev, 2 bag batched, 2 bag delegating, 2 bag memo-ignore-args, 3 bag memo, 3 bag batched, 3 bag memo-ignore-args, 3 bag batched-swap, 3 bag delegating, 3 bag delegating-prev, 4 bag delegating-prev, 4 bag batched-swap, 4 bag batched, 4 bag memo, 4 bag delegating, 4 bag memo-ignore-args.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -480,7 +480,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -555,7 +555,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -630,7 +630,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -705,7 +705,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-planned but never scheduled (grid points beyond the ladder): 5 bag batched-swap, 5 bag delegating, 5 bag batched, 5 bag delegating-prev, 5 bag memo-ignore-args, 5 bag memo.\par
+planned but never scheduled (grid points beyond the ladder): 5 bag delegating, 5 bag memo-ignore-args, 5 bag memo, 5 bag delegating-prev, 5 bag batched-swap, 5 bag batched.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{batched}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

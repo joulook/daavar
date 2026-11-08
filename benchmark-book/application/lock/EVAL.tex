@@ -82,7 +82,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): wrong-round 2 3 fifo, never-grant 2 3 fifo, double-grant 2 3 fifo, double-grant 2 4 fifo, never-grant 2 4 fifo, wrong-round 2 4 fifo, double-grant 2 5 fifo, wrong-round 2 5 fifo, never-grant 2 5 fifo, wrong-round 2 6 fifo, never-grant 2 6 fifo, double-grant 2 6 fifo, wrong-round 3 4 fifo, never-grant 3 4 fifo, wrong-round 3 4 fifo.t16.p.r3, control-lifo 3 5 fifo, fifo 3 5 fifo, wrong-round 3 5 fifo, never-grant 3 5 fifo, fifo 3 5 fifo.t16.p.r3, wrong-round 3 5 fifo.t16.p.r3, control-lifo 3 6 fifo, fifo 3 6 fifo, never-grant 3 6 fifo, \ldots\ (94 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): double-grant 2 3 fifo, wrong-round 2 3 fifo, never-grant 2 3 fifo, double-grant 2 4 fifo, wrong-round 2 4 fifo, never-grant 2 4 fifo, never-grant 2 5 fifo, double-grant 2 5 fifo, wrong-round 2 5 fifo, wrong-round 2 6 fifo, never-grant 2 6 fifo, double-grant 2 6 fifo, never-grant 3 4 fifo, wrong-round 3 4 fifo, wrong-round 3 4 fifo.t16.p.r3, control-lifo 3 5 fifo, fifo 3 5 fifo, never-grant 3 5 fifo, wrong-round 3 5 fifo, fifo 3 5 fifo.t16.p.r3, wrong-round 3 5 fifo.t16.p.r3, wrong-round 3 6 fifo, control-lifo 3 6 fifo, fifo 3 6 fifo, \ldots\ (94 instances in all).\par
 left out by the table rules (ok): fifo 2 5 fifo.\par
 left out by the table rules (timeout): fifo 3 4 fifo.\par
 skipped: a smaller size had reached its limit: double-grant 3 4 fifo, double-grant 3 5 fifo, double-grant 3 6 fifo.\par
@@ -187,9 +187,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): fifo 3 4 fifo, fifo 3 5 fifo, wrong-round 3 5 fifo, fifo 3 5 fifo.t16.p.r3, wrong-round 3 5 fifo.t16.p.r3, wrong-round 3 6 fifo, never-grant 3 6 fifo, never-grant 4 4 fifo, double-grant 4 4 fifo, wrong-round 4 4 fifo, wrong-round 4 5 fifo, never-grant 4 5 fifo, never-grant 4 6 fifo, wrong-round 4 6 fifo, never-grant 5 3 fifo, wrong-round 5 3 fifo, double-grant 5 3 fifo, never-grant 5 4 fifo, wrong-round 5 4 fifo, double-grant 5 4 fifo, double-grant 5 5 fifo, wrong-round 5 5 fifo, never-grant 5 5 fifo, never-grant 5 6 fifo, \ldots\ (43 instances in all).\par
-left out by the table rules (ok): fifo 2 5 fifo, fifo 3 4 fifo, wrong-round 3 4 fifo.\par
-skipped: a smaller size had reached its limit: double-grant 3 5 fifo, double-grant 3 6 fifo, control-lifo 3 6 fifo, fifo 3 6 fifo, fifo 4 4 fifo, double-grant 4 4 fifo, control-lifo 4 4 fifo, fifo 4 5 fifo, double-grant 4 5 fifo, control-lifo 4 5 fifo, fifo 4 6 fifo, double-grant 4 6 fifo, control-lifo 4 6 fifo, fifo 5 3 fifo, control-lifo 5 3 fifo, control-lifo 5 4 fifo, fifo 5 4 fifo, control-lifo 5 5 fifo, fifo 5 5 fifo, fifo 5 6 fifo, control-lifo 5 6 fifo, fifo 6 2 fifo, control-lifo 6 2 fifo, fifo 6 3 fifo, \ldots\ (31 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): fifo 3 4 fifo, fifo 3 5 fifo, wrong-round 3 5 fifo, fifo 3 5 fifo.t16.p.r3, wrong-round 3 5 fifo.t16.p.r3, wrong-round 3 6 fifo, never-grant 3 6 fifo, wrong-round 4 4 fifo, double-grant 4 4 fifo, never-grant 4 4 fifo, never-grant 4 5 fifo, wrong-round 4 5 fifo, never-grant 4 6 fifo, wrong-round 4 6 fifo, wrong-round 5 3 fifo, never-grant 5 3 fifo, double-grant 5 3 fifo, wrong-round 5 4 fifo, double-grant 5 4 fifo, never-grant 5 4 fifo, wrong-round 5 5 fifo, never-grant 5 5 fifo, double-grant 5 5 fifo, wrong-round 5 6 fifo, \ldots\ (43 instances in all).\par
+left out by the table rules (ok): fifo 2 5 fifo, wrong-round 3 4 fifo, fifo 3 4 fifo.\par
+skipped: a smaller size had reached its limit: double-grant 3 5 fifo, double-grant 3 6 fifo, control-lifo 3 6 fifo, fifo 3 6 fifo, fifo 4 4 fifo, control-lifo 4 4 fifo, double-grant 4 4 fifo, control-lifo 4 5 fifo, fifo 4 5 fifo, double-grant 4 5 fifo, control-lifo 4 6 fifo, double-grant 4 6 fifo, fifo 4 6 fifo, fifo 5 3 fifo, control-lifo 5 3 fifo, control-lifo 5 4 fifo, fifo 5 4 fifo, fifo 5 5 fifo, control-lifo 5 5 fifo, control-lifo 5 6 fifo, fifo 5 6 fifo, fifo 6 2 fifo, control-lifo 6 2 fifo, control-lifo 6 3 fifo, \ldots\ (31 instances in all).\par
 \section*{offline}
 \subsection*{offline: pair \textsf{control-lifo}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -250,7 +250,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): wrong-round 2 3 fifo, control-lifo 2 3 fifo, never-grant 2 3 fifo, double-grant 2 3 fifo, fifo 2 3 fifo, double-grant 2 4 fifo, fifo 2 4 fifo, control-lifo 2 4 fifo, never-grant 2 4 fifo, wrong-round 2 4 fifo, control-lifo 2 5 fifo, double-grant 2 5 fifo, fifo 2 5 fifo, wrong-round 2 5 fifo, never-grant 2 5 fifo, wrong-round 2 6 fifo, fifo 2 6 fifo, never-grant 2 6 fifo, control-lifo 2 6 fifo, double-grant 2 6 fifo, double-grant 3 4 fifo, control-lifo 3 4 fifo, wrong-round 3 4 fifo, never-grant 3 4 fifo, \ldots\ (112 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): fifo 2 3 fifo, double-grant 2 3 fifo, wrong-round 2 3 fifo, control-lifo 2 3 fifo, never-grant 2 3 fifo, control-lifo 2 4 fifo, fifo 2 4 fifo, double-grant 2 4 fifo, wrong-round 2 4 fifo, never-grant 2 4 fifo, never-grant 2 5 fifo, control-lifo 2 5 fifo, double-grant 2 5 fifo, wrong-round 2 5 fifo, fifo 2 5 fifo, wrong-round 2 6 fifo, fifo 2 6 fifo, control-lifo 2 6 fifo, never-grant 2 6 fifo, double-grant 2 6 fifo, fifo 3 4 fifo, double-grant 3 4 fifo, control-lifo 3 4 fifo, never-grant 3 4 fifo, \ldots\ (112 instances in all).\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-lifo}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -307,7 +307,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-planned but never scheduled (grid points beyond the ladder): control-lifo 3 4 fifo, never-grant 3 4 fifo, control-lifo 4 3 fifo, never-grant 4 3 fifo, wrong-round 4 3 fifo, fifo 4 3 fifo.\par
+planned but never scheduled (grid points beyond the ladder): never-grant 3 4 fifo, control-lifo 3 4 fifo, wrong-round 4 3 fifo, never-grant 4 3 fifo, fifo 4 3 fifo, control-lifo 4 3 fifo.\par
 refused (an input missing at run time): double-grant 3 3 fifo.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{control-lifo}, model fifo, expected conforms}
@@ -365,7 +365,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-planned but never scheduled (grid points beyond the ladder): control-lifo 3 4 fifo, never-grant 3 4 fifo, control-lifo 4 3 fifo, never-grant 4 3 fifo, wrong-round 4 3 fifo, fifo 4 3 fifo.\par
+planned but never scheduled (grid points beyond the ladder): never-grant 3 4 fifo, control-lifo 3 4 fifo, wrong-round 4 3 fifo, never-grant 4 3 fifo, fifo 4 3 fifo, control-lifo 4 3 fifo.\par
 skipped: a smaller size had reached its limit: double-grant 3 3 fifo.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{control-lifo}, model fifo, expected conforms}

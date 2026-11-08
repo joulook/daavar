@@ -76,8 +76,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 10 fifo.t16.p.r3, ring split 10 fifo.t16.p.r3, ring conf 11 fifo, ring split 11 fifo, ring split 11 fifo.t16.p.r3.\par
-skipped: a smaller size had reached its limit: leader silent 6 fifo, leader conf 6 fifo, leader split 6 fifo, leader silent 7 fifo, leader conf 7 fifo, leader split 7 fifo, leader conf 8 fifo, leader split 8 fifo, ring split 8 fifo, leader silent 8 fifo, ring conf 9 fifo, ring split 9 fifo, leader split 9 fifo, leader silent 9 fifo, leader conf 9 fifo, ring conf 10 fifo, ring split 10 fifo.\par
+planned but never scheduled (grid points beyond the ladder): ring split 9 fifo, ring conf 9 fifo, ring conf 10 fifo, ring split 10 fifo, ring split 10 fifo.t16.p.r3, ring conf 10 fifo.t16.p.r3, ring conf 11 fifo, ring split 11 fifo, ring split 11 fifo.t16.p.r3.\par
+skipped: a smaller size had reached its limit: leader silent 6 fifo, leader split 6 fifo, leader conf 6 fifo, leader conf 7 fifo, leader split 7 fifo, leader silent 7 fifo, leader split 8 fifo, leader silent 8 fifo, ring split 8 fifo, leader conf 8 fifo, ring split 9 fifo, leader silent 9 fifo, leader split 9 fifo, leader conf 9 fifo, ring conf 9 fifo, ring conf 10 fifo, ring split 10 fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{leader-conf}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -155,9 +155,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): ring conf 10 fifo.t16.p.r3, ring split 10 fifo.t16.p.r3, ring split 11 fifo, ring split 12 fifo, ring conf 12 fifo, ring split 14 fifo, ring conf 14 fifo, ring conf 15 fifo, ring split 15 fifo, ring conf 16 fifo, ring split 16 fifo, ring conf 17 fifo.\par
-skipped: a smaller size had reached its limit: leader silent 6 fifo, leader conf 6 fifo, leader split 6 fifo, leader silent 7 fifo, leader conf 7 fifo, leader split 7 fifo, leader conf 8 fifo, leader split 8 fifo, leader silent 8 fifo, leader split 9 fifo, leader silent 9 fifo, leader conf 9 fifo.\par
-left out by the table rules (ok): ring split 9 fifo, ring conf 9 fifo, ring split 10 fifo.\par
+planned but never scheduled (grid points beyond the ladder): ring split 10 fifo.t16.p.r3, ring conf 10 fifo.t16.p.r3, ring split 11 fifo, ring conf 12 fifo, ring split 12 fifo, ring conf 14 fifo, ring split 14 fifo, ring split 15 fifo, ring conf 15 fifo, ring split 16 fifo, ring conf 16 fifo, ring conf 17 fifo.\par
+skipped: a smaller size had reached its limit: leader silent 6 fifo, leader split 6 fifo, leader conf 6 fifo, leader conf 7 fifo, leader split 7 fifo, leader silent 7 fifo, leader split 8 fifo, leader silent 8 fifo, leader conf 8 fifo, leader silent 9 fifo, leader split 9 fifo, leader conf 9 fifo.\par
+left out by the table rules (ok): ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo.\par
 left out by the table rules (timeout): ring conf 10 fifo, ring conf 11 fifo.\par
 the tool ended with an error (exit-101): ring split 12 fifo.\par
 \section*{offline}
@@ -228,10 +228,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 10 fifo.vs-ring-conf.p.r3, ring split 10 fifo.vs-ring-conf.p.r3, ring conf 11 fifo, ring split 11 fifo.vs-ring-conf.p.r3, ring split 12 fifo.\par
-left out by the table rules (ok): leader conf 4 fifo, ring conf 4 fifo, ring split 4 fifo, leader silent 4 fifo, leader split 4 fifo, ring split 5 fifo, ring conf 5 fifo, ring conf 6 fifo, ring split 6 fifo, ring split 7 fifo, ring conf 7 fifo, ring conf 8 fifo, ring split 8 fifo, ring split 9 fifo.\par
-skipped: a smaller size had reached its limit: leader conf 5 fifo, leader silent 5 fifo, leader split 5 fifo, leader silent 6 fifo, leader conf 6 fifo, leader split 6 fifo, leader silent 7 fifo, leader conf 7 fifo, leader split 7 fifo, leader conf 8 fifo, leader split 8 fifo, leader silent 8 fifo, leader split 9 fifo, leader silent 9 fifo, leader conf 9 fifo, ring conf 10 fifo.\par
-left out by the table rules (memory): ring split 9 fifo, ring conf 9 fifo.\par
+planned but never scheduled (grid points beyond the ladder): ring split 9 fifo, ring conf 9 fifo, ring conf 10 fifo, ring split 10 fifo, ring conf 10 fifo.vs-ring-conf.p.r3, ring split 10 fifo.vs-ring-conf.p.r3, ring conf 11 fifo, ring split 11 fifo.vs-ring-conf.p.r3, ring split 12 fifo.\par
+left out by the table rules (ok): leader silent 4 fifo, ring split 4 fifo, leader conf 4 fifo, ring conf 4 fifo, leader split 4 fifo, ring split 5 fifo, ring conf 5 fifo, ring conf 6 fifo, ring split 6 fifo, ring split 7 fifo, ring conf 7 fifo, ring split 8 fifo, ring conf 8 fifo, ring split 9 fifo.\par
+skipped: a smaller size had reached its limit: leader split 5 fifo, leader silent 5 fifo, leader conf 5 fifo, leader silent 6 fifo, leader split 6 fifo, leader conf 6 fifo, leader conf 7 fifo, leader split 7 fifo, leader silent 7 fifo, leader split 8 fifo, leader silent 8 fifo, leader conf 8 fifo, leader silent 9 fifo, leader split 9 fifo, leader conf 9 fifo, ring conf 10 fifo.\par
+left out by the table rules (memory): ring conf 9 fifo, ring split 9 fifo.\par
 left out by the table rules (timeout): ring split 10 fifo.\par
 refused (an input missing at run time): ring split 11 fifo.\par
 \section*{cross offline, Java implementation against the Rust specification}
@@ -290,7 +290,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): leader conf 4 fifo, ring conf 4 fifo, ring split 4 fifo, leader silent 4 fifo, leader split 4 fifo, ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
+planned but never scheduled (grid points beyond the ladder): leader silent 4 fifo, ring split 4 fifo, leader conf 4 fifo, ring conf 4 fifo, leader split 4 fifo, ring split 9 fifo, ring conf 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{leader-conf}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -345,8 +345,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): leader conf 4 fifo, ring split 4 fifo, leader silent 4 fifo, leader split 4 fifo, ring conf 4 fifo, ring split 5 fifo, ring conf 5 fifo, ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo.\par
-skipped: a smaller size had reached its limit: ring conf 11 fifo, ring split 11 fifo.\par
+planned but never scheduled (grid points beyond the ladder): leader silent 4 fifo, ring split 4 fifo, leader conf 4 fifo, ring conf 4 fifo, leader split 4 fifo, ring split 5 fifo, ring conf 5 fifo, ring split 9 fifo, ring conf 9 fifo, ring split 10 fifo, ring conf 10 fifo.\par
+skipped: a smaller size had reached its limit: ring split 11 fifo, ring conf 11 fifo.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{leader-conf}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -401,7 +401,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): ring split 2 fifo, leader conf 2 fifo, leader silent 2 fifo, ring conf 2 fifo, leader split 2 fifo, ring split 3 fifo, leader conf 3 fifo, ring conf 3 fifo, leader split 3 fifo, leader silent 3 fifo, ring split 4 fifo, ring conf 4 fifo, ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
+planned but never scheduled (grid points beyond the ladder): ring conf 2 fifo, leader conf 2 fifo, leader split 2 fifo, ring split 2 fifo, leader silent 2 fifo, leader conf 3 fifo, ring conf 3 fifo, leader silent 3 fifo, leader split 3 fifo, ring split 3 fifo, ring split 4 fifo, ring conf 4 fifo, ring split 9 fifo, ring conf 9 fifo, ring conf 10 fifo, ring split 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{leader-conf}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -456,8 +456,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): ring split 2 fifo, leader conf 2 fifo, leader silent 2 fifo, ring conf 2 fifo, leader split 2 fifo, ring split 3 fifo, leader conf 3 fifo, ring conf 3 fifo, leader split 3 fifo, leader silent 3 fifo, ring split 4 fifo, ring conf 4 fifo.\par
-planned but never scheduled (grid points beyond the ladder): ring conf 9 fifo, ring split 9 fifo, ring split 10 fifo, ring conf 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
+left out by the table rules (ok): ring conf 2 fifo, leader conf 2 fifo, leader split 2 fifo, ring split 2 fifo, leader silent 2 fifo, leader conf 3 fifo, ring conf 3 fifo, leader silent 3 fifo, leader split 3 fifo, ring split 3 fifo, ring split 4 fifo, ring conf 4 fifo.\par
+planned but never scheduled (grid points beyond the ladder): ring split 9 fifo, ring conf 9 fifo, ring conf 10 fifo, ring split 10 fifo, ring conf 11 fifo, ring split 11 fifo.\par
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{ring-split}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

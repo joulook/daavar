@@ -44,8 +44,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-the tool ended with an error (exit-101): 4 shared-bucket fifo, 4 lost-set fifo, 4 v3 fifo.\par
-skipped: a smaller size had reached its limit: 5 shared-bucket fifo, 5 lost-set fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 shared-bucket fifo, 8 lost-set fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
+the tool ended with an error (exit-101): 4 lost-set fifo, 4 shared-bucket fifo, 4 v3 fifo.\par
+skipped: a smaller size had reached its limit: 5 lost-set fifo, 5 shared-bucket fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 lost-set fifo, 8 shared-bucket fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{lost-set}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -81,8 +81,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-the tool ended with an error (exit-101): 4 shared-bucket fifo, 4 lost-set fifo, 4 v3 fifo.\par
-skipped: a smaller size had reached its limit: 5 shared-bucket fifo, 5 lost-set fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 shared-bucket fifo, 8 lost-set fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
+the tool ended with an error (exit-101): 4 lost-set fifo, 4 shared-bucket fifo, 4 v3 fifo.\par
+skipped: a smaller size had reached its limit: 5 lost-set fifo, 5 shared-bucket fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 lost-set fifo, 8 shared-bucket fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{lost-set}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -118,7 +118,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 4 lost-set fifo, 4 shared-bucket fifo, 4 v3 fifo, 5 shared-bucket fifo, 5 lost-set fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 shared-bucket fifo, 8 lost-set fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
+skipped: a smaller size had reached its limit: 4 lost-set fifo, 4 shared-bucket fifo, 4 v3 fifo, 5 lost-set fifo, 5 shared-bucket fifo, 5 v3 fifo, 6 shared-bucket fifo, 6 lost-set fifo, 6 v3 fifo, 7 shared-bucket fifo, 7 lost-set fifo, 7 v3 fifo, 8 lost-set fifo, 8 shared-bucket fifo, 8 v3 fifo, 9 lost-set fifo, 9 shared-bucket fifo, 9 v3 fifo.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{lost-set}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -318,7 +318,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-refused (an input missing at run time): 2 fifo lost-set, 2 fifo shared-bucket, 2 fifo v3, 3 fifo shared-bucket, 3 fifo lost-set, 3 fifo v3.\par
+refused (an input missing at run time): 2 fifo shared-bucket, 2 fifo lost-set, 2 fifo v3, 3 fifo lost-set, 3 fifo shared-bucket, 3 fifo v3.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{lost-set}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -348,7 +348,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: 2 fifo lost-set, 2 fifo shared-bucket, 2 fifo v3, 3 fifo shared-bucket, 3 fifo lost-set, 3 fifo v3.\par
+skipped: a smaller size had reached its limit: 2 fifo shared-bucket, 2 fifo lost-set, 2 fifo v3, 3 fifo lost-set, 3 fifo shared-bucket, 3 fifo v3.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{lost-set}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -412,5 +412,5 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-skipped: a smaller size had reached its limit: 2 fifo lost-set, 2 fifo shared-bucket, 2 fifo v3, 3 fifo shared-bucket, 3 fifo lost-set, 3 fifo v3.\par
+skipped: a smaller size had reached its limit: 2 fifo shared-bucket, 2 fifo lost-set, 2 fifo v3, 3 fifo lost-set, 3 fifo shared-bucket, 3 fifo v3.\par
 \end{document}

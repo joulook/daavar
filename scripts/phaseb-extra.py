@@ -25,19 +25,23 @@ def paper_name(study, x):   # a study label in the paper's words
     if re.match(r"^(port|code|paper) \(", x): x = PREFIX.get(study, "") + x
     return x
 def norm(s):   # a comparable form of a pair side, from the paper's macros or the study labels
-    s = re.sub(r"\\s(raft|paper|zab|der|lin|cas|rr|bk|pc|cc)\b", lambda m: "S_" + m.group(1), s)
+    s = re.sub(r"\\s(raft|paper|omni|zab|der|lin|cas|pmd|chain|swift|pine|rr|bk|pc|cc)\b", lambda m: "S_" + m.group(1), s)
+    s = s.replace("S_omni", "S_paper").replace("S_pmd", "S_der").replace("S_chain", "S_der").replace("S_swift", "S_der").replace("S_pine", "S_der")   # the study labels keep the old names
+    s = re.sub(r"^(ZooKeeper|ChainPaxos|SwiftPaxos|Pineapple|Cassandra|3FS|BookKeeper|CockroachDB|ScalarDB) (port|code|paper)", r"\2", s)   # the paper's tables group by system and drop the prefix
     s = re.sub(r"S\$\\?_\{\\mathrm\{(\w+)\}\}\$", r"S_\1", s)
     s = s.replace("$^{\\ast}$", "").replace("\\_", "_")
     return re.sub(r"\s+", " ", s).strip()
 def row_key(study, cand, ref, size): return (norm(paper_name(study, cand)), norm(paper_name(study, ref)), size)
 # ---- the rows the paper's tables already show ----
 shown = set(); unmatched = []
-for f in ("spec-conf", "spec-viol"):
+for f in ("realsw", "agents-rust"):   # 2026-11-09: the paper's Phase C and D tables (the former spec-conf/spec-viol)
     pair = None
     for line in open(f"{R}/PLDI/tex/tables/eval2/{f}.tex"):
         if "&" not in line or "multicolumn" in line or line.lstrip().startswith(("%", "pair")) or re.match(r"\s*\\(toprule|midrule|bottomrule|cmidrule|begin|end|caption|label|scriptsize)", line): continue
         cells = [c.strip() for c in line.split("&")]
         if cells[0]: pair = cells[0]
+        if len(cells) > 3 and cells[2] and ("\\tf" in cells[2] or "\\jmc" in cells[2]): del cells[2]   # the real-software table has a tools column
+        if cells[0] and "\\jmc" in cells[0]: continue
         size = re.sub(r"\\pendg\{([^}]*)\}", r"\1", cells[1]).strip()
         if not pair or not size: continue
         p = pair; m = re.search(r" \((v1nolin|v1)\)", p)
