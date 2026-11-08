@@ -5,15 +5,15 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{2pc} (a1-commit)}
 \author{}
-\date{generated 2026-11-05 from brain-data bb4df53ad 2026-11-05 15:31:21 +0100}
+\date{generated 2026-11-08 from brain-data 614b86250 2026-11-08 11:41:25 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): correct: expected conforms (n=1 is refused: the program never spawns visible p1); control-reverse: expected conforms (n=1 is refused: the program never spawns visible p1); eager: expected violation (n=1 is refused: the program never spawns visible p1); early-abort: expected violation (n=1 is refused: the program never spawns visible p1); silent: expected violation (n=1 is refused: the program never spawns visible p1). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): correct: expected conforms (n=1 is refused: the program never spawns visible p1); control-reverse: expected conforms (n=1 is refused: the program never spawns visible p1); eager: expected violation (n=1 is refused: the program never spawns visible p1); early-abort: expected violation (n=1 is refused: the program never spawns visible p1); silent: expected violation (n=1 is refused: the program never spawns visible p1). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2,1 & 16 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & 4 & 29 & brain03, 2026-11-03 \\
@@ -26,20 +26,20 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \subsection*{stateless: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2,1 & 16 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & 4 & 30 & brain03, 2026-11-03 \\
 \color{blue} 2,2 & 256 & 64 & conforms & 0.1 & 4 & 1 h, 250 GB & 16 & 1847 & brain03, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB & 5 & 30 & brain03, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & conforms & 4.2 & 8 & 1 h, 250 GB & 25 & 3219 & brain03, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & conforms & 4.2 & 2 & 48 h, 250 GB & 26 & 3177 & brain05, 2026-11-07 \\
 \color{blue} 5,3 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateless: pair \textsf{eager}, model fifo, expected violation}
 \begin{longtable}{@{}rrrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2,1 & 16 & 8 & 5 & violation & 0.0 & 4 & 1 h, 250 GB & 8 & 101 & brain03, 2026-11-03 \\
@@ -52,20 +52,20 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \subsection*{stateless: pair \textsf{early-abort}, model fifo, expected violation}
 \begin{longtable}{@{}rrrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2,1 & 16 & 8 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 7 & 83 & brain03, 2026-11-03 \\
 \color{blue} 2,2 & 256 & 64 & 48 & violation & 0.6 & 4 & 1 h, 250 GB & 57 & 13455 & brain03, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & 32 & violation & 0.1 & 4 & 1 h, 250 GB & 36 & 545 & brain03, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & 139712 & violation & 462.9 & 19 & 1 h, 250 GB & 139728 & 35768350 & brain03, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & 139712 & violation & 390.6 & 19 & 48 h, 250 GB & 139728 & 35767283 & brain05, 2026-11-07 \\
 \color{blue} 5,3 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{stateless: pair \textsf{silent}, model fifo, expected violation}
 \begin{longtable}{@{}rrrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2,1 & 16 & 8 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & 8 & 128 & brain03, 2026-11-03 \\
@@ -76,8 +76,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 4 fifo, eager 2 4 fifo, correct 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, correct 2 5 fifo, eager 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, eager 3 3 fifo, early-abort 3 3 fifo, silent 3 3 fifo, correct 3 3 fifo, \ldots\ (95 instances in all).\par
-skipped: a smaller size had reached its limit: eager 6 4 fifo, early-abort 6 4 fifo, correct 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, eager 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, correct 8 6 fifo, control-reverse 8 6 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, silent 9 7 fifo, early-abort 9 7 fifo.\par
+planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 3 fifo, silent 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, correct 2 5 fifo, control-reverse 2 5 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, silent 3 3 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, \ldots\ (101 instances in all).\par
+left out by the table rules (ok): correct 4 2 fifo, early-abort 4 2 fifo.\par
+skipped: a smaller size had reached its limit: correct 6 4 fifo, eager 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, early-abort 6 4 fifo, eager 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, correct 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, early-abort 8 6 fifo, silent 8 6 fifo, control-reverse 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, silent 9 7 fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -101,7 +102,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 2,1 & 16 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 2,2 & 256 & 64 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & conforms & 4.5 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & conforms & 4.1 & 2 & 48 h, 250 GB & brain05, 2026-11-07 \\
 \color{blue} 5,3 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -127,7 +128,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{blue} 2,1 & 16 & 8 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 2,2 & 256 & 64 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & 32 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & 139712 & violation & 4.7 & 6 & 1 h, 250 GB & brain02, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & 139712 & violation & 3.7 & 2 & 48 h, 250 GB & brain05, 2026-11-07 \\
 \color{blue} 5,3 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -145,8 +146,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 4 fifo, eager 2 4 fifo, correct 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, correct 2 5 fifo, eager 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, eager 3 3 fifo, early-abort 3 3 fifo, silent 3 3 fifo, correct 3 3 fifo, \ldots\ (95 instances in all).\par
-skipped: a smaller size had reached its limit: eager 6 4 fifo, early-abort 6 4 fifo, correct 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, eager 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, correct 8 6 fifo, control-reverse 8 6 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, silent 9 7 fifo, early-abort 9 7 fifo.\par
+planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 3 fifo, silent 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, correct 2 5 fifo, control-reverse 2 5 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, silent 3 3 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, \ldots\ (101 instances in all).\par
+left out by the table rules (ok): correct 4 2 fifo, early-abort 4 2 fifo.\par
+skipped: a smaller size had reached its limit: correct 6 4 fifo, eager 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, early-abort 6 4 fifo, eager 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, correct 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, early-abort 8 6 fifo, silent 8 6 fifo, control-reverse 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, silent 9 7 fifo.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -154,10 +156,10 @@ skipped: a smaller size had reached its limit: eager 6 4 fifo, early-abort 6 4 f
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 3,1 & 16 & 48 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 4,2 & 256 & 147456 & conforms & 5.2 & 4 & 4 h, 250 GB & 0.1 & 5.2 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2,1 & 16 & 8 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3,1 & 16 & 48 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 4,2 & 256 & 147456 & conforms & 5.2 & 8 & 4 h, 250 GB & 0.1 & 5.2 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{correct}, model fifo, expected conforms}
@@ -166,10 +168,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & conforms & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 3,1 & 16 & 48 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain05, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & conforms & 5.9 & 4 & 4 h, 250 GB & 0.1 & 5.9 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2,1 & 16 & 8 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & conforms & 0.2 & 8 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 3,1 & 16 & 48 & conforms & 0.1 & 8 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & conforms & 5.9 & 8 & 4 h, 250 GB & 0.1 & 5.9 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & conforms & 4.3 & 6 & 48 h, 250 GB & 0.1 & 4.3 & 0.0 & merge & brain05, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{eager}, model fifo, expected violation}
@@ -178,10 +181,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 5 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 55 & violation & 0.2 & 4 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 3,1 & 16 & 48 & 25 & violation & 0.1 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain05, 2026-11-03 \\
-\color{blue} 4,2 & 256 & 147456 & 1015 & violation & 5.7 & 6 & 4 h, 250 GB & 0.1 & 5.7 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,1 & 16 & 8 & 5 & violation & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 55 & violation & 0.2 & 8 & 10 min, 16 GB & 0.1 & 0.2 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 3,1 & 16 & 48 & 25 & violation & 0.1 & 8 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain05, 2026-11-03 \\
+\color{blue} 4,2 & 256 & 147456 & 1015 & violation & 5.7 & 10 & 4 h, 250 GB & 0.1 & 5.7 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{early-abort}, model fifo, expected violation}
@@ -190,10 +193,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 40 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 3,1 & 16 & 48 & 12 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 4,2 & 256 & 147456 & 240 & violation & 5.2 & 4 & 4 h, 250 GB & 0.1 & 5.1 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 40 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3,1 & 16 & 48 & 12 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 4,2 & 256 & 147456 & 240 & violation & 5.2 & 8 & 4 h, 250 GB & 0.1 & 5.1 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 4,2 & 256 & 147456 & 240 & violation & 3.8 & 6 & 48 h, 250 GB & 0.1 & 3.8 & 0.0 & merge & brain05, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{silent}, model fifo, expected violation}
@@ -202,15 +206,15 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 16 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 3,1 & 16 & 48 & 5 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{blue} 4,2 & 256 & 147456 & 25 & violation & 7.2 & 6 & 4 h, 250 GB & 0.1 & 7.2 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 16 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3,1 & 16 & 48 & 5 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{blue} 4,2 & 256 & 147456 & 25 & violation & 7.2 & 10 & 4 h, 250 GB & 0.1 & 7.2 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 4 fifo, eager 2 4 fifo, correct 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, correct 2 5 fifo, eager 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, eager 3 3 fifo, early-abort 3 3 fifo, silent 3 3 fifo, correct 3 3 fifo, \ldots\ (100 instances in all).\par
-skipped: a smaller size had reached its limit: correct 5 3 fifo, silent 5 3 fifo, early-abort 5 3 fifo, eager 5 3 fifo, control-reverse 5 3 fifo, eager 6 4 fifo, early-abort 6 4 fifo, correct 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, eager 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, correct 8 6 fifo, control-reverse 8 6 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, silent 9 7 fifo, \ldots\ (25 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): control-reverse 2 3 fifo, eager 2 3 fifo, correct 2 3 fifo, early-abort 2 3 fifo, silent 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, correct 2 5 fifo, control-reverse 2 5 fifo, eager 2 5 fifo, silent 2 5 fifo, early-abort 2 5 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, silent 3 3 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, \ldots\ (106 instances in all).\par
+skipped: a smaller size had reached its limit: correct 5 3 fifo, silent 5 3 fifo, control-reverse 5 3 fifo, early-abort 5 3 fifo, eager 5 3 fifo, correct 6 4 fifo, eager 6 4 fifo, silent 6 4 fifo, control-reverse 6 4 fifo, early-abort 6 4 fifo, eager 7 5 fifo, silent 7 5 fifo, control-reverse 7 5 fifo, correct 7 5 fifo, early-abort 7 5 fifo, eager 8 6 fifo, early-abort 8 6 fifo, silent 8 6 fifo, control-reverse 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, correct 9 7 fifo, eager 9 7 fifo, control-reverse 9 7 fifo, \ldots\ (25 instances in all).\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -218,9 +222,10 @@ skipped: a smaller size had reached its limit: correct 5 3 fifo, silent 5 3 fifo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 3.1 & 174 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 3.6 & 166 & 10 min, 16 GB & 0.1 & 3.6 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 3.3 & 164 & 10 min, 16 GB & 0.1 & 3.3 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.1 & 179 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 3.6 & 170 & 10 min, 16 GB & 0.1 & 3.6 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.3 & 168 & 10 min, 16 GB & 0.1 & 3.3 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,2 & 256 & 2304 & conforms & 10.4 & 2321 & 48 h, 80 GB & 0.2 & 10.4 & 0.0 & merge & pinky12, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model fifo, expected conforms}
@@ -229,9 +234,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 3.1 & 162 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 3.4 & 176 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 3.4 & 162 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.1 & 166 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 3.4 & 180 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.4 & 166 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,2 & 256 & 2304 & conforms & 10.3 & 2395 & 48 h, 80 GB & 0.2 & 10.3 & 0.0 & merge & pinky12, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{eager}, model fifo, expected violation}
@@ -240,9 +246,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 5 & violation & 3.1 & 156 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 55 & violation & 3.4 & 160 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 25 & violation & 3.3 & 167 & 10 min, 16 GB & 0.1 & 3.3 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 5 & violation & 3.1 & 160 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 55 & violation & 3.4 & 164 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 25 & violation & 3.3 & 171 & 10 min, 16 GB & 0.1 & 3.3 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,2 & 256 & 2304 & 775 & violation & 11.2 & 2584 & 48 h, 80 GB & 0.2 & 11.1 & 0.0 & merge & pinky12, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{early-abort}, model fifo, expected violation}
@@ -251,9 +258,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 174 & 10 min, 16 GB & 0.0 & 3.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 40 & violation & 3.4 & 175 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 12 & violation & 3.4 & 168 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 178 & 10 min, 16 GB & 0.0 & 3.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 40 & violation & 3.4 & 179 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 12 & violation & 3.4 & 172 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,2 & 256 & 2304 & 240 & violation & 10.7 & 2338 & 48 h, 80 GB & 0.2 & 10.7 & 0.0 & merge & pinky12, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{silent}, model fifo, expected violation}
@@ -262,11 +270,14 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 3.1 & 152 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 16 & violation & 3.4 & 170 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 5 & violation & 3.2 & 167 & 10 min, 16 GB & 0.1 & 3.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 3.1 & 156 & 10 min, 16 GB & 0.0 & 3.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 16 & violation & 3.4 & 174 & 10 min, 16 GB & 0.1 & 3.4 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 5 & violation & 3.2 & 171 & 10 min, 16 GB & 0.1 & 3.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,2 & 256 & 2304 & 25 & violation & 10.4 & 2372 & 48 h, 80 GB & 0.2 & 10.4 & 0.0 & merge & pinky12, 2026-11-07 \\
 \bottomrule
 \end{longtable}
+\paragraph{Not run (cross offline, Java implementation against the Rust specification).}
+planned but never scheduled (grid points beyond the ladder): eager 2 3 fifo, early-abort 2 3 fifo, correct 2 3 fifo, control-reverse 2 3 fifo, silent 2 3 fifo, silent 4 1 fifo, eager 4 1 fifo, correct 4 1 fifo, control-reverse 4 1 fifo, early-abort 4 1 fifo.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -274,9 +285,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 174 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 174 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 3.1 & 168 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 178 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 178 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,3 & 4096 & 512 & conforms & 10.6 & 2971 & 48 h, 200 GB & 10.6 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.1 & 173 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model fifo, expected conforms}
@@ -285,9 +297,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 174 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 174 & 10 min, 16 GB & 4.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 3.1 & 168 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 178 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 178 & 10 min, 16 GB & 4.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,3 & 4096 & 512 & conforms & 10.6 & 2971 & 48 h, 200 GB & 10.6 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.1 & 173 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{eager}, model fifo, expected violation}
@@ -296,9 +309,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 5 & violation & 3.2 & 174 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 55 & violation & 4.0 & 174 & 10 min, 16 GB & 4.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 25 & violation & 3.1 & 168 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 5 & violation & 3.2 & 178 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 55 & violation & 4.0 & 178 & 10 min, 16 GB & 4.0 & 0.2 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,3 & 4096 & 512 & 485 & violation & 10.6 & 2971 & 48 h, 200 GB & 10.6 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 3,1 & 16 & 48 & 25 & violation & 3.1 & 172 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{early-abort}, model fifo, expected violation}
@@ -307,9 +321,10 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 174 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 40 & violation & 4.0 & 174 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 12 & violation & 3.1 & 168 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 178 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 40 & violation & 4.0 & 178 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,3 & 4096 & 512 & 316 & violation & 10.6 & 2971 & 48 h, 200 GB & 10.6 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 3,1 & 16 & 48 & 12 & violation & 3.1 & 173 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{silent}, model fifo, expected violation}
@@ -318,11 +333,13 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 174 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 16 & violation & 4.0 & 174 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 5 & violation & 3.1 & 168 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 178 & 10 min, 16 GB & 3.2 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 16 & violation & 4.0 & 178 & 10 min, 16 GB & 4.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 5 & violation & 3.1 & 172 & 10 min, 16 GB & 3.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-01 \\
 \bottomrule
 \end{longtable}
+\paragraph{Not run (cross offline, Rust implementation against the Java specification).}
+planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, silent 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, correct 4 1 fifo, control-reverse 4 1 fifo, early-abort 4 1 fifo.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -331,7 +348,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \midrule
 \endhead
 \color{red} 2,1 & 16 & 8 & conforms & 0.7 & 149 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & conforms & 1.0 & 148 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & conforms & 1.1 & 148 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \color{red} 3,1 & 16 & 48 & conforms & 0.8 & 146 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -341,8 +358,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 0.6 & 167 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & conforms & 1.0 & 152 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2,1 & 16 & 8 & conforms & 0.7 & 167 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & conforms & 1.1 & 152 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \color{red} 3,1 & 16 & 48 & conforms & 0.8 & 148 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -353,8 +370,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \midrule
 \endhead
 \color{red} 2,1 & 16 & 8 & 5 & violation & 0.7 & 146 & 1 h, 250 GB & 46 & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 55 & violation & 1.1 & 156 & 1 h, 250 GB & 52 & brain05, 2026-11-02 \\
-\color{red} 3,1 & 16 & 48 & 42 & violation & 0.8 & 150 & 1 h, 250 GB & 47 & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 55 & violation & 1.2 & 156 & 1 h, 250 GB & 52 & brain05, 2026-11-02 \\
+\color{red} 3,1 & 16 & 48 & 42 & violation & 0.9 & 150 & 1 h, 250 GB & 47 & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{early-abort}, model fifo, expected violation}
@@ -363,8 +380,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 0.6 & 148 & 1 h, 250 GB & 88 & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 48 & violation & 1.0 & 156 & 1 h, 250 GB & 124 & brain05, 2026-11-02 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 0.7 & 148 & 1 h, 250 GB & 88 & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 48 & violation & 1.1 & 156 & 1 h, 250 GB & 124 & brain05, 2026-11-02 \\
 \color{red} 3,1 & 16 & 48 & 32 & violation & 0.9 & 148 & 1 h, 250 GB & 121 & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -374,13 +391,13 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 8 & violation & 0.6 & 146 & 1 h, 250 GB & 41 & brain05, 2026-11-02 \\
-\color{red} 2,2 & 256 & 64 & 64 & violation & 1.1 & 156 & 1 h, 250 GB & 65 & brain05, 2026-11-02 \\
-\color{red} 3,1 & 16 & 48 & 48 & violation & 0.8 & 167 & 1 h, 250 GB & 53 & brain05, 2026-11-02 \\
+\color{red} 2,1 & 16 & 8 & 8 & violation & 0.7 & 146 & 1 h, 250 GB & 41 & brain05, 2026-11-02 \\
+\color{red} 2,2 & 256 & 64 & 64 & violation & 1.2 & 156 & 1 h, 250 GB & 65 & brain05, 2026-11-02 \\
+\color{red} 3,1 & 16 & 48 & 48 & violation & 0.9 & 167 & 1 h, 250 GB & 53 & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 2 1 fifo, eager 2 1 fifo, silent 2 1 fifo, early-abort 2 1 fifo, correct 2 1 fifo, eager 2 2 fifo, silent 2 2 fifo, early-abort 2 2 fifo, control-reverse 2 2 fifo, correct 2 2 fifo, silent 3 1 fifo, eager 3 1 fifo, early-abort 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): control-reverse 2 1 fifo, correct 2 1 fifo, eager 2 1 fifo, silent 2 1 fifo, early-abort 2 1 fifo, correct 2 2 fifo, control-reverse 2 2 fifo, early-abort 2 2 fifo, eager 2 2 fifo, silent 2 2 fifo, silent 3 1 fifo, early-abort 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo, eager 3 1 fifo.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -388,9 +405,9 @@ planned but never scheduled (grid points beyond the ladder): control-reverse 2 1
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 174 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 174 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.2 & 168 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model fifo, expected conforms}
@@ -399,9 +416,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & conforms & 3.2 & 174 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & conforms & 4.0 & 174 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & conforms & 3.2 & 168 & 1 h, 250 GB &  & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{eager}, model fifo, expected violation}
@@ -410,9 +427,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 5 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 55 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 42 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 5 & violation & 3.2 & 174 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 55 & violation & 4.0 & 174 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 42 & violation & 3.2 & 168 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{early-abort}, model fifo, expected violation}
@@ -421,9 +438,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 32 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 4 & violation & 3.2 & 174 & 1 h, 250 GB & 1 & brain04, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 48 & violation & 4.0 & 174 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 32 & violation & 3.2 & 168 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{silent}, model fifo, expected violation}
@@ -432,13 +449,13 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 16 & 8 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
-\color{red} 2,2 & 256 & 64 & 64 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
-\color{red} 3,1 & 16 & 48 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 2,1 & 16 & 8 & 8 & violation & 3.2 & 174 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 2,2 & 256 & 64 & 64 & violation & 4.0 & 174 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
+\color{red} 3,1 & 16 & 48 & 48 & violation & 3.2 & 168 & 1 h, 250 GB & 2 & brain04, 2026-11-01 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): control-reverse 2 1 fifo, eager 2 1 fifo, silent 2 1 fifo, early-abort 2 1 fifo, correct 2 1 fifo, eager 2 2 fifo, silent 2 2 fifo, early-abort 2 2 fifo, control-reverse 2 2 fifo, correct 2 2 fifo, silent 3 1 fifo, eager 3 1 fifo, early-abort 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo.\par
+left out by the table rules (ok): control-reverse 2 1 fifo, correct 2 1 fifo, eager 2 1 fifo, silent 2 1 fifo, early-abort 2 1 fifo, correct 2 2 fifo, control-reverse 2 2 fifo, early-abort 2 2 fifo, eager 2 2 fifo, silent 2 2 fifo, silent 3 1 fifo, early-abort 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo, eager 3 1 fifo.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -446,9 +463,8 @@ left out by the table rules (ok): control-reverse 2 1 fifo, eager 2 1 fifo, sile
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 7.3 & 175 & 4 h, 250 GB & 7.3 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 11.8 & 1969 & 4 h, 250 GB & 11.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 8.8 & 149 & 4 h, 250 GB & 8.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 1523 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 210 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-reverse}, model fifo, expected conforms}
@@ -457,9 +473,20 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms$^{\ast}$ & 11.1 & 1733 & 4 h, 250 GB & 11.1 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms$^{\ast}$ & 7.5 & 161 & 4 h, 250 GB & 7.5 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms$^{\ast}$ & 10.9 & 1809 & 4 h, 250 GB & 10.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 7.3 & 179 & 4 h, 250 GB & 7.3 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 11.8 & 1973 & 4 h, 250 GB & 11.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 8.8 & 153 & 4 h, 250 GB & 8.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-reverse}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & conforms$^{\ast}$ & 11.1 & 1738 & 4 h, 250 GB & 11.1 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms$^{\ast}$ & 7.5 & 165 & 4 h, 250 GB & 7.5 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms$^{\ast}$ & 10.9 & 1813 & 4 h, 250 GB & 10.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model fifo, expected conforms}
@@ -468,9 +495,18 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 11.1 & 1733 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 5.0 & 160 & 10 min, 250 GB & 4.8 & 0.2 & 0.1 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 175 & 10 min, 250 GB & 4.9 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 210 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{correct}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & conforms & 11.1 & 1738 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 5.0 & 164 & 10 min, 250 GB & 4.8 & 0.2 & 0.1 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 179 & 10 min, 250 GB & 4.9 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{eager}, model fifo, expected conforms}
@@ -479,9 +515,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 6.3 & 160 & 4 h, 250 GB & 6.3 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 4.3 & 157 & 10 min, 250 GB & 4.3 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 8.2 & 158 & 10 min, 250 GB & 8.2 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 6.3 & 164 & 4 h, 250 GB & 6.3 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 4.3 & 161 & 10 min, 250 GB & 4.3 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 8.2 & 162 & 10 min, 250 GB & 8.2 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{early-abort}, model fifo, expected conforms}
@@ -490,9 +526,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 9.8 & 157 & 4 h, 250 GB & 9.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 14.7 & 1564 & 4 h, 250 GB & 14.7 & 0.4 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 7.8 & 156 & 4 h, 250 GB & 7.8 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 9.8 & 161 & 4 h, 250 GB & 9.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 14.7 & 1568 & 4 h, 250 GB & 14.7 & 0.4 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 7.8 & 160 & 4 h, 250 GB & 7.8 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{silent}, model fifo, expected conforms}
@@ -501,9 +537,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 12.4 & 1841 & 4 h, 250 GB & 12.4 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 15.2 & 1490 & 4 h, 250 GB & 15.2 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 158 & 4 h, 250 GB & 4.8 & 0.1 & 0.1 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 12.4 & 1845 & 4 h, 250 GB & 12.4 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 15.2 & 1494 & 4 h, 250 GB & 15.2 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 162 & 4 h, 250 GB & 4.8 & 0.1 & 0.1 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{eager}, model fifo, expected violation}
@@ -512,9 +548,19 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 5 & violation & 11.1 & 1733 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & 55 & violation & 4.8 & 160 & 10 min, 250 GB & 4.8 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 25 & violation & 4.9 & 175 & 10 min, 250 GB & 4.9 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.5 & 194 & 48 h, 200 GB & 5.5 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & 485 & violation & 5.3 & 211 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{eager}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 5 & violation & 11.1 & 1738 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & 55 & violation & 4.8 & 164 & 10 min, 250 GB & 4.8 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 25 & violation & 4.9 & 179 & 10 min, 250 GB & 4.9 & 0.2 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{early-abort}, model fifo, expected violation}
@@ -523,9 +569,19 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 4 & violation & 11.1 & 1733 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & 40 & violation & 7.5 & 161 & 4 h, 250 GB & 7.5 & 0.4 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 12 & violation & 10.8 & 1809 & 4 h, 250 GB & 10.8 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.4 & 219 & 48 h, 200 GB & 5.4 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & 316 & violation & 5.3 & 211 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{early-abort}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 4 & violation & 11.1 & 1738 & 4 h, 250 GB & 11.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & 40 & violation & 7.5 & 165 & 4 h, 250 GB & 7.5 & 0.4 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 12 & violation & 10.8 & 1813 & 4 h, 250 GB & 10.8 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{silent}, model fifo, expected violation}
@@ -534,11 +590,23 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 4 & violation & 11.1 & 1733 & 4 h, 250 GB & 11.1 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & 16 & violation & 7.5 & 161 & 4 h, 250 GB & 7.5 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 5 & violation & 10.8 & 1809 & 4 h, 250 GB & 10.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.2 & 192 & 48 h, 200 GB & 5.2 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & 64 & violation & 5.3 & 210 & 48 h, 200 GB & 5.3 & 0.1 & 0.0 & merge & volta14, 2026-11-07 \\
 \bottomrule
 \end{longtable}
+\subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{silent}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 4 & violation & 11.1 & 1738 & 4 h, 250 GB & 11.1 & 0.5 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & 16 & violation & 7.5 & 165 & 4 h, 250 GB & 7.5 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 5 & violation & 10.8 & 1813 & 4 h, 250 GB & 10.8 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
+planned but never scheduled (grid points beyond the ladder): silent 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, correct 4 1 fifo, control-reverse 4 1 fifo, early-abort 4 1 fifo.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -546,9 +614,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 7.3 & 175 & 4 h, 250 GB & 0.5 & 7.3 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 11.8 & 1969 & 4 h, 250 GB & 0.1 & 11.8 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 8.8 & 149 & 4 h, 250 GB & 0.1 & 8.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 1523 & 48 h, 200 GB & 0.1 & 5.3 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 1523 & 48 h, 200 GB & 0.1 & 5.3 & 0.0 & merge & volta14, 2026-11-07 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{control-reverse}, model fifo, expected conforms}
@@ -557,9 +624,20 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms$^{\ast}$ & 7.3 & 175 & 4 h, 250 GB & 0.1 & 7.3 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms$^{\ast}$ & 11.8 & 1969 & 4 h, 250 GB & 0.2 & 11.8 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 3,1 & 48 & 48 & conforms$^{\ast}$ & 8.8 & 149 & 4 h, 250 GB & 0.2 & 8.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 7.3 & 179 & 4 h, 250 GB & 0.5 & 7.3 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 11.8 & 1973 & 4 h, 250 GB & 0.1 & 11.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 8.8 & 153 & 4 h, 250 GB & 0.1 & 8.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{control-reverse}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & conforms$^{\ast}$ & 7.3 & 179 & 4 h, 250 GB & 0.1 & 7.3 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms$^{\ast}$ & 11.8 & 1973 & 4 h, 250 GB & 0.2 & 11.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 3,1 & 48 & 48 & conforms$^{\ast}$ & 8.8 & 153 & 4 h, 250 GB & 0.2 & 8.8 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model fifo, expected conforms}
@@ -568,9 +646,18 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 11.1 & 1733 & 4 h, 250 GB & 0.1 & 11.1 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 4.8 & 160 & 10 min, 250 GB & 0.2 & 4.8 & 0.0 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 175 & 10 min, 250 GB & 0.2 & 4.9 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 & conforms$^{\ast}$ & 5.3 & 210 & 48 h, 200 GB & 0.1 & 5.3 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model fifo, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & conforms & 11.1 & 1738 & 4 h, 250 GB & 0.1 & 11.1 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 4.8 & 164 & 10 min, 250 GB & 0.2 & 4.8 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 4.9 & 179 & 10 min, 250 GB & 0.2 & 4.9 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{eager}, model fifo, expected conforms}
@@ -579,9 +666,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 6.3 & 160 & 4 h, 250 GB & 0.1 & 6.3 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 4.3 & 157 & 10 min, 250 GB & 0.2 & 4.3 & 0.0 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 8.2 & 158 & 10 min, 250 GB & 0.2 & 8.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 6.3 & 164 & 4 h, 250 GB & 0.1 & 6.3 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 4.3 & 161 & 10 min, 250 GB & 0.2 & 4.3 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 8.2 & 162 & 10 min, 250 GB & 0.2 & 8.2 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{early-abort}, model fifo, expected conforms}
@@ -590,9 +677,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 9.8 & 157 & 4 h, 250 GB & 0.1 & 9.8 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 14.7 & 1564 & 4 h, 250 GB & 0.4 & 14.7 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 7.8 & 156 & 4 h, 250 GB & 0.5 & 7.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 9.8 & 161 & 4 h, 250 GB & 0.1 & 9.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 14.7 & 1568 & 4 h, 250 GB & 0.4 & 14.7 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 7.8 & 160 & 4 h, 250 GB & 0.5 & 7.8 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{silent}, model fifo, expected conforms}
@@ -601,9 +688,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & conforms & 12.5 & 1841 & 4 h, 250 GB & 0.5 & 12.4 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 15.2 & 1490 & 4 h, 250 GB & 0.1 & 15.2 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 4.8 & 158 & 4 h, 250 GB & 0.1 & 4.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,1 & 8 & 8 & conforms & 12.5 & 1845 & 4 h, 250 GB & 0.5 & 12.4 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 15.2 & 1494 & 4 h, 250 GB & 0.1 & 15.2 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 4.8 & 162 & 4 h, 250 GB & 0.1 & 4.8 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{eager}, model fifo, expected violation}
@@ -612,9 +699,19 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 5 & violation & 6.3 & 160 & 4 h, 250 GB & 0.1 & 6.3 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & 55 & violation & 4.3 & 157 & 10 min, 250 GB & 0.2 & 4.3 & 0.0 & merge & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 25 & violation & 8.2 & 158 & 10 min, 250 GB & 0.2 & 8.2 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.5 & 194 & 48 h, 200 GB & 0.1 & 5.5 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & 485 & violation & 5.5 & 194 & 48 h, 200 GB & 0.1 & 5.5 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{eager}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 5 & violation & 6.3 & 164 & 4 h, 250 GB & 0.1 & 6.3 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & 55 & violation & 4.3 & 161 & 10 min, 250 GB & 0.2 & 4.3 & 0.0 & merge & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 25 & violation & 8.2 & 162 & 10 min, 250 GB & 0.2 & 8.2 & 0.0 & merge & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{early-abort}, model fifo, expected violation}
@@ -623,9 +720,19 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 4 & violation & 9.8 & 157 & 4 h, 250 GB & 0.1 & 9.8 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & 40 & violation & 14.7 & 1564 & 4 h, 250 GB & 0.2 & 14.7 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 3,1 & 48 & 48 & 12 & violation & 7.8 & 156 & 4 h, 250 GB & 0.2 & 7.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.4 & 219 & 48 h, 200 GB & 0.1 & 5.4 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 & 316 & violation & 5.4 & 218 & 48 h, 200 GB & 0.1 & 5.4 & 0.0 & merge & volta14, 2026-11-07 \\
+\bottomrule
+\end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{early-abort}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 4 & violation & 9.8 & 161 & 4 h, 250 GB & 0.1 & 9.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & 40 & violation & 14.7 & 1568 & 4 h, 250 GB & 0.2 & 14.7 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 3,1 & 48 & 48 & 12 & violation & 7.8 & 160 & 4 h, 250 GB & 0.2 & 7.8 & 0.0 & merge & brain01, 2026-11-05 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{silent}, model fifo, expected violation}
@@ -634,11 +741,23 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 2,1 & 8 & 8 & 4 & violation & 12.4 & 1841 & 4 h, 250 GB & 0.1 & 12.4 & 0.0 & merge & brain01, 2026-11-05 \\
-\color{blue} 2,2 & 64 & 64 & 16 & violation & 15.2 & 1490 & 4 h, 250 GB & 0.2 & 15.2 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 5 & violation & 4.8 & 158 & 4 h, 250 GB & 0.2 & 4.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{red} 2,3 & 512 & 512 & 64 & violation & 5.2 & 192 & 48 h, 200 GB & 0.1 & 5.2 & 0.0 & merge & volta14, 2026-11-07 \\
+\color{red} 2,3 & 512 & 512 &  & conforms$^{\ast}$ & 5.2 & 192 & 48 h, 200 GB & 0.1 & 5.2 & 0.0 & merge & volta14, 2026-11-07 \\
 \bottomrule
 \end{longtable}
+\subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{silent}, model fifo, expected violation}
+\begin{longtable}{@{}rrrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{blue} 2,1 & 8 & 8 & 4 & violation & 12.4 & 1845 & 4 h, 250 GB & 0.1 & 12.4 & 0.0 & merge & brain01, 2026-11-05 \\
+\color{blue} 2,2 & 64 & 64 & 16 & violation & 15.2 & 1494 & 4 h, 250 GB & 0.2 & 15.2 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 5 & violation & 4.8 & 162 & 4 h, 250 GB & 0.2 & 4.8 & 0.0 & merge & brain01, 2026-11-05 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
+planned but never scheduled (grid points beyond the ladder): silent 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, correct 4 1 fifo, control-reverse 4 1 fifo, early-abort 4 1 fifo.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -646,8 +765,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 3.3 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 3.8 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.8 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.9 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \color{red} 3,1 & 48 & 48 & conforms & 3.6 & 158 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -657,9 +776,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms$^{\ast}$ & 3.5 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms$^{\ast}$ & 3.8 & 167 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms$^{\ast}$ & 3.5 & 163 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms$^{\ast}$ & 3.7 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms$^{\ast}$ & 3.9 & 167 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms$^{\ast}$ & 3.7 & 163 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model fifo, expected conforms}
@@ -668,9 +787,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 4.1 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 5.1 & 156 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 4.8 & 155 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 4.2 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 5.3 & 156 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 5.0 & 155 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{eager}, model fifo, expected conforms}
@@ -679,9 +798,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 3.9 & 158 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & conforms & 5.2 & 161 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & conforms & 5.0 & 158 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 4.0 & 158 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & conforms & 5.4 & 161 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & conforms & 5.2 & 158 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{early-abort}, model fifo, expected conforms}
@@ -690,9 +809,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 3.3 & 150 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 4.0 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 3.5 & 150 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.4 & 150 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 4.5 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 4.1 & 150 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{silent}, model fifo, expected conforms}
@@ -701,9 +820,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 3.4 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.9 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \color{red} 2,2 & 64 & 64 & conforms & 4.0 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 3.5 & 154 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.6 & 154 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{eager}, model fifo, expected violation}
@@ -712,9 +831,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 5 & violation & 3.6 & 164 & 1 h, 250 GB & 132 & brain02, 2026-11-03 \\
-\color{blue} 2,2 & 64 & 64 & 55 & violation & 5.0 & 155 & 1 h, 250 GB & 128 & brain02, 2026-11-03 \\
-\color{blue} 3,1 & 48 & 48 & 42 & violation & 4.5 & 150 & 1 h, 250 GB & 86 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 5 & violation & 3.7 & 164 & 1 h, 250 GB & 132 & brain02, 2026-11-03 \\
+\color{blue} 2,2 & 64 & 64 & 55 & violation & 5.2 & 155 & 1 h, 250 GB & 128 & brain02, 2026-11-03 \\
+\color{blue} 3,1 & 48 & 48 & 42 & violation & 4.7 & 150 & 1 h, 250 GB & 86 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{early-abort}, model fifo, expected violation}
@@ -723,9 +842,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 4 & violation & 3.5 & 164 & 1 h, 250 GB & 2260 & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & 48 & violation & 3.8 & 157 & 1 h, 250 GB & 2340 & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & 32 & violation & 3.8 & 158 & 1 h, 250 GB & 2196 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 4 & violation & 3.7 & 164 & 1 h, 250 GB & 2260 & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & 48 & violation & 4.0 & 157 & 1 h, 250 GB & 2340 & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & 32 & violation & 4.0 & 158 & 1 h, 250 GB & 2196 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{silent}, model fifo, expected violation}
@@ -734,9 +853,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 8 & violation & 3.5 & 166 & 1 h, 250 GB & 64 & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & 64 & violation & 3.8 & 157 & 1 h, 250 GB & 85 & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & 48 & violation & 3.8 & 153 & 1 h, 250 GB & 69 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 8 & violation & 3.7 & 166 & 1 h, 250 GB & 64 & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & 64 & violation & 3.9 & 157 & 1 h, 250 GB & 85 & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & 48 & violation & 4.0 & 153 & 1 h, 250 GB & 69 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
@@ -746,9 +865,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.1 & 154 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.6 & 167 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.8 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{control-reverse}, model fifo, expected conforms}
@@ -757,9 +876,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms$^{\ast}$ & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms$^{\ast}$ & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms$^{\ast}$ & 0.0 & 2 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms$^{\ast}$ & 9.4 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms$^{\ast}$ & 3.6 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms$^{\ast}$ & 3.6 & 163 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{correct}, model fifo, expected conforms}
@@ -768,9 +887,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 0.2 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 9.6 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.6 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.6 & 163 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{eager}, model fifo, expected conforms}
@@ -779,9 +898,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.4 & 154 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.8 & 162 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.6 & 155 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{early-abort}, model fifo, expected conforms}
@@ -790,9 +909,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.3 & 160 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.6 & 154 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.4 & 164 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{silent}, model fifo, expected conforms}
@@ -801,9 +920,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & conforms & 0.0 & 2 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & conforms & 3.8 & 169 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & conforms & 3.8 & 163 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & conforms & 3.3 & 156 & 1 h, 250 GB &  & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{eager}, model fifo, expected violation}
@@ -812,9 +931,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 5 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & 55 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & 42 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 5 & violation & 9.4 & 160 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & 55 & violation & 3.6 & 164 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & 42 & violation & 3.6 & 163 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{early-abort}, model fifo, expected violation}
@@ -823,9 +942,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 4 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & 32 & violation & 0.0 & 2 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 4 & violation & 9.4 & 160 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & 48 & violation & 3.6 & 164 & 1 h, 250 GB & 2 & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & 32 & violation & 3.6 & 163 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{silent}, model fifo, expected violation}
@@ -834,9 +953,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2,1 & 8 & 8 & 8 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
-\color{red} 2,2 & 64 & 64 & 64 & violation & 0.0 & 2 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
-\color{red} 3,1 & 48 & 48 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,1 & 8 & 8 & 8 & violation & 9.4 & 160 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 2,2 & 64 & 64 & 64 & violation & 3.6 & 164 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
+\color{red} 3,1 & 48 & 48 & 48 & violation & 3.6 & 163 & 1 h, 250 GB & 1 & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \end{document}

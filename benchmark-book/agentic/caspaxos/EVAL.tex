@@ -5,15 +5,15 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{caspaxos} (caspaxos)}
 \author{}
-\date{generated 2026-11-05 from brain-data bb4df53ad 2026-11-05 15:31:21 +0100}
+\date{generated 2026-11-08 from brain-data 614b86250 2026-11-08 11:41:25 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 3,2 &  &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  &  & brain01, 2026-11-02 \\
@@ -41,7 +41,7 @@ skipped: a smaller size had reached its limit: 3 3 bag, 5 2 bag.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 18 &  &  &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 18 &  & failed &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \color{blue} 3,3 & 162 &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \color{blue} 5,2 & 18 &  & \faClock\ (4 h) &  &  & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \bottomrule

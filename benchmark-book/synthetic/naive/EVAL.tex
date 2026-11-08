@@ -5,15 +5,15 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{naive} (s1-naive)}
 \author{}
-\date{generated 2026-11-05 from brain-data bb4df53ad 2026-11-05 15:31:21 +0100}
+\date{generated 2026-11-08 from brain-data 614b86250 2026-11-08 11:41:25 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): naive: expected violation; self: expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): naive: expected violation; self: expected conforms. \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2 & 2 & 2 & conforms & 0.0 & 4 & 1 h, 250 GB & 2 & 3 & brain03, 2026-11-02 \\
@@ -27,7 +27,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \subsection*{stateless: pair \textsf{naive}, model bag, expected violation}
 \begin{longtable}{@{}rrrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2 & 2 & 2 & 2 & violation & 0.0 & 4 & 1 h, 250 GB & 2 & 4 & brain03, 2026-11-02 \\
@@ -39,8 +39,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, naive 10 2 bag, self 10 2 bag.\par
-left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, self 5 2 bag, naive 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, self 8 2 bag, naive 8 2 bag, self 9 1 bag, naive 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, naive 10 bag.t16.p.r3.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
 left out by the table rules (invalid: foreign load): naive 10 bag, naive 11 bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
@@ -77,8 +77,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, self 9 2 bag, naive 9 2 bag, naive 10 1 bag, self 10 1 bag, naive 10 2 bag, self 10 2 bag, self 14 2 bag, naive 14 2 bag.\par
-left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, self 5 2 bag, naive 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag, naive 8 2 bag, naive 9 2 bag, naive 10 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, self 8 2 bag, naive 8 2 bag, self 9 1 bag, naive 9 1 bag, naive 9 2 bag, self 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag, naive 14 2 bag, self 14 2 bag.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag, naive 8 2 bag, naive 9 2 bag, naive 10 2 bag.\par
 the tool ended with an error (exit-101): self 8 1 bag.\par
 skipped: a smaller size had reached its limit: self 8 2 bag, self 9 1 bag, self 9 2 bag.\par
 \section*{offline}
@@ -88,12 +88,12 @@ skipped: a smaller size had reached its limit: self 8 2 bag, self 9 1 bag, self 
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 2 & 2 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 3 & 6 & 6 & conforms & 0.0 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 4 & 24 & 24 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 5 & 120 & 120 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 2 & 2 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 6 & 6 & conforms & 0.0 & 8 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4 & 24 & 24 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5 & 120 & 120 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 6 & 720 & 720 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{blue} 7 & 5040 & 5040 & conforms & 0.6 & 10 & 1 h, 250 GB & 0.3 & 0.4 & 0.3 & merge & brain01, 2026-11-03 \\
+\color{blue} 7 & 5040 & 5040 & conforms & 0.6 & 20 & 1 h, 250 GB & 0.3 & 0.4 & 0.3 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{naive}, model bag, expected violation}
@@ -102,17 +102,17 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 2 & 2 & 2 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 3 & 6 & 6 & 6 & violation & 0.0 & 4 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 4 & 24 & 24 & 24 & violation & 0.1 & 4 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 5 & 120 & 120 & 120 & violation & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 2 & 2 & 2 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 6 & 6 & 6 & violation & 0.0 & 8 & 10 min, 16 GB & 0.0 & 0.0 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 4 & 24 & 24 & 24 & violation & 0.1 & 8 & 10 min, 16 GB & 0.0 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 5 & 120 & 120 & 120 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 6 & 720 & 720 & 720 & violation & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \color{red} 7 & 5040 & 5040 & 5040 & violation & 0.7 & 60 & 10 min, 16 GB & 0.3 & 0.4 & 0.3 & in-memory & brain01, 2026-11-02 \\
-\color{blue} 10 & 3628800 & 3628800 & 3628800 & violation & 730.9 & 9811 & 48 h, 250 GB & 384.9 & 397.6 & 333.3 & merge & brain01, 2026-11-03 \\
-\color{blue} 11 & 39916800 & 39916800 & 39916800 & violation & 13349.0 & 115422 & 48 h, 250 GB & 5218.0 & 5447.0 & 7902.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 10 & 3628800 & 3628800 & 3628800 & violation & 616.2 & 13321 & 48 h, 250 GB & 330.8 & 332.3 & 283.9 & merge & brain04, 2026-11-05 \\
+\color{blue} 11 & 39916800 & 39916800 & 39916800 & violation & 13349.0 & 151016 & 48 h, 250 GB & 5218.0 & 5447.0 & 7902.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, naive 8 2 bag, self 8 2 bag, naive 9 1 bag, self 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, naive 10 2 bag, self 10 2 bag.\par
-left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, self 5 2 bag, naive 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
+planned but never scheduled (grid points beyond the ladder): naive 8 1 bag, self 8 1 bag, self 8 2 bag, naive 8 2 bag, self 9 1 bag, naive 9 1 bag, self 9 2 bag, naive 9 2 bag, self 10 1 bag, naive 10 1 bag, self 10 2 bag, naive 10 2 bag.\par
+left out by the table rules (ok): naive 2 2 bag, self 2 2 bag, naive 3 2 bag, self 3 2 bag, naive 4 2 bag, self 4 2 bag, naive 5 2 bag, self 5 2 bag, self 6 2 bag, naive 6 2 bag, naive 7 2 bag, self 7 2 bag.\par
 \end{document}

@@ -5,15 +5,15 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{vrr} (vrr)}
 \author{}
-\date{generated 2026-11-05 from brain-data bb4df53ad 2026-11-05 15:31:21 +0100}
+\date{generated 2026-11-08 from brain-data b351c947d 2026-11-08 10:25:41 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 3,2 & 2 & 868 & conforms & 0.1 & 2 & 4 h, 250 GB & 2 & 3 & brain01, 2026-11-03 \\
@@ -30,10 +30,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 3,2 & 2 & 868 & conforms & 0.1 & 2 & 4 h, 250 GB & brain01, 2026-11-03 \\
 \color{blue} 3,3 & 6 & 1194756 & conforms & 20.4 & 22 & 4 h, 250 GB & brain01, 2026-11-03 \\
 \color{blue} 3,4 & 24 & 6039877584 & conforms & 46587.0 & 15737 & 48 h, 250 GB & brain03, 2026-11-03 \\
+\color{blue} 4,3 & 6 & 8284096548 & conforms & 116784.0 & 21740 & 48 h, 80 GB & pinky15, 2026-11-05 \\
 \bottomrule
 \end{longtable}
-\paragraph{Not run (stateful).}
-the tool ended with an error (exit-143): 4 3 bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -41,13 +40,25 @@ the tool ended with an error (exit-143): 4 3 bag.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 2 & 868 & conforms & 0.1 & 4 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,3 & 6 & 1194756 & conforms & 21.3 & 21 & 1 h, 250 GB & 0.1 & 21.3 & 0.0 & merge & brain01, 2026-11-03 \\
-\color{blue} 4,3 & 6 & 8284096548 & conforms & 63371.0 & 21744 & 48 h, 250 GB & 0.0 & 63371.0 & 0.0 & merge & brain03, 2026-11-04 \\
+\color{blue} 3,2 & 2 & 868 & conforms & 0.1 & 8 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 6 & 1194756 & conforms & 21.3 & 25 & 1 h, 250 GB & 0.1 & 21.3 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,4 & 24 & 6039877584 & conforms & 50027.0 & 15670 & 48 h, 250 GB & 0.0 & 50027.0 & 0.0 & merge & brain03, 2026-11-07 \\
+\color{blue} 4,3 & 6 & 8284096548 & conforms & 63371.0 & 21748 & 48 h, 250 GB & 0.0 & 63371.0 & 0.0 & merge & brain03, 2026-11-04 \\
 \bottomrule
 \end{longtable}
-\paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
+\section*{cross offline, Java implementation against the Rust specification}
+\subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{single}, model bag, expected conforms}
+\begin{longtable}{@{}rrrlrrlrrrrl@{}}
+\toprule
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
+\midrule
+\endhead
+\color{red} 3,2 & 2 & 868 & conforms & 11.9 & 2209 & 4 h, 250 GB & 0.1 & 11.9 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\color{red} 3,3 & 6 & 1194756 & conforms & 4059.0 & 26800 & 4 h, 250 GB & 0.1 & 4059.0 & 0.0 & in-memory & brain01, 2026-11-03 \\
+\bottomrule
+\end{longtable}
+\paragraph{Not run (cross offline, Java implementation against the Rust specification).}
+skipped: a smaller size had reached its limit: 3 4 bag, 4 3 bag.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -55,8 +66,8 @@ planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 3,2 & 2 & 868 & conforms & 11.9 & 2162 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
-\color{red} 3,3 & 6 & 1194756 & conforms & 2861.8 & 22854 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{red} 3,2 & 2 & 868 & conforms & 12.0 & 2162 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{red} 3,3 & 6 & 1194756 & conforms & 2861.9 & 22854 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
@@ -66,13 +77,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 868 & 868 & conforms & 6.4 & 234 & 4 h, 250 GB & 6.3 & 0.1 & 0.1 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,3 & 1194756 & 1194756 & conforms & 1426.5 & 15484 & 4 h, 250 GB & 1426.1 & 21.3 & 0.4 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 868 & 868 & conforms & 6.4 & 238 & 4 h, 250 GB & 6.3 & 0.1 & 0.1 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 1194756 & 1194756 & conforms & 1426.5 & 15506 & 4 h, 250 GB & 1426.1 & 21.3 & 0.4 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-skipped: a smaller size had reached its limit: 4 3 bag.\par
-planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
+skipped: a smaller size had reached its limit: 3 4 bag, 4 3 bag.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -80,13 +90,12 @@ planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 868 & 868 & conforms & 6.4 & 234 & 4 h, 250 GB & 0.1 & 6.3 & 0.1 & merge & brain01, 2026-11-03 \\
-\color{blue} 3,3 & 1194756 & 1194756 & conforms & 1426.1 & 15484 & 4 h, 250 GB & 21.3 & 1426.1 & 0.0 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 868 & 868 & conforms & 6.4 & 238 & 4 h, 250 GB & 0.1 & 6.3 & 0.1 & merge & brain01, 2026-11-03 \\
+\color{blue} 3,3 & 1194756 & 1194756 & conforms & 1426.1 & 15506 & 4 h, 250 GB & 21.3 & 1426.1 & 0.0 & merge & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: 4 3 bag.\par
-planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
+skipped: a smaller size had reached its limit: 3 4 bag, 4 3 bag.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{single}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -94,8 +103,8 @@ planned but never scheduled (grid points beyond the ladder): 3 4 bag.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{blue} 3,2 & 868 & 868 & conforms & 10.3 & 2099 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
-\color{red} 3,3 & 1194756 & 1194756 & conforms & 2977.2 & 23725 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{blue} 3,2 & 868 & 868 & conforms & 10.5 & 2099 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{red} 3,3 & 1194756 & 1194756 & conforms & 2998.5 & 23725 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
@@ -105,8 +114,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 3,2 & 868 & 868 & conforms & 0.1 & 4 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
-\color{red} 3,3 & 1194756 & 1194756 & conforms & 25.2 & 21 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{red} 3,2 & 868 & 868 & conforms & 11.9 & 2205 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
+\color{red} 3,3 & 1194756 & 1194756 & conforms & 4084.2 & 26796 & 4 h, 250 GB &  & brain01, 2026-11-03 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}

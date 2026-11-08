@@ -350,7 +350,7 @@ if not FULL and KEEP is None:
         body.append(f"{shown} & {size} & {pair} & " + " & ".join([paint(c1, x) for x in on] + [paint(c3, x) for x in off]) + " \\\\")
         csvrows.append([nm.replace("\\textsf{", "").rstrip("}"), size, pair] + on + off + [c1.get("run id", ""), c3.get("run id", "")])
     if body:
-        cap = ("Time components in seconds of \\online and \\offline on the pairs of \\Cref{tab:table2,tab:table3} that both finished (C = conforming, V = violating). "
+        cap = ("Time components in seconds of \\online and \\offline on the pairs of the two preceding tables that both finished (C = conforming, V = violating). "
                "\\online: T$_{\\mathit{ref}}$ = exploring the reference and building the index, T$_{\\mathit{cand}}$ = exploring the candidate and querying it, T = the run. "
                "\\offline: for the reference and the candidate export, E = exploring and summarising, W = writing the summary file; J = the merge join; T = the longer export plus the join. "
                "A component below 0.05\\,s is printed as $<$0.1.")

@@ -5,15 +5,15 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{abd} (abd-register-civl)}
 \author{}
-\date{generated 2026-11-05 from brain-data bb4df53ad 2026-11-05 15:31:21 +0100}
+\date{generated 2026-11-08 from brain-data 614b86250 2026-11-08 11:41:25 +0100}
 \begin{document}\maketitle\small
-\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{spec}}$, $G_{\mathit{impl}}$ = the graphs of the specification and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{spec}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
+\noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
 \section*{stateless}
 \subsection*{stateless: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2 & 3 & 12480 & conforms & 0.4 & 2 & 1 h, 250 GB & 3 & 6 & brain03, 2026-11-01 \\
@@ -23,7 +23,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \subsection*{stateless: pair \textsf{read-no-writeback}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrl@{}}
 \toprule
-size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{spec}}^{\mathit{expl}}$ & run \\
+size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & sweeps & $G_{\mathit{ref}}^{\mathit{expl}}$ & run \\
 \midrule
 \endhead
 \color{blue} 2 & 3 & 544 & conforms & 0.1 & 2 & 1 h, 250 GB & 3 & 6 & brain03, 2026-11-01 \\
@@ -32,7 +32,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-skipped: a smaller size had reached its limit: 4 correct bag, 5 correct bag, 5 read-no-writeback bag, 6 correct bag, 6 read-no-writeback bag, 7 correct bag, 7 read-no-writeback bag, 8 read-no-writeback bag, 8 correct bag, 9 read-no-writeback bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 4 correct bag, 5 correct bag, 5 read-no-writeback bag, 6 read-no-writeback bag, 6 correct bag, 7 read-no-writeback bag, 7 correct bag, 8 correct bag, 8 read-no-writeback bag, 9 read-no-writeback bag, 9 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -56,7 +56,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-skipped: a smaller size had reached its limit: 4 correct bag, 5 correct bag, 5 read-no-writeback bag, 6 correct bag, 6 read-no-writeback bag, 7 correct bag, 7 read-no-writeback bag, 8 read-no-writeback bag, 8 correct bag, 9 read-no-writeback bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 4 correct bag, 5 correct bag, 5 read-no-writeback bag, 6 read-no-writeback bag, 6 correct bag, 7 read-no-writeback bag, 7 correct bag, 8 correct bag, 8 read-no-writeback bag, 9 read-no-writeback bag, 9 correct bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -64,7 +64,7 @@ skipped: a smaller size had reached its limit: 4 correct bag, 5 correct bag, 5 r
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 12480 & conforms & 0.6 & 4 & 10 min, 16 GB & 0.1 & 0.6 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2 & 3 & 12480 & conforms & 0.6 & 8 & 10 min, 16 GB & 0.1 & 0.6 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -73,12 +73,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 544 & conforms & 0.1 & 4 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
-\color{red} 3 & 3 & 960768 & violation & 6.9 & 6 & 10 min, 16 GB & 0.0 & 6.9 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 2 & 3 & 544 & conforms & 0.1 & 8 & 10 min, 16 GB & 0.1 & 0.1 & 0.0 & in-memory & brain05, 2026-11-02 \\
+\color{red} 3 & 3 & 960768 & violation & 6.9 & 10 & 10 min, 16 GB & 0.0 & 6.9 & 0.0 & in-memory & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-skipped: a smaller size had reached its limit: 3 bag correct, 4 correct bag, 4 read-no-writeback bag, 5 correct bag, 5 read-no-writeback bag, 6 correct bag, 6 read-no-writeback bag, 7 correct bag, 7 read-no-writeback bag, 8 read-no-writeback bag, 8 correct bag, 9 read-no-writeback bag, 9 correct bag.\par
+skipped: a smaller size had reached its limit: 3 bag correct, 4 read-no-writeback bag, 4 correct bag, 5 correct bag, 5 read-no-writeback bag, 6 read-no-writeback bag, 6 correct bag, 7 read-no-writeback bag, 7 correct bag, 8 correct bag, 8 read-no-writeback bag, 9 read-no-writeback bag, 9 correct bag.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -86,7 +86,7 @@ skipped: a smaller size had reached its limit: 3 bag correct, 4 correct bag, 4 r
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 12480 & conforms & 3.3 & 160 & 10 min, 16 GB & 3.3 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 3 & 12480 & conforms & 3.3 & 164 & 10 min, 16 GB & 3.3 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -95,11 +95,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 544 & conforms & 3.3 & 160 & 10 min, 16 GB & 3.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 3 & 3 & 960768 & violation & 6.9 & 157 & 10 min, 16 GB & 2.9 & 6.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 3 & 544 & conforms & 3.3 & 164 & 10 min, 16 GB & 3.3 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 3 & 960768 & violation & 6.9 & 163 & 10 min, 16 GB & 2.9 & 6.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
+planned but never scheduled (grid points beyond the ladder): 4 bag read-no-writeback.\par
 skipped: a smaller size had reached its limit: 3 bag correct.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model bag, expected conforms}
@@ -108,7 +109,7 @@ skipped: a smaller size had reached its limit: 3 bag correct.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 12480 & conforms & 79.5 & 1870 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2 & 3 & 12480 & conforms & 79.6 & 1870 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \color{red} 3 & 3 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -118,12 +119,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 544 & conforms & 3.5 & 559 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
+\color{red} 2 & 3 & 544 & conforms & 3.6 & 559 & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \color{red} 3 & 3 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain05, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 2 bag read-no-writeback, 2 bag correct, 3 bag read-no-writeback, 3 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 2 bag correct, 2 bag read-no-writeback, 3 bag correct, 3 bag read-no-writeback.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -131,7 +132,7 @@ planned but never scheduled (grid points beyond the ladder): 2 bag read-no-write
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 12480 & conforms & 0.7 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 2 & 3 & 12480 & conforms & 4.0 & 160 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
 \color{red} 3 & 3 &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
@@ -141,8 +142,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 3 & 544 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
-\color{red} 3 & 3 & 960768 & violation & 7.9 & 6 & 1 h, 250 GB & 309 & brain01, 2026-11-02 \\
+\color{red} 2 & 3 & 544 & conforms & 3.4 & 160 & 1 h, 250 GB &  & brain01, 2026-11-02 \\
+\color{red} 3 & 3 & 960768 & violation & 10.8 & 157 & 1 h, 250 GB & 309 & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \section*{twins offline, Rust implementation against its Java twin}
@@ -152,7 +153,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 64.9 & 5608 & 10 min, 16 GB & 64.9 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 64.9 & 5612 & 10 min, 16 GB & 64.9 & 0.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -161,7 +162,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 64.9 & 5608 & 10 min, 16 GB & 64.9 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 64.9 & 5612 & 10 min, 16 GB & 64.9 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -170,8 +171,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 5.6 & 275 & 10 min, 16 GB & 5.6 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 3 & 960768 & 960768 & conforms & 2201.8 & 30793 & 10 min, 16 GB & 2201.8 & 6.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 5.6 & 279 & 10 min, 16 GB & 5.6 & 0.1 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 960768 & 960768 & conforms & 2201.8 & 30799 & 10 min, 16 GB & 2201.8 & 6.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
@@ -184,7 +185,7 @@ refused (an input missing at run time): 3 bag read-no-writeback.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 64.9 & 5608 & 10 min, 16 GB & 0.6 & 64.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 64.9 & 5612 & 10 min, 16 GB & 0.6 & 64.9 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -193,7 +194,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 5.6 & 275 & 10 min, 16 GB & 0.6 & 5.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 5.6 & 279 & 10 min, 16 GB & 0.6 & 5.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -202,8 +203,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 5.6 & 275 & 10 min, 16 GB & 0.1 & 5.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
-\color{red} 3 & 960768 & 960768 & conforms & 2201.8 & 30793 & 10 min, 16 GB & 6.9 & 2201.8 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 5.6 & 279 & 10 min, 16 GB & 0.1 & 5.6 & 0.0 & in-memory & brain01, 2026-11-02 \\
+\color{red} 3 & 960768 & 960768 & conforms & 2201.8 & 30799 & 10 min, 16 GB & 6.9 & 2201.8 & 0.0 & in-memory & brain01, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
@@ -216,7 +217,7 @@ refused (an input missing at run time): 3 bag read-no-writeback.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 117.1 & 9140 & 10 min, 16 GB & 117.0 & 1.1 & 0.1 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 117.1 & 9146 & 10 min, 16 GB & 117.0 & 1.1 & 0.1 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -225,7 +226,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 117.0 & 9140 & 10 min, 16 GB & 117.0 & 0.2 & 0.0 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 117.0 & 9144 & 10 min, 16 GB & 117.0 & 0.2 & 0.0 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -234,7 +235,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 10.3 & 1697 & 10 min, 16 GB & 10.3 & 0.2 & 0.0 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 10.3 & 1702 & 10 min, 16 GB & 10.3 & 0.2 & 0.0 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
@@ -247,7 +248,7 @@ refused (an input missing at run time): 3 bag read-no-writeback.\par
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 117.0 & 9140 & 10 min, 16 GB & 1.1 & 117.0 & 0.0 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 117.0 & 9146 & 10 min, 16 GB & 1.1 & 117.0 & 0.0 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -256,7 +257,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 10.3 & 1697 & 10 min, 16 GB & 1.1 & 10.3 & 0.0 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 10.3 & 1704 & 10 min, 16 GB & 1.1 & 10.3 & 0.0 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -265,11 +266,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & export spec & export impl & join & join kind & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 10.3 & 1697 & 10 min, 16 GB & 0.2 & 10.3 & 0.0 & in-memory & brain02, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 10.3 & 1702 & 10 min, 16 GB & 0.2 & 10.3 & 0.0 & in-memory & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: 3 bag read-no-writeback, 3 bag correct.\par
+skipped: a smaller size had reached its limit: 3 bag correct, 3 bag read-no-writeback.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -277,7 +278,7 @@ skipped: a smaller size had reached its limit: 3 bag read-no-writeback, 3 bag co
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 116.1 & 9686 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 117.2 & 9686 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -286,7 +287,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 11.1 & 2359 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 12.2 & 2359 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -295,12 +296,12 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 10.9 & 2218 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
-\color{red} 3 & 960768 & 960768 & conforms & 3176.8 & 36433 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 11.1 & 2218 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 3 & 960768 & 960768 & conforms & 3195.7 & 36433 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Java port (JMC) against the Rust implementation's export).}
-skipped: a smaller size had reached its limit: 3 bag read-no-writeback, 3 bag correct.\par
+skipped: a smaller size had reached its limit: 3 bag correct, 3 bag read-no-writeback.\par
 \section*{context-free twins online, Rust implementation (TraceForge) against the Java port's export}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -308,7 +309,7 @@ skipped: a smaller size had reached its limit: 3 bag read-no-writeback, 3 bag co
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 12480 & conforms & 1.1 & 8 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 12480 & conforms & 118.1 & 9140 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -317,7 +318,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 0.1 & 4 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 12480 & 544 & conforms$^{\ast}$ & 117.1 & 9140 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \subsection*{context-free twins online, Rust implementation (TraceForge) against the Java port's export: pair \textsf{read-no-writeback}, model bag, expected conforms}
@@ -326,9 +327,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & first miss ms & run \\
 \midrule
 \endhead
-\color{red} 2 & 544 & 544 & conforms & 0.1 & 4 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
+\color{red} 2 & 544 & 544 & conforms & 10.4 & 1697 & 1 h, 250 GB &  & brain02, 2026-11-02 \\
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-skipped: a smaller size had reached its limit: 3 bag read-no-writeback, 3 bag correct.\par
+skipped: a smaller size had reached its limit: 3 bag correct, 3 bag read-no-writeback.\par
 \end{document}

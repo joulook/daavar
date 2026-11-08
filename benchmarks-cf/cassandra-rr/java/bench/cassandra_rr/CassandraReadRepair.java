@@ -108,35 +108,113 @@ public final class CassandraReadRepair implements MpProgram {
     // ------------------------------------------------------------------------------------------
     // Internal messages (net/Verb.java: MUTATION_REQ/RSP, READ_REQ/RSP, READ_REPAIR_REQ/RSP).
     // PORT: net/Message's header reduced to the id (the callback correlation of
-    // net/RequestCallbacks) and the sender.
+    // net/RequestCallbacks) and the sender's endpoint (the replica's address, i.e. the Tid of its
+    // coordinator thread, where responses go). PORT (fix round 2): every internal message also
+    // carries {@code known}: per replica, the highest memtable version in the sender's causal past
+    // (see MutationStage and ReadStageTask: it is what a read must at least observe).
     // ------------------------------------------------------------------------------------------
 
-    @Tag("MutationReq") public record MutationReq(int id, Tid from, Mutation payload) implements MpMessage {}
-    @Tag("MutationRsp") public record MutationRsp(int id, Tid from) implements MpMessage {}
-    @Tag("ReadReq") public record ReadReq(int id, Tid from, ReadCommand payload) implements MpMessage {}
-    @Tag("ReadRsp") public record ReadRsp(int id, Tid from, ReadResponse payload) implements MpMessage {}
-    @Tag("ReadRepairReq") public record ReadRepairReq(int id, Tid from, Mutation payload) implements MpMessage {}
-    @Tag("ReadRepairRsp") public record ReadRepairRsp(int id, Tid from) implements MpMessage {}
+    @Tag("MutationReq") public record MutationReq(int id, Tid from, Mutation payload, List<Integer> known) implements MpMessage {}
+    @Tag("MutationRsp") public record MutationRsp(int id, Tid from, List<Integer> known) implements MpMessage {}
+    @Tag("ReadReq") public record ReadReq(int id, Tid from, ReadCommand payload, List<Integer> known) implements MpMessage {}
+    @Tag("ReadRsp") public record ReadRsp(int id, Tid from, ReadResponse payload, List<Integer> known) implements MpMessage {}
+    @Tag("ReadRepairReq") public record ReadRepairReq(int id, Tid from, Mutation payload, List<Integer> known) implements MpMessage {}
+    @Tag("ReadRepairRsp") public record ReadRepairRsp(int id, Tid from, List<Integer> known) implements MpMessage {}
 
     /**
-     * A local runnable queued on its stage by Stage.maybeExecuteImmediately when no work permit is
-     * free (StorageProxy.LocalMutationRunnable via performLocally, StorageProxy.LocalReadRunnable).
-     * PORT: a queued task is a message of the replica to itself; {@code id} names the callback.
+     * PORT (fix round 2): the publication of memtable state {@code index} of replica
+     * {@code replica} (the memtable after its index-th write), sent by the replica's MUTATION
+     * stage after each write to every thread of that replica that may read the memtable (its READ
+     * stage tasks and its coordinator thread, for inline local reads). Receiving it models the
+     * volatile read of the memtable's partition reference (AtomicBTreePartition.ref): a reader is
+     * causally after the write it observes, and nothing else. A READ stage task is single-use and
+     * gets one copy of each state ({@code slot} 0); the coordinator thread may read inline several
+     * times and gets one copy per inline-read slot (a message is read once).
      */
-    @Tag("LocalMutationRunnable") public record LocalMutationRunnable(int id, Mutation mutation) implements MpMessage {}
-    @Tag("LocalReadRunnable") public record LocalReadRunnable(int id, ReadCommand command) implements MpMessage {}
+    @Tag("Version") public record Version(int replica, int index, int slot, List<Cell> memtable, List<Integer> known) implements MpMessage {}
 
-    /** The model of the verbs between replicas and of the queued local tasks (see Node.step). */
+    /**
+     * The model of every message (see NOTES.md F1/G2): delivery to a stage thread pool, whose
+     * tasks run in any order; the client channels carry at most one message per direction.
+     */
     static final CommunicationModel STAGES = CommunicationModel.ASYN;
 
     /**
-     * Whether Stage.maybeExecuteImmediately may take its inline branch (a free work permit).
-     * PORT: false: the queued branch alone yields every history the inline branch does (a queued
-     * local task may be received at the replica's very next step, and between the inline point
-     * and that step the coordinator only sends), so the inline branch adds only duplicate
-     * executions. Set to true to explore both branches with a Nondet choice.
+     * Whether Stage.maybeExecuteImmediately may take its inline branch (a free work permit); the
+     * queued branch is always possible. PORT (fix round 2): true: both branches are explored (a
+     * Nondet choice), since they differ in causal order (inline work is on the coordinator thread).
      */
-    static final boolean INLINE_LOCAL_EXECUTION = false;
+    static final boolean INLINE_LOCAL_EXECUTION = true;
+
+    static List<Integer> known(int[] k) {
+        return List.of(k[0], k[1], k[2]);
+    }
+
+    static void merge(int[] k, List<Integer> other) {
+        for (int i = 0; i < k.length; i++)
+            k[i] = Math.max(k[i], other.get(i));
+    }
+
+    /**
+     * PORT (fix round 2): the threads of one replica, in spawn order: its coordinator thread
+     * (native-transport request thread, role {@code n<r>}, the replica's address), its MUTATION
+     * stage ({@code n<r>-mutation}), and its READ stage tasks ({@code n<r>-read-c<c>-<s>}), one
+     * single-use thread per read request coordinator {@code c} can send it (two per read of client
+     * {@code c}: the initial request and the full data read of a repair). Then the clients.
+     */
+    static final class Layout {
+        final int q;
+        final int perReplica;
+
+        Layout(int q) {
+            this.q = q;
+            int p = 2;
+            for (int c = 0; c < CLIENTS; c++) p += slots(c);
+            this.perReplica = p;
+        }
+
+        int reads(int c) {
+            int n = 0;
+            for (int j = 0; j < q; j++) if ((c + j) % 3 != 0) n++;
+            return n;
+        }
+
+        int slots(int c) { return 2 * reads(c); }
+        int coordinator(int r) { return r * perReplica; }
+        int mutation(int r) { return r * perReplica + 1; }
+
+        int worker(int r, int c, int s) {
+            if (s >= slots(c)) throw new IllegalStateException("no read slot " + s + " for c" + c + " at n" + r);
+            int off = 2;
+            for (int k = 0; k < c; k++) off += slots(k);
+            return r * perReplica + off + s;
+        }
+
+        int client(int i) { return REPLICAS * perReplica + i; }
+        int total() { return REPLICAS * perReplica + CLIENTS; }
+
+        String role(int idx) {
+            if (idx >= REPLICAS * perReplica) return "c" + (idx - REPLICAS * perReplica);
+            int r = idx / perReplica, o = idx % perReplica;
+            if (o == 0) return "n" + r;
+            if (o == 1) return "n" + r + "-mutation";
+            int off = 2;
+            for (int c = 0; c < CLIENTS; c++) {
+                if (o < off + slots(c)) return "n" + r + "-read-c" + c + "-" + (o - off);
+                off += slots(c);
+            }
+            throw new IllegalStateException();
+        }
+
+        Tid tid(long base, int idx) { return Tid.of(base + idx, role(idx)); }
+
+        List<Tid> workers(long base, int r) {
+            List<Tid> l = new ArrayList<>();
+            for (int c = 0; c < CLIENTS; c++)
+                for (int s = 0; s < slots(c); s++) l.add(tid(base, worker(r, c, s)));
+            return l;
+        }
+    }
 
     // ------------------------------------------------------------------------------------------
     // Program parameters and entry
@@ -150,14 +228,16 @@ public final class CassandraReadRepair implements MpProgram {
     private final ReadRepairStrategy strategy;
     private final CommunicationModel model;
     private final String modelName;
+    private final Layout layout;
     /**
-     * Test only (not a protocol option): {@code review1} restricts the schedules to those of the
-     * REVIEW.md finding-1 history (see Node.witnessAllows and ReplicaPlans.forRead). It only
-     * removes choices: every execution it allows is an execution of the unrestricted program.
+     * Test only (not a protocol option): a reachability aid. {@code review1} restricts the
+     * schedules towards the REVIEW.md finding-1 history (ReplicaPlans.forRead, Node.inline,
+     * ReadStageTask.run). It only removes choices: every execution it allows is an execution of
+     * the unrestricted program.
      */
     private final boolean review1;
 
-    /** Launcher entry: {@code impl,<q>,<blocking|none>,<fifo|bag>}. */
+    /** Launcher entry: {@code impl,<q>,<blocking|none>,<fifo|bag>[,review1]}. */
     public CassandraReadRepair(String... args) {
         if (args.length < 4 || args.length > 5 || !args[0].equals("impl")
                 || (args.length == 5 && !args[4].equals("review1"))) {
@@ -175,34 +255,43 @@ public final class CassandraReadRepair implements MpProgram {
             case "bag" -> CommunicationModel.ASYN;
             default -> throw new IllegalArgumentException("model must be fifo or bag");
         };
+        this.layout = new Layout(q);
     }
 
     @Override public String programName() { return "cassandra-rr"; }
     @Override public String size() { return "q=" + q + ",rr=" + strategy.name().toLowerCase() + "," + modelName; }
     @Override public CommunicationModel model() { return model; }
-    @Override public List<String> rolesInSpawnOrder() { return List.of("n0", "n1", "n2", "c0", "c1"); }
+
+    @Override
+    public List<String> rolesInSpawnOrder() {
+        List<String> roles = new ArrayList<>();
+        for (int k = 0; k < layout.total(); k++) roles.add(layout.role(k));
+        return roles;
+    }
+
     @Override public List<String> visibleRoles() { return List.of("c0", "c1"); }
 
     /**
-     * Observation only (printed by the launcher through toString): the distinct sequences of
-     * replies each client received, and how many client runs finished. Not part of the protocol;
-     * it touches no message-passing state.
+     * Observation only (printed by the launcher through toString): the distinct reply sequences
+     * of each client and the distinct pairs of them. These are reply strings only: they carry no
+     * causal order (the exported summaries do; NOTES.md G6). Not part of the protocol; it touches
+     * no message-passing state.
      */
     private final Map<String, Boolean> observedReplies = new ConcurrentHashMap<>();
-    private final Map<String, Boolean> observedHistories = new ConcurrentHashMap<>();
+    private final Map<String, Boolean> observedReplyPairs = new ConcurrentHashMap<>();
     private final java.util.concurrent.atomic.AtomicLong finishedClients = new java.util.concurrent.atomic.AtomicLong();
 
     /**
-     * The reference check of fix round 1 (translit-review/REVIEW.md, finding 1; q=2, none, fifo):
-     * c0 Write(0,1) -> Ack, ReadA -> 1; c1 ReadA -> 1, then ReadAB -> (0,0).
+     * The reply strings of the fix-round-1 reference check (translit-review/REVIEW.md, finding 1;
+     * q=2, none): c0 Write(0,1) -> Ack, ReadA -> 1; c1 ReadA -> 1, then ReadAB -> (0,0).
      */
     static final String REVIEW_HISTORY = "c0=[Ack[client=0] ValueA[client=0, a=1]] c1=[ValueA[client=1, a=1] ValueAB[client=1, a=0, b=0]]";
 
     @Override
     public String toString() {
         return "finished client runs " + finishedClients.get() + "; distinct replies per client "
-                + new TreeSet<>(observedReplies.keySet()) + "; distinct joint histories " + observedHistories.size()
-                + (q == 2 ? "; review history (REVIEW.md finding 1) " + (observedHistories.containsKey(REVIEW_HISTORY) ? "PRESENT" : "ABSENT") : "");
+                + new TreeSet<>(observedReplies.keySet()) + "; distinct reply-string pairs " + observedReplyPairs.size()
+                + (q == 2 ? "; review reply strings (REVIEW.md finding 1) " + (observedReplyPairs.containsKey(REVIEW_HISTORY) ? "PRESENT" : "ABSENT") : "");
     }
 
     static long value(int i, int j) {
@@ -210,24 +299,32 @@ public final class CassandraReadRepair implements MpProgram {
     }
 
     /**
-     * Main: starts the replicas in index order, then the clients in index order, and waits for
+     * Main: starts the replicas' threads in replica index order (each replica's coordinator
+     * thread, MUTATION stage and READ stage tasks), then the clients in index order, and waits for
      * them; it sends and receives nothing.
      */
     @Override
     public void run() {
         List<MpProcess.Handle> handles = new ArrayList<>();
-        for (int k = 0; k < REPLICAS; k++) {
-            final int idx = k;
-            handles.add(MpProcess.spawn("n" + k, () -> new Node(idx, q, strategy, model, review1).run()));
-        }
         String[] replies = new String[CLIENTS]; // observation only, read by main after the clients' await
-        for (int i = 0; i < CLIENTS; i++) {
-            final int idx = i;
-            handles.add(MpProcess.spawn("c" + i, () -> {
-                replies[idx] = client(idx, q, model);
-                observedReplies.put("c" + idx + ":" + replies[idx], Boolean.TRUE);
-                finishedClients.incrementAndGet();
-            }));
+        for (int k = 0; k < layout.total(); k++) {
+            final int idx = k;
+            String role = layout.role(k);
+            Runnable body;
+            if (idx >= layout.client(0)) {
+                int i = idx - layout.client(0);
+                body = () -> {
+                    replies[i] = client(i, layout, model);
+                    observedReplies.put("c" + i + ":" + replies[i], Boolean.TRUE);
+                    finishedClients.incrementAndGet();
+                };
+            } else {
+                int r = idx / layout.perReplica, o = idx % layout.perReplica;
+                if (o == 0) body = () -> new Node(r, layout, strategy, review1).run();
+                else if (o == 1) body = () -> new MutationStage(r, layout).run();
+                else body = () -> new ReadStageTask(r, idx, layout, review1).run();
+            }
+            handles.add(MpProcess.spawn(role, body));
         }
         // Every process derives the others' addresses from its own task id: the processes are
         // created consecutively (checked here, before any wait).
@@ -237,29 +334,21 @@ public final class CassandraReadRepair implements MpProgram {
                 throw new IllegalStateException("task ids are not consecutive: " + handles);
             }
         }
-        for (int k = REPLICAS; k < handles.size(); k++) {
+        for (int i = 0; i < CLIENTS; i++) {
+            handles.get(layout.client(i)).await();
+        }
+        observedReplyPairs.put("c0=[" + replies[0] + "] c1=[" + replies[1] + "]", Boolean.TRUE);
+        for (int k = 0; k < layout.client(0); k++) {
             handles.get(k).await();
         }
-        observedHistories.put("c0=[" + replies[0] + "] c1=[" + replies[1] + "]", Boolean.TRUE);
-        for (int k = 0; k < REPLICAS; k++) {
-            handles.get(k).await();
-        }
-    }
-
-    static Tid replicaTid(long base, int k) {
-        return Tid.of(base + k, "n" + k);
-    }
-
-    static Tid clientTid(long base, int i) {
-        return Tid.of(base + REPLICAS + i, "c" + i);
     }
 
     /** The client loop of INTERFACE.md, verbatim in meaning. */
-    static String client(int i, int q, CommunicationModel model) {
-        long base = MpProcess.self().raw() - REPLICAS - i;
-        Tid node = replicaTid(base, i);
+    static String client(int i, Layout layout, CommunicationModel model) {
+        long base = MpProcess.self().raw() - layout.client(i);
+        Tid node = layout.tid(base, layout.coordinator(i));
         StringBuilder replies = new StringBuilder();
-        for (int j = 0; j < q; j++) {
+        for (int j = 0; j < layout.q; j++) {
             MpMessage rep;
             switch ((i + j) % 3) {
                 case 0 -> {
@@ -389,100 +478,64 @@ public final class CassandraReadRepair implements MpProgram {
     // One replica process: storage, verb handlers, messaging, and the coordinator (StorageProxy)
     // ------------------------------------------------------------------------------------------
 
+    /**
+     * A replica's coordinator thread (role {@code n<r>}): the native-transport request thread that
+     * runs StorageProxy for its client, and the thread its response callbacks signal.
+     *
+     * <p>PORT (fix round 2, REVIEW-r2.md finding 1): a replica is several processes, one per
+     * Cassandra thread whose work it runs, so that program order exists only where the source has
+     * a dependency:
+     * <ul>
+     *   <li>this coordinator thread: the client request, StorageProxy and the read executor, and
+     *       the callbacks of its requests. The REQUEST_RESPONSE stage task of a response
+     *       (ResponseVerbHandler -> callback.onResponse) is run here, at the receipt of the
+     *       response: its only effect is on the coordinator's handler (the Accumulator, the
+     *       counter, the latch), which the waiting coordinator thread then reads, so the task is
+     *       ordered before the coordinator's continuation in the source as well (NOTES.md G3);</li>
+     *   <li>{@link MutationStage}: the MUTATION stage (MUTATION_REQ, READ_REPAIR_REQ and queued
+     *       local mutations) and the memtable;</li>
+     *   <li>{@link ReadStageTask}: one READ stage task per read request (READ_REQ and queued
+     *       local reads).</li>
+     * </ul>
+     */
     static final class Node {
         final int index;
-        final int q;
+        final Layout layout;
         final ReadRepairStrategy readRepairStrategy;
-        final CommunicationModel model;
         Tid self;
         long base;
         final List<Replica> naturalReplicas = new ArrayList<>();
-        /** PORT: in-memory state instead of the storage engine (memtable of the one row). */
-        final TreeMap<String, Cell> memtable = new TreeMap<>();
         /** net/RequestCallbacks: id -> callback. PORT: entries never expire (no timeouts). */
         final Map<Integer, RequestCallback> callbacks = new HashMap<>();
         int nextId = 0;
+        /** The causal knowledge of memtable versions (see the internal messages). */
+        final int[] known = new int[REPLICAS];
+        /** The next READ stage task slot of each target replica for this coordinator. */
+        final int[] slotUsed = new int[REPLICAS];
+        /** The next inline-read slot (a copy of each published state per slot). */
+        int inlineReads = 0;
 
         final boolean review1;
-        int clientOpsDone = 0;     // review1 bookkeeping only
-        int readsPlanned = 0;      // review1 bookkeeping only
-        boolean servedRead = false; // review1 bookkeeping only
-        boolean localApplied = false; // review1 bookkeeping only
+        int readsPlanned = 0; // review1 bookkeeping only
 
-        Node(int index, int q, ReadRepairStrategy readRepairStrategy, CommunicationModel model, boolean review1) {
-            this.review1 = review1;
+        Node(int index, Layout layout, ReadRepairStrategy readRepairStrategy, boolean review1) {
             this.index = index;
-            this.q = q;
+            this.layout = layout;
             this.readRepairStrategy = readRepairStrategy;
-            this.model = model;
+            this.review1 = review1;
         }
-
-        boolean coordinating = false;
 
         void run() {
             self = MpProcess.self();
-            base = self.raw() - index;
+            base = self.raw() - layout.coordinator(index);
             for (int k = 0; k < REPLICAS; k++)
-                naturalReplicas.add(new Replica(k, replicaTid(base, k), k == index));
-            // PORT: the process never terminates: a replica keeps receiving (the harness ends an
-            // execution blocked on receive).
-            while (true)
-                step();
-        }
-
-        /**
-         * One step of the replica's threads: receive one message and run what it carries.
-         *
-         * <p>PORT (fix round 1, REVIEW.md finding 1): Cassandra receives a verb on an inbound
-         * (network) thread and runs it as a task on the verb's stage
-         * (InboundMessageHandler.dispatch -> header.verb.stage.execute, F/net/InboundMessageHandler.java
-         * l.388-399). MUTATION, READ and REQUEST_RESPONSE are all multi-threaded stages
-         * (F/concurrent/Stage.java l.45-50), so the tasks of a replica run in any order relative to
-         * each other and to the coordinator thread, whatever order the transport delivered them in.
-         * The receipt order of a channel therefore constrains nothing observable for the verbs, and
-         * the execution of a verb at an arbitrary later point is modelled as its delivery at that
-         * point: the verbs between replicas (and the queued local runnables) are sent and received
-         * under {@link #STAGES} = ASYN, and a received verb runs at once. The client channels keep
-         * the transport order the harness selects (each client has at most one request in flight).
-         */
-        void step() {
-            // PORT: a response whose callback can no longer change anything (the third
-            // MUTATION_RSP of a write after its handler signalled) is not received: in Cassandra
-            // its task has no effect, and leaving it unread removes executions that differ only in
-            // where it was read. The guard reads only the captured set.
-            java.util.Set<Integer> live = liveCallbacks();
-            if (!review1) {
-                accept(Channel.recv(STAGES, msg -> !(msg instanceof MutationRsp r) || live.contains(r.id())));
-                return;
-            }
-            // review1 (test only): delay some receipts, capturing the state the guard needs.
-            final int idx = index;
-            final boolean mutationsAllowed = idx == 1 ? clientOpsDone >= 2 : idx != 2 || servedRead;
-            final boolean readsAllowed = idx != 0 || localApplied;
-            accept(Channel.recv(STAGES, msg -> (!(msg instanceof MutationRsp r) || live.contains(r.id()))
-                    && (!(msg instanceof MutationReq) || mutationsAllowed)
-                    && (!(msg instanceof ReadReq) || readsAllowed)));
-        }
-
-        java.util.Set<Integer> liveCallbacks() {
-            java.util.Set<Integer> live = new java.util.HashSet<>();
-            for (Map.Entry<Integer, RequestCallback> e : callbacks.entrySet())
-                if (!(e.getValue() instanceof WriteResponseHandler w && w.condition))
-                    live.add(e.getKey());
-            return java.util.Set.copyOf(live);
-        }
-
-        void accept(MpMessage m) {
-            if (m instanceof Write || m instanceof ReadA || m instanceof ReadAB) {
-                if (coordinating)
-                    throw new IllegalStateException("client request during a coordinator wait: " + m);
-                coordinating = true;
+                naturalReplicas.add(new Replica(k, layout.tid(base, layout.coordinator(k)), k == index));
+            // PORT: the process never terminates: it keeps receiving client requests (the harness
+            // ends an execution blocked on receive).
+            while (true) {
+                MpMessage m = Channel.recv(STAGES, msg -> msg instanceof Write || msg instanceof ReadA || msg instanceof ReadAB);
                 coordinate(m);
-                coordinating = false;
-                clientOpsDone++;
-                return;
             }
-            dispatch(m); // the stage task of the verb
         }
 
         /**
@@ -495,13 +548,13 @@ public final class CassandraReadRepair implements MpProgram {
             if (m instanceof Write w) {
                 StorageProxy.mutate(this, new Mutation(new PartitionUpdate(List.of(
                         new Cell("a", w.value(), w.value()), new Cell("b", w.value(), w.value())))));
-                Channel.send(STAGES, clientTid(base, w.client()), new Ack(w.client()));
+                Channel.send(STAGES, layout.tid(base, layout.client(w.client())), new Ack(w.client()));
             } else if (m instanceof ReadA r) {
                 Map<String, Cell> row = StorageProxy.readRegular(this, new ReadCommand(List.of("a"), false));
-                Channel.send(STAGES, clientTid(base, r.client()), new ValueA(r.client(), valueOf(row, "a")));
+                Channel.send(STAGES, layout.tid(base, layout.client(r.client())), new ValueA(r.client(), valueOf(row, "a")));
             } else if (m instanceof ReadAB r) {
                 Map<String, Cell> row = StorageProxy.readRegular(this, new ReadCommand(List.of("a", "b"), false));
-                Channel.send(STAGES, clientTid(base, r.client()),
+                Channel.send(STAGES, layout.tid(base, layout.client(r.client())),
                         new ValueAB(r.client(), valueOf(row, "a"), valueOf(row, "b")));
             }
         }
@@ -512,14 +565,45 @@ public final class CassandraReadRepair implements MpProgram {
         }
 
         /**
-         * A wait of the coordinator thread on a Condition or latch. PORT: while it waits, the
-         * replica's other threads go on receiving and executing stage tasks (step), until the
-         * waited-for condition holds. A client request cannot arrive during a wait (the client waits
-         * for its reply).
+         * A wait of the coordinator thread on a Condition or latch. PORT: the responses its
+         * callbacks are waiting for are received here, and their REQUEST_RESPONSE task
+         * (ResponseVerbHandler.doVerb) runs at receipt (see the class comment).
+         *
+         * <p>PORT: a response whose callback can no longer change anything (the third
+         * MUTATION_RSP of a write, after its handler signalled) is not received: in the source its
+         * task only decrements a counter that nothing reads any more, so the task has no causal
+         * successor (NOTES.md G4). The guard reads only the captured set.
          */
         void awaitUntil(java.util.function.BooleanSupplier condition) {
-            while (!condition.getAsBoolean())
-                step();
+            while (!condition.getAsBoolean()) {
+                java.util.Set<Integer> live = liveCallbacks();
+                MpMessage m = Channel.recv(STAGES, msg -> responseId(msg) >= 0 && live.contains(responseId(msg)));
+                if (m instanceof MutationRsp r) {
+                    merge(known, r.known());
+                    ResponseVerbHandler.doVerb(this, r.id(), r.from(), null);
+                } else if (m instanceof ReadRsp r) {
+                    merge(known, r.known());
+                    ResponseVerbHandler.doVerb(this, r.id(), r.from(), r.payload());
+                } else if (m instanceof ReadRepairRsp r) {
+                    merge(known, r.known());
+                    ResponseVerbHandler.doVerb(this, r.id(), r.from(), null);
+                }
+            }
+        }
+
+        static int responseId(MpMessage msg) {
+            if (msg instanceof MutationRsp r) return r.id();
+            if (msg instanceof ReadRsp r) return r.id();
+            if (msg instanceof ReadRepairRsp r) return r.id();
+            return -1;
+        }
+
+        java.util.Set<Integer> liveCallbacks() {
+            java.util.Set<Integer> live = new java.util.HashSet<>();
+            for (Map.Entry<Integer, RequestCallback> e : callbacks.entrySet())
+                if (!(e.getValue() instanceof WriteResponseHandler w && w.condition))
+                    live.add(e.getKey());
+            return java.util.Set.copyOf(live);
         }
 
         /**
@@ -527,82 +611,198 @@ public final class CassandraReadRepair implements MpProgram {
          * l.218): runs the task on the calling thread if a work permit is free, else queues it on the
          * stage. PORT: whether a permit is free is a Nondet choice.
          */
-        void maybeExecuteImmediately(Runnable task, java.util.function.IntFunction<MpMessage> queued, RequestCallback callback) {
-            if (INLINE_LOCAL_EXECUTION && Nondet.chooseBoolean()) {
-                task.run();
-            } else {
-                // PORT: the queued task is a message to this replica (see step): it runs whenever it
-                // is received; its callback is registered like a request's.
-                int id = nextId++;
-                callbacks.put(id, callback);
-                Channel.send(STAGES, self, queued.apply(id));
-            }
-        }
-
-        /** The stage task of a received verb: IVerbHandler.doVerb, and net/ResponseVerbHandler for responses. */
-        void dispatch(MpMessage m) {
-            if (m instanceof MutationReq r) {
-                MutationVerbHandler.doVerb(this, r);
-            } else if (m instanceof ReadReq r) {
-                ReadCommandVerbHandler.doVerb(this, r);
-                servedRead = true;
-            } else if (m instanceof ReadRepairReq r) {
-                ReadRepairVerbHandler.doVerb(this, r);
-            } else if (m instanceof MutationRsp r) {
-                ResponseVerbHandler.doVerb(this, r.id(), r.from(), null);
-            } else if (m instanceof ReadRsp r) {
-                ResponseVerbHandler.doVerb(this, r.id(), r.from(), r.payload());
-            } else if (m instanceof ReadRepairRsp r) {
-                ResponseVerbHandler.doVerb(this, r.id(), r.from(), null);
-            } else if (m instanceof LocalMutationRunnable r) {
-                // StorageProxy.performLocally's runnable: runnable.run(); handler.onResponse(null)
-                apply(r.mutation());
-                localApplied = true;
-                callbacks.get(r.id()).onResponse(self, null);
-            } else if (m instanceof LocalReadRunnable r) {
-                // StorageProxy.LocalReadRunnable.runMayThrow: handler.response(response)
-                callbacks.get(r.id()).onResponse(self, executeLocally(r.command()));
-            } else {
-                throw new IllegalStateException("unexpected message " + m);
-            }
+        boolean inline() {
+            if (review1) return false; // review1: queued only
+            return INLINE_LOCAL_EXECUTION && Nondet.chooseBoolean();
         }
 
         // ---- net/MessagingService --------------------------------------------------------------
 
-        int sendWithCallback(Tid to, RequestCallback callback, java.util.function.IntFunction<MpMessage> message) {
+        int register(RequestCallback callback) {
             int id = nextId++;
             callbacks.put(id, callback);
-            Channel.send(STAGES, to, message.apply(id));
             return id;
         }
 
-        // ---- the storage engine ----------------------------------------------------------------
+        /** MessagingService.sendWriteWithCallback(MUTATION_REQ): to the destination's MUTATION stage. */
+        void sendMutation(Replica destination, RequestCallback callback, Mutation mutation) {
+            int id = register(callback);
+            Channel.send(STAGES, layout.tid(base, layout.mutation(destination.index())),
+                    new MutationReq(id, self, mutation, known(known)));
+        }
+
+        /** MessagingService.sendWithCallback(READ_REQ): to a READ stage task of the destination. */
+        void sendRead(Replica destination, RequestCallback callback, ReadCommand command) {
+            int id = register(callback);
+            int slot = slotUsed[destination.index()]++;
+            Channel.send(STAGES, layout.tid(base, layout.worker(destination.index(), index, slot)),
+                    new ReadReq(id, self, command, known(known)));
+        }
+
+        /** MessagingService.sendWithCallback(READ_REPAIR_REQ): to the destination's MUTATION stage. */
+        void sendReadRepair(Replica destination, RequestCallback callback, Mutation mutation) {
+            int id = register(callback);
+            Channel.send(STAGES, layout.tid(base, layout.mutation(destination.index())),
+                    new ReadRepairReq(id, self, mutation, known(known)));
+        }
+
+        // ---- local execution (StorageProxy.performLocally, LocalReadRunnable) -------------------
+
+        /**
+         * performLocally(Stage.MUTATION, localReplica, mutation::apply, handler) (StorageProxy l.1646).
+         * Queued: a LocalMutationRunnable on the MUTATION stage, i.e. a mutation request to this
+         * replica's MutationStage, which applies and answers the handler. Inline: the same apply
+         * runs on this coordinator thread before it goes on. PORT: the memtable is owned by the
+         * MutationStage process, so the inline apply is a synchronous call to it: the request,
+         * then the wait for exactly its acknowledgement (handler.onResponse runs at that receipt).
+         */
+        void performLocally(Mutation mutation, RequestCallback handler) {
+            if (!inline()) {
+                sendMutation(naturalReplicas.get(index), handler, mutation);
+                return;
+            }
+            boolean[] done = {false};
+            sendMutation(naturalReplicas.get(index), (from, payload) -> {
+                done[0] = true;
+                handler.onResponse(from, payload);
+            }, mutation);
+            awaitUntil(() -> done[0]);
+        }
+
+        /**
+         * Stage.READ.maybeExecuteImmediately(new LocalReadRunnable(command, handler)). Queued: a
+         * READ stage task of this replica. Inline: the read runs on this coordinator thread: it
+         * observes a published memtable state not older than its causal knowledge (the guard), then
+         * handler.response.
+         */
+        void localRead(ReadCommand command, ReadCallback handler) {
+            if (!inline()) {
+                sendRead(naturalReplicas.get(index), handler, command);
+                return;
+            }
+            final int r = index, need = known[index], slot = inlineReads++;
+            Version v = (Version) Channel.recv(STAGES, msg -> msg instanceof Version x && x.replica() == r
+                    && x.slot() == slot && x.index() >= need);
+            merge(known, v.known());
+            handler.response(executeLocally(toRow(v.memtable()), command));
+        }
+    }
+
+    /**
+     * ReadCommand.executeLocally + createResponse over a memtable state. Every fetched column (all
+     * regular columns, ColumnFilter.allRegularColumnsBuilder, F/cql3/selection/ColumnFilterFactory.java
+     * l.46-57) is returned; a fetched but not queried cell keeps its timestamp and has its value
+     * skipped (BTreeRow.filter, F/db/rows/BTreeRow.java l.344-371: an UPDATE writes no row
+     * liveness, so the cell is never dropped). The digest covers what is returned.
+     * PORT: a skipped value is represented as 0 (Cassandra: an empty value).
+     */
+    static ReadResponse executeLocally(Map<String, Cell> memtable, ReadCommand command) {
+        List<Cell> data = new ArrayList<>();
+        for (String column : command.fetchedColumns()) {
+            Cell c = memtable.get(column);
+            if (c == null) continue;
+            boolean isSkippable = !command.queriedColumns().contains(column);
+            data.add(isSkippable ? c.withSkippedValue() : c);
+        }
+        return command.isDigestQuery()
+               ? ReadResponse.createDigestResponse(data)
+               : ReadResponse.createDataResponse(data);
+    }
+
+    /**
+     * A replica's MUTATION stage (role {@code n<r>-mutation}) and its memtable. PORT (fix round
+     * 2): the stage is multi-threaded in the source, but every write to the partition goes through
+     * the memtable's compare-and-swap (AtomicBTreePartition: a volatile read of the current tree,
+     * then a CAS), so each write happens after the write it replaced; one process for the stage
+     * keeps exactly that write-to-write order and the order of each task's apply and response
+     * (NOTES.md G3). Messages are received in any order (ASYN), as the pool's tasks may run.
+     * After each write it publishes the new state ({@link Version}) to the replica's readers.
+     */
+    static final class MutationStage {
+        final int index;
+        final Layout layout;
+        Tid self; // the replica's address (its coordinator thread): the 'from' of responses
+        long base;
+        final TreeMap<String, Cell> memtable = new TreeMap<>();
+        int version = 0;
+        final int[] known = new int[REPLICAS];
+
+        MutationStage(int index, Layout layout) {
+            this.index = index;
+            this.layout = layout;
+        }
+
+        void run() {
+            base = MpProcess.self().raw() - layout.mutation(index);
+            self = layout.tid(base, layout.coordinator(index));
+            publish();
+            while (true) {
+                MpMessage m = Channel.recv(STAGES, msg -> msg instanceof MutationReq || msg instanceof ReadRepairReq);
+                if (m instanceof MutationReq r) {
+                    merge(known, r.known());
+                    MutationVerbHandler.doVerb(this, r);
+                } else if (m instanceof ReadRepairReq r) {
+                    merge(known, r.known());
+                    ReadRepairVerbHandler.doVerb(this, r);
+                }
+            }
+        }
 
         /** Mutation.apply -> Keyspace.apply -> memtable put: cells are merged with Cells.reconcile. */
         void apply(Mutation mutation) {
             for (Cell c : mutation.update().cells())
                 memtable.put(c.column(), Cells.reconcile(memtable.get(c.column()), c));
+            version++;
+            known[index] = version;
+            publish();
         }
 
-        /**
-         * ReadCommand.executeLocally + createResponse. Every fetched column (all regular columns,
-         * ColumnFilter.allRegularColumnsBuilder, F/cql3/selection/ColumnFilterFactory.java l.46-57)
-         * is returned; a fetched but not queried cell keeps its timestamp and has its value skipped
-         * (BTreeRow.filter, F/db/rows/BTreeRow.java l.344-371: an UPDATE writes no row liveness, so
-         * the cell is never dropped). The digest covers what is returned.
-         * PORT: a skipped value is represented as 0 (Cassandra: an empty value).
-         */
-        ReadResponse executeLocally(ReadCommand command) {
-            List<Cell> data = new ArrayList<>();
-            for (String column : command.fetchedColumns()) {
-                Cell c = memtable.get(column);
-                if (c == null) continue;
-                boolean isSkippable = !command.queriedColumns().contains(column);
-                data.add(isSkippable ? c.withSkippedValue() : c);
-            }
-            return command.isDigestQuery()
-                   ? ReadResponse.createDigestResponse(data)
-                   : ReadResponse.createDataResponse(data);
+        void publish() {
+            List<Cell> state = List.copyOf(memtable.values());
+            for (int s = 0; s < layout.slots(index); s++) // the coordinator thread's inline-read slots
+                Channel.send(STAGES, layout.tid(base, layout.coordinator(index)), new Version(index, version, s, state, known(known)));
+            for (Tid reader : layout.workers(base, index))
+                Channel.send(STAGES, reader, new Version(index, version, 0, state, known(known)));
+        }
+    }
+
+    /**
+     * One READ stage task of a replica (role {@code n<r>-read-c<c>-<s>}): it serves exactly one
+     * read request, the s-th that coordinator c sends this replica. PORT (fix round 2): a task of
+     * its own, so two reads at one replica, or a read and a write, are not ordered unless the
+     * source orders them: the read observes a published memtable state (a {@link Version}) that
+     * is not older than the request's causal knowledge, and is causally after that state's write
+     * and nothing else (NOTES.md G1).
+     */
+    static final class ReadStageTask {
+        final int index;
+        final int idx;
+        final Layout layout;
+        final boolean review1;
+        Tid self;
+        final int[] known = new int[REPLICAS];
+
+        ReadStageTask(int index, int idx, Layout layout, boolean review1) {
+            this.index = index;
+            this.idx = idx;
+            this.layout = layout;
+            this.review1 = review1;
+        }
+
+        void run() {
+            long base = MpProcess.self().raw() - idx;
+            self = layout.tid(base, layout.coordinator(index));
+            ReadReq message = (ReadReq) Channel.recv(STAGES, msg -> msg instanceof ReadReq);
+            merge(known, message.known());
+            final int r = index, need = known[index];
+            // review1 (test only): c1's reads at n1 and n2 observe the oldest admissible state, at n0
+            // a state that contains a write.
+            final boolean servesC1 = (idx % layout.perReplica) - 2 >= layout.slots(0);
+            final int mode = !review1 || !servesC1 ? 0 : (r == 0 ? 2 : 1);
+            Version v = (Version) Channel.recv(STAGES, msg -> msg instanceof Version x && x.replica() == r
+                    && (mode == 1 ? x.index() == need : x.index() >= (mode == 2 ? Math.max(need, 1) : need)));
+            merge(known, v.known());
+            ReadCommandVerbHandler.doVerb(this, message, toRow(v.memtable()));
         }
     }
 
@@ -612,41 +812,41 @@ public final class CassandraReadRepair implements MpProgram {
     // ------------------------------------------------------------------------------------------
 
     static final class MutationVerbHandler {
-        static void doVerb(Node node, MutationReq message) {
+        static void doVerb(MutationStage stage, MutationReq message) {
             // PORT: no expiry check (no timeouts), no size validation, no forwarding (one DC).
             Tid respondToAddress = message.from();
-            applyMutation(node, message, respondToAddress);
+            applyMutation(stage, message, respondToAddress);
         }
 
-        static void applyMutation(Node node, MutationReq message, Tid respondToAddress) {
+        static void applyMutation(MutationStage stage, MutationReq message, Tid respondToAddress) {
             // PORT: applyFuture().addCallback(respond) collapsed: apply, then respond.
-            node.apply(message.payload());
-            respond(node, message, respondToAddress);
+            stage.apply(message.payload());
+            respond(stage, message, respondToAddress);
         }
 
-        static void respond(Node node, MutationReq respondTo, Tid respondToAddress) {
-            Channel.send(STAGES, respondToAddress, new MutationRsp(respondTo.id(), node.self));
+        static void respond(MutationStage stage, MutationReq respondTo, Tid respondToAddress) {
+            Channel.send(STAGES, respondToAddress, new MutationRsp(respondTo.id(), stage.self, known(stage.known)));
         }
     }
 
     static final class ReadCommandVerbHandler {
-        static void doVerb(Node node, ReadReq message) {
+        static void doVerb(ReadStageTask task, ReadReq message, Map<String, Cell> memtable) {
             ReadCommand command = message.payload();
             // PORT: no bootstrap, out-of-range, transient, monitoring or warning checks.
-            ReadResponse response = node.executeLocally(command);
-            Channel.send(STAGES, message.from(), new ReadRsp(message.id(), node.self, response));
+            ReadResponse response = executeLocally(memtable, command);
+            Channel.send(STAGES, message.from(), new ReadRsp(message.id(), task.self, response, known(task.known)));
         }
     }
 
     static final class ReadRepairVerbHandler {
-        static void doVerb(Node node, ReadRepairReq message) {
+        static void doVerb(MutationStage stage, ReadRepairReq message) {
             // AbstractMutationVerbHandler.doVerb -> applyMutation (PORT: no token-ownership checks).
-            applyMutation(node, message, message.from());
+            applyMutation(stage, message, message.from());
         }
 
-        static void applyMutation(Node node, ReadRepairReq message, Tid respondToAddress) {
-            node.apply(message.payload());
-            Channel.send(STAGES, respondToAddress, new ReadRepairRsp(message.id(), node.self));
+        static void applyMutation(MutationStage stage, ReadRepairReq message, Tid respondToAddress) {
+            stage.apply(message.payload());
+            Channel.send(STAGES, respondToAddress, new ReadRepairRsp(message.id(), stage.self, known(stage.known)));
         }
     }
 
@@ -709,17 +909,12 @@ public final class CassandraReadRepair implements MpProgram {
 
             if (insertLocal) {
                 // performLocally(stage, localReplica, mutation::apply, responseHandler, ...) (l.1646)
-                Replica local = localReplica;
-                node.maybeExecuteImmediately(() -> {
-                    node.apply(mutation);                            // runnable.run()
-                    responseHandler.onResponse(local.endpoint(), null); // handler.onResponse(null)
-                }, id -> new LocalMutationRunnable(id, mutation), responseHandler);
+                node.performLocally(mutation, responseHandler);
             }
 
             if (localDc != null) {
                 for (Replica destination : localDc)
-                    node.sendWithCallback(destination.endpoint(), responseHandler,
-                            id -> new MutationReq(id, node.self, mutation));
+                    node.sendMutation(destination, responseHandler, mutation);
             }
         }
 
@@ -1116,13 +1311,12 @@ public final class CassandraReadRepair implements MpProgram {
                     hasLocalEndpoint = true;
                     continue;
                 }
-                node.sendWithCallback(replica.endpoint(), handler, id -> new ReadReq(id, node.self, readCommand));
+                node.sendRead(replica, handler, readCommand);
             }
             // We delay the local (potentially blocking) read till the end to avoid stalling remote requests.
             if (hasLocalEndpoint) {
                 // Stage.READ.maybeExecuteImmediately(new LocalReadRunnable(readCommand, handler))
-                node.maybeExecuteImmediately(() -> handler.response(node.executeLocally(readCommand)),
-                        id -> new LocalReadRunnable(id, readCommand), handler);
+                node.localRead(readCommand, handler);
             }
         }
 
@@ -1233,11 +1427,10 @@ public final class CassandraReadRepair implements MpProgram {
         void sendReadCommand(Replica to, ReadCallback readCallback) {
             if (to.isSelf()) {
                 // Stage.READ.maybeExecuteImmediately(new LocalReadRunnable(command, readCallback, ...))
-                node.maybeExecuteImmediately(() -> readCallback.response(node.executeLocally(command)),
-                        id -> new LocalReadRunnable(id, command), readCallback);
+                node.localRead(command, readCallback);
                 return;
             }
-            node.sendWithCallback(to.endpoint(), readCallback, id -> new ReadReq(id, node.self, command));
+            node.sendRead(to, readCallback, command);
         }
 
         /** AbstractReadRepair.startRepair (l.126): full data reads to every contact. */
@@ -1405,10 +1598,10 @@ public final class CassandraReadRepair implements MpProgram {
             ack(from);
         }
 
-        void sendRR(Mutation mutation, Tid endpoint) {
+        void sendRR(Mutation mutation, Replica endpoint) {
             // MessagingService.sendWithCallback(Message.out(READ_REPAIR_REQ, mutation), endpoint, this):
-            // a repair to the coordinator itself is a message to itself, as in Cassandra.
-            node.sendWithCallback(endpoint, this, id -> new ReadRepairReq(id, node.self, mutation));
+            // a repair of the coordinator's own replica also goes to its MUTATION stage as a message.
+            node.sendReadRepair(endpoint, this, mutation);
         }
 
         /** BlockingPartitionRepair.sendInitialRepairs. */
@@ -1417,7 +1610,7 @@ public final class CassandraReadRepair implements MpProgram {
                 Replica destination = entry.getKey();
                 Mutation mutation = entry.getValue();
                 // use a separate verb here to avoid writing hints on timeouts
-                sendRR(mutation, destination.endpoint());
+                sendRR(mutation, destination);
             }
         }
 

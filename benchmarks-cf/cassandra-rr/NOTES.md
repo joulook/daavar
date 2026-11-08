@@ -4,41 +4,44 @@ Source: `java/bench/cassandra_rr/CassandraReadRepair.java` (one file). Translite
 `plan/case-studies/cassandra/read-repair-src` (paths below are relative to `src/java/org/apache/cassandra`),
 with lookups in the full tree `src-4.1` where the cut calls out of itself. Every changed line carries `// PORT:`.
 
-## Roles
+## Roles (since fix round 2)
 
 | Role | Process | What it runs |
 |---|---|---|
-| `n0`, `n1`, `n2` | `Node.run` | Replica side (MutationVerbHandler, ReadCommandVerbHandler, ReadRepairVerbHandler, ResponseVerbHandler) and the coordinator for its own client (StorageProxy.mutate, StorageProxy.readRegular). It never terminates: it loops on `Node.step` (one blocking `Channel.recv`, then the received task). |
+| `n0`, `n1`, `n2` | `Node.run` | The replica's coordinator thread (native-transport request thread) and the replica's address. It runs StorageProxy for its own client, the read executor, inline local work, and the callbacks of its own requests. It never terminates: it waits for the next client request. |
+| `n<r>-mutation` | `MutationStage.run` | The replica's MUTATION stage and its memtable. It runs MutationVerbHandler, ReadRepairVerbHandler and queued local mutations, and publishes every new memtable state (`Version`) to the replica's readers. It never terminates. |
+| `n<r>-read-c<c>-<s>` | `ReadStageTask.run` | One READ stage task: the s-th read request that coordinator `n<c>` sends replica r (ReadCommandVerbHandler, or a queued local read). Single-use. Coordinator c can send r at most two requests per read of client c (the initial one and the repair's full data read), so there are 2·reads(c) such tasks. A task that is never used stays blocked on receive. |
 | `c0`, `c1` | `client` | The INTERFACE.md loop: operation j has kind (i+j) mod 3: 0 is `Write(i, 1+i+2j)` and waits for `Ack`; 1 is `ReadA(i)` and waits for `ValueA`; 2 is `ReadAB(i)` and waits for `ValueAB`. |
-| main | `run` | Spawns n0, n1, n2, then c0, c1 (named roles), checks the task ids are consecutive, awaits the clients and then the replicas. It sends and receives nothing. Every execution ends blocked, with the replicas waiting on receive. |
+| main | `run` | Spawns every replica's threads, replica by replica (coordinator, mutation stage, read tasks), then c0 and c1. It checks the task ids are consecutive, awaits the clients and then the rest. It sends and receives nothing. Every execution ends blocked, with replica threads waiting on receive. |
 
-Addresses: process k (in spawn order) has task id `base + k`. Each process computes `base` from its own
-`MpProcess.self()` and its index, so no setup message is needed. Main checks the ids are consecutive before
-it waits on anyone.
+At q=1 a replica has 4 threads (c1 has one read), so there are 14 processes in all.
+
+Addresses: process k in spawn order (`Layout`) has task id `base + k`. Each process computes `base` from its
+own `MpProcess.self()` and its index, so no setup message is needed. Main checks the ids are consecutive.
 
 Visible roles: `c0`, `c1`. Declared model (`model()`, the header only): `fifo` is `CommunicationModel.P2P`,
-`bag` is `ASYN`. Since fix round 1 every send and receive uses `STAGES = ASYN`, whatever the argument; see F1
-below for why that is the faithful choice and why `fifo` and `bag` coincide. `programName()` is
-`cassandra-rr`. `size()` is `q=<q>,rr=<blocking|none>,<fifo|bag>`.
+`bag` is `ASYN`. Every send and receive uses `STAGES = ASYN`, whatever the argument (F1, G2).
+`programName()` is `cassandra-rr`. `size()` is `q=<q>,rr=<blocking|none>,<fifo|bag>`.
 
 ## Messages
 
-Visible (INTERFACE.md; `@Tag` equals the record name. That is an assumption: INTERFACE.md does not give the tags the exporter expects): `Write(int client, long value)`, `ReadA(int client)`,
-`ReadAB(int client)`, `Ack(int client)`, `ValueA(int client, long a)`, `ValueAB(int client, long a, long b)`.
+Visible (INTERFACE.md; `@Tag` equals the record name. That is an assumption: INTERFACE.md does not give the
+tags the exporter expects): `Write(int client, long value)`, `ReadA(int client)`, `ReadAB(int client)`,
+`Ack(int client)`, `ValueA(int client, long a)`, `ValueAB(int client, long a, long b)`.
 
-Internal (net/Verb.java). `id` is the callback correlation of net/RequestCallbacks. `from` is the sender, the
-`Message.from()` of the header.
+Internal (net/Verb.java). `id` is the callback correlation of net/RequestCallbacks. `from` is the requester's
+address (its coordinator thread), the `Message.from()` of the header. `known` is the sender's causal
+knowledge of memtable versions (G1).
 
-| Record | Verb | Sent by | Handled by |
+| Record | Verb | Sent by, to | Handled by |
 |---|---|---|---|
-| `MutationReq(id, from, Mutation)` | MUTATION_REQ | coordinator, sendToHintedReplicas, to each non-local replica | MutationVerbHandler.doVerb: apply, reply |
-| `MutationRsp(id, from)` | MUTATION_RSP | replica | WriteResponseHandler.onResponse |
-| `ReadReq(id, from, ReadCommand)` | READ_REQ (data or digest, by `isDigestQuery`) | AbstractReadExecutor.makeRequests (initial data and digest reads); AbstractReadRepair.sendReadCommand (full data reads after a mismatch) | ReadCommandVerbHandler.doVerb: data or digest response |
-| `ReadRsp(id, from, ReadResponse)` | READ_RSP | replica | ReadCallback.onResponse, then DigestResolver or DataResolver.preprocess |
-| `ReadRepairReq(id, from, Mutation)` | READ_REPAIR_REQ | BlockingPartitionRepair.sendRR, to each stale source (the coordinator itself included) | ReadRepairVerbHandler.doVerb: apply, reply |
-| `ReadRepairRsp(id, from)` | READ_REPAIR_RSP | replica | BlockingPartitionRepair.onResponse, then ack |
-| `LocalMutationRunnable(id, Mutation)` | (no verb: a queued StorageProxy.LocalMutationRunnable) | the coordinator to itself, performLocally | apply, then the write handler's onResponse |
-| `LocalReadRunnable(id, ReadCommand)` | (no verb: a queued StorageProxy.LocalReadRunnable) | the coordinator to itself, makeRequests / sendReadCommand | executeLocally, then the read callback's response |
+| `MutationReq(id, from, Mutation, known)` | MUTATION_REQ (or a queued/inline local mutation) | coordinator (sendToHintedReplicas, performLocally) to `n<r>-mutation` | MutationVerbHandler.doVerb: apply, publish, reply |
+| `MutationRsp(id, from, known)` | MUTATION_RSP | mutation stage to the coordinator | WriteResponseHandler.onResponse |
+| `ReadReq(id, from, ReadCommand, known)` | READ_REQ (or a queued local read) | coordinator (makeRequests, sendReadCommand) to a read task | ReadCommandVerbHandler.doVerb |
+| `ReadRsp(id, from, ReadResponse, known)` | READ_RSP | read task to the coordinator | ReadCallback.onResponse, then the resolver's preprocess |
+| `ReadRepairReq(id, from, Mutation, known)` | READ_REPAIR_REQ | BlockingPartitionRepair.sendRR to `n<r>-mutation` (own replica included) | ReadRepairVerbHandler.doVerb |
+| `ReadRepairRsp(id, from, known)` | READ_REPAIR_RSP | mutation stage to the coordinator | BlockingPartitionRepair.onResponse |
+| `Version(replica, index, slot, memtable, known)` | none: the publication of a memtable state (G1) | mutation stage to each read task (slot 0) and to its coordinator thread (one copy per inline-read slot) | a read observing that state |
 
 Data: `Cell(column, value, timestamp)` (a skipped value is 0, `Cell.withSkippedValue`). `PartitionUpdate(List<Cell>)` holds the one row; an empty list means
 no row. `Mutation(PartitionUpdate)`. `ReadCommand(queriedColumns, isDigestQuery)`.
@@ -49,8 +52,9 @@ no row. `Mutation(PartitionUpdate)`. `ReadCommand(queriedColumns, isDigestQuery)
 Write (`Write{i,v}` to `ni`). StorageProxy.mutate calls performWrite. performWrite builds the write plan with
 `ReplicaPlans.forWrite` and the `writeNormal` selector, which contacts all three replicas. It builds a
 `WriteResponseHandler` with `responses = blockFor = writeQuorum = 2` and calls sendToHintedReplicas.
-sendToHintedReplicas walks the contacts in order. The local mutation goes to performLocally, which queues a
-`LocalMutationRunnable` (applied whenever it is received, then counted as one response). Each other replica
+sendToHintedReplicas walks the contacts in order. The local mutation goes to performLocally (`Node.performLocally`).
+Queued (a Nondet choice), it is a `MutationReq` to the replica's own mutation stage, counted when its
+`MutationRsp` arrives. Inline, the coordinator waits for exactly that acknowledgement before going on. Each other replica
 is sent a `MutationReq`. Next, `maybeTryAdditionalReplicas`
 returns at once, because nothing is left uncontacted. `get()` then waits until two responses have arrived,
 and the coordinator replies `Ack{i}`. The third `MutationRsp` arrives later, and its callback has no effect.
@@ -65,15 +69,17 @@ Read (`ReadA`, columns [a]; `ReadAB`, columns [a,b]). fetchRows runs these phase
    `NeverSpeculatingReadExecutor` (initialDataRequestCount = 1). `ReadRepair.create` builds a
    `BlockingReadRepair` for `blocking` and a `ReadOnlyReadRepair` for `none`.
 2. `executeAsync`. The data read goes to contacts[0], the digest read to contacts[1]. A remote one is a
-   `ReadReq`. A local one is a queued `LocalReadRunnable` (makeRequests runs the local read last).
+   `ReadReq`. A local one is `Node.localRead`: queued, a `ReadReq` to one of the replica's
+   own read tasks; inline (a Nondet choice), the coordinator thread receives a `Version` itself.
+   makeRequests runs the local read last.
    Each command fetches both regular columns. A non-queried one keeps its timestamp, and its value is
    skipped. Data and digest cover what is fetched.
 3. `maybeTryAdditionalReplicas` does nothing.
 4. `awaitResponses`. The ReadCallback (blockFor 2) is signalled once the data is present and 2 responses
    have arrived. If `DigestResolver.responsesMatch` holds, the result is the data response
    (`setResult(getData())`). Otherwise `readRepair.startRepair` runs. It creates a new DataResolver and
-   ReadCallback (blockFor 2) and sends a full data read to each contact: a queued `LocalReadRunnable` for the local
-   replica, a `ReadReq` otherwise.
+   ReadCallback (blockFor 2) and sends a full data read to each contact: `Node.localRead` for the local replica, a
+   `ReadReq` otherwise.
 5. `maybeSendAdditionalDataRequests` returns if the result is set. Otherwise it calls
    `maybeSendAdditionalReads`, which sends nothing (no speculation).
 6. `awaitReadRepair` calls `awaitReads`. This waits for the 2 data responses, then runs
@@ -96,10 +102,9 @@ Read (`ReadA`, columns [a]; `ReadAB`, columns [a,b]). fetchRows runs these phase
 8. The reply carries the per-column value of the result, `ValueA{i,a}` or `ValueAB{i,a,b}`. An absent cell
    is 0.
 
-While waiting in steps 4, 6 and 7 and in the write's `get()`, the coordinator keeps stepping (`Node.awaitUntil`
-calls `Node.step`): it receives a message and runs its stage task. So a replica blocked as a coordinator
-still serves other coordinators' mutations, reads and repairs, its own queued local tasks, and its own repair
-message.
+While waiting in steps 4, 6 and 7 and in the write's `get()`, the coordinator thread receives only the
+responses its live callbacks await, and runs each callback (`Node.awaitUntil`). The replica's mutation stage
+and read tasks are separate processes, so they serve other coordinators meanwhile (fix round 2).
 
 ## Method map
 
@@ -108,16 +113,17 @@ message.
 | StorageProxy.mutate (StorageProxy.java l.873) | `StorageProxy.mutate` |
 | StorageProxy.performWrite (l.1360) | `StorageProxy.performWrite` |
 | StorageProxy.sendToHintedReplicas (l.1464) | `StorageProxy.sendToHintedReplicas` |
-| StorageProxy.performLocally (l.1646) | `Node.maybeExecuteImmediately` with a `LocalMutationRunnable` |
-| Stage.maybeExecuteImmediately / SEPExecutor.maybeExecuteImmediately (F l.218) | `Node.maybeExecuteImmediately` |
-| InboundMessageHandler.dispatch -> verb.stage.execute (F l.388-399) | `Node.step` / `Node.accept` / `Node.dispatch` |
+| StorageProxy.performLocally (l.1646) | `Node.performLocally` |
+| Stage.maybeExecuteImmediately / SEPExecutor.maybeExecuteImmediately (F l.218) | `Node.inline` (the choice), `Node.performLocally`, `Node.localRead` |
+| InboundMessageHandler.dispatch -> verb.stage.execute (F l.388-399) | the stage processes: `MutationStage.run`, `ReadStageTask.run`; responses in `Node.awaitUntil` |
+| Memtable apply / AtomicBTreePartition | `MutationStage.apply` + `publish` |
 | AbstractWriteResponseHandler.get / blockFor / maybeTryAdditionalReplicas / signal | `WriteResponseHandler.get / blockFor / maybeTryAdditionalReplicas / signal` |
 | WriteResponseHandler.onResponse / ackCount | `WriteResponseHandler.onResponse / ackCount` |
 | StorageProxy.readRegular (l.1967) | `StorageProxy.readRegular` |
 | StorageProxy.fetchRows (l.2068) | `StorageProxy.fetchRows` |
 | StorageProxy.concatAndBlockOnRepair (l.2029) | `StorageProxy.concatAndBlockOnRepair` |
 | StorageProxy.SinglePartitionReadLifecycle | does not exist in this 4.1 tree (see decision D1) |
-| StorageProxy.LocalReadRunnable | `LocalReadRunnable` (queued) / the inline branch of `Node.maybeExecuteImmediately` |
+| StorageProxy.LocalReadRunnable | `Node.localRead` (queued: a read task; inline: the coordinator thread) |
 | ReplicaPlans.forRead / contactForRead (l.706, l.660) | `ReplicaPlans.forRead` |
 | ReplicaPlans.forWrite + writeNormal (l.439, l.505) | `ReplicaPlans.forWrite` |
 | ReplicaPlans.forReadRepair + writeReadRepair (l.434, l.551) | `ReplicaPlans.forReadRepair` |
@@ -228,8 +234,8 @@ write plan's contacts are the two sources (writeReadRepair l.562-580 adds none).
 
 D13. **Write plan and handler.** writeNormal (l.505) contacts all live replicas (no transient replicas).
 maybeTryAdditionalReplicas (AbstractWriteResponseHandler l.334) returns at once because nothing is
-uncontacted. The local mutation is queued (performLocally, F3) before the remote MutationReqs are sent, and
-it runs whenever its task is received. Ideal-CL delegates,
+uncontacted. The local mutation goes to performLocally (inline or queued, G5) before the remote MutationReqs
+are sent. Ideal-CL delegates,
 metrics, tracing and hints are dropped.
 
 D14. **Addresses.** The prompt says every process knows every address from the start, and main must not send.
@@ -237,7 +243,8 @@ So each process computes the task ids from its own id and the spawn order. Main 
 consecutive before waiting.
 
 D15. **Observation.** `toString()` (printed by the launcher as `observed:`) reports how many client runs
-finished, the distinct reply sequences per client, the number of distinct joint histories, and (for q=2)
+finished, the distinct reply sequences per client, the number of distinct reply-string pairs (renamed in
+fix round 2: they are reply strings only, with no causal order, and are not joint histories), and (for q=2)
 whether the REVIEW.md finding-1 history was seen. These are collected outside the message-passing API, for
 the reader only. They are not part of the protocol and raise no event.
 
@@ -248,6 +255,9 @@ javac -d java/out -cp "$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar
 ```
 
 ## Fix round 1 (review: plan/case-studies/cassandra/rr/translit-review/REVIEW.md)
+
+Kept as a record. Fix round 2 supersedes F1's single replica process and F3's self-messages and disabled
+inline branch (see G1-G4). F2, F4 and F6 still hold. F5's history is rechecked under round 2.
 
 The review judged round 0 NOT FAITHFUL. Round 0 ran each received verb to completion at receipt, read the
 local replica first, executed local work only inline, and digested the queried cells only. Changes:
@@ -343,7 +353,7 @@ the Nondet replica choice. So reachability is shown with a test-only restriction
 F6. **Stale remark corrected.** D2 no longer claims that the README calls NoopReadRepair the NONE strategy.
 The current README names ReadOnlyReadRepair.
 
-## Runs (inside OUT_DIR, round 1 binary)
+## Runs of the round 1 binary (superseded; kept as a record)
 
 Compile as above (no warnings, no errors).
 
@@ -351,14 +361,14 @@ Compile as above (no warnings, no errors).
 java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_rr.CassandraReadRepair:impl,1,blocking,fifo' must 0 1 report - 600 </dev/null
 ```
 Exit 0. `ran: 8376 iterations`. `graphs: 0 distinct complete, 8376 distinct blocked; stack exhausted`.
-`observed: finished client runs 16752; distinct replies per client [c0:Ack[client=0], c1:ValueA[client=1, a=0], c1:ValueA[client=1, a=1]]; distinct joint histories 2`.
+`observed: finished client runs 16752; distinct replies per client [c0:Ack[client=0], c1:ValueA[client=1, a=0], c1:ValueA[client=1, a=1]]; distinct reply-string pairs 2`.
 Last output line: `max_porf_count: 0`.
 
 ```
 java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_rr.CassandraReadRepair:impl,1,none,fifo' must 0 1 report - 600 </dev/null
 ```
 Exit 0. `ran: 4608 iterations`. `graphs: 0 distinct complete, 4608 distinct blocked; stack exhausted`.
-`observed: finished client runs 9216; ... distinct joint histories 2`.
+`observed: finished client runs 9216; ... distinct reply-string pairs 2`.
 Last output line: `max_porf_count: 0`.
 
 Every graph is blocked because the replicas never terminate. Every client run finished. For comparison,
@@ -368,7 +378,167 @@ q=2 checks (same commands with `impl,2,<s>,fifo`, timeout 1200 s; not of record)
 - `none`: 134 929 graphs, stack not exhausted (timeout). Every client run finished.
 - `blocking`: 113 095 graphs, stack not exhausted (timeout). Every client run finished.
 
-In both, the DFS stayed in one corner within the bound: one distinct joint history, and the review history
+In both, the DFS stayed in one corner within the bound: one distinct reply-string pair, and the review history
 was ABSENT there. Its reachability is established by the `review1` run (F5), not by these. A complete q=2
 enumeration needs a much larger budget or the split mode. Round 0's q=2 runs exhausted at 2282 and 1635
 graphs, over its much smaller behaviour set.
+
+
+## Fix round 2 (review: plan/case-studies/cassandra/rr/translit-review/REVIEW-r2.md)
+
+The review accepted the round-1 value-history fix. It found that the exported observation includes causal
+order (SummaryExporter: per visible event, the count of the other client's visible events porf-before it,
+through invisible events), and that round 1 put every task of a replica on one thread. Round 1 therefore
+had program-order edges that Cassandra's separate stages do not impose. Its witness, a Cassandra history
+that round 1 cannot produce, is (q=1, none):
+
+- c0: `Write(0,1)` -> `Ack(0)`
+- c1: `ReadA(1)` -> `ValueA(1,0)`
+- no causal edge from c1's `ReadA` send to c0's `Ack` receive.
+
+Causal model assumed (as the review states it, and stated here so it can be checked). The source's causal
+order is:
+- program order of each Cassandra thread;
+- message send -> receive;
+- the memory happens-before the source's synchronisation creates:
+  - the stage executor's submit -> task;
+  - a callback's accumulate or count -> the waiting coordinator's continuation;
+  - a memtable write -> a read that observes it (the volatile read of AtomicBTreePartition.ref);
+  - a memtable write -> the next write to the partition (its CAS reads the tree the previous write
+    installed).
+
+A read does **not** order a later write: there is no read -> write edge.
+
+G1. **One process per Cassandra thread.** A replica is now three kinds of processes (Roles): the coordinator
+thread, the MUTATION stage, and one READ stage task per read request.
+- **Memtable state flows only from write to read.** The memtable lives in the MUTATION stage process. After
+  each write it publishes the new state as a `Version` message to every reader of that replica:
+  - each READ stage task gets one copy;
+  - the coordinator thread gets one copy per possible inline read.
+- **What a read observes.** A reader observes a state by receiving one `Version`. So it is causally after
+  the write that produced that state, and through the stage's program order after all earlier writes, and
+  after nothing else. It sends nothing to the mutation stage, so there is no read -> write edge.
+- **Which states a read may observe.** It must observe a state no older than the newest write in its causal
+  past. This is the guard `index >= known[r]`, where `known` is a per-replica vector of the highest version
+  in the sender's causal past, carried on every internal message and merged at every receipt. In the source
+  such a write completed earlier in real time, so the read sees it. The read may also observe any newer
+  state already published, which is a concurrent write.
+- **Every such choice is a source behaviour.** The causal order is a partial order with no edge from the
+  read to the writes after the observed one (except through the read's own later messages). So a real-time
+  schedule exists that puts the read after the observed write and before the next one.
+- **The witness.** Its zero read takes version 0 at two replicas whose mutation stage applies the write
+  afterwards, with no edge back.
+
+G2. **ASYN delivery, argued for the causal observation.** ASYN and P2P differ only in which receive orders
+are admissible, not in the edges a receive creates (send -> receive, plus the receiver's program order). So
+the question is only whether some admissible order is missing or extra.
+- **Mutation stage.** It stands for a multi-threaded pool (F/concurrent/Stage.java l.45-50), whose tasks run
+  in any order even when FIFO delivered them in order (F1). So ASYN is the source's admissible set. P2P would
+  forbid orders the source has.
+- **Read tasks.** Each receives one request, then one `Version` chosen by its guard. Order is moot.
+- **Coordinator thread.** It receives only the responses its live callbacks await, and they come from
+  different stage tasks (REQUEST_RESPONSE is multi-threaded too). It receives the one in-flight client
+  request.
+- **Clients.** They have at most one message in flight per direction, so ASYN and P2P coincide (REVIEW-r2
+  finding 2 accepts this part).
+
+G3. **Remaining program-order edges, argued for the exported counts.** A count changes only if some visible
+event enters or leaves a visible event's causal past. An added edge whose source has no visible event in its
+past beyond those the target already has changes nothing.
+- **Responses on the coordinator thread.** REQUEST_RESPONSE tasks run on the coordinator thread at receipt
+  (`Node.awaitUntil`). In the source each awaited response's task is ordered before the coordinator's
+  continuation by the signal it contributes to: the accumulator or counter the coordinator reads, and the
+  Condition or latch. So receiving it on the coordinator thread adds no edge into the coordinator's future
+  that the source lacks. Two awaited responses on one thread may be ordered either way (ASYN). The edge
+  between them adds no visible predecessor beyond each sender's past, and both pasts reach the continuation
+  anyway.
+- **One mutation-stage process.** Between consecutive mutation tasks i then j, the model adds task i's
+  events before task j's receipt. In the source, task j's apply is after task i's apply (CAS). Task j's
+  receipt has no successors other than task j's later events, which follow its apply. Task i's events after
+  its apply are sends whose own pasts lie within task i's prefix. So the model adds no visible predecessor
+  to anything after task j's apply that the source does not already have. The other order (j before i) is
+  explored too.
+- **Inline local mutation.** The inline write is a synchronous request to the replica's own mutation stage.
+  The coordinator waits for exactly that acknowledgement. This gives coordinator-past -> write -> later
+  writes, and earlier writes -> write -> the coordinator's continuation. Those are the source's edges for a
+  CAS performed on the coordinator thread.
+
+G4. **The unreceived third write acknowledgement, argued for the exported counts.** In the source the third
+`MUTATION_RSP` runs a REQUEST_RESPONSE task that only decrements `responses`, which nothing reads after the
+signal. So that task has no successor in the causal order, and its receive event is invisible. Receiving it
+on the coordinator thread would add a spurious edge (that response's sender -> the coordinator's later
+events), so leaving it unread is the faithful choice.
+- **Delivery.** It is an omitted completion with no successors, not a claim that the modelled execution
+  delivers every message. The source's delivery of it adds an event with no outgoing edges and no effect on
+  any summary (words, statuses or counts).
+- **Unread `Version` copies.** These are modelling devices. Each stands for a read that did not happen, not
+  for a source message.
+
+G5. **Local execution: both branches.** `INLINE_LOCAL_EXECUTION = true`, so `Node.inline` is a Nondet choice
+at every local mutation and local read.
+- **Inline.** The work runs on the coordinator thread: a read receives a `Version` there, and a mutation
+  waits for its acknowledgement. Inline work orders the coordinator's later sends after it.
+- **Queued.** The work is a mutation-stage task or a read task.
+- **Why both are needed.** Round 1's argument that queued subsumes inline covered values only. The two
+  branches give different causal orders, and both are source behaviours (SEPExecutor.maybeExecuteImmediately
+  l.218-239), so both are explored.
+
+G6. **Evidence, and what each piece shows.**
+- **Exhaustive q=1 runs (below).** Both exhaust the stack.
+- **Exported summaries.** These are the causal observation: words plus counts. They are written to
+  `checks/q1-none.jsonl` and `checks/q1-blocking.jsonl` with the same command and an export file in place
+  of `-`.
+  - **none:** 2 distinct summaries.
+    - `ValueA(1,0)` with counts `[0,0,0,0]`: no c1 event is before c0's `Ack` and no c0 event is before
+      c1's reply. This is Astra's witness: reached in the exhaustive run, unrestricted.
+    - `ValueA(1,1)` with counts `[0,0,0,1]`.
+  - **blocking:** 3 distinct summaries. The two above, plus `ValueA(1,1)` with counts `[0,1,0,1]`: c0's
+    `Ack` after c1's `ReadA`, which needs a read-repair write applied at a replica before its write
+    acknowledgement.
+- **`review1`: a reachability aid only.** It removes choices: c1's read plans are fixed, all local work is
+  queued, and the read tasks for c1's reads observe the oldest admissible state at n1 and n2 and a state
+  with a write at n0. Every execution it allows is an execution of the unrestricted program. It shows only
+  that the restricted search reaches the round-1 history (q=2, none): exhausted at 2112 graphs, `review reply
+  strings (REVIEW.md finding 1) PRESENT`, summary in `checks/q2-none-review1.jsonl`. It is not evidence of
+  equivalence.
+- **The `observed:` monitor.** It checks reply strings only (`distinct reply-string pairs`). It records no
+  causal counts. The exported summaries carry those.
+- **The bounded q=2 runs.** These are incomplete evidence: neither a counterexample nor a validation (below).
+
+## Runs (inside OUT_DIR, round 2 binary)
+
+Compile as above (no warnings, no errors).
+
+```
+java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_rr.CassandraReadRepair:impl,1,blocking,fifo' must 0 1 report - 600 </dev/null
+```
+Exit 0. `ran: 2258 iterations`. `graphs: 0 distinct complete, 2258 distinct blocked; stack exhausted`.
+`observed: finished client runs 4516; distinct replies per client [c0:Ack[client=0], c1:ValueA[client=1, a=0], c1:ValueA[client=1, a=1]]; distinct reply-string pairs 2`.
+Last output line: `max_porf_count: 0`.
+
+```
+java -Xss4m -Xmx8g -cp java/out:$(cat /local/home/mkhoshechin/Documents/github-jmc/daavar/jmc/cp.txt) org.mpi_sws.jmc.mp.launch.MpLauncher 'bench.cassandra_rr.CassandraReadRepair:impl,1,none,fifo' must 0 1 report - 600 </dev/null
+```
+Exit 0. `ran: 1606 iterations`. `graphs: 0 distinct complete, 1606 distinct blocked; stack exhausted`.
+`observed: finished client runs 3212; ... distinct reply-string pairs 2`.
+Last output line: `max_porf_count: 0`.
+
+Every graph is blocked because replica threads never terminate. Every client run finished.
+
+The graph counts fell from round 1 (8376 and 4608). Independent threads need fewer interleavings in Must's
+graph enumeration than one thread per replica, whose receive orders all differ.
+
+Causal check (same command, export file instead of `-`):
+- `... 'bench.cassandra_rr.CassandraReadRepair:impl,1,none,fifo' must 0 1 report checks/q1-none.jsonl 600 </dev/null`:
+  same 1606 graphs, `summaries_distinct: 2`, Astra's witness present (G6).
+- `... 'bench.cassandra_rr.CassandraReadRepair:impl,2,none,fifo,review1' must 0 1 report checks/q2-none-review1.jsonl 1200 </dev/null`:
+  2112 graphs, exhausted, round-1 reply strings PRESENT.
+
+q=2 bounded runs: incomplete evidence, neither a counterexample nor a validation. Same command with
+`impl,2,<s>,fifo`, export to `checks/q2-<s>.jsonl`, 1200 s.
+- **none:** 45 547 graphs, stack not exhausted (timeout). Every client run finished. 3 distinct summaries, 3
+  reply-string pairs. The round-1 reply strings were not met within the bound; `review1` reaches them.
+- **blocking:** 32 622 graphs, stack not exhausted (timeout). Every client run finished. 5 distinct
+  summaries, 2 reply-string pairs.
+
+All round-2 runs were repeated after the machine pause, on the final binary, with the same numbers.
