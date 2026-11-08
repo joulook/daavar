@@ -1,0 +1,26 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C1.hermes.impl_3_2_bag.t16.p.r3	C	hermes	3,2	bag	impl	stateful-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_2_bag	hermes.impl_3_2_bag
+C2.hermes.impl_3_2_bag.t16.p.r3	C	hermes	3,2	bag	impl	stateless-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_2_bag	hermes.impl_3_2_bag
+C3E.hermes.spec_3_2_bag.t16.p.r3	C	hermes	3,2	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_2_bag	
+C3E.hermes.impl_3_2_bag.t16.p.r3	C	hermes	3,2	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes		hermes.impl_3_2_bag
+C3J.hermes.impl_3_2_bag.p.r3.m	C	hermes	3,2	bag	impl	join	16	conforms	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_2_bag	hermes.impl_3_2_bag
+C1.hermes.impl_3_3_bag.t16.p.r3	C	hermes	3,3	bag	impl	stateful-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_3_bag	hermes.impl_3_3_bag
+C2.hermes.impl_3_3_bag.t16.p.r3	C	hermes	3,3	bag	impl	stateless-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_3_bag	hermes.impl_3_3_bag
+C3E.hermes.spec_3_3_bag.t16.p.r3	C	hermes	3,3	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_3_bag	
+C3E.hermes.impl_3_3_bag.t16.p.r3	C	hermes	3,3	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes		hermes.impl_3_3_bag
+C3J.hermes.impl_3_3_bag.p.r3.m	C	hermes	3,3	bag	impl	join	16	conforms	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_3_bag	hermes.impl_3_3_bag
+C1.hermes.impl_3_4_bag.t16.p.r3	C	hermes	3,4	bag	impl	stateful-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_4_bag	hermes.impl_3_4_bag
+C2.hermes.impl_3_4_bag.t16.p.r3	C	hermes	3,4	bag	impl	stateless-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_3_4_bag	hermes.impl_3_4_bag
+C3E.hermes.spec_3_4_bag.t16.p.r3	C	hermes	3,4	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_4_bag	
+C3E.hermes.impl_3_4_bag.t16.p.r3	C	hermes	3,4	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes		hermes.impl_3_4_bag
+C3J.hermes.impl_3_4_bag.p.r3.m	C	hermes	3,4	bag	impl	join	16	conforms	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_3_4_bag	hermes.impl_3_4_bag
+C1.hermes.impl_4_2_bag.t16.p.r3	C	hermes	4,2	bag	impl	stateful-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_4_2_bag	hermes.impl_4_2_bag
+C2.hermes.impl_4_2_bag.t16.p.r3	C	hermes	4,2	bag	impl	stateless-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_4_2_bag	hermes.impl_4_2_bag
+C3E.hermes.spec_4_2_bag.t16.p.r3	C	hermes	4,2	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_4_2_bag	
+C3E.hermes.impl_4_2_bag.t16.p.r3	C	hermes	4,2	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes		hermes.impl_4_2_bag
+C3J.hermes.impl_4_2_bag.p.r3.m	C	hermes	4,2	bag	impl	join	16	conforms	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_4_2_bag	hermes.impl_4_2_bag
+C1.hermes.impl_4_3_bag.t16.p.r3	C	hermes	4,3	bag	impl	stateful-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_4_3_bag	hermes.impl_4_3_bag
+C2.hermes.impl_4_3_bag.t16.p.r3	C	hermes	4,3	bag	impl	stateless-parallel	16	conforms	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	hermes	hermes.spec_4_3_bag	hermes.impl_4_3_bag
+C3E.hermes.spec_4_3_bag.t16.p.r3	C	hermes	4,3	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_4_3_bag	
+C3E.hermes.impl_4_3_bag.t16.p.r3	C	hermes	4,3	bag	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes		hermes.impl_4_3_bag
+C3J.hermes.impl_4_3_bag.p.r3.m	C	hermes	4,3	bag	impl	join	16	conforms	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	hermes	hermes.spec_4_3_bag	hermes.impl_4_3_bag

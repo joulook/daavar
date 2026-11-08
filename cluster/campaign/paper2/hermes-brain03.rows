@@ -1,0 +1,28 @@
+# hermes paper rows (owner 2026-11-08 20:30: hermes(3,3) joins Table 1; schedule new instances). brain03, 48 h tier, one row per NUMA node.
+# Sizes (n replicas, k clients): 3,2 and 3,3 rerun as paper rows (.p.r3); 3,4, 4,2 and 4,3 are new and run only when the smaller size finished (needok ladder).
+# Nested (C2) at the new sizes runs only if Nested finishes 3,3 within 48 h (it reached the 4 h limit there in the cf2 campaign).
+C1.hermes.impl_3_2_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateful --threads 16 --model bag -- 3 2
+C2.hermes.impl_3_2_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateless --threads 16 --model bag -- 3 2
+C3E.hermes.spec_3_2_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh hermes export spec --out export.jsonl --threads 16 --model bag -- 3 2
+C3E.hermes.impl_3_2_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh hermes export impl --out export.jsonl --threads 16 --model bag -- 3 2
+C3J.hermes.impl_3_2_bag.p.r3.m 250 172800 needok:C3E.hermes.spec_3_2_bag.t16.p.r3,C3E.hermes.impl_3_2_bag.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.hermes.spec_3_2_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.hermes.impl_3_2_bag.t16.p.r3/export.jsonl
+C1.hermes.impl_3_3_bag.t16.p.r3 250 172800 needok:C1.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateful --threads 16 --model bag -- 3 3
+C2.hermes.impl_3_3_bag.t16.p.r3 250 172800 needok:C2.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateless --threads 16 --model bag -- 3 3
+C3E.hermes.spec_3_3_bag.t16.p.r3 250 172800 needok:C3E.hermes.spec_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export spec --out export.jsonl --threads 16 --model bag -- 3 3
+C3E.hermes.impl_3_3_bag.t16.p.r3 250 172800 needok:C3E.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export impl --out export.jsonl --threads 16 --model bag -- 3 3
+C3J.hermes.impl_3_3_bag.p.r3.m 250 172800 needok:C3E.hermes.spec_3_3_bag.t16.p.r3,C3E.hermes.impl_3_3_bag.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.hermes.spec_3_3_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.hermes.impl_3_3_bag.t16.p.r3/export.jsonl
+C1.hermes.impl_3_4_bag.t16.p.r3 250 172800 needok:C1.hermes.impl_3_3_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateful --threads 16 --model bag -- 3 4
+C2.hermes.impl_3_4_bag.t16.p.r3 250 172800 needok:C2.hermes.impl_3_3_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateless --threads 16 --model bag -- 3 4
+C3E.hermes.spec_3_4_bag.t16.p.r3 250 172800 needok:C3E.hermes.spec_3_3_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export spec --out export.jsonl --threads 16 --model bag -- 3 4
+C3E.hermes.impl_3_4_bag.t16.p.r3 250 172800 needok:C3E.hermes.impl_3_3_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export impl --out export.jsonl --threads 16 --model bag -- 3 4
+C3J.hermes.impl_3_4_bag.p.r3.m 250 172800 needok:C3E.hermes.spec_3_4_bag.t16.p.r3,C3E.hermes.impl_3_4_bag.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.hermes.spec_3_4_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.hermes.impl_3_4_bag.t16.p.r3/export.jsonl
+C1.hermes.impl_4_2_bag.t16.p.r3 250 172800 needok:C1.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateful --threads 16 --model bag -- 4 2
+C2.hermes.impl_4_2_bag.t16.p.r3 250 172800 needok:C2.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateless --threads 16 --model bag -- 4 2
+C3E.hermes.spec_4_2_bag.t16.p.r3 250 172800 needok:C3E.hermes.spec_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export spec --out export.jsonl --threads 16 --model bag -- 4 2
+C3E.hermes.impl_4_2_bag.t16.p.r3 250 172800 needok:C3E.hermes.impl_3_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export impl --out export.jsonl --threads 16 --model bag -- 4 2
+C3J.hermes.impl_4_2_bag.p.r3.m 250 172800 needok:C3E.hermes.spec_4_2_bag.t16.p.r3,C3E.hermes.impl_4_2_bag.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.hermes.spec_4_2_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.hermes.impl_4_2_bag.t16.p.r3/export.jsonl
+C1.hermes.impl_4_3_bag.t16.p.r3 250 172800 needok:C1.hermes.impl_4_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateful --threads 16 --model bag -- 4 3
+C2.hermes.impl_4_3_bag.t16.p.r3 250 172800 needok:C2.hermes.impl_4_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes conf --engine stateless --threads 16 --model bag -- 4 3
+C3E.hermes.spec_4_3_bag.t16.p.r3 250 172800 needok:C3E.hermes.spec_4_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export spec --out export.jsonl --threads 16 --model bag -- 4 3
+C3E.hermes.impl_4_3_bag.t16.p.r3 250 172800 needok:C3E.hermes.impl_4_2_bag.t16.p.r3 "$DAAVAR"/scripts/rust-run.sh hermes export impl --out export.jsonl --threads 16 --model bag -- 4 3
+C3J.hermes.impl_4_3_bag.p.r3.m 250 172800 needok:C3E.hermes.spec_4_3_bag.t16.p.r3,C3E.hermes.impl_4_3_bag.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.hermes.spec_4_3_bag.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.hermes.impl_4_3_bag.t16.p.r3/export.jsonl
