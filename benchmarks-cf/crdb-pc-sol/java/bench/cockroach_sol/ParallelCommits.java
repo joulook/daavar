@@ -18,10 +18,11 @@ public final class ParallelCommits implements MpProgram {
     }
     @Tag("Recover") public record Recover() implements MpMessage {}
     @Tag("Written") public record Written(int key) implements MpMessage {}
-    @Tag("Committed") public record Committed() implements MpMessage {}
+    @Tag("Committed") public record Committed() implements MpMessage, Fate {}
     @Tag("Retry") public record Retry() implements MpMessage {}
-    @Tag("Aborted") public record Aborted() implements MpMessage {}
-    @Tag("Recovered") public record Recovered(boolean committed) implements MpMessage {}
+    @Tag("Aborted") public record Aborted() implements MpMessage, Fate {}
+    sealed interface Fate permits Committed, Aborted {}   // written as the Rust unit variants Fate::Committed / Fate::Aborted (2026-11-08)
+    @Tag("Recovered") public record Recovered(Fate fate) implements MpMessage {}
 
     enum Status { PENDING, STAGING, COMMITTED, ABORTED }
     enum Error { NONE, INTENT_MISSING, RETRY_SERIALIZABLE, RETRY_ASYNC_WRITE_FAILURE,
@@ -247,7 +248,7 @@ public final class ParallelCommits implements MpProgram {
             for (Tid range : s.ranges()) send(range, batch(resolveId, Kind.RESOLVE, pushed.meta(), List.of(),
                 List.of(), List.of(), keys(), false, pushed.status()));
             for (int k = 0; k < n; k++) answer(resolveId);
-            send(s.preventers().get(index), new Recovered(pushed.status() == Status.COMMITTED));
+            send(s.preventers().get(index), new Recovered(pushed.status() == Status.COMMITTED ? new Committed() : new Aborted()));
         }
     }
 

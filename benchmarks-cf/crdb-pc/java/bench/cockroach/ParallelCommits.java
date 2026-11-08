@@ -55,7 +55,7 @@ public final class ParallelCommits implements MpProgram {
 
     /** tc -> c. */
     @Tag("Committed")
-    public record Committed() implements MpMessage {}
+    public record Committed() implements MpMessage, Fate {}
 
     /** tc -> c. */
     @Tag("Retry")
@@ -63,11 +63,14 @@ public final class ParallelCommits implements MpProgram {
 
     /** tc -> c. */
     @Tag("Aborted")
-    public record Aborted() implements MpMessage {}
+    public record Aborted() implements MpMessage, Fate {}
 
     /** hi -> pi: committed == true for Fate Committed. */
+    /** The fate of a recovered transaction: the zero-field records Committed and Aborted, written as the Rust
+     *  unit variants Fate::Committed and Fate::Aborted (2026-11-08: a boolean here never matched the Rust twin). */
+    sealed interface Fate permits Committed, Aborted {}
     @Tag("Recovered")
-    public record Recovered(boolean committed) implements MpMessage {}
+    public record Recovered(Fate fate) implements MpMessage {}
 
     // =====================================================================================================
     // Invisible vocabulary: roachpb / kvpb / enginepb types (only the fields the cut uses)
@@ -1664,7 +1667,7 @@ public final class ParallelCommits implements MpProgram {
             if (rr.err() != null) {
                 throw new AssertionError("intent resolution failed: " + rr.err());
             }
-            Channel.send(model, setup.preventers().get(index - 1), new Recovered(finalized.status() == TransactionStatus.COMMITTED));
+            Channel.send(model, setup.preventers().get(index - 1), new Recovered(finalized.status() == TransactionStatus.COMMITTED ? new Committed() : new Aborted()));
             while (true) {
                 Channel.recv(model, mm -> false); // never terminates: waits for a next message that never comes
             }
