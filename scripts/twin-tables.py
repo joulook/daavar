@@ -1,4 +1,7 @@
 import csv,sys,re,collections
+from decimal import Decimal, ROUND_HALF_UP
+def _half_up(x):   # one decimal, half up on the value's text (audit 1108-1703: 287.25 printed as 287.2 under binary-float formatting)
+    return str(Decimal(str(x).strip()).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP))
 R=sys.argv[1]; MODE=sys.argv[2] if len(sys.argv)>2 else 'twin'
 # (offline kind, online kind, title): the two kinds that check the same side against the same export
 PAIRS={'twin':[('campaign-twin-offline-java-spec','campaign-twin-online-rust-impl','Twins: Rust implementation checked against the Java twin\'s export'),
@@ -19,7 +22,7 @@ def short(prog,var):
     w=[x for x in re.split(r"[-_ ]",var) if x]; return prog+"-"+("".join(x[0] for x in w) if len(w)>1 else var[:6])
 def esc(s): return s.replace('_','\\_').replace('%','\\%')
 def fnum(x):
-    try: v=float(x); return str(int(v)) if v==int(v) else '%.1f' % v
+    try: v=float(x); return str(int(v)) if v==int(v) else _half_up(x)
     except Exception: return '--'
 def mib(x):   # the CSV's peak MB is already KiB/1024, i.e. MiB (audit 2026-11-04: no second division)
     try: return str(round(float(x)))
