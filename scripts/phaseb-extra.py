@@ -19,6 +19,7 @@ TITLE = {"raft": "Raft and OmniPaxos libraries", "omnipaxos": "Omni-Paxos", "zoo
          "cassandra": "Cassandra, lightweight transactions", "cassandra-rr": "Cassandra, read repair", "craq": "3FS (CRAQ)", "bk": "BookKeeper", "crdb": "CockroachDB, parallel commits", "scalardb": "ScalarDB, consensus commit"}
 ORDER = ["raft", "omnipaxos", "zookeeper", "chainpaxos", "swiftpaxos", "pineapple", "cassandra", "cassandra-rr", "craq", "bk", "crdb", "scalardb"]
 PREFIX = {"zookeeper": "ZooKeeper ", "chainpaxos": "ChainPaxos ", "swiftpaxos": "SwiftPaxos ", "pineapple": "Pineapple ", "cassandra": "Cassandra ", "cassandra-rr": "Cassandra ", "craq": "3FS ", "bk": "BookKeeper ", "crdb": "CockroachDB ", "scalardb": "ScalarDB "}
+def lab(x): return esc(x).replace("S$\\_{", "S$_{")   # escape underscores outside the S$_{...}$ names
 def paper_name(study, x):   # a study label in the paper's words
     x = x.replace("sol", "Codex").replace("Rust OmniPaxos", "OmniPaxos")
     if re.match(r"^(port|code|paper) \(", x): x = PREFIX.get(study, "") + x
@@ -34,7 +35,7 @@ shown = set(); unmatched = []
 for f in ("spec-conf", "spec-viol"):
     pair = None
     for line in open(f"{R}/PLDI/tex/tables/eval2/{f}.tex"):
-        if "&" not in line or "multicolumn" in line or line.lstrip().startswith(("%", "\\", "pair")): continue
+        if "&" not in line or "multicolumn" in line or line.lstrip().startswith(("%", "pair")) or re.match(r"\s*\\(toprule|midrule|bottomrule|cmidrule|begin|end|caption|label|scriptsize)", line): continue
         cells = [c.strip() for c in line.split("&")]
         if cells[0]: pair = cells[0]
         size = re.sub(r"\\pendg\{([^}]*)\}", r"\1", cells[1]).strip()
@@ -82,7 +83,7 @@ for k in sorted(rows, key=lambda k: (ORDER.index(k[0]), k[1], k[2], sz(k[3]), k[
     study, cand, ref, size, model = k
     if row_key(study, cand, ref, size) in shown: continue
     ro, rn = rows[k].get("offline"), rows[k].get("online"); r0 = ro or rn
-    label = f"{esc(paper_name(study, cand))} $\\sqsubseteq$ {esc(paper_name(study, ref))}" + ("" if model == "fifo" else f"$^{{\\mathrm{{{model}}}}}$")
+    label = f"{lab(paper_name(study, cand))} $\\sqsubseteq$ {lab(paper_name(study, ref))}" + ("" if model == "fifo" else f"$^{{\\mathrm{{{model}}}}}$")
     v = r0["verdict"] == "violation"
     cells = [r0["impl graphs"] or "--", r0["spec graphs"] or "--"] + ([(ro or {}).get("uncovered") or (rn or {}).get("uncovered") or "--"] if v else [])
     off = paint(study, ro, [T(ro), M(ro)]) if ro else ["", ""]; on = paint(study, rn, [T(rn), M(rn)]) if rn else ["", ""]
@@ -115,7 +116,7 @@ for line in open(PENDING):
 sched = []
 for k in sorted(pend, key=lambda k: (ORDER.index(k[0]), k[1], k[2], sz(k[3]), k[3])):
     study, cand, ref, size, model = k
-    label = f"{esc(paper_name(study, cand))} $\\sqsubseteq$ {esc(paper_name(study, ref))}" + ("" if model == "fifo" else f"$^{{\\mathrm{{{model}}}}}$")
+    label = f"{lab(paper_name(study, cand))} $\\sqsubseteq$ {lab(paper_name(study, ref))}" + ("" if model == "fifo" else f"$^{{\\mathrm{{{model}}}}}$")
     st = {kind: f"\\textit{{{state}}} ({node})" for state, node, kind in pend[k]}
     sched.append((study, label, size, ["", ""] + [st.get("offline", ""), ""] + [st.get("online", ""), ""]))
 # ---- emit ----

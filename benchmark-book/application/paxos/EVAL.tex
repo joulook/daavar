@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{paxos} (paxos-oopsla25)}
 \author{}
-\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
+\date{generated 2026-11-08 from brain-data 38584f536 2026-11-08 20:45:11 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -67,7 +67,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \end{longtable}
 \paragraph{Not run (stateless).}
 the tool ended with an error (exit-101): 4 correct bag, 4 ignore-max-vote bag, 4 half-majority bag, 4 1b-none bag, 4 skip-2a-check bag.\par
-skipped: a smaller size had reached its limit: 5 correct bag, 5 ignore-max-vote bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 half-majority bag, 6 correct bag, 6 ignore-max-vote bag, 6 1b-none bag, 6 skip-2a-check bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 correct bag, 7 1b-none bag, 7 skip-2a-check bag, 8 ignore-max-vote bag, 8 correct bag, 8 half-majority bag, 8 1b-none bag, 8 skip-2a-check bag.\par
+skipped: a smaller size had reached its limit: 5 correct bag, 5 half-majority bag, 5 ignore-max-vote bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 correct bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 correct bag, 8 ignore-max-vote bag, 8 1b-none bag, 8 skip-2a-check bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -126,7 +126,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \end{longtable}
 \paragraph{Not run (stateful).}
 the tool ended with an error (exit-101): 4 correct bag, 4 ignore-max-vote bag, 4 half-majority bag, 4 1b-none bag, 4 skip-2a-check bag.\par
-skipped: a smaller size had reached its limit: 5 correct bag, 5 ignore-max-vote bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 half-majority bag, 6 correct bag, 6 ignore-max-vote bag, 6 1b-none bag, 6 skip-2a-check bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 correct bag, 7 1b-none bag, 7 skip-2a-check bag, 8 ignore-max-vote bag, 8 correct bag, 8 half-majority bag, 8 1b-none bag, 8 skip-2a-check bag.\par
+skipped: a smaller size had reached its limit: 5 correct bag, 5 half-majority bag, 5 ignore-max-vote bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 correct bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 correct bag, 8 ignore-max-vote bag, 8 1b-none bag, 8 skip-2a-check bag.\par
 left out by the table rules (ok): 1 bag skip-2a-check, 1 bag skip-2a-check.t16.c48h.r7.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{1b-none}, model bag, expected conforms}
@@ -186,7 +186,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \end{longtable}
 \paragraph{Not run (offline).}
 left out by the table rules (ok): 1 bag skip-2a-check, 1 bag skip-2a-check.m.c48h.r7.\par
-skipped: a smaller size had reached its limit: 4 half-majority bag, 4 correct bag, 4 ignore-max-vote bag, 4 1b-none bag, 4 skip-2a-check bag, 5 correct bag, 5 ignore-max-vote bag, 5 half-majority bag, 5 1b-none bag, 5 skip-2a-check bag, 6 half-majority bag, 6 correct bag, 6 ignore-max-vote bag, 6 1b-none bag, 6 skip-2a-check bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 correct bag, 7 1b-none bag, 7 skip-2a-check bag, 8 ignore-max-vote bag, 8 correct bag, 8 half-majority bag, 8 1b-none bag, \ldots\ (25 instances in all).\par
+skipped: a smaller size had reached its limit: 4 correct bag, 4 half-majority bag, 4 ignore-max-vote bag, 4 1b-none bag, 4 skip-2a-check bag, 5 correct bag, 5 half-majority bag, 5 ignore-max-vote bag, 5 1b-none bag, 5 skip-2a-check bag, 6 ignore-max-vote bag, 6 correct bag, 6 half-majority bag, 6 1b-none bag, 6 skip-2a-check bag, 7 correct bag, 7 ignore-max-vote bag, 7 half-majority bag, 7 1b-none bag, 7 skip-2a-check bag, 8 half-majority bag, 8 correct bag, 8 ignore-max-vote bag, 8 1b-none bag, \ldots\ (25 instances in all).\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -238,7 +238,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): 3 bag correct, 3 bag ignore-max-vote, 3 bag half-majority, 3 bag 1b-none.\par
+planned but never scheduled (grid points beyond the ladder): 3 bag correct, 3 bag half-majority, 3 bag ignore-max-vote, 3 bag 1b-none.\par
 skipped: a smaller size had reached its limit: 2 bag skip-2a-check.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{1b-none}, model bag, expected conforms}
@@ -292,7 +292,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 3 bag correct, 3 bag ignore-max-vote, 3 bag half-majority, 3 bag 1b-none, 3 bag skip-2a-check.\par
+planned but never scheduled (grid points beyond the ladder): 3 bag half-majority, 3 bag ignore-max-vote, 3 bag correct, 3 bag 1b-none, 3 bag skip-2a-check.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{1b-none}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -568,7 +568,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins online, Rust implementation (TraceForge) against the Java twin's export).}
-planned but never scheduled (grid points beyond the ladder): 1 bag ignore-max-vote, 1 bag correct, 1 bag half-majority, 1 bag 1b-none, 1 bag skip-2a-check, 2 bag correct, 2 bag ignore-max-vote, 2 bag half-majority, 2 bag 1b-none, 2 bag skip-2a-check.\par
+planned but never scheduled (grid points beyond the ladder): 1 bag half-majority, 1 bag correct, 1 bag ignore-max-vote, 1 bag 1b-none, 1 bag skip-2a-check, 2 bag correct, 2 bag ignore-max-vote, 2 bag half-majority, 2 bag 1b-none, 2 bag skip-2a-check.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}

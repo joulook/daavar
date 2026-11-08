@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{replog} (replicated-log-aneris)}
 \author{}
-\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
+\date{generated 2026-11-08 from brain-data 38584f536 2026-11-08 20:45:11 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -67,8 +67,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 7 correct bag, 8 asyn-fault fifo, 8 correct fifo, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault, 10 fifo correct, 10 fifo asyn-fault.\par
-skipped: a smaller size had reached its limit: 5 asyn-fault bag, 6 asyn-fault bag, 7 asyn-fault bag, 8 correct bag, 8 asyn-fault bag, 9 asyn-fault bag, 9 asyn-fault fifo, 9 correct bag, 10 correct fifo, 10 correct bag, 10 asyn-fault fifo.\par
+planned but never scheduled (grid points beyond the ladder): 7 correct bag, 8 fifo correct, 8 fifo asyn-fault, 8 correct fifo, 8 asyn-fault fifo, 9 fifo correct, 9 fifo asyn-fault, 10 fifo asyn-fault, 10 fifo correct.\par
+skipped: a smaller size had reached its limit: 5 asyn-fault bag, 6 asyn-fault bag, 7 asyn-fault bag, 8 asyn-fault bag, 8 correct bag, 9 correct bag, 9 asyn-fault fifo, 9 asyn-fault bag, 10 asyn-fault fifo, 10 correct bag, 10 correct fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{asyn-fault}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -134,9 +134,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 5 asyn-fault bag, 9 asyn-fault fifo, 11 correct fifo, 11 asyn-fault fifo, 12 fifo correct, 12 correct fifo, 12 asyn-fault fifo, 13 correct fifo, 13 asyn-fault fifo, 14 correct fifo, 15 correct fifo, 15 asyn-fault fifo, 16 asyn-fault fifo, 16 correct fifo.\par
-skipped: a smaller size had reached its limit: 6 asyn-fault bag, 7 asyn-fault bag, 8 asyn-fault bag, 9 asyn-fault bag, 9 correct bag, 10 correct fifo, 10 correct bag, 10 asyn-fault fifo.\par
-left out by the table rules (ok): 7 correct fifo, 7 asyn-fault fifo, 7 correct bag, 7 asyn-fault fifo.x3.t16.c48h.r7, 7 correct bag.x3.t16.c48h.r7, 7 correct fifo.x3.t16.c48h.r7, 8 asyn-fault fifo, 8 correct fifo.\par
+planned but never scheduled (grid points beyond the ladder): 5 asyn-fault bag, 9 asyn-fault fifo, 11 asyn-fault fifo, 11 correct fifo, 12 correct fifo, 12 asyn-fault fifo, 12 fifo correct, 13 asyn-fault fifo, 13 correct fifo, 14 correct fifo, 15 asyn-fault fifo, 15 correct fifo, 16 correct fifo, 16 asyn-fault fifo.\par
+skipped: a smaller size had reached its limit: 6 asyn-fault bag, 7 asyn-fault bag, 8 asyn-fault bag, 9 correct bag, 9 asyn-fault bag, 10 asyn-fault fifo, 10 correct bag, 10 correct fifo.\par
+left out by the table rules (ok): 7 correct fifo, 7 asyn-fault fifo, 7 correct bag, 7 correct bag.x3.t16.c48h.r7, 7 asyn-fault fifo.x3.t16.c48h.r7, 7 correct fifo.x3.t16.c48h.r7, 8 asyn-fault fifo, 8 correct fifo.\par
 left out by the table rules (timeout): 9 correct fifo, 9 asyn-fault fifo.\par
 left out by the table rules (invalid: foreign load): 11 fifo correct, 12 fifo asyn-fault.\par
 \section*{offline}
@@ -196,9 +196,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 5 asyn-fault bag, 8 asyn-fault fifo, 8 fifo correct, 8 fifo asyn-fault, 9 asyn-fault fifo, 9 fifo correct, 9 correct bag, 9 correct fifo, 9 fifo asyn-fault, 10 fifo asyn-fault.\par
-skipped: a smaller size had reached its limit: 5 asyn-fault bag, 6 asyn-fault bag, 7 asyn-fault bag, 8 asyn-fault bag, 9 asyn-fault bag, 9 asyn-fault fifo, 9 correct bag, 9 correct fifo, 10 correct fifo, 10 fifo correct, 10 correct bag, 10 asyn-fault fifo.\par
-left out by the table rules (ok): 7 correct fifo, 7 asyn-fault fifo, 7 correct bag, 7 asyn-fault fifo.x3.m.c48h.r7, 7 correct bag.x3.m.c48h.r7, 7 correct fifo.x3.m.c48h.r7.\par
+planned but never scheduled (grid points beyond the ladder): 5 asyn-fault bag, 8 fifo correct, 8 fifo asyn-fault, 8 asyn-fault fifo, 9 fifo correct, 9 correct bag, 9 fifo asyn-fault, 9 correct fifo, 9 asyn-fault fifo, 10 fifo asyn-fault.\par
+skipped: a smaller size had reached its limit: 5 asyn-fault bag, 6 asyn-fault bag, 7 asyn-fault bag, 8 asyn-fault bag, 9 correct bag, 9 correct fifo, 9 asyn-fault fifo, 9 asyn-fault bag, 10 asyn-fault fifo, 10 correct bag, 10 correct fifo, 10 fifo correct.\par
+left out by the table rules (ok): 7 correct fifo, 7 asyn-fault fifo, 7 correct bag, 7 correct fifo.x3.m.c48h.r7, 7 asyn-fault fifo.x3.m.c48h.r7, 7 correct bag.x3.m.c48h.r7.\par
 refused (an input missing at run time): 8 correct bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
@@ -225,7 +225,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
 skipped: a smaller size had reached its limit: 4 bag asyn-fault, 10 fifo correct.\par
 planned but never scheduled (grid points beyond the ladder): 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault, 10 fifo asyn-fault.\par
-refused (an input missing at run time): 2 fifo correct, 2 fifo asyn-fault, 3 fifo asyn-fault, 3 fifo correct, 4 fifo asyn-fault, 4 fifo correct.\par
+refused (an input missing at run time): 2 fifo asyn-fault, 2 fifo correct, 3 fifo asyn-fault, 3 fifo correct, 4 fifo asyn-fault, 4 fifo correct.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{asyn-fault}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -273,7 +273,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
 skipped: a smaller size had reached its limit: 10 fifo asyn-fault, 10 fifo correct.\par
-planned but never scheduled (grid points beyond the ladder): 5 fifo asyn-fault, 5 fifo correct, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 5 fifo correct, 5 fifo asyn-fault, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -285,7 +285,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 2 fifo correct, 2 fifo asyn-fault, 2 bag correct, 2 bag asyn-fault, 3 bag asyn-fault, 3 bag correct, 3 fifo asyn-fault, 3 fifo correct, 4 bag correct, 4 fifo asyn-fault, 4 fifo correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault, 10 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 2 fifo asyn-fault, 2 fifo correct, 2 bag correct, 2 bag asyn-fault, 3 fifo asyn-fault, 3 fifo correct, 3 bag asyn-fault, 3 bag correct, 4 bag correct, 4 fifo asyn-fault, 4 fifo correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault, 10 fifo asyn-fault.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{asyn-fault}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -409,7 +409,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
 skipped: a smaller size had reached its limit: 4 bag asyn-fault.\par
-planned but never scheduled (grid points beyond the ladder): 5 fifo asyn-fault, 5 fifo correct, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 5 fifo correct, 5 fifo asyn-fault, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{asyn-fault}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -477,7 +477,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
 skipped: a smaller size had reached its limit: 4 bag asyn-fault.\par
-planned but never scheduled (grid points beyond the ladder): 5 fifo asyn-fault, 5 fifo correct, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 5 fifo correct, 5 fifo asyn-fault, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{asyn-fault}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -554,7 +554,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
 skipped: a smaller size had reached its limit: 4 bag asyn-fault.\par
-planned but never scheduled (grid points beyond the ladder): 5 fifo asyn-fault, 5 fifo correct, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 5 fifo correct, 5 fifo asyn-fault, 5 bag correct, 8 fifo correct, 8 fifo asyn-fault, 9 fifo correct, 9 fifo asyn-fault.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{asyn-fault}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -622,7 +622,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
 skipped: a smaller size had reached its limit: 4 bag asyn-fault, 8 fifo asyn-fault.\par
-planned but never scheduled (grid points beyond the ladder): 5 fifo asyn-fault, 5 fifo correct, 5 bag correct, 8 fifo correct, 9 fifo correct, 9 fifo asyn-fault.\par
+planned but never scheduled (grid points beyond the ladder): 5 fifo correct, 5 fifo asyn-fault, 5 bag correct, 8 fifo correct, 9 fifo correct, 9 fifo asyn-fault.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{asyn-fault}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}

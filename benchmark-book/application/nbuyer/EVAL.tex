@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{nbuyer} (n-buyer-kragl)}
 \author{}
-\date{generated 2026-11-08 from brain-data 34d8e8fae 2026-11-08 19:23:20 +0100}
+\date{generated 2026-11-08 from brain-data 38584f536 2026-11-08 20:45:11 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -36,7 +36,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-skipped: a smaller size had reached its limit: 6 no-subtract bag, 7 no-subtract bag, 7 correct bag, 8 correct bag, 8 no-subtract bag, 9 no-subtract bag, 9 correct bag, 10 correct bag, 10 no-subtract bag, 11 no-subtract bag, 11 correct bag.\par
+skipped: a smaller size had reached its limit: 6 no-subtract bag, 7 no-subtract bag, 7 correct bag, 8 no-subtract bag, 8 correct bag, 9 correct bag, 9 no-subtract bag, 10 no-subtract bag, 10 correct bag, 11 no-subtract bag, 11 correct bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -66,7 +66,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-skipped: a smaller size had reached its limit: 7 no-subtract bag, 8 correct bag, 8 no-subtract bag, 9 no-subtract bag, 9 correct bag, 10 correct bag, 10 no-subtract bag, 11 no-subtract bag, 11 correct bag.\par
+skipped: a smaller size had reached its limit: 7 no-subtract bag, 8 no-subtract bag, 8 correct bag, 9 correct bag, 9 no-subtract bag, 10 no-subtract bag, 10 correct bag, 11 no-subtract bag, 11 correct bag.\par
 left out by the table rules (ok): 6 no-subtract bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
@@ -101,7 +101,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (offline).}
 planned but never scheduled (grid points beyond the ladder): 8 no-subtract bag, 8 correct bag.\par
-skipped: a smaller size had reached its limit: 9 no-subtract bag, 9 correct bag, 10 correct bag, 10 no-subtract bag, 11 no-subtract bag, 11 correct bag.\par
+skipped: a smaller size had reached its limit: 9 correct bag, 9 no-subtract bag, 10 no-subtract bag, 10 correct bag, 11 no-subtract bag, 11 correct bag.\par
 left out by the table rules (timeout): 6 no-subtract bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
@@ -183,7 +183,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 2 no-subtract bag, 2 correct bag, 3 correct bag, 3 no-subtract bag, 4 no-subtract bag, 4 correct bag, 5 correct bag, 5 no-subtract bag.\par
+planned but never scheduled (grid points beyond the ladder): 2 correct bag, 2 no-subtract bag, 3 no-subtract bag, 3 correct bag, 4 no-subtract bag, 4 correct bag, 5 no-subtract bag, 5 correct bag.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -210,7 +210,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): 2 no-subtract bag, 2 correct bag, 3 correct bag, 3 no-subtract bag, 4 no-subtract bag, 4 correct bag, 5 correct bag, 5 no-subtract bag.\par
+left out by the table rules (ok): 2 correct bag, 2 no-subtract bag, 3 no-subtract bag, 3 correct bag, 4 no-subtract bag, 4 correct bag, 5 no-subtract bag, 5 correct bag.\par
 \section*{twins offline, Rust implementation against its Java twin}
 \subsection*{twins offline, Rust implementation against its Java twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -240,7 +240,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Rust implementation against its Java twin).}
-planned but never scheduled (grid points beyond the ladder): 7 bag no-subtract, 7 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag no-subtract.\par
 \section*{twins offline, Java implementation against its Rust twin}
 \subsection*{twins offline, Java implementation against its Rust twin: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -270,7 +270,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins offline, Java implementation against its Rust twin).}
-planned but never scheduled (grid points beyond the ladder): 7 bag no-subtract, 7 bag correct.\par
+planned but never scheduled (grid points beyond the ladder): 7 bag correct, 7 bag no-subtract.\par
 \section*{twins online, Rust implementation (TraceForge) against the Java twin's export}
 \subsection*{twins online, Rust implementation (TraceForge) against the Java twin's export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
