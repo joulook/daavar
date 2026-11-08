@@ -269,7 +269,9 @@ if not FULL and KEEP is None:
             if limit(r) and num(r.get("timeout s")) != 172800: return None
             r = dict(r); r["colour"] = "blue" if re.search(r"\.p(?=\.|$)", r.get("run id", "")) else ("orange" if r.get("contended") == "yes" else "red")   # orange (owner 2026-11-04 12:40): the run shared its NUMA node with another run; its time is not trusted
             return r
-        def paint(r, cell): return f"\\textcolor{{{r['colour']}}}{{{cell}}}" if r is not None and cell != "" else cell
+        def paint(r, cell):
+            cell = cell.replace("$_{\\mathrm{48h}}$", "")   # the curated tables show \faClock without its tier (owner 2026-11-08): the setup states the 48 h limit
+            return f"\\textcolor{{{r['colour']}}}{{{cell}}}" if r is not None and cell != "" else cell
         for prog, var, model, size in want:
             k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
             m = inst.get(k, {}) if k else {}
@@ -294,7 +296,8 @@ if not FULL and KEEP is None:
                 if short or never_ran:   # the largest size of the instance at which every engine completed (no limit), below this row's size
                     shown = sz(size)
                     import math
-                    cands = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(shown) and all(a <= b for a, b in zip(sz(kk[4]), shown)) and sz(kk[4]) != shown
+                    def same_shape(a, b): return all((a[i] == a[j]) == (b[i] == b[j]) for i in range(len(a)) for j in range(i + 1, len(a)))   # owner 2026-11-08: no 20,10 under 20,20; a dagger size keeps the equalities of the listed size
+                    cands = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(shown) and all(a <= b for a, b in zip(sz(kk[4]), shown)) and sz(kk[4]) != shown and same_shape(sz(kk[4]), shown)
                              and any(decided(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))
                              and not any(limit(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))]   # completed = every engine that ran at that size finished, none hit a limit
                     if cands:
