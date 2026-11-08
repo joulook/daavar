@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{zab} (zab-broadcast-remix)}
 \author{}
-\date{generated 2026-11-08 from brain-data 614b86250 2026-11-08 11:41:25 +0100}
+\date{generated 2026-11-08 from brain-data 522afaee3 2026-11-08 12:20:57 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -35,7 +35,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 correct fifo, 4 fifo issue1-propose-to-ackld, 4 issue1-propose-to-ackld fifo, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
+planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 4 correct fifo, 4 issue1-propose-to-ackld fifo, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
 left out by the table rules (ok): 3 correct fifo, 3 issue1-propose-to-ackld fifo.\par
 skipped: a smaller size had reached its limit: 4 fifo correct, 5 correct fifo, 5 issue1-propose-to-ackld fifo, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 issue1-propose-to-ackld fifo, 8 correct fifo, 8 issue1-propose-to-ackld fifo.\par
 \section*{stateful}
@@ -64,8 +64,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-left out by the table rules (ok): 3 correct fifo, 3 fifo correct, 3 fifo issue1-propose-to-ackld, 3 issue1-propose-to-ackld fifo, 3 fifo correct.t16.r41, 3 fifo correct.t16.r42.\par
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct.t16.r31, 3 fifo correct.t16.r32, 3 fifo correct.t16.r33, 3 fifo correct.t16.r34, 3 fifo correct.t16.r35, 3 fifo correct.t16.r43, 3 fifo correct.t16.r44, 3 fifo correct.t16.r45, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 issue1-propose-to-ackld fifo, 7 fifo issue1-propose-to-ackld, 8 correct fifo, 8 issue1-propose-to-ackld fifo, 9 correct fifo, 9 issue1-propose-to-ackld fifo, 10 correct fifo, 10 issue1-propose-to-ackld fifo, 11 correct fifo, 11 issue1-propose-to-ackld fifo.\par
+left out by the table rules (ok): 3 correct fifo, 3 fifo correct, 3 fifo issue1-propose-to-ackld, 3 issue1-propose-to-ackld fifo, 3 fifo correct.t16.r41, 3 fifo correct.t16.r42, 3 fifo correct.t16.r43, 3 fifo correct.t16.r44, 3 fifo correct.t16.r45.\par
+planned but never scheduled (grid points beyond the ladder): 3 fifo correct.t16.r31, 3 fifo correct.t16.r32, 3 fifo correct.t16.r33, 3 fifo correct.t16.r34, 3 fifo correct.t16.r35, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 fifo issue1-propose-to-ackld, 7 issue1-propose-to-ackld fifo, 8 correct fifo, 8 issue1-propose-to-ackld fifo, 9 correct fifo, 9 issue1-propose-to-ackld fifo, 10 correct fifo, 10 issue1-propose-to-ackld fifo, 11 correct fifo, 11 issue1-propose-to-ackld fifo.\par
 left out by the table rules (timeout): 4 correct fifo, 4 issue1-propose-to-ackld fifo, 5 fifo correct, 5 fifo issue1-propose-to-ackld, 6 fifo correct.\par
 skipped: a smaller size had reached its limit: 5 correct fifo, 5 issue1-propose-to-ackld fifo, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 issue1-propose-to-ackld fifo, 8 correct fifo, 8 issue1-propose-to-ackld fifo.\par
 left out by the table rules (invalid: foreign load): 6 fifo issue1-propose-to-ackld, 7 fifo correct.\par
@@ -95,8 +95,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 3 fifo correct.r31, 3 fifo correct.r32, 3 fifo correct.r33, 3 fifo correct.r34, 3 fifo correct.r35, 3 fifo correct.r42, 3 fifo correct.r43, 3 fifo correct.r44, 3 fifo correct.r45, 4 fifo correct, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
-left out by the table rules (ok): 3 fifo correct.r41.\par
+planned but never scheduled (grid points beyond the ladder): 3 fifo correct, 3 fifo issue1-propose-to-ackld, 3 fifo correct.r31, 3 fifo correct.r32, 3 fifo correct.r33, 3 fifo correct.r34, 3 fifo correct.r35, 4 fifo correct, 4 fifo issue1-propose-to-ackld, 5 fifo correct, 5 fifo issue1-propose-to-ackld.\par
+left out by the table rules (ok): 3 fifo correct.r41, 3 fifo correct.r42, 3 fifo correct.r43, 3 fifo correct.r44, 3 fifo correct.r45.\par
 skipped: a smaller size had reached its limit: 4 correct fifo, 4 issue1-propose-to-ackld fifo, 5 correct fifo, 5 issue1-propose-to-ackld fifo, 6 correct fifo, 6 issue1-propose-to-ackld fifo, 7 correct fifo, 7 issue1-propose-to-ackld fifo, 8 correct fifo, 8 issue1-propose-to-ackld fifo.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{correct}, model fifo, expected conforms}
