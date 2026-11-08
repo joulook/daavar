@@ -11,9 +11,11 @@ def fnum(x):   # seconds: 1 decimal from 10 s, 2 below, 3 below 0.1 s; a run bel
     try: v = float(x)
     except Exception: return '--'
     if v == 0: return '$<$0.01'
-    if v >= 10: return '%.1f' % v
-    if v >= 0.1: return '%.2f' % v
-    return '%.3f' % v
+    from decimal import Decimal, ROUND_HALF_UP   # half-up on the value's text: 23.95 prints 24.0, not 23.9 (audit 1108-1703)
+    d = lambda nd: str(Decimal(str(x).strip()).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
+    if v >= 10: return d(1)
+    if v >= 0.1: return d(2)
+    return d(3)
 def mib(x):
     try: return str(round(float(x)))
     except Exception: return '--'
