@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{lb-ll} (balancer-load-aware)}
 \author{}
-\date{generated 2026-11-08 from brain-data 522afaee3 2026-11-08 12:20:57 +0100}
+\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): l1: expected conforms (README); l2: expected conforms (README); l2-stale: expected violation (README says violation without a size rule. No verdict is given for k>c \&\& c>=2 \&\& m>=2: a Reject there depends on k, q and m, and a model finds none at 3 1 2 2, 3 1 3 2, 4 1 2 3); l2-stale: expected conforms (at most k requests in flight, so no reject). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -35,7 +35,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (stateless).}
 planned but never scheduled (grid points beyond the ladder): l1 2 2 3 fifo, l1 2 2 4 fifo, l1 2 2 5 fifo, l1 2 3 2 fifo, l1 2 3 3 fifo, l1 2 3 4 fifo, l1 2 3 5 fifo, l1 2 4 2 fifo, l1 2 4 3 fifo, l1 2 4 4 fifo, l1 2 4 5 fifo, l1 2 5 2 fifo, l1 2 5 3 fifo, l1 2 5 4 fifo, l1 2 5 5 fifo, l1 3 2 2 fifo, l1 3 2 3 fifo, l1 3 2 4 fifo, l1 3 2 5 fifo, l1 3 3 2 fifo, l1 3 3 4 fifo, l1 3 3 5 fifo, l1 3 4 2 fifo, l1 3 4 3 fifo, \ldots\ (340 instances in all).\par
-skipped: a smaller size had reached its limit: l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2-stale 3 3 3 2 fifo, l2-stale 4 4 4 3 fifo, l2 4 4 4 3 fifo, l2 5 5 5 4 fifo, l2-stale 5 5 5 4 fifo, l2 6 6 6 5 fifo, l2-stale 6 6 6 5 fifo, l2-stale 7 7 7 6 fifo, l2 7 7 7 6 fifo, l2 8 8 8 7 fifo, l2-stale 8 8 8 7 fifo.\par
+skipped: a smaller size had reached its limit: l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2-stale 3 3 3 2 fifo, l2-stale 4 4 4 3 fifo, l2 4 4 4 3 fifo, l2-stale 5 5 5 4 fifo, l2 5 5 5 4 fifo, l2 6 6 6 5 fifo, l2-stale 6 6 6 5 fifo, l2 7 7 7 6 fifo, l2-stale 7 7 7 6 fifo, l2 8 8 8 7 fifo, l2-stale 8 8 8 7 fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -63,7 +63,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (stateful).}
 planned but never scheduled (grid points beyond the ladder): l1 2 2 3 fifo, l1 2 2 4 fifo, l1 2 2 5 fifo, l1 2 3 2 fifo, l1 2 3 3 fifo, l1 2 3 4 fifo, l1 2 3 5 fifo, l1 2 4 2 fifo, l1 2 4 3 fifo, l1 2 4 4 fifo, l1 2 4 5 fifo, l1 2 5 2 fifo, l1 2 5 3 fifo, l1 2 5 4 fifo, l1 2 5 5 fifo, l1 3 2 2 fifo, l1 3 2 3 fifo, l1 3 2 4 fifo, l1 3 2 5 fifo, l1 3 3 2 fifo, l1 3 3 4 fifo, l1 3 3 5 fifo, l1 3 4 2 fifo, l1 3 4 3 fifo, \ldots\ (340 instances in all).\par
-skipped: a smaller size had reached its limit: l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2-stale 4 4 4 3 fifo, l2 4 4 4 3 fifo, l2 5 5 5 4 fifo, l2-stale 5 5 5 4 fifo, l2 6 6 6 5 fifo, l2-stale 6 6 6 5 fifo, l2-stale 7 7 7 6 fifo, l2 7 7 7 6 fifo, l2 8 8 8 7 fifo, l2-stale 8 8 8 7 fifo.\par
+skipped: a smaller size had reached its limit: l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2-stale 4 4 4 3 fifo, l2 4 4 4 3 fifo, l2-stale 5 5 5 4 fifo, l2 5 5 5 4 fifo, l2 6 6 6 5 fifo, l2-stale 6 6 6 5 fifo, l2 7 7 7 6 fifo, l2-stale 7 7 7 6 fifo, l2 8 8 8 7 fifo, l2-stale 8 8 8 7 fifo.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -116,7 +116,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (offline).}
 planned but never scheduled (grid points beyond the ladder): l1 2 2 3 fifo, l1 2 2 4 fifo, l1 2 2 5 fifo, l1 2 3 2 fifo, l1 2 3 3 fifo, l1 2 3 4 fifo, l1 2 3 5 fifo, l1 2 4 2 fifo, l1 2 4 3 fifo, l1 2 4 4 fifo, l1 2 4 5 fifo, l1 2 5 2 fifo, l1 2 5 3 fifo, l1 2 5 4 fifo, l1 2 5 5 fifo, l1 3 2 2 fifo, l1 3 2 3 fifo, l1 3 2 4 fifo, l1 3 2 5 fifo, l1 3 3 2 fifo, l1 3 3 4 fifo, l1 3 3 5 fifo, l1 3 4 2 fifo, l1 3 4 3 fifo, \ldots\ (340 instances in all).\par
-skipped: a smaller size had reached its limit: l1 3 3 3 fifo, l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2 3 3 3 2 fifo, l2-stale 3 3 3 2 fifo, l2 4 4 4 3 fifo, l2-stale 4 4 4 3 fifo, l2 5 5 5 4 fifo, l2-stale 5 5 5 4 fifo, l2-stale 6 6 6 5 fifo, l2 6 6 6 5 fifo, l2 7 7 7 6 fifo, l2-stale 7 7 7 6 fifo, l2-stale 8 8 8 7 fifo, l2 8 8 8 7 fifo.\par
+skipped: a smaller size had reached its limit: l1 3 3 3 fifo, l1 4 4 4 fifo, l1 5 5 5 fifo, l1 6 6 6 fifo, l1 7 7 7 fifo, l1 8 8 8 fifo, l1 9 9 9 fifo, l2 3 3 3 2 fifo, l2-stale 3 3 3 2 fifo, l2 4 4 4 3 fifo, l2-stale 4 4 4 3 fifo, l2-stale 5 5 5 4 fifo, l2 5 5 5 4 fifo, l2 6 6 6 5 fifo, l2-stale 6 6 6 5 fifo, l2-stale 7 7 7 6 fifo, l2 7 7 7 6 fifo, l2 8 8 8 7 fifo, l2-stale 8 8 8 7 fifo.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -192,8 +192,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): l1 2 2 3 fifo, l1 3 2 2 fifo, l2-stale 2 2 2 2 fifo, l2 2 2 2 2 fifo, l2-stale 2 2 3 1 fifo, l2 2 2 3 1 fifo, l2-stale 2 3 2 1 fifo, l2 2 3 2 1 fifo, l2-stale 3 2 2 1 fifo, l2 3 2 2 1 fifo.\par
-left out by the table rules (ok): l2-stale 2 1 1 1 fifo, l2 2 1 1 1 fifo, l2 2 2 2 1 fifo, l2-stale 2 2 2 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): l1 2 2 3 fifo, l1 3 2 2 fifo, l2-stale 2 2 2 2 fifo, l2 2 2 2 2 fifo, l2 2 2 3 1 fifo, l2-stale 2 2 3 1 fifo, l2 2 3 2 1 fifo, l2-stale 2 3 2 1 fifo, l2-stale 3 2 2 1 fifo, l2 3 2 2 1 fifo.\par
+left out by the table rules (ok): l2-stale 2 1 1 1 fifo, l2 2 1 1 1 fifo, l2-stale 2 2 2 1 fifo, l2 2 2 2 1 fifo.\par
 skipped: a smaller size had reached its limit: l1 3 3 3 fifo.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model fifo, expected conforms}
@@ -247,7 +247,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): l1 2 2 2 fifo, l1 3 3 3 fifo, l2 2 1 1 1 fifo, l2-stale 2 1 1 1 fifo, l2-stale 2 2 2 1 fifo, l2 2 2 2 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): l1 2 2 2 fifo, l1 3 3 3 fifo, l2-stale 2 1 1 1 fifo, l2 2 1 1 1 fifo, l2 2 2 2 1 fifo, l2-stale 2 2 2 1 fifo.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -271,6 +271,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): l1 2 2 2 fifo, l2 2 1 1 1 fifo, l2-stale 2 1 1 1 fifo, l2-stale 2 2 2 1 fifo, l2 2 2 2 1 fifo.\par
+left out by the table rules (ok): l1 2 2 2 fifo, l2-stale 2 1 1 1 fifo, l2 2 1 1 1 fifo, l2 2 2 2 1 fifo, l2-stale 2 2 2 1 fifo.\par
 skipped: a smaller size had reached its limit: l1 3 3 3 fifo.\par
 \end{document}

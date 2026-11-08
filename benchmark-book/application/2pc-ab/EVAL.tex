@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{2pc-ab} (two-pc-abstain-kragl)}
 \author{}
-\date{generated 2026-11-08 from brain-data 522afaee3 2026-11-08 12:20:57 +0100}
+\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -41,7 +41,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (stateless).}
 planned but never scheduled (grid points beyond the ladder): 8 off-by-one bag, 8 correct bag, 8 off-by-one bag.t16.p.r3, 8 correct bag.t16.p.r3, 9 off-by-one bag, 9 correct bag, 9 off-by-one bag.t16.p.r3, 9 correct bag.t16.p.r3, 10 off-by-one bag, 10 correct bag.\par
-skipped: a smaller size had reached its limit: 8 correct bag, 8 off-by-one bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag, 11 correct bag, 11 off-by-one bag.\par
+skipped: a smaller size had reached its limit: 8 off-by-one bag, 8 correct bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag, 11 correct bag, 11 off-by-one bag.\par
 left out by the table rules (invalid: foreign load): 7 off-by-one bag.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{correct}, model bag, expected conforms}
@@ -57,7 +57,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 5 & 19744 & 2291 & conforms & 1.5 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 6 & 236938 & 15205 & conforms & 8.0 & 44 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 7 & 3314280 & 111539 & conforms & 63.3 & 238 & 1 h, 250 GB & brain02, 2026-11-03 \\
-\color{blue} 8 & 52994722 & 909809 & conforms & 463.2 & 871 & 48 h, 250 GB & brain04, 2026-11-08 \\
+\color{blue} 8 & 52994722 & 909809 & conforms & 1111.8 & 873 & 48 h, 250 GB & brain04, 2026-11-05 \\
 \color{blue} 9 & 953561800 & 8247331 & conforms & 12426.0 & 3020 & 48 h, 250 GB & brain04, 2026-11-05 \\
 \color{blue} 10 &  &  & \faClock\ (48 h) &  &  & 48 h, 250 GB & brain04, 2026-11-03 \\
 \bottomrule
@@ -81,10 +81,11 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): 8 correct bag.t16.r31, 8 correct bag.t16.r32, 8 correct bag.t16.r33, 8 correct bag.t16.r34, 8 correct bag.t16.r35, 8 correct bag.t16.r42, 8 correct bag.t16.r43, 8 correct bag.t16.r44, 8 correct bag.t16.r45, 11 correct bag, 11 off-by-one bag, 12 off-by-one bag, 13 off-by-one bag, 13 correct bag, 14 correct bag, 14 off-by-one bag, 15 correct bag, 15 off-by-one bag, 16 off-by-one bag, 16 correct bag.\par
-left out by the table rules (ok): 1 correct bag, 1 correct bag.t16.c48h.r7, 8 off-by-one bag, 8 correct bag.\par
+left out by the table rules (ok): 1 correct bag, 1 correct bag.t16.c48h.r7, 8 off-by-one bag, 8 correct bag, 8 correct bag.t16.r41.\par
+the tool ended with an error (exit-143): 8 correct bag.t16.r42.\par
+planned but never scheduled (grid points beyond the ladder): 8 off-by-one bag.t16.p.r3, 8 correct bag.t16.p.r3, 8 correct bag.t16.r31, 8 correct bag.t16.r32, 8 correct bag.t16.r33, 8 correct bag.t16.r34, 8 correct bag.t16.r35, 8 correct bag.t16.r43, 8 correct bag.t16.r44, 8 correct bag.t16.r45, 11 correct bag, 11 off-by-one bag, 12 off-by-one bag, 13 correct bag, 13 off-by-one bag, 14 off-by-one bag, 14 correct bag, 15 off-by-one bag, 15 correct bag, 16 correct bag, 16 off-by-one bag.\par
 left out by the table rules (timeout): 9 correct bag, 9 off-by-one bag.\par
-skipped: a smaller size had reached its limit: 10 off-by-one bag, 10 correct bag, 11 correct bag, 11 off-by-one bag.\par
+skipped: a smaller size had reached its limit: 10 correct bag, 10 off-by-one bag, 11 correct bag, 11 off-by-one bag.\par
 left out by the table rules (invalid: foreign load): 11 off-by-one bag, 12 correct bag.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{correct}, model bag, expected conforms}
@@ -126,9 +127,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): 8 correct bag.r31, 8 correct bag.r32, 8 correct bag.r33, 8 correct bag.r34, 8 correct bag.r35, 8 correct bag.r41, 8 correct bag.r42, 8 correct bag.r43, 8 correct bag.r44, 8 correct bag.r45, 11 correct bag, 11 off-by-one bag.\par
-left out by the table rules (ok): 1 correct bag, 1 correct bag.m.c48h.r7, 9 correct bag, 9 off-by-one bag.\par
-refused (an input missing at run time): 10 off-by-one bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 8 off-by-one bag.p.r3, 8 correct bag.p.r3, 8 correct bag.r31, 8 correct bag.r32, 8 correct bag.r33, 8 correct bag.r34, 8 correct bag.r35, 8 correct bag.r42, 8 correct bag.r43, 8 correct bag.r44, 8 correct bag.r45, 11 correct bag, 11 off-by-one bag.\par
+left out by the table rules (ok): 1 correct bag, 1 correct bag.m.c48h.r7, 8 correct bag.r41, 9 off-by-one bag, 9 correct bag.\par
+refused (an input missing at run time): 10 correct bag, 10 off-by-one bag.\par
 skipped: a smaller size had reached its limit: 11 correct bag, 11 off-by-one bag.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{correct}, model bag, expected conforms}
@@ -158,7 +159,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): 6 correct bag, 6 off-by-one bag, 8 correct bag, 8 off-by-one bag, 9 off-by-one bag, 9 correct bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 6 off-by-one bag, 6 correct bag, 8 off-by-one bag, 8 correct bag, 9 off-by-one bag, 9 correct bag, 10 correct bag.\par
 left out by the table rules (ok): 1 correct bag, 1 correct bag.tfspec-jmcimpl.m.c48h.r7.\par
 skipped: a smaller size had reached its limit: 10 off-by-one bag.\par
 \section*{cross offline, Rust implementation against the Java specification}
@@ -189,8 +190,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): 6 correct bag, 8 correct bag, 8 off-by-one bag, 9 off-by-one bag, 9 correct bag.\par
-refused (an input missing at run time): 10 off-by-one bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 6 correct bag, 8 off-by-one bag, 8 correct bag, 9 off-by-one bag, 9 correct bag.\par
+refused (an input missing at run time): 10 correct bag, 10 off-by-one bag.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{correct}, model bag, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -219,7 +220,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 1 correct bag, 1 off-by-one bag, 2 correct bag, 2 off-by-one bag, 3 correct bag, 3 off-by-one bag, 4 off-by-one bag, 4 correct bag, 5 off-by-one bag, 5 correct bag, 8 correct bag, 8 off-by-one bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 1 off-by-one bag, 1 correct bag, 2 off-by-one bag, 2 correct bag, 3 off-by-one bag, 3 correct bag, 4 correct bag, 4 off-by-one bag, 5 correct bag, 5 off-by-one bag, 8 off-by-one bag, 8 correct bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag.\par
 left out by the table rules (ok): 1 correct bag, 1 correct bag.w16.c48h.r7.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{correct}, model bag, expected conforms}
@@ -249,6 +250,6 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-planned but never scheduled (grid points beyond the ladder): 8 correct bag, 8 off-by-one bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag.\par
-left out by the table rules (ok): 1 correct bag, 1 off-by-one bag, 2 correct bag, 2 off-by-one bag, 3 correct bag, 3 off-by-one bag, 4 off-by-one bag, 4 correct bag, 5 off-by-one bag, 5 correct bag.\par
+planned but never scheduled (grid points beyond the ladder): 8 off-by-one bag, 8 correct bag, 9 off-by-one bag, 9 correct bag, 10 off-by-one bag, 10 correct bag.\par
+left out by the table rules (ok): 1 off-by-one bag, 1 correct bag, 2 off-by-one bag, 2 correct bag, 3 off-by-one bag, 3 correct bag, 4 correct bag, 4 off-by-one bag, 5 correct bag, 5 off-by-one bag.\par
 \end{document}

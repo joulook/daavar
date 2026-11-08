@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{bank} (bank-grove)}
 \author{}
-\date{generated 2026-11-08 from brain-data 522afaee3 2026-11-08 12:20:57 +0100}
+\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): no entry in the rule file (the README states the expectation). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -37,7 +37,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \end{longtable}
 \paragraph{Not run (offline).}
 planned but never scheduled (grid points beyond the ladder): 5 unordered fifo.\par
-skipped: a smaller size had reached its limit: 4 ordered fifo, 5 unordered fifo, 5 ordered fifo, 6 unordered fifo, 6 ordered fifo, 7 unordered fifo, 7 ordered fifo, 8 unordered fifo, 8 ordered fifo, 9 unordered fifo, 9 ordered fifo.\par
+skipped: a smaller size had reached its limit: 4 ordered fifo, 5 ordered fifo, 5 unordered fifo, 6 unordered fifo, 6 ordered fifo, 7 unordered fifo, 7 ordered fifo, 8 ordered fifo, 8 unordered fifo, 9 ordered fifo, 9 unordered fifo.\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{ordered}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -110,7 +110,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): 1 fifo ordered, 1 fifo unordered, 2 fifo ordered, 2 fifo unordered, 3 fifo ordered, 3 fifo unordered.\par
+planned but never scheduled (grid points beyond the ladder): 1 fifo ordered, 1 fifo unordered, 2 fifo ordered, 2 fifo unordered, 3 fifo unordered, 3 fifo ordered.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{ordered}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -206,7 +206,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (twins online, Rust implementation (TraceForge) against the Java twin's export).}
-planned but never scheduled (grid points beyond the ladder): 1 fifo unordered, 1 fifo ordered, 2 fifo unordered, 2 fifo ordered.\par
+planned but never scheduled (grid points beyond the ladder): 1 fifo unordered, 1 fifo ordered, 2 fifo ordered, 2 fifo unordered.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{ordered}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -229,7 +229,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-refused (an input missing at run time): 3 fifo ordered, 3 fifo unordered.\par
+refused (an input missing at run time): 3 fifo unordered, 3 fifo ordered.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{ordered}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -252,7 +252,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-skipped: a smaller size had reached its limit: 3 fifo ordered, 3 fifo unordered.\par
+skipped: a smaller size had reached its limit: 3 fifo unordered, 3 fifo ordered.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{ordered}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -298,5 +298,5 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & firs
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins online, Rust implementation (TraceForge) against the Java port's export).}
-skipped: a smaller size had reached its limit: 3 fifo ordered, 3 fifo unordered.\par
+skipped: a smaller size had reached its limit: 3 fifo unordered, 3 fifo ordered.\par
 \end{document}

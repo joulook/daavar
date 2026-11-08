@@ -5,7 +5,7 @@
 \setlength{\LTcapwidth}{\textwidth}\setlength{\tabcolsep}{3pt}
 \title{Evaluation runs: \textsf{2pc} (a1-commit)}
 \author{}
-\date{generated 2026-11-08 from brain-data 522afaee3 2026-11-08 12:20:57 +0100}
+\date{generated 2026-11-08 from brain-data e1e40f443 2026-11-08 13:42:54 +0100}
 \begin{document}\maketitle\small
 \noindent Every campaign run on this benchmark, one row per instance (variant, specification, communication model, size) and engine; the newest run of an instance wins. Expected verdicts (the rule file): correct: expected conforms (n=1 is refused: the program never spawns visible p1); control-reverse: expected conforms (n=1 is refused: the program never spawns visible p1); eager: expected violation (n=1 is refused: the program never spawns visible p1); early-abort: expected violation (n=1 is refused: the program never spawns visible p1); silent: expected violation (n=1 is refused: the program never spawns visible p1). \textcolor{blue}{Blue} rows are at the current pins (TraceForge 367cdc6, whose predecessor 9a0629e is equivalent for every engine but the join; merge join 367cdc6; JMC 3c43b2d2): a rerun gives the same result. \textcolor{red}{Red} rows are superseded (an older pin, or the in-memory join that the merge join replaces) and their rerun is pending. A planned instance without a measurement is not a row: it is listed under ``Not run''. $G_{\mathit{ref}}$, $G_{\mathit{cand}}$ = the graphs of the reference and of the implementation (the stateless engine's own count of specification graphs explored, repeats included, is $G_{\mathit{ref}}^{\mathit{expl}}$); $G_x$ = the implementation graphs no specification graph covers (violating pairs); T = wall seconds; M = peak resident MiB; tier = the run's time and memory limits; $^{\ast}$ marks a verdict other than the expected one; \faClock\ = the time tier was reached; oom = the memory limit was reached.
 
@@ -33,6 +33,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & swee
 \color{blue} 2,2 & 256 & 64 & conforms & 0.1 & 4 & 1 h, 250 GB & 16 & 1847 & brain03, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB & 5 & 30 & brain03, 2026-11-03 \\
 \color{blue} 4,2 & 256 & 147456 & conforms & 4.2 & 2 & 48 h, 250 GB & 26 & 3177 & brain05, 2026-11-07 \\
+\color{blue} 5,2 & 256 & 14745600 & conforms & 188.4 & 38 & 48 h, 250 GB & 25 & 2923 & brain01, 2026-11-08 \\
 \color{blue} 5,3 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB &  &  & brain03, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -76,9 +77,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateless).}
-planned but never scheduled (grid points beyond the ladder): eager 2 3 fifo, control-reverse 2 3 fifo, correct 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, eager 2 4 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, silent 2 5 fifo, correct 2 5 fifo, eager 2 5 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, early-abort 3 3 fifo, \ldots\ (101 instances in all).\par
-left out by the table rules (ok): early-abort 4 2 fifo, correct 4 2 fifo.\par
-skipped: a smaller size had reached its limit: silent 6 4 fifo, eager 6 4 fifo, control-reverse 6 4 fifo, correct 6 4 fifo, early-abort 6 4 fifo, early-abort 7 5 fifo, correct 7 5 fifo, control-reverse 7 5 fifo, silent 7 5 fifo, eager 7 5 fifo, silent 8 6 fifo, early-abort 8 6 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, correct 9 7 fifo, silent 9 7 fifo.\par
+planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, correct 2 3 fifo, control-reverse 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, correct 2 4 fifo, correct 2 5 fifo, eager 2 5 fifo, early-abort 2 5 fifo, silent 2 5 fifo, control-reverse 2 5 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, silent 3 3 fifo, \ldots\ (100 instances in all).\par
+left out by the table rules (ok): correct 4 2 fifo, early-abort 4 2 fifo.\par
+skipped: a smaller size had reached its limit: early-abort 6 4 fifo, eager 6 4 fifo, correct 6 4 fifo, control-reverse 6 4 fifo, silent 6 4 fifo, eager 7 5 fifo, control-reverse 7 5 fifo, early-abort 7 5 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, silent 9 7 fifo, correct 9 7 fifo.\par
 \section*{stateful}
 \subsection*{stateful: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrll@{}}
@@ -103,6 +104,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & run 
 \color{blue} 2,2 & 256 & 64 & conforms & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & conforms & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 4,2 & 256 & 147456 & conforms & 4.1 & 2 & 48 h, 250 GB & brain05, 2026-11-07 \\
+\color{blue} 5,2 & 256 & 14745600 & conforms & 188.9 & 40 & 48 h, 250 GB & brain01, 2026-11-08 \\
 \color{blue} 5,3 &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -129,6 +131,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \color{blue} 2,2 & 256 & 64 & 48 & violation & 0.0 & 4 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 3,1 & 16 & 48 & 32 & violation & 0.0 & 2 & 1 h, 250 GB & brain02, 2026-11-03 \\
 \color{blue} 4,2 & 256 & 147456 & 139712 & violation & 3.7 & 2 & 48 h, 250 GB & brain05, 2026-11-07 \\
+\color{blue} 5,2 & 256 & 14745600 & 14356224 & violation & 183.4 & 41 & 48 h, 250 GB & brain01, 2026-11-08 \\
 \color{blue} 5,3 &  &  &  & \faClock\ (1 h) &  &  & 1 h, 250 GB & brain02, 2026-11-03 \\
 \bottomrule
 \end{longtable}
@@ -146,9 +149,9 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (stateful).}
-planned but never scheduled (grid points beyond the ladder): eager 2 3 fifo, control-reverse 2 3 fifo, correct 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, eager 2 4 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, silent 2 5 fifo, correct 2 5 fifo, eager 2 5 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, early-abort 3 3 fifo, \ldots\ (101 instances in all).\par
-left out by the table rules (ok): early-abort 4 2 fifo, correct 4 2 fifo.\par
-skipped: a smaller size had reached its limit: silent 6 4 fifo, eager 6 4 fifo, control-reverse 6 4 fifo, correct 6 4 fifo, early-abort 6 4 fifo, early-abort 7 5 fifo, correct 7 5 fifo, control-reverse 7 5 fifo, silent 7 5 fifo, eager 7 5 fifo, silent 8 6 fifo, early-abort 8 6 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, correct 9 7 fifo, silent 9 7 fifo.\par
+planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, correct 2 3 fifo, control-reverse 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, correct 2 4 fifo, correct 2 5 fifo, eager 2 5 fifo, early-abort 2 5 fifo, silent 2 5 fifo, control-reverse 2 5 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, silent 3 3 fifo, \ldots\ (99 instances in all).\par
+left out by the table rules (ok): correct 4 2 fifo, early-abort 4 2 fifo.\par
+skipped: a smaller size had reached its limit: early-abort 6 4 fifo, eager 6 4 fifo, correct 6 4 fifo, control-reverse 6 4 fifo, silent 6 4 fifo, eager 7 5 fifo, control-reverse 7 5 fifo, early-abort 7 5 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, silent 9 7 fifo, correct 9 7 fifo.\par
 \section*{offline}
 \subsection*{offline: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -173,6 +176,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & verdict & T & M & tier & expo
 \color{blue} 3,1 & 16 & 48 & conforms & 0.1 & 8 & 1 h, 250 GB & 0.1 & 0.1 & 0.0 & merge & brain05, 2026-11-03 \\
 \color{blue} 4,2 & 256 & 147456 & conforms & 5.9 & 8 & 4 h, 250 GB & 0.1 & 5.9 & 0.0 & merge & brain01, 2026-11-03 \\
 \color{blue} 4,2 & 256 & 147456 & conforms & 4.3 & 6 & 48 h, 250 GB & 0.1 & 4.3 & 0.0 & merge & brain05, 2026-11-07 \\
+\color{blue} 5,2 & 256 & 14745600 & conforms & 210.4 & 39 & 48 h, 250 GB & 0.1 & 210.4 & 0.0 & merge & brain01, 2026-11-08 \\
 \bottomrule
 \end{longtable}
 \subsection*{offline: pair \textsf{eager}, model fifo, expected violation}
@@ -213,8 +217,8 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (offline).}
-planned but never scheduled (grid points beyond the ladder): eager 2 3 fifo, control-reverse 2 3 fifo, correct 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, correct 2 4 fifo, silent 2 4 fifo, eager 2 4 fifo, early-abort 2 5 fifo, control-reverse 2 5 fifo, silent 2 5 fifo, correct 2 5 fifo, eager 2 5 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, early-abort 3 2 fifo, eager 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, early-abort 3 3 fifo, \ldots\ (106 instances in all).\par
-skipped: a smaller size had reached its limit: control-reverse 5 3 fifo, early-abort 5 3 fifo, eager 5 3 fifo, silent 5 3 fifo, correct 5 3 fifo, silent 6 4 fifo, eager 6 4 fifo, correct 6 4 fifo, control-reverse 6 4 fifo, early-abort 6 4 fifo, early-abort 7 5 fifo, correct 7 5 fifo, control-reverse 7 5 fifo, silent 7 5 fifo, eager 7 5 fifo, silent 8 6 fifo, early-abort 8 6 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, correct 9 7 fifo, \ldots\ (25 instances in all).\par
+planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, correct 2 3 fifo, control-reverse 2 3 fifo, early-abort 2 3 fifo, eager 2 3 fifo, eager 2 4 fifo, early-abort 2 4 fifo, control-reverse 2 4 fifo, silent 2 4 fifo, correct 2 4 fifo, correct 2 5 fifo, eager 2 5 fifo, early-abort 2 5 fifo, silent 2 5 fifo, control-reverse 2 5 fifo, control-reverse 3 2 fifo, correct 3 2 fifo, silent 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, correct 3 3 fifo, eager 3 3 fifo, control-reverse 3 3 fifo, silent 3 3 fifo, \ldots\ (105 instances in all).\par
+skipped: a smaller size had reached its limit: silent 5 3 fifo, early-abort 5 3 fifo, control-reverse 5 3 fifo, correct 5 3 fifo, eager 5 3 fifo, early-abort 6 4 fifo, eager 6 4 fifo, correct 6 4 fifo, control-reverse 6 4 fifo, silent 6 4 fifo, eager 7 5 fifo, control-reverse 7 5 fifo, early-abort 7 5 fifo, correct 7 5 fifo, silent 7 5 fifo, control-reverse 8 6 fifo, eager 8 6 fifo, correct 8 6 fifo, silent 8 6 fifo, early-abort 8 6 fifo, early-abort 9 7 fifo, control-reverse 9 7 fifo, eager 9 7 fifo, silent 9 7 fifo, \ldots\ (25 instances in all).\par
 \section*{cross offline, Java implementation against the Rust specification}
 \subsection*{cross offline, Java implementation against the Rust specification: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -277,7 +281,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Java implementation against the Rust specification).}
-planned but never scheduled (grid points beyond the ladder): eager 2 3 fifo, early-abort 2 3 fifo, correct 2 3 fifo, control-reverse 2 3 fifo, silent 2 3 fifo, silent 4 1 fifo, eager 4 1 fifo, control-reverse 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): correct 2 3 fifo, silent 2 3 fifo, early-abort 2 3 fifo, control-reverse 2 3 fifo, eager 2 3 fifo, silent 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo, control-reverse 4 1 fifo, eager 4 1 fifo.\par
 \section*{cross offline, Rust implementation against the Java specification}
 \subsection*{cross offline, Rust implementation against the Java specification: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -339,7 +343,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross offline, Rust implementation against the Java specification).}
-planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, control-reverse 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, control-reverse 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): silent 2 3 fifo, correct 3 2 fifo, eager 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, early-abort 3 2 fifo, silent 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo, control-reverse 4 1 fifo, eager 4 1 fifo.\par
 \section*{cross online, Java implementation (JMC) against the Rust specification export}
 \subsection*{cross online, Java implementation (JMC) against the Rust specification export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -397,7 +401,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Java implementation (JMC) against the Rust specification export).}
-planned but never scheduled (grid points beyond the ladder): correct 2 1 fifo, silent 2 1 fifo, control-reverse 2 1 fifo, early-abort 2 1 fifo, eager 2 1 fifo, control-reverse 2 2 fifo, silent 2 2 fifo, eager 2 2 fifo, correct 2 2 fifo, early-abort 2 2 fifo, early-abort 3 1 fifo, correct 3 1 fifo, silent 3 1 fifo, eager 3 1 fifo, control-reverse 3 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): early-abort 2 1 fifo, correct 2 1 fifo, silent 2 1 fifo, control-reverse 2 1 fifo, eager 2 1 fifo, silent 2 2 fifo, correct 2 2 fifo, control-reverse 2 2 fifo, early-abort 2 2 fifo, eager 2 2 fifo, silent 3 1 fifo, early-abort 3 1 fifo, eager 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo.\par
 \section*{cross online, Rust implementation (TraceForge) against the Java specification export}
 \subsection*{cross online, Rust implementation (TraceForge) against the Java specification export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
@@ -455,7 +459,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (cross online, Rust implementation (TraceForge) against the Java specification export).}
-left out by the table rules (ok): correct 2 1 fifo, silent 2 1 fifo, control-reverse 2 1 fifo, early-abort 2 1 fifo, eager 2 1 fifo, control-reverse 2 2 fifo, silent 2 2 fifo, eager 2 2 fifo, correct 2 2 fifo, early-abort 2 2 fifo, early-abort 3 1 fifo, correct 3 1 fifo, silent 3 1 fifo, eager 3 1 fifo, control-reverse 3 1 fifo.\par
+left out by the table rules (ok): early-abort 2 1 fifo, correct 2 1 fifo, silent 2 1 fifo, control-reverse 2 1 fifo, eager 2 1 fifo, silent 2 2 fifo, correct 2 2 fifo, control-reverse 2 2 fifo, early-abort 2 2 fifo, eager 2 2 fifo, silent 3 1 fifo, early-abort 3 1 fifo, eager 3 1 fifo, control-reverse 3 1 fifo, correct 3 1 fifo.\par
 \section*{context-free twins offline, Rust implementation against the context-free Java port}
 \subsection*{context-free twins offline, Rust implementation against the context-free Java port: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -606,7 +610,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Rust implementation against the context-free Java port).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, control-reverse 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): correct 3 2 fifo, eager 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, early-abort 3 2 fifo, silent 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo, control-reverse 4 1 fifo, eager 4 1 fifo.\par
 \section*{context-free twins offline, Java port against the Rust implementation}
 \subsection*{context-free twins offline, Java port against the Rust implementation: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrrrrl@{}}
@@ -757,7 +761,7 @@ size & $G_{\mathit{spec}}$ & $G_{\mathit{impl}}$ & $G_x$ & verdict & T & M & tie
 \bottomrule
 \end{longtable}
 \paragraph{Not run (context-free twins offline, Java port against the Rust implementation).}
-planned but never scheduled (grid points beyond the ladder): control-reverse 3 2 fifo, eager 3 2 fifo, early-abort 3 2 fifo, silent 3 2 fifo, correct 3 2 fifo, silent 4 1 fifo, eager 4 1 fifo, control-reverse 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo.\par
+planned but never scheduled (grid points beyond the ladder): correct 3 2 fifo, eager 3 2 fifo, silent 3 2 fifo, control-reverse 3 2 fifo, early-abort 3 2 fifo, silent 4 1 fifo, correct 4 1 fifo, early-abort 4 1 fifo, control-reverse 4 1 fifo, eager 4 1 fifo.\par
 \section*{context-free twins online, Java port (JMC) against the Rust implementation's export}
 \subsection*{context-free twins online, Java port (JMC) against the Rust implementation's export: pair \textsf{control-reverse}, model fifo, expected conforms}
 \begin{longtable}{@{}rrrlrrlrl@{}}
