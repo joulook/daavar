@@ -347,18 +347,22 @@ if not FULL and KEEP is None:
         pair = "C" if tname == "table2" else "V"
         on = [comp(c1, "spec phase s"), comp(c1, "impl phase s"), cell_T(c1)]
         off = [comp(c3, "spec explore s"), comp(c3, "spec write s"), comp(c3, "impl explore s"), comp(c3, "impl write s"), comp(c3, "join s"), cell_T(c3)]
-        body.append(f"{shown} & {size} & {pair} & " + " & ".join([paint(c1, x) for x in on] + [paint(c3, x) for x in off]) + " \\\\")
-        csvrows.append([nm.replace("\\textsf{", "").rstrip("}"), size, pair] + on + off + [c1.get("run id", ""), c3.get("run id", "")])
+        # the export's extra cost per candidate graph (owner 2026-11-08): (E_cand - T_cand) / G_cand in microseconds, signed
+        _e, _t, _g = num(c3.get("impl explore s")), num(c1.get("impl phase s")), num(c1.get("impl graphs"))
+        dg = f"{(_e - _t) / _g * 1e6:+.1f}" if None not in (_e, _t, _g) and _g > 0 else "--"
+        body.append(f"{shown} & {size} & {pair} & " + " & ".join([paint(c1, x) for x in on] + [paint(c3, x) for x in off]) + f" & {dg}" + " \\\\")
+        csvrows.append([nm.replace("\\textsf{", "").rstrip("}"), size, pair] + on + off + [dg, c1.get("run id", ""), c3.get("run id", "")])
     if body:
         cap = ("Time components in seconds of \\online and \\offline on the pairs of the two preceding tables that both finished (C = conforming, V = violating). "
                "\\online: T$_{\\mathit{ref}}$ = exploring the reference and building the index, T$_{\\mathit{cand}}$ = exploring the candidate and querying it, T = the run. "
                "\\offline: for the reference and the candidate export, E = exploring and summarising, W = writing the summary file; J = the merge join; T = the longer export plus the join. "
+               "$\\Delta/G$ = (E$_{\\mathit{cand}}$ $-$ T$_{\\mathit{cand}}$) divided by the number of candidate graphs, in microseconds. "
                "A component below 0.05\\,s is printed as $<$0.1.")
-        hdr1 = "instance & size & pair & \\multicolumn{3}{c}{\\online} & \\multicolumn{6}{c}{\\offline} \\\\"
+        hdr1 = "instance & size & pair & \\multicolumn{3}{c}{\\online} & \\multicolumn{6}{c}{\\offline} & \\\\"
         cm = "\\cmidrule(lr){4-6}\\cmidrule(lr){7-12}"
-        hdr2 = " & & & T$_{\\mathit{ref}}$ & T$_{\\mathit{cand}}$ & T & E$_{\\mathit{ref}}$ & W$_{\\mathit{ref}}$ & E$_{\\mathit{cand}}$ & W$_{\\mathit{cand}}$ & J & T \\\\"
-        emit("table4", "tab:table4", cap, "@{}lrlrrrrrrrrr@{}", hdr1, cm, hdr2, body,
-             ["instance", "size", "pair", "online T_ref s", "online T_cand s", "online T s", "offline E_ref s", "offline W_ref s", "offline E_cand s", "offline W_cand s", "offline join s", "offline T s", "online run id", "offline run id"], csvrows)
+        hdr2 = " & & & T$_{\\mathit{ref}}$ & T$_{\\mathit{cand}}$ & T & E$_{\\mathit{ref}}$ & W$_{\\mathit{ref}}$ & E$_{\\mathit{cand}}$ & W$_{\\mathit{cand}}$ & J & T & $\\Delta/G$ \\\\"
+        emit("table4", "tab:table4", cap, "@{}lrlrrrrrrrrrr@{}", hdr1, cm, hdr2, body,
+             ["instance", "size", "pair", "online T_ref s", "online T_cand s", "online T s", "offline E_ref s", "offline W_ref s", "offline E_cand s", "offline W_cand s", "offline join s", "offline T s", "delta per candidate graph us", "online run id", "offline run id"], csvrows)
         summary.append(f"table4: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
