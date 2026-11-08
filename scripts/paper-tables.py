@@ -74,12 +74,15 @@ def limit(r): return r is not None and r["verdict"] in ("t/o", "oom")
 TIER = {600: "10m", 3600: "1h", 14400: "4h", 86400: "24h", 172800: "48h"}
 def tier(r):
     t = num(r.get("timeout s")); return TIER.get(int(t), f"{int(t)}s") if t else ""
+def rnd(v, nd):   # decimal rounding (half up) from the value's text, so 5.55 s prints as 5.6 and not as 5.5 (binary 5.55 is below the half; audit 1108-1648)
+    from decimal import Decimal, ROUND_HALF_UP
+    return str(Decimal(repr(v)).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
 def cell_T(r):
     if r is None or not (decided(r) or limit(r)): return ""
     if r["verdict"] == "t/o": return "\\faClock" + (f"$_{{\\mathrm{{{tier(r)}}}}}$" if tier(r) else "")
     if r["verdict"] == "oom":
         g = num(r.get("mem GB")); return "oom" + (f"$_{{\\mathrm{{{int(g)}G}}}}$" if g and g < 250 else "")
-    v = num(r.get("wall s")); return "" if v is None else f"{v:.1f}"
+    v = num(r.get("wall s")); return "" if v is None else rnd(v, 1)
 def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's first report counts from the run's start; Online's from the
     # implementation phase, so the specification phase, which must finish before any violation can be known, is added (sverify_p.rs impl_started)
     if r is None or r.get("verdict") != "violation": return ""
@@ -90,7 +93,7 @@ def cell_T1(r, online):   # the first violation (owner 2026-11-06): Nested's fir
         if sp is None: return ""   # a measured zero is a valid short phase (Astra, 11-06)
         v = sp + fm / 1000
     else: v = fm / 1000
-    return f"{v:.3f}" if v < 0.1 else (f"{v:.2f}" if v < 10 else f"{v:.1f}")   # small first-violation times at ms precision, so a short specification phase is visible
+    return rnd(v, 3) if v < 0.1 else (rnd(v, 2) if v < 10 else rnd(v, 1))   # small first-violation times at ms precision, so a short specification phase is visible
 def cell_Tp(r):   # T below 0.1 s to the millisecond (Table 3, beside T_1)
     c = cell_T(r); ms = num((r or {}).get("wall ms")); v = ms / 1000 if ms is not None else num((r or {}).get("wall s"))   # the exact wall, not the CSV's 0.1 s rounding (Opus audit 11-06)
     return f"{v:.3f}" if (c and v is not None and not c.startswith("\\") and not c.startswith("oom") and v < 0.1) else c
@@ -339,7 +342,7 @@ if not FULL and KEEP is None:
     # Offline: per export E = exploring and summarising, W = writing the summary file; J = the merge join; T as in Tables 1-2 (the longer export plus the join).
     def comp(r, key):   # a component from its record field: never a printed zero (owner 2026-11-06); "--" when the record lacks it
         v = num((r or {}).get(key))
-        return "--" if v is None else ("$<$0.1" if v < 0.05 else f"{v:.1f}")
+        return "--" if v is None else ("$<$0.1" if v < 0.05 else rnd(v, 1))
     body = []; csvrows = []; prev_t = None; prev_nm = None
     for tname, nm, size, c1, c3 in BRK:
         if tname != prev_t and body: body.append("\\midrule")
