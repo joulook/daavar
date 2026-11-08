@@ -29,10 +29,10 @@ C1.a3-lock.impl_wrong-round_3_5_fifo.t16.p.r3	A	a3-lock	3,5	fifo	wrong-round	sta
 C2.a3-lock.impl_wrong-round_3_5_fifo.t16.p.r3	A	a3-lock	3,5	fifo	wrong-round	stateless-parallel	16		paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	a3-lock	a3-lock.spec_fifo_3_5_fifo	a3-lock.impl_wrong-round_3_5_fifo
 C3E.a3-lock.impl_wrong-round_3_5_fifo.t16.p.r3	A	a3-lock	3,5	fifo	wrong-round	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a3-lock		a3-lock.impl_wrong-round_3_5_fifo
 C3J.a3-lock.impl_wrong-round_3_5_fifo.vs-fifo.p.r3.m	A	a3-lock	3,5	fifo	wrong-round	join	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a3-lock	a3-lock.spec_fifo_3_5_fifo	a3-lock.impl_wrong-round_3_5_fifo
-C2.s1-naive.impl_naive_10_bag.t16.p.r3	A	s1-naive	10	bag		stateless-parallel	16		paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	s1-naive	s1-naive.spec_naive_10_bag	s1-naive.impl_naive_10_bag
-C3E.s3-commit.spec_16_16_fifo.t16.p.r3	A	s3-commit	16,16	fifo		export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit	s3-commit.spec_16_16_fifo	
-C3E.s3-commit.impl_16_16_fifo.t16.p.r3	A	s3-commit	16,16	fifo		export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit		s3-commit.impl_16_16_fifo
-C3J.s3-commit.impl_16_16_fifo.p.r3.m	A	s3-commit	16,16	fifo		join	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit	s3-commit.spec_16_16_fifo	s3-commit.impl_16_16_fifo
-C3E.s4-chain.spec_8192_fifo.t16.p.r3	A	s4-chain	8192	fifo		export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain	s4-chain.spec_8192_fifo	
-C3E.s4-chain.impl_8192_fifo.t16.p.r3	A	s4-chain	8192	fifo		export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain		s4-chain.impl_8192_fifo
-C3J.s4-chain.impl_8192_fifo.p.r3.m	A	s4-chain	8192	fifo		join	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain	s4-chain.spec_8192_fifo	s4-chain.impl_8192_fifo
+C2.s1-naive.impl_naive_10_bag.t16.p.r3	A	s1-naive	10	bag	naive	stateless-parallel	16		paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	s1-naive	s1-naive.spec_naive_10_bag	s1-naive.impl_naive_10_bag
+C3E.s3-commit.spec_16_16_fifo.t16.p.r3	A	s3-commit	16,16	fifo	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit	s3-commit.spec_16_16_fifo	
+C3E.s3-commit.impl_16_16_fifo.t16.p.r3	A	s3-commit	16,16	fifo	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit		s3-commit.impl_16_16_fifo
+C3J.s3-commit.impl_16_16_fifo.p.r3.m	A	s3-commit	16,16	fifo	impl	join	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s3-commit	s3-commit.spec_16_16_fifo	s3-commit.impl_16_16_fifo
+C3E.s4-chain.spec_8192_fifo.t16.p.r3	A	s4-chain	8192	fifo	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain	s4-chain.spec_8192_fifo	
+C3E.s4-chain.impl_8192_fifo.t16.p.r3	A	s4-chain	8192	fifo	impl	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain		s4-chain.impl_8192_fifo
+C3J.s4-chain.impl_8192_fifo.p.r3.m	A	s4-chain	8192	fifo	impl	join	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	s4-chain	s4-chain.spec_8192_fifo	s4-chain.impl_8192_fifo
