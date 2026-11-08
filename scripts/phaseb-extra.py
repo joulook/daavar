@@ -43,7 +43,9 @@ for f in ("spec-conf", "spec-viol"):
         p = pair; m = re.search(r" \((v1nolin|v1)\)", p)
         if m: p = p.replace(m.group(0), ""); size = size + (" v1nolin" if m.group(1) == "v1nolin" else "")
         a, b = [norm(x) for x in p.split("$\\sqsubseteq$")]
-        shown.add((a, b, size))
+        for bb in b.split(", "):   # a row against two references at once (ZooKeeper port against S_raft, S_zab) stands for both pairs
+            shown.add((a, bb, size))
+            if re.fullmatch(r"\d+", size): shown.add((a, bb, size + ",0"))   # the paper writes a ZooKeeper size (e, 0) as e
 # ---- the runs: per study, Rust candidates against specifications or Rust programs ----
 OMNI_RUST = {"Rust OmniPaxos", "S$_{\\mathrm{raft}}$", "S$_{\\mathrm{paper}}$"}   # the Omni-Paxos study's other candidates are Java programs (Phase D)
 def is_spec(x): return x.startswith("S$")
