@@ -121,8 +121,11 @@ print(f"naive: {_n - len(rows)} rows of the second spawn encoding left out; size
 def num(x):
     try: return float(x)
     except (TypeError, ValueError): return None
+def dsec(ms, nd):   # decimal half-up rounding of ms/1000 (audit 1108-1656: 14450 ms printed as 14.4 under binary-float formatting)
+    from decimal import Decimal, ROUND_HALF_UP
+    return str((Decimal(repr(ms)) / 1000).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
 def fmt_s(ms):
-    v = num(ms); return "--" if v is None else (f"{v/1000:.1f}" if v < 100000 else f"{v/1000:.0f}")
+    v = num(ms); return "--" if v is None else (dsec(v, 1) if v < 100000 else dsec(v, 0))
 def fmt_gb(kb):  # prints MB below 1 GB, GB above
     v = num(kb); return "--" if v is None else (f"{v/1024:.0f}\\,MB" if v < 1048576 else f"{v/1048576:.1f}\\,GB")
 def esc(s): return s.replace("_", "\\_")
@@ -290,7 +293,7 @@ def fnum(x, div=1.0, fmt="{:.0f}"):
 def wsec(ms):   # 2026-11-07 (audit 1107-0034): wall seconds in the campaign CSVs: 1 decimal from 10 s, 2 from 0.1 s, 3 below, so a 20 ms run prints 0.020 and never 0.0
     v = num(ms)
     if v is None: return "--"
-    s = v / 1000; return "{:.1f}".format(s) if s >= 10 else ("{:.2f}".format(s) if s >= 0.1 else "{:.3f}".format(s))
+    s = v / 1000; return dsec(v, 1) if s >= 10 else (dsec(v, 2) if s >= 0.1 else dsec(v, 3))
 # ---- old join versus merge join (SORTED-JOIN 367cdc6, 2026-11-03): the same join id with and without the .m suffix ----
 _jc = {}
 for r in _allrows:
