@@ -251,6 +251,7 @@ if not FULL and KEEP is None:
     inst = collections.OrderedDict()
     for m, rs in data.items():
         for r in rs: put(inst, key_of(r), m, r)
+    BRK = []
     for tname, tlabel, viol, what in CURATED:
         TF_ = os.path.join(DV, "cluster", "campaign", "inputs", tname + ".tsv")
         if not os.path.exists(TF_): continue
@@ -303,7 +304,8 @@ if not FULL and KEEP is None:
             gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None) if viol else None; gx = gx_r.get("uncovered", "") if gx_r else ("" if viol else None)
             CURATED_NAMES = {("lb", "hash-a4a"): "lb-hash", ("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav", ("bcast", "decide-early"): "bcast-de", ("chan", "no-seqno"): "chan-ns", ("ewd998", "no-black-on-receive"): "ewd998-nb", ("lb", "rr-a4b"): "lb", ("lb", "rr-a4a"): "lb-strict", ("lock", "fifo"): "lock", ("lock", "wrong-round"): "lock-wr", ("pbkv", "pb"): "pbkv", ("replog-co", "early-reply"): "replog-co-er", ("ring-el", "no-compare"): "ring-el-nc", ("zab", "issue 1"): "zab-issue1"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
-            nm = nm if (prog, var) != prev else ""; prev = (prog, var)
+            nm_full = nm; nm = nm if (prog, var) != prev else ""; prev = (prog, var)
+            if decided(c1) and decided(c3): BRK.append((tname, nm_full, size, c1, c3))   # Table 4 (owner 2026-11-08): the time components of the pairs both algorithms finished
             if nm and body: body.append("\\midrule")
             expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""   # the stateless engine's own counts: sweeps kept in the witness cache, specification graphs explored (repeats counted)
             sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
@@ -320,6 +322,7 @@ if not FULL and KEEP is None:
                 gxx_r = next((r for r in dx if r.get("uncovered") not in ("", None)), None) if viol else None; gxx = gxx_r.get("uncovered", "") if gxx_r else ("" if viol else None)   # the counts of a dagger row carry the colour of the run that supplies them, as in the other rows (reviews r9)
                 xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else ""] + ([cell_T1(x2, False)] if viol else []) + [(cell_Tp if viol else cell_T)(x2), cell_M(x2)] + ([cell_T1(x1, True)] if viol else []) + [(cell_Tp if viol else cell_T)(x1), cell_M(x1), (cell_Tp if viol else cell_T)(x3), cell_M_off(x3)]
                 xown = [x2, x2] + ([x2] if viol else []) + [x2, x2] + ([x1] if viol else []) + [x1, x1, x3, x3]
+                if decided(x1) and decided(x3): BRK.append((tname, nm_full, ex[3], x1, x3))   # the dagger row's pair belongs to Table 4 too (its colours are its own)
                 body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {paint(gxi_r, gxi)} & {paint(gxs_r, gxs)}" + (f" & {paint(gxx_r, gxx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
                 csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
         cap = what   # the curated caption carries the column definitions (owner, 2026-11-05: short captions)
@@ -331,6 +334,32 @@ if not FULL and KEEP is None:
         emit(tname, tlabel, cap, "@{}lrrr" + ("r" if viol else "") + "r" * (nN + nO + 2) + "@{}", hdr1, cm, " & " * (base - 1) + f" & sweeps & $G_{{\\mathit{{ref}}}}^{{\\mathit{{expl}}}}$ & {T1}T & M & {T1}T & M & T & M \\\\", body,
              ["program", "variant", "model", "size", "G impl", "G spec"] + (["G x"] if viol else []) + ["nested sweeps", "nested spec graphs explored"] + (["nested first violation s"] if viol else []) + ["nested s", "nested MB"] + (["online first violation s"] if viol else []) + ["online s", "online MB", "offline s", "offline MB", "colour (blue = paper run (.p) on a brain node with one row per NUMA node, orange = shared node, earlier engine version or shared-node type, red = earlier campaign at the current pins)"] + (["fallback"] if FALLBACK else []), csvrows)
         summary.append(f"{tname}: {len(csvrows)} rows")
+    # ---- Table 4 (owner 2026-11-08): where the time of an online and of an offline check goes, on the pairs of Tables 1-2 that both finished.
+    # Online (in-process): T_ref = exploring the reference and building the index (spec phase), T_cand = exploring the candidate and querying it (impl phase).
+    # Offline: per export E = exploring and summarising, W = writing the summary file; J = the merge join; T as in Tables 1-2 (the longer export plus the join).
+    def comp(r, key):   # a component from its record field: never a printed zero (owner 2026-11-06); "--" when the record lacks it
+        v = num((r or {}).get(key))
+        return "--" if v is None else ("$<$0.1" if v < 0.05 else f"{v:.1f}")
+    body = []; csvrows = []; prev_t = None; prev_nm = None
+    for tname, nm, size, c1, c3 in BRK:
+        if tname != prev_t and body: body.append("\\midrule")
+        shown = nm if (tname, nm) != prev_nm else ""; prev_t, prev_nm = tname, (tname, nm)
+        pair = "C" if tname == "table2" else "V"
+        on = [comp(c1, "spec phase s"), comp(c1, "impl phase s"), cell_T(c1)]
+        off = [comp(c3, "spec explore s"), comp(c3, "spec write s"), comp(c3, "impl explore s"), comp(c3, "impl write s"), comp(c3, "join s"), cell_T(c3)]
+        body.append(f"{shown} & {size} & {pair} & " + " & ".join([paint(c1, x) for x in on] + [paint(c3, x) for x in off]) + " \\\\")
+        csvrows.append([nm.replace("\\textsf{", "").rstrip("}"), size, pair] + on + off + [c1.get("run id", ""), c3.get("run id", "")])
+    if body:
+        cap = ("Time components in seconds of \\online and \\offline on the pairs of \\Cref{tab:table2,tab:table3} that both finished (C = conforming, V = violating). "
+               "\\online: T$_{\\mathit{ref}}$ = exploring the reference and building the index, T$_{\\mathit{cand}}$ = exploring the candidate and querying it, T = the run. "
+               "\\offline: for the reference and the candidate export, E = exploring and summarising, W = writing the summary file; J = the merge join; T = the longer export plus the join. "
+               "A component below 0.05\\,s is printed as $<$0.1.")
+        hdr1 = "instance & size & pair & \\multicolumn{3}{c}{\\online} & \\multicolumn{6}{c}{\\offline} \\\\"
+        cm = "\\cmidrule(lr){4-6}\\cmidrule(lr){7-12}"
+        hdr2 = " & & & T$_{\\mathit{ref}}$ & T$_{\\mathit{cand}}$ & T & E$_{\\mathit{ref}}$ & W$_{\\mathit{ref}}$ & E$_{\\mathit{cand}}$ & W$_{\\mathit{cand}}$ & J & T \\\\"
+        emit("table4", "tab:table4", cap, "@{}lrlrrrrrrrrr@{}", hdr1, cm, hdr2, body,
+             ["instance", "size", "pair", "online T_ref s", "online T_cand s", "online T s", "offline E_ref s", "offline W_ref s", "offline E_cand s", "offline W_cand s", "offline join s", "offline T s", "online run id", "offline run id"], csvrows)
+        summary.append(f"table4: {len(csvrows)} rows")
 if wb is not None: wb.save(f"{OUT}/paper-tables{SUF}.xlsx")
 if incons:
     print(f"{len(incons)} graph-count inconsistencies across the engines:")
