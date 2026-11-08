@@ -18,6 +18,8 @@ share	correct	fifo	24,24
 bcast	correct	bag	5
 chan	correct	bag	6
 ewd998	correct	bag	5
+hermes	impl	bag	3,2
+hermes	impl	bag	3,3
 lb	hash-a4a	fifo	3,3,3
 lb	hash-a4a	fifo	4,4,4
 lock	fifo	fifo	3,4
