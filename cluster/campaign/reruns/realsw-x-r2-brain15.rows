@@ -1,0 +1,2 @@
+# Rerun of the MicroRaft (1,1,1) vs S_omni join: the imported MicroRaft export (11-02, before SORTED-JOIN) was unsorted and conf-join --merge refused it; the import copy on brain15 was sorted on 2026-11-09.
+XJ1.raft-rs.impl_correct_1_1_1_fifo.vs-omni.tfspec-jmcimpl.cinf.m.r2 250 8640000 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/imports/C3E.omnipaxos-derived.spec_correct_1_1_1_fifo.t16.c48h.r3/export.jsonl "$EVAL_OUT"/imports/XJE.raft-rs.impl_correct_1_1_1_fifo.w16/export.jsonl
