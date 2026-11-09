@@ -1,0 +1,37 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.craq-lin.spec_1_fifo.t16	C	craq-lin	1	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-lin.spec_1_fifo	craq-lin.spec_1_fifo
+C3E.craq-derived.spec_1_fifo.t16	C	craq-derived	1	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-derived.spec_1_fifo	craq-derived.spec_1_fifo
+C3J.craq-derived.spec_1_fifo.vs-hand	C	craq-derived	1	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-lin.spec_1_fifo	craq-derived.spec_1_fifo
+C3J.craq-lin.spec_1_fifo.vs-derived	C	craq-lin	1	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-derived.spec_1_fifo	craq-lin.spec_1_fifo
+C3E.craq-rust.impl_1_fifo.t16	C	craq-rust	1	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-rust.impl_1_fifo	craq-rust.impl_1_fifo
+C3J.craq-rust.impl_1_fifo.vs-hand	C	craq-rust	1	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-lin.spec_1_fifo	craq-rust.impl_1_fifo
+C3J.craq-rust.impl_1_fifo.vs-derived	C	craq-rust	1	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-derived.spec_1_fifo	craq-rust.impl_1_fifo
+XCE.craq.impl_1_fifo.w16	X	craq	1	fifo	impl	must-split	16		transliteration	c48h	export	jmc	jmc	java	java	offline-batch	full	craq		
+XJ1.craq.impl_1_fifo.vs-hand.tfspec-jmcimpl	X	craq	1	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-lin.spec_1_fifo	craq.impl_1_fifo
+XJ1.craq.impl_1_fifo.vs-derived.tfspec-jmcimpl	X	craq	1	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-derived.spec_1_fifo	craq.impl_1_fifo
+XC1.craq.impl_1_fifo.vs-rust.jimpl-tfimpl	X	craq	1	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	jmc	traceforge	java	rust	offline-batch	full	craq	craq.impl_1_fifo	craq.impl_1_fifo
+XC2.craq.impl_1_fifo.vs-rust.tfimpl-jimpl	X	craq	1	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	traceforge	jmc	rust	java	offline-batch	full	craq	craq-rust.impl_1_fifo	craq.impl_1_fifo
+C3E.craq-lin.spec_2_fifo.t16	C	craq-lin	2	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-lin.spec_2_fifo	craq-lin.spec_2_fifo
+C3E.craq-derived.spec_2_fifo.t16	C	craq-derived	2	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-derived.spec_2_fifo	craq-derived.spec_2_fifo
+C3J.craq-derived.spec_2_fifo.vs-hand	C	craq-derived	2	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-lin.spec_2_fifo	craq-derived.spec_2_fifo
+C3J.craq-lin.spec_2_fifo.vs-derived	C	craq-lin	2	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-derived.spec_2_fifo	craq-lin.spec_2_fifo
+C3E.craq-rust.impl_2_fifo.t16	C	craq-rust	2	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-rust.impl_2_fifo	craq-rust.impl_2_fifo
+C3J.craq-rust.impl_2_fifo.vs-hand	C	craq-rust	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-lin.spec_2_fifo	craq-rust.impl_2_fifo
+C3J.craq-rust.impl_2_fifo.vs-derived	C	craq-rust	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-derived.spec_2_fifo	craq-rust.impl_2_fifo
+XCE.craq.impl_2_fifo.w16	X	craq	2	fifo	impl	must-split	16		transliteration	c48h	export	jmc	jmc	java	java	offline-batch	full	craq		
+XJ1.craq.impl_2_fifo.vs-hand.tfspec-jmcimpl	X	craq	2	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-lin.spec_2_fifo	craq.impl_2_fifo
+XJ1.craq.impl_2_fifo.vs-derived.tfspec-jmcimpl	X	craq	2	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-derived.spec_2_fifo	craq.impl_2_fifo
+XC1.craq.impl_2_fifo.vs-rust.jimpl-tfimpl	X	craq	2	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	jmc	traceforge	java	rust	offline-batch	full	craq	craq.impl_2_fifo	craq.impl_2_fifo
+XC2.craq.impl_2_fifo.vs-rust.tfimpl-jimpl	X	craq	2	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	traceforge	jmc	rust	java	offline-batch	full	craq	craq-rust.impl_2_fifo	craq.impl_2_fifo
+C3E.craq-lin.spec_3_fifo.t16	C	craq-lin	3	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-lin.spec_3_fifo	craq-lin.spec_3_fifo
+C3E.craq-derived.spec_3_fifo.t16	C	craq-derived	3	fifo	spec	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-derived.spec_3_fifo	craq-derived.spec_3_fifo
+C3J.craq-derived.spec_3_fifo.vs-hand	C	craq-derived	3	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-derived	craq-lin.spec_3_fifo	craq-derived.spec_3_fifo
+C3J.craq-lin.spec_3_fifo.vs-derived	C	craq-lin	3	fifo	spec	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-lin	craq-derived.spec_3_fifo	craq-lin.spec_3_fifo
+C3E.craq-rust.impl_3_fifo.t16	C	craq-rust	3	fifo	impl	must-partitioned	16	readme		c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-rust.impl_3_fifo	craq-rust.impl_3_fifo
+C3J.craq-rust.impl_3_fifo.vs-hand	C	craq-rust	3	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-lin.spec_3_fifo	craq-rust.impl_3_fifo
+C3J.craq-rust.impl_3_fifo.vs-derived	C	craq-rust	3	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	craq-rust	craq-derived.spec_3_fifo	craq-rust.impl_3_fifo
+XCE.craq.impl_3_fifo.w16	X	craq	3	fifo	impl	must-split	16		transliteration	c48h	export	jmc	jmc	java	java	offline-batch	full	craq		
+XJ1.craq.impl_3_fifo.vs-hand.tfspec-jmcimpl	X	craq	3	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-lin.spec_3_fifo	craq.impl_3_fifo
+XJ1.craq.impl_3_fifo.vs-derived.tfspec-jmcimpl	X	craq	3	fifo	impl	join	1	readme	transliteration	c48h	cross-language	traceforge	jmc	rust	java	offline-batch	full	craq	craq-derived.spec_3_fifo	craq.impl_3_fifo
+XC1.craq.impl_3_fifo.vs-rust.jimpl-tfimpl	X	craq	3	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	jmc	traceforge	java	rust	offline-batch	full	craq	craq.impl_3_fifo	craq.impl_3_fifo
+XC2.craq.impl_3_fifo.vs-rust.tfimpl-jimpl	X	craq	3	fifo	impl	join	1	twin	transliteration twin-spec=craq-rust	c48h	twin-cf	traceforge	jmc	rust	java	offline-batch	full	craq	craq-rust.impl_3_fifo	craq.impl_3_fifo
