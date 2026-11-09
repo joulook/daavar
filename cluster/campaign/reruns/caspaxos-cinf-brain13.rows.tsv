@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.caspaxos.impl_3_2_bag.cinf.m	C	caspaxos	3,2	bag	impl	join	1			c600	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	caspaxos	caspaxos.spec_3_2_bag.t16.cinf	caspaxos.impl_3_2_bag.t16.cinf
+XJ1.caspaxos.impl_3_2_bag.tfspec-jmcimpl.cinf.m	X	caspaxos	3,2	bag	impl	join	1	readme		c4h	cross-language	traceforge	jmc	rust	java	offline-batch	full	caspaxos	caspaxos.spec_3_2_bag.t16.cinf	caspaxos.impl_3_2_bag.w16.cinf
+XC1.caspaxos.impl_3_2_bag.jimpl-tfimpl.cinf.m	X	caspaxos	3,2	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	jmc	traceforge	java	rust	offline-batch	full	caspaxos	caspaxos.impl_3_2_bag.w16.cinf	caspaxos.impl_3_2_bag.t16.cinf
+XC2.caspaxos.impl_3_2_bag.tfimpl-jimpl.cinf.m	X	caspaxos	3,2	bag	impl	join	1	twin	twin-spec=impl	c600	twin-cf	traceforge	jmc	rust	java	offline-batch	full	caspaxos	caspaxos.impl_3_2_bag.t16.cinf	caspaxos.impl_3_2_bag.w16.cinf
