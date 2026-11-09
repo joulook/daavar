@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Twins of the paper's Tables 3, 5 and 6 (eval2: realsw, agents-rust, agents; owner 2026-11-09): every finished offline
 check (a join with verdict conforms or violation) that could sit in one of those tables and that the table does not show,
-one row per pair (candidate $\\sqsubseteq$ reference) at the pair's biggest finished size.
+one row per pair (candidate $\\sqsubseteq$ reference) at the pair's biggest finished size, and only when the
+paper's table shows the pair at no size or only at smaller sizes (owner 2026-11-09: rows that extend the paper).
 The sides of a join are named from the two export ids in its command (conf-join takes the reference export first, the
 candidate second), in the paper's words and macros, so the direction of a row never depends on the id's prefix.
 Values: brain-data records only, composed as tables.py composes the campaign CSVs (export record = the exact id's latest
@@ -211,15 +212,18 @@ pairs = collections.defaultdict(list)
 for k, x in found.items():
     vkey = x["size"].split(" ")[1] if " " in x["size"] else ""   # ChainPaxos: mixed and local are different pairs
     pairs[(x["tab"], x["blk"], x["cand"], x["ref"], x["ctool"], x["rtool"], vkey, x["model"])].append(x)
-twins = collections.defaultdict(list); bigger = collections.defaultdict(list); shown_used = set()
+dropped_smaller = []; twins = collections.defaultdict(list); bigger = collections.defaultdict(list); shown_used = set()
 for pk, xs in pairs.items():
     ss = shown_sizes(xs[0])
     rest = [x for x in xs if x["size"] not in ss]
     if not rest: continue
-    best = max(rest, key=lambda x: ssum(x["size"]))
-    twins[best["tab"]].append(best)
+    top = max(ssum(x["size"])[0] for x in rest)
+    bests = [x for x in rest if ssum(x["size"])[0] == top]   # the biggest size by the sum of its parameters; sizes tied on the sum (1,2,1 and 1,1,2) are all kept
     ssv = [s for s in ss if (s.split(" ")[1] if " " in s else "") == pk[6]]   # the paper's sizes of the same pair (ChainPaxos: of the same variant)
-    if ssv and all(ssum(best["size"]) > ssum(s) for s in ssv): bigger[best["tab"]].append((best, ssv))
+    if ssv and not all(top > ssum(s)[0] for s in ssv): dropped_smaller += bests; continue   # owner 2026-11-09: only rows that extend the paper; a pair the paper shows at an equal or larger size (sum) has no twin row
+    for best in sorted(bests, key=lambda x: ssum(x["size"])):
+        twins[best["tab"]].append(best)
+        if ssv: bigger[best["tab"]].append((best, ssv))
 # ---- emit ----------------------------------------------------------------------------------------------------------
 def dsec(v, nd): return str(Decimal(repr(v)).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
 def grp(s):   # 13\,530 as in the paper: a thin space from five digits
@@ -264,7 +268,9 @@ def plabel(x): return f"{x['cand']} $\\sqsubseteq$ {x['ref']}" if not x["blk"].s
 N = []
 for tab, name in (("realsw", "realsw"), ("agents-rust", "agentsrust"), ("agents", "agents")):
     bs = sorted(bigger[tab], key=lambda y: (y[0]["blk"], y[0]["cand"], y[0]["ref"]))
-    s = "; ".join(f"{plabel(x)} ({'; '.join(sorted(ssv, key=ssum))} in the paper, {x['size']} here)" for x, ssv in bs) or "none"
+    g = {}   # one entry per pair: sizes tied on the sum are listed together
+    for x, ssv in bs: g.setdefault(plabel(x), (ssv, []))[1].append(x["size"])
+    s = "; ".join(f"{p} ({'; '.join(sorted(ssv, key=ssum))} in the paper, {'; '.join(sz)} here)" for p, (ssv, sz) in g.items()) or "none"
     extra = ""
     if tab == "realsw":
         z = sorted({(c, rr, sz) for c, rr, sz, _ in zero_to}, key=lambda y: (y[0], y[1], ssum(y[2])))
@@ -275,6 +281,7 @@ open(f"{OUT}/notes.tex", "w").write("\n".join(N) + "\n")
 print(f"joins named: {len(found)} (pair, size) cells; twin rows: " + ", ".join(f"{t} {len(twins[t])}" for t in ("realsw", "agents-rust", "agents")))
 print(f"checked against the campaign CSVs: {incsv} rows, {len(mism)} mismatches"); [print("  MISMATCH", m) for m in mism]
 print("left out:", dict(left)); print("unnamed sides:", dict(unnamed))
+print(f"pairs left out because the paper shows them at an equal or larger size: {len(dropped_smaller)}");
 print("vacuous (a side with no graph):", vacuous); print("0 election timeouts:", zero_to)
 print(f"paper rows: {sum(len(d) for d in shown.values())} (pair, size) cells; checked against the records: {len(paper_check)} differences"); [print("PAPER CHECK", m) for m in paper_check]
 for t in ("realsw", "agents-rust", "agents"):
