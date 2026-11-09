@@ -1,0 +1,3 @@
+# ChainPaxos (owner 2026-11-09): code (Java) against paper (Rust) both ways at 3 mixed; the four exports are on pinky04 (.r2). Reference export first, candidate second.
+XC2.chainpaxos-code.impl_3_mixed_fifo.vs-paper-rust.tfimpl-jimpl.cinf.m 250 8640000 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.chainpaxos-paper-rust.impl_3_mixed_fifo.t16.c48h.r2/export.jsonl "$EVAL_OUT"/XCE.chainpaxos-code.impl_3_mixed_fifo.w16.c48h.r2/export.jsonl
+XC1.chainpaxos-paper-rust.impl_3_mixed_fifo.vs-code-java.jimpl-tfimpl.cinf.m 250 8640000 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/XCE.chainpaxos-code.impl_3_mixed_fifo.w16.c48h.r2/export.jsonl "$EVAL_OUT"/C3E.chainpaxos-paper-rust.impl_3_mixed_fifo.t16.c48h.r2/export.jsonl

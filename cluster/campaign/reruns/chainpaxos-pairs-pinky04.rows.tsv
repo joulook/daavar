@@ -1,0 +1,3 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XC2.chainpaxos-code.impl_3_mixed_fifo.vs-paper-rust.tfimpl-jimpl.cinf.m	X	chainpaxos-code	3 mixed	fifo	correct	join	1	twin	pairs 11-09	cinf	twin-cf	traceforge	jmc	rust	java	offline-batch	full	chainpaxos-code	chainpaxos-code-rust.impl_3_mixed_fifo	chainpaxos-code.impl_3_mixed_fifo
+XC1.chainpaxos-paper-rust.impl_3_mixed_fifo.vs-code-java.jimpl-tfimpl.cinf.m	X	chainpaxos-paper-rust	3 mixed	fifo	correct	join	1	twin	pairs 11-09	cinf	twin-cf	jmc	traceforge	java	rust	offline-batch	full	zookeeper-zab-opus	zookeeper-zab-opus.impl_1_0_fifo.w16.cinf	zookeeper-zab-rust.impl_1_0_fifo
