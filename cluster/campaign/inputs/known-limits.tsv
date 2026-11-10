@@ -1,0 +1,4 @@
+# Known limits shown in Tables 1-2 as \faClock$^{\ast}$ (owner 2026-11-10 19:55: "run them on any free node but in the paper mention they were timeout"); program, variant, model, size, engine, the reason. A result that lands replaces the mark.
+2pc-le	ring-conf	fifo	9	stateless	Nested at size 8 reached the 48 h limit (C2.election.impl_ring_conf_8_fifo.x4.t16.c48h, stop_reason timeout, a run that shared its NUMA node)
+2pc-le	ring-conf	fifo	10	stateless	Nested at size 8 reached the 48 h limit (C2.election.impl_ring_conf_8_fifo.x4.t16.c48h, stop_reason timeout, a run that shared its NUMA node)
+2pc-le	ring-split	fifo	10	stateless	Nested explores at least G_x x G_ref = 523776 x 36288000 = 1.9e13 reference graphs; at the fastest measured Nested rate, 6.3e5 graphs/s (ring-el-nc 6), that is 3.0e7 s, above 172800 s

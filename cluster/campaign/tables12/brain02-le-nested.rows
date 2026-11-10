@@ -1,0 +1,2 @@
+# 2pc-le Nested on brain02: owner 2026-11-10 19:55 ("run them on any free node but in the paper mention they were timeout"); 48 h tier, not the paper machine
+C2.election.impl_ring_split_10_fifo.t16.r4 250 172800 "$DAAVAR"/scripts/rust-run.sh election conf --engine stateless --threads 16 --model fifo -- ring split 10

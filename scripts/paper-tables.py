@@ -278,8 +278,11 @@ if not FULL and KEEP is None:
         def timed_out(r): return r is not None and r.get("verdict") == "t/o" and num(r.get("timeout s")) == 172800
         def known_limit(prog, var, model, size, eng, online_row=None):   # owner 2026-11-10 (OWNER-ORDERS-2026-11-10.md; 19:15 "when we know that the timeout is going to happen we should see it")
             if eng == "stateless" and timed_out(online_row): return True   # Nested is never faster than Online on the same size
+            if (prog, var, model, size, eng) in KLIM: return True   # a known limit with its stated reason (inputs/known-limits.tsv, owner 2026-11-10 19:55)
             s = sz(size)
             return any(kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(s) and all(a <= b for a, b in zip(sz(kk[4]), s)) and sz(kk[4]) != s and timed_out(inst[kk].get(eng)) for kk in inst)
+        _kl = os.path.join(DV, "cluster", "campaign", "inputs", "known-limits.tsv")
+        KLIM = {tuple(l.rstrip("\n").split("\t")[:5]) for l in open(_kl) if l.strip() and not l.startswith("#")} if os.path.exists(_kl) else set()
         KNOWN = "\\faClock$^{\\ast}$"   # not run to the end: the limit is known from a smaller size or, for Nested, from Online at the same size
         def paint(r, cell):
             cell = cell.replace("$_{\\mathrm{48h}}$", "")   # the curated tables show \faClock without its tier (owner 2026-11-08): the setup states the 48 h limit
@@ -360,7 +363,7 @@ if not FULL and KEEP is None:
                 grp.append((sz(ex[3]), f" & {ex[3]}$^\\ddagger$ & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\",   # size and counts in black (owner 2026-11-10)
                             [prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace(KNOWN, "t/o (known)").replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size]))
         flush()
-        cap = what + " \\faClock$^{\\ast}$: the limit is known from a smaller size of the instance or, for \\nested, from \\online at the same size, and the run was not made or has not ended."   # owner 2026-11-10: a known limit is shown, labelled as not measured (R10)
+        cap = what + " \\faClock$^{\\ast}$: the run was not made or has not ended, and the limit is known from a measured limit at a smaller size of the instance, for \\nested from \\online at the same size, or from the number of reference graphs \\nested must explore."   # owner 2026-11-10: a known limit is shown, labelled as not measured (R10)
         base = 5 if viol else 4
         nN, nO = (5, 3) if viol else (4, 2)
         hdr1 = f"instance & size & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{{nN}}}{{c}}{{\\nested}} & \\multicolumn{{{nO}}}{{c}}{{\\online}} & \\multicolumn{{2}}{{c}}{{\\offline}} \\\\"
