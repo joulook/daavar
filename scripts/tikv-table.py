@@ -18,9 +18,9 @@ def size_label(size, model, variant):
     lab = sc + (' async' if a == '1' else '') + (' 1PC' if o == '1' else '')
     if variant not in ('correct', ''): lab += ', ' + variant
     return lab + (r'$^{\mathrm{B}}$' if model in ('bag', 'asyn') else '')
-def decide(size, model, variant):
+def decide(size, model, variant, vs=''):
     v = '' if variant == 'correct' else '_' + variant
-    f = f"{DEC}/C3J.tikv-txn-rust.impl_{size.replace(',', '_')}_{model}{v}.cinf.m.out"
+    f = f"{DEC}/C3J.tikv-txn-rust.impl_{size.replace(',', '_')}_{model}{v}{vs}.cinf.m.out"
     if not os.path.exists(f): return None
     for l in open(f):
         m = re.match(r'decide: uncovered=(\d+) violations=(\d+) false_alarms=(\d+) unresolved=(\d+)', l)
@@ -30,8 +30,9 @@ rows = []
 # Rust port vs S_dt: campaign-offline-tf.csv (program tikv-txn-rust)
 for r in csv.DictReader(open(f"{TB}/campaign-offline-tf.csv")):
     if r['program'] != 'tikv-txn-rust': continue
-    d = decide(r['size'], r['model'], r['variant'])
-    rows.append(dict(pair='rust-sdt', size=r['size'], model=r['model'], variant=r['variant'], tools=r'\tf\ / \tf', gc=r['impl graphs'], gr=r['spec graphs'], gx=r['uncovered'], T=r['wall s'], M=r['peak MB'], verdict=r['verdict'], real=d[1] if d else '', false=d[2] if d else '', unresolved=d[3] if d else ''))
+    plus = '.vs-plus.' in r['run id']   # S_dt+ (owner 2026-11-10): the same port against the specification with causes A, B, C admitted
+    d = decide(r['size'], r['model'], r['variant'], '.vs-plus' if plus else '')
+    rows.append(dict(pair='rust-plus' if plus else 'rust-sdt', size=r['size'], model=r['model'], variant=r['variant'], tools=r'\tf\ / \tf', gc=r['impl graphs'], gr=r['spec graphs'], gx=r['uncovered'], T=r['wall s'], M=r['peak MB'], verdict=r['verdict'], real=d[1] if d else '', false=d[2] if d else '', unresolved=d[3] if d else ''))
 # Java port vs S_dt: cross-application-{conf,viol}-full.csv (program tikv-txn, impl Java)
 for kind in ('conf', 'viol'):
     for r in csv.DictReader(open(f"{TB}/cross-application-{kind}-full.csv")):
@@ -48,7 +49,7 @@ for f, pair, tools in (('rust-spec', 'java-rust', r'\jmc\ / \tf'), ('java-spec',
 ORDER = ['S1', 'X2', 'X2r', 'P2', 'M2', 'L1', 'A3']
 def key(r):
     sc, a, o, at = r['size'].split(','); return (ORDER.index(sc), r['model'] != 'fifo', o, a, r['variant'] != 'correct', r['variant'])
-PAIRS = [('rust-sdt', r'TiKV port (Rust) $\sqsubseteq$ ' + SDT), ('java-sdt', r'TiKV port (Java) $\sqsubseteq$ ' + SDT), ('java-rust', r'TiKV port (Java) $\sqsubseteq$ TiKV port (Rust)'), ('rust-java', r'TiKV port (Rust) $\sqsubseteq$ TiKV port (Java)')]
+PAIRS = [('rust-sdt', r'TiKV port (Rust) $\sqsubseteq$ ' + SDT), ('rust-plus', r'TiKV port (Rust) $\sqsubseteq$ \sdtplus'), ('java-sdt', r'TiKV port (Java) $\sqsubseteq$ ' + SDT), ('java-rust', r'TiKV port (Java) $\sqsubseteq$ TiKV port (Rust)'), ('rust-java', r'TiKV port (Rust) $\sqsubseteq$ TiKV port (Java)')]
 os.makedirs(f"{TB}/eval2", exist_ok=True)
 with open(f"{TB}/eval2/tikv.csv", 'w', newline='') as fh:
     w = csv.writer(fh); w.writerow(['pair', 'size', 'model', 'variant', 'tools', 'G cand', 'G ref', 'G x', 'offline s', 'offline MB', 'verdict', 'decide violations', 'decide false alarms', 'decide unresolved'])
