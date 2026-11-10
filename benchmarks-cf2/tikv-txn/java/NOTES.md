@@ -713,8 +713,9 @@ Change (TxnKv.java):
 
 Design points (for the round-3 review):
 1. No Stop message. The order said to end the tasks "exactly as the other daemon processes of the port are ended".
-   The port's daemons (r, pd, x, t, init) are never sent a Stop: each blocks on its next receive when the clients
-   are done, and JMC ends the daemons with main. The shard tasks do the same.
+   The port's daemons (r, pd, x, t) are never sent a Stop: each blocks on its next receive when the clients are
+   done, and JMC ends the daemons with main (init is different: it returns after sending the setup messages). The
+   shard tasks do the same as r, pd, x and t.
 2. Fixed task count 2·m·R. Round 2 spawned a new task per shard per plan, so the count varied by execution. Now
    each of ti and xi has one task per region, and it serves that region's shard of every plan the process runs.
    ti and xi run plans concurrently, so they do not share tasks. Within one process, plans run one after another:
@@ -743,3 +744,5 @@ refusal; javac into ~/tmp/claude-build/tikv-java/out):
   "spawned by process" refusal, and 7224 is the round-2 count for X2 fifo (a non-export run).
 - The first X2 smoke, before the ResolveCfg-as-values fix, stopped at once with the replay drift quoted above. S1
   and X2 were then run again on the final file. Those two reruns are the results above.
+
+Astra round 3 (2026-11-10): APPROVED (REVIEW-astra-java-r3.md); the only item was this init wording, fixed here.
