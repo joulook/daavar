@@ -1,0 +1,7 @@
+C3E.a1-commit.spec_correct_6_2_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit export spec --out export.jsonl --threads 16 --model fifo -- correct 6 2
+C3E.a1-commit.impl_correct_6_2_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --threads 16 --model fifo -- correct 6 2
+C3E.a1-commit.impl_early-abort_6_2_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit export impl --out export.jsonl --threads 16 --model fifo -- early-abort 6 2
+C3J.a1-commit.impl_correct_6_2_fifo.c48h.m 80 172800 needok:C3E.a1-commit.spec_correct_6_2_fifo.t16.c48h,C3E.a1-commit.impl_correct_6_2_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a1-commit.spec_correct_6_2_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.a1-commit.impl_correct_6_2_fifo.t16.c48h/export.jsonl
+C3J.a1-commit.impl_early-abort_6_2_fifo.c48h.m 80 172800 needok:C3E.a1-commit.spec_correct_6_2_fifo.t16.c48h,C3E.a1-commit.impl_early-abort_6_2_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a1-commit.spec_correct_6_2_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.a1-commit.impl_early-abort_6_2_fifo.t16.c48h/export.jsonl
+C1.a1-commit.impl_correct_6_2_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- correct 6 2
+C1.a1-commit.impl_early-abort_6_2_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh a1-commit conf --engine stateful --threads 16 --model fifo -- early-abort 6 2

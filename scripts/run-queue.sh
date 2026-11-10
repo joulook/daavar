@@ -85,6 +85,7 @@ run_row() {  # id memGB timeoutS numa-list width cmd...
 
 declare -A BUSY=()   # numa-node -> pid
 declare -A ROWPID=() # pid -> "first width"
+declare -A JMCPID=() # pid -> row id, for the JMC exports this dispatcher launched (JMC cap, 2026-11-10)
 free_finished() { local n p; for p in "${!ROWPID[@]}"; do if ! kill -0 "$p" 2>/dev/null; then wait "$p" 2>/dev/null; for n in ${ROWPID[$p]//,/ }; do unset "BUSY[$n]"; done; unset "ROWPID[$p]"; fi; done; }
 allowed() { local k; for k in "${ALLOWED[@]}"; do [ "$k" = "$1" ] && return 0; done; return 1; }
 ext_busy() {  # $1 numa node -> 0 if a row of another queue runs on it (state=running, live pid, numa_node "k+…"; 2026-11-03: one row per node across queues)
@@ -142,11 +143,17 @@ while [ ${#PENDING[@]} -gt 0 ]; do
     _df=$(df -BG --output=avail "$EVAL_OUT" 2>/dev/null | tail -1 | tr -dc 0-9)
     if [ -n "$_df" ] && [ "$_df" -lt "${MIN_DISK_FREE_GB:-150}" ]; then [ $hold -eq 0 ] && echo "$(date -Is) waiting: disk ${_df} GB free (MIN_DISK_FREE_GB ${MIN_DISK_FREE_GB:-150})" >> "$QDIR/queue.log"; hold=1; NEXT+=("$line"); continue; fi
     # JMC cap (owner, 2026-11-07): a JMC export is 17 JVMs at ~1.7x the heap; never more than JMC_MAX (brain 3, else 1) at once on the node
-    case "$cmd" in *jmc-run.sh*) _jm=0; for _s in /local/mkhoshechin/eval/out*/*/status; do grep -q '^state=running' "$_s" 2>/dev/null && grep -q 'jmc-run.sh' "$(dirname "$_s")/cmd.txt" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$_s" | head -1)" 2>/dev/null && _jm=$((_jm+1)); done
+    # 2026-11-10 (brain09 09:40, node-guard killed a 4th export): the status files alone miss the rows launched moments ago (their
+    # status and pid are written by run_row after the fork), so several JMC exports could start in one pass. The JMC exports this
+    # dispatcher launched are counted from JMCPID while their row subshell lives; the status scan counts the other queues' rows.
+    case "$cmd" in *jmc-run.sh*) _jm=0; declare -A _ours=()
+      for _p in "${!JMCPID[@]}"; do if kill -0 "$_p" 2>/dev/null; then _jm=$((_jm+1)); _ours[${JMCPID[$_p]}]=1; else unset "JMCPID[$_p]"; fi; done
+      for _s in /local/mkhoshechin/eval/out*/*/status; do [ -n "${_ours[$(basename "$(dirname "$_s")")]:-}" ] && continue; grep -q '^state=running' "$_s" 2>/dev/null && grep -q 'jmc-run.sh' "$(dirname "$_s")/cmd.txt" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$_s" | head -1)" 2>/dev/null && _jm=$((_jm+1)); done; unset _ours
       if [ "$_jm" -ge "${JMC_MAX:-$(case "$(hostname -s)" in brain*) echo 3;; *) echo 1;; esac)}" ]; then NEXT+=("$line"); continue; fi;; esac
     if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
     ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!
     ROWPID[$p]="$first"; for n in ${first//,/ }; do BUSY[$n]=$p; done; launched_any=1
+    case "$cmd" in *jmc-run.sh*) JMCPID[$p]="$id";; esac
     echo "$(date -Is) launched $id on numa $first (w=$w) pid $p" >> "$QDIR/queue.log"
   done
   PENDING=("${NEXT[@]}")

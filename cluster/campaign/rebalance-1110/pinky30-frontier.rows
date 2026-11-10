@@ -1,0 +1,6 @@
+C3E.s2-share.spec_share_25_24_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export spec --out export.jsonl --threads 16 --model fifo -- share 25 24
+C3E.s2-share.impl_share_25_24_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh s2-share export impl --out export.jsonl --threads 16 --model fifo -- share 25 24
+C3J.s2-share.impl_share_25_24_fifo.c48h.m 80 172800 needok:C3E.s2-share.spec_share_25_24_fifo.t16.c48h,C3E.s2-share.impl_share_25_24_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s2-share.spec_share_25_24_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.s2-share.impl_share_25_24_fifo.t16.c48h/export.jsonl
+C3E.s3-commit.spec_25_20_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh s3-commit export spec --out export.jsonl --threads 16 --model fifo -- 25 20
+C3E.s3-commit.impl_25_20_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh s3-commit export impl --out export.jsonl --threads 16 --model fifo -- 25 20
+C3J.s3-commit.impl_25_20_fifo.c48h.m 80 172800 needok:C3E.s3-commit.spec_25_20_fifo.t16.c48h,C3E.s3-commit.impl_25_20_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.s3-commit.spec_25_20_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.s3-commit.impl_25_20_fifo.t16.c48h/export.jsonl
