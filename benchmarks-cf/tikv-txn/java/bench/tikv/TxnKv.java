@@ -206,7 +206,8 @@ public final class TxnKv implements MpProgram {
 
     /** The setup message of {@code init} (INTERFACE.md section 2). */
     record Setup(List<Tid> regions, Tid pd, List<Tid> xs, List<Tid> ts, List<Tid> cs, List<Integer> regionOfKey,
-            List<Boolean> pessimistic, boolean async, boolean onepc, int a) implements MpMessage {}
+            List<Boolean> pessimistic, boolean async, boolean onepc, int a, List<List<Tid>> tTasks,
+            List<List<Tid>> xTasks) implements MpMessage {}
 
     @Override
     public void run() {
@@ -250,8 +251,26 @@ public final class TxnKv implements MpProgram {
             cHandles.add(h);
             cs.add(h.tid());
         }
+        // Round 3 (owner 2026-11-10 08:40, JMC export mode needs main to spawn every process): the shard tasks
+        // of Lib.retryMultiRegion are spawned here, one invisible daemon per (ti or xi, region), and each takes
+        // its jobs as ShardWork messages. Only a split layout (R >= 2) has plans with two shards; with R = 1
+        // every plan has one shard and runs inline, so no task is spawned.
+        List<List<Tid>> tTasks = new ArrayList<>();
+        List<List<Tid>> xTasks = new ArrayList<>();
+        if (regionCount >= 2) {
+            final List<Tid> regionTids = List.copyOf(regions);
+            for (List<List<Tid>> owners : List.of(tTasks, xTasks)) {
+                for (int i = 1; i <= m; i++) {
+                    List<Tid> perRegion = new ArrayList<>();
+                    for (int r = 0; r < regionCount; r++) {
+                        perRegion.add(MpProcess.spawnDaemon(() -> shardTaskMain(model, pd, regionTids, layout)).tid());
+                    }
+                    owners.add(List.copyOf(perRegion));
+                }
+            }
+        }
         final Setup setup = new Setup(List.copyOf(regions), pd, List.copyOf(xs), List.copyOf(ts), List.copyOf(cs),
-                layout, pessimistic, async, onepc, a);
+                layout, pessimistic, async, onepc, a, List.copyOf(tTasks), List.copyOf(xTasks));
         final List<Tid> targets = new ArrayList<>();
         targets.addAll(regions);
         targets.add(pd);
@@ -2047,6 +2066,37 @@ public final class TxnKv implements MpProgram {
     /** The end of a shard task (plan.rs:398-410: the task's (idx, result)), sent to the task that spawned it. */
     record ShardDone(int plan, int idx, ShardOut out) implements MpMessage {}
 
+    /**
+     * One job of a shard task (round 3): what join_set.spawn (plan.rs:398) handed the task, i.e. what the
+     * round-2 port captured when it spawned the task (the caller, the plan id, the shard index, the shard,
+     * its request and its ResolveCfg). The ResolveCfg travels as its values (timestamp, the backoff's
+     * maxAttempts and currentAttempts), because JMC compares message payloads by equals on replay and
+     * Backoff is a mutable object without value equality.
+     */
+    record ShardWork(Tid parent, int plan, int idx, Shard sh, KvRequest shardReq, long timestamp,
+            int backoffMax, int backoffCurrent) implements MpMessage {
+        ResolveCfg cfg() {
+            Backoff b = new Backoff(backoffMax);
+            b.currentAttempts = backoffCurrent;
+            return new ResolveCfg(timestamp, b);
+        }
+    }
+
+    /**
+     * A shard task (round 3): an invisible daemon spawned by main for one (ti or xi, region). Each job runs
+     * as the round-2 spawned task did: a fresh Lib at the task's address, singleShardHandler, ShardDone to
+     * the caller. Like the port's other daemons it is never stopped; it blocks on its next ShardWork.
+     */
+    static void shardTaskMain(CommunicationModel md, Tid pd, List<Tid> regions, List<Integer> regionOfKey) {
+        final Tid self = MpProcess.self();
+        while (true) {
+            ShardWork w = Channel.recv(md, ShardWork.class);
+            Lib task = new Lib(md, self, pd, regions, regionOfKey);
+            ShardOut o = task.singleShardHandler(w.sh(), w.shardReq(), w.cfg());
+            Channel.send(md, w.parent(), new ShardDone(w.plan(), w.idx(), o));
+        }
+    }
+
     /** What `.resolve_lock(timestamp, backoff, ..)` adds to a plan. */
     record ResolveCfg(long timestamp, Backoff backoff) {}
 
@@ -2063,6 +2113,8 @@ public final class TxnKv implements MpProgram {
         int nextId = 0;
         /** ti's xi (the target of the commit_secondary trigger). */
         Tid xi;
+        /** This process's shard tasks, indexed by region (round 3; empty when R = 1). */
+        List<Tid> shardTasks = List.of();
 
         void sendTrigger(XTrigger t) {
             Channel.send(md, xi, t); // tokio::spawn (transaction.rs:1401-1405) -> one message to xi
@@ -2076,13 +2128,13 @@ public final class TxnKv implements MpProgram {
             this.regionOfKey = s.regionOfKey();
         }
 
-        /** The library of a shard task spawned by {@code parent} (plan.rs:398): same PD and regions, own address. */
-        Lib(Lib parent, Tid self) {
-            this.md = parent.md;
+        /** The library of one job of a shard task (plan.rs:398): same PD and regions, the task's address. */
+        Lib(CommunicationModel md, Tid self, Tid pd, List<Tid> regions, List<Integer> regionOfKey) {
+            this.md = md;
             this.self = self;
-            this.pd = parent.pd;
-            this.regions = parent.regions;
-            this.regionOfKey = parent.regionOfKey;
+            this.pd = pd;
+            this.regions = regions;
+            this.regionOfKey = regionOfKey;
         }
 
         /** PdClient::get_timestamp. */
@@ -2237,19 +2289,15 @@ public final class TxnKv implements MpProgram {
                     return List.of(outs);
                 }
                 final int plan = nextId++;
-                final Tid parent = self;
-                final Lib parentLib = this;
                 for (int i = 0; i < n; i++) {
-                    final int idx = i;
                     final Shard sh = shards.get(i);
                     final KvRequest shardReq = applyShard(req, sh.keys()); // clone_then_apply_shard
-                    final ResolveCfg cfg = new ResolveCfg(rl.timestamp(), rl.backoff().copy()); // backoff.clone()
-                    // join_set.spawn (plan.rs:398) -> one invisible daemon per shard (PORT: a tokio task)
-                    MpProcess.spawnDaemon(() -> {
-                        Lib task = new Lib(parentLib, MpProcess.self());
-                        ShardOut o = task.singleShardHandler(sh, shardReq, cfg);
-                        Channel.send(md, parent, new ShardDone(plan, idx, o));
-                    });
+                    // join_set.spawn (plan.rs:398) -> one job for this shard's task (PORT: a tokio task). Round 3:
+                    // the task is a daemon spawned by main (one per region of this process), and the spawn is
+                    // one ShardWork message to it; the shards of a plan are distinct regions (shardsOf). The
+                    // task rebuilds ResolveCfg(rl.timestamp(), rl.backoff().copy()) (backoff.clone()) from it.
+                    Channel.send(md, shardTasks.get(sh.region()), new ShardWork(self, plan, i, sh, shardReq,
+                            rl.timestamp(), rl.backoff().maxAttempts, rl.backoff().currentAttempts));
                 }
                 for (int i = 0; i < n; i++) {
                     // collect_join_set_results (plan.rs:108-153). PORT: joined in shard order, not in
@@ -3190,6 +3238,7 @@ public final class TxnKv implements MpProgram {
         final Tid self = MpProcess.self();
         Lib lib = new Lib(md, self, s);
         lib.xi = s.xs().get(i - 1);
+        if (!s.tTasks().isEmpty()) lib.shardTasks = s.tTasks().get(i - 1);
         Tid c = s.cs().get(i - 1);
         boolean pessimistic = s.pessimistic().get(i - 1);
         Transaction txn = null;
@@ -3231,6 +3280,7 @@ public final class TxnKv implements MpProgram {
         Setup s = Channel.recv(md, Setup.class);
         final Tid self = MpProcess.self();
         Lib lib = new Lib(md, self, s);
+        if (!s.xTasks().isEmpty()) lib.shardTasks = s.xTasks().get(i - 1);
         while (true) {
             XTrigger t = Channel.recv(md, XTrigger.class);
             try {

@@ -687,3 +687,59 @@ Reading of the counts (my explanation from the program's structure, not a measur
   schedules.
 - The class files of the S1 and X2-fifo after runs were compiled before a comment-only edit of
   TxnKv.java; every other after run used the final file.
+
+## Round 3: spawn structure for JMC export (2026-11-10, owner decision 2026-11-10 08:40)
+
+Why: at the pin 648e9c8, JMC's export mode needs main to spawn every process. In round 2, ti and xi spawned the
+shard tasks of `Lib.retryMultiRegion` (21:10 amendment), so every instance with a two-shard plan was refused with
+"must: process 12 was spawned by process 7". This round makes one structural change, and nothing else changes.
+
+Change (TxnKv.java):
+- `run()` spawns the shard tasks up front with `MpProcess.spawnDaemon(() -> shardTaskMain(..))`. There is one task
+  per (ti or xi, region), so 2·m·R tasks, and only when R >= 2. They are spawned after c1..cm and before init, so
+  the tids of r, pd, x, t and c are unchanged and only init's moves. `Setup` carries them in `tTasks` and `xTasks`
+  (per client index, per region), and tMain/xMain put their own list into `Lib.shardTasks`.
+- Where `retryMultiRegion` spawned a daemon for shard i, it now sends one `ShardWork(parent, plan, idx, sh,
+  shardReq, timestamp, backoffMax, backoffCurrent)` to the task of the shard's region. The shards of one plan are
+  distinct regions (`shardsOf` groups sorted keys by region, and the region of a key is monotone). This is the
+  payload the round-2 closure captured. The `ResolveCfg` travels as its values because JMC compares message
+  payloads by `equals` on replay, and `Backoff` has no value equality. Sending the object gave "must: replay drift
+  ... ShardWork[... backoff=TxnKv$Backoff@61105c1d]" on the first X2 smoke. The task rebuilds
+  `ResolveCfg(timestamp, backoff.copy())`, the same value round 2 passed.
+- `shardTaskMain` loops: receive a `ShardWork`, build a fresh Lib at the task's address, run `singleShardHandler`,
+  send `ShardDone(plan, idx, out)` to the parent. The parent's join (`ShardDone` received in shard order) and the
+  inline one-shard path are unchanged. The constructor `Lib(Lib parent, Tid self)` became
+  `Lib(md, self, pd, regions, regionOfKey)`, with the same fields.
+
+Design points (for the round-3 review):
+1. No Stop message. The order said to end the tasks "exactly as the other daemon processes of the port are ended".
+   The port's daemons (r, pd, x, t, init) are never sent a Stop: each blocks on its next receive when the clients
+   are done, and JMC ends the daemons with main. The shard tasks do the same.
+2. Fixed task count 2·m·R. Round 2 spawned a new task per shard per plan, so the count varied by execution. Now
+   each of ti and xi has one task per region, and it serves that region's shard of every plan the process runs.
+   ti and xi run plans concurrently, so they do not share tasks. Within one process, plans run one after another:
+   the caller waits for every `ShardDone` before it continues. So a task has at most one job at a time. The shards
+   of one plan go to distinct tasks, and there is no shared queue between shards.
+3. Fresh Lib per job. Each job starts with request ids at 0, as round 2's freshly spawned task did. The ids are
+   reused at the same address across jobs. That is safe because every request a job sends (TSO, KvReq) is answered
+   before the job ends: each region sends exactly one reply per request, and `ResolveLockNext` goes to the region
+   itself. So no reply is ever left over for a later job to match.
+
+Why the visible behaviour is preserved: spawn edges are invisible, and no observation, status or message tag of
+c1..cm changes. Each former spawn is now one invisible `ShardWork` message, sent at the same program point with the
+same payload. Its receive orders the task's job after the caller's earlier events, as the spawn edge did. The task
+then runs the same code as before and sends the same `ShardDone`. The difference is that a task's job may start
+later than the send, and a task's address is reused across jobs. Neither difference is visible, and the parent's
+behaviour does not change: it waits for the `ShardDone` messages in shard order whatever the schedule. Graph counts
+may still change, because the invisible events change (ShardWork send and receive, the earlier daemon spawns).
+
+Smokes (workstation; JMC classes of 10-31, the stale local build noted in STAGING.md, which contains the export
+refusal; javac into ~/tmp/claude-build/tikv-java/out):
+- `impl,S1,0,0,1,fifo`, export: exit 0, `graphs_complete: 431`, `graphs_blocked: 0`, `summaries_distinct: 58`,
+  `stop_reason: exhausted`, 14.5 s, 59 export lines. Same 431 as rounds 1-2: S1 has one key (n = 1), so R = 1
+  and no shard task is spawned. It checks only that the export still works.
+- `impl,X2,0,0,1,fifo`, export under `timeout 600` (a round-2 refusal): exit 0, `graphs_complete: 7224`,
+  `graphs_blocked: 0`, `summaries_distinct: 16`, `stop_reason: exhausted`, 354 s, 17 export lines. No
+  "spawned by process" refusal, and 7224 is the round-2 count for X2 fifo (a non-export run).
+- The first X2 smoke, before the ResolveCfg-as-values fix, stopped at once with the replay drift quoted above. S1
+  and X2 were then run again on the final file. Those two reruns are the results above.
