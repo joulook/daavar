@@ -144,7 +144,8 @@ for t in ("table2", "table3"):
             if vs and not limit(vs): decided_cell = True
             if (vs == "" and vm != "") or (vs and not limit(vs) and vm == ""): problems.append(f"{key}: {s}='{vs}' but {m}='{vm}' (time and memory must come together)")
             colour = r.get(next(c for c in cols if c.startswith("colour")), "")
-            if vs and s.split()[0] + "=" not in colour: problems.append(f"{key}: {s} present but no colour for it ('{colour}')")
+            if vs and vs != "t/o (known)" and s.split()[0] + "=" not in colour: problems.append(f"{key}: {s} present but no colour for it ('{colour}')")   # a known limit (owner 2026-11-10) comes from no run of this cell, so it has no colour
+            if vs == "t/o (known)": notes.append(f"{key}: {s} is a known limit (inputs/known-limits.tsv, a smaller size's or Online's measured timeout)")
         if decided_cell and (not r.get("G impl") or not r.get("G spec")): problems.append(f"{key}: a decided cell but G impl='{r.get('G impl')}' G spec='{r.get('G spec')}'")
         if not anycell and not r.get("G impl"):
             nxt = rs[i + 1] if i + 1 < len(rs) else None
