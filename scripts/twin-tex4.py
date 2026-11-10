@@ -38,7 +38,7 @@ ONAME={'omnipaxos-paper':'OmniPaxos paper port (Opus, Java)','omnipaxos-paper-so
 def spec_of(P,r):   # the specification a real-software row is checked against (the vs- word of the run id, else the hand-written one)
     if P.startswith('omnipaxos') or P=='raft':
         vs=re.search(r'\.vs-([a-z-]+)', r['run id']); w=vs.group(1) if vs else 'hand'
-        return {'derived':r'S$_{\mathrm{paper}}$ (derived, Rust)','zkderived':r'S$_{\mathrm{zab}}$ (derived, Rust)','swiftderived':r'S$_{\mathrm{swift}}$ (derived, Rust)'}.get(w, r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
+        return {'derived':r'S$_{\mathrm{paper}}$ (derived, Rust)','omni':r'S$_{\mathrm{paper}}$ (derived, Rust)','zkderived':r'S$_{\mathrm{zab}}$ (derived, Rust)','swiftderived':r'S$_{\mathrm{swift}}$ (derived, Rust)'}.get(w, r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
     return r'S$_{\mathrm{'+esc(P)+'}}$'
 _st_src=open(__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)),'study-tables.py')).read()
 _ST={}; exec(compile(_st_src[:_st_src.index('\nCOMMON = ')],'study-tables.py','exec'),_ST)   # the case studies' role names (2026-11-07, audit 1107-0005: CROSS/TWIN mislabelled craq and chainpaxos rows); omnipaxos keeps its own names below
@@ -79,7 +79,7 @@ def pair(r,f):   # the two components of a check, as the paper's Table 7 names t
         if P in AGENTIC: return (esc(P)+' (context-free agent, Rust)', SJ)
         return (hand(v), SJ)
     if f in ('campaign-offline-tf.csv','campaign-stateful.csv'):   # Rust against Rust
-        if P=='raft': return ('raft-rs (library, Rust)', r'S$_{\mathrm{raft}}$ (hand-written, Rust)')
+        if P=='raft': return ('raft-rs (library, Rust)', spec_of(P,r))   # the reference named by the vs- word (vs-omni = the derived specification; audit 1110-2249)
         if P=='omnipaxos' and '.spec_' in r['run id']: return (r'S$_{\mathrm{raft}}$ (hand-written, Rust)', spec_of(P,r))   # the two specifications against each other
         if P=='omnipaxos': return ('OmniPaxos (library, Rust'+vv(v)+')', spec_of(P,r))   # the variant (reorder) after the comma, as for every program (audit 1107-1409)
         if P=='omnipaxos-derived': return (r'S$_{\mathrm{paper}}$ (derived, Rust)', spec_of(P,r))
