@@ -1,0 +1,6 @@
+# tables12 campaign (owner orders 2026-11-10; plan/eval2/tables12/PLAN.md). Nested rows the owner ordered run although they are predicted to reach the 48 h limit (PLAN.md T12, T15, V12).
+# Start when brain03 NUMA nodes 0, 1, 5 free (C2 2pc-ab(9) x2 at 07:42/07:58, C1 reset at 08:56 on 2026-11-10): NUMA_SET=0,1,5. A 48 h row started 09:00 ends by 2026-11-12 09:00.
+# The two lb rows are brain01.rows:46 and :51 moved unchanged (remove them from brain01's queue).
+C2.ewd998-termination.impl_4_bag_correct.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh ewd998-termination conf --engine stateless --threads 16 --model bag -- 4 correct
+C2.a4-balancer.impl_hash_a4a_4_4_4_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- hash a4a 4 4 4
+C2.a4-balancer.impl_rr_a4a_4_4_4_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a4-balancer conf --engine stateless --threads 16 --model fifo -- rr a4a 4 4 4

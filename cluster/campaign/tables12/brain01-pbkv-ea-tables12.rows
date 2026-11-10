@@ -1,0 +1,10 @@
+# tables12 campaign (owner orders 2026-11-10; plan/eval2/tables12/PLAN.md). Replaces pbkv-ea.rows (queue pbkv-ea-p) after its dispatcher is stopped: lines 13-16 (size 3,6, not ordered) left out; C2 3,5 kept (owner: Nested at both sizes; predicted to reach the 48 h limit, PLAN.md V14).
+# Optional, owner's call (PLAN.md Q7): C2.a2-store.impl_early-ack_2_7_fifo.t16.p.r4, a rerun of the Nested 2,7 row that shared NUMA node 0 with two other rows from 2026-11-10 00:10.
+C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 2 7
+C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 2 7
+C3J.a2-store.impl_early-ack_2_7_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_2_7_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_2_7_fifo.t16.p.r3/export.jsonl
+C1.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateful --threads 16 --model fifo -- early-ack 3 5
+C2.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 3 5
+C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 3 5
+C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 3 5
+C3J.a2-store.impl_early-ack_3_5_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3/export.jsonl
