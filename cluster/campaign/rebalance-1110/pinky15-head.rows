@@ -1,0 +1,7 @@
+# rebalance-1110: pinky15 next-1107-r2 head; its tail (8 rows) moved to pinky29
+# pinky15, 2026-11-06 23:xx: Phase B-D Offline next sizes (owner 2026-11-06 23:20; plan/phaseCD-offline/NEXT-SIZES.md)
+# exports (C3E TraceForge, XCE/XJE JMC) then merge joins with needok on both exports; 48 h tier (.c48h, 172800 s); JMC heap -Xmx8g per JVM; after the node's live queue
+C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh cassandra-cas export spec --out export.jsonl --threads 16 --model fifo -- 4 v1nolin
+C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.c48h 80 172800 "$DAAVAR"/scripts/rust-run.sh cassandra-derived export spec --out export.jsonl --threads 16 --model fifo -- 4 v1nolin
+C3J.cassandra-cas.spec_4_v1nolin_fifo.vs-derived.c48h.m 80 172800 needok:C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.c48h,C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.c48h/export.jsonl
+C3J.cassandra-derived.spec_4_v1nolin_fifo.vs-hand.c48h.m 80 172800 needok:C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.c48h,C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.c48h/export.jsonl "$EVAL_OUT"/C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.c48h/export.jsonl

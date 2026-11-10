@@ -1,0 +1,4 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3J.swiftpaxos-code-rust-sol.impl_2_fifo.vs-derived	C	swiftpaxos-code-rust-sol	2	fifo	impl	join	1	readme		c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	swiftpaxos-code-rust-sol	swiftpaxos-derived.spec_2_fifo	swiftpaxos-code-rust-sol.impl_2_fifo
+XJE.two-pc-trillium.impl_9_bag_ignore-abort-vote.w16	X	two-pc-trillium	9	bag	ignore-abort-vote	must-split	16			c1h	export	jmc	jmc	java	java	offline-batch	full	two-pc-trillium		
+XJ1.two-pc-trillium.impl_9_bag_ignore-abort-vote.tfspec-jmcimpl	X	two-pc-trillium	9	bag	ignore-abort-vote	join	1	readme		c600	cross-language	traceforge	jmc	rust	java	offline-batch	full	two-pc-trillium	two-pc-trillium.spec_9_bag	two-pc-trillium.impl_9_bag_ignore-abort-vote

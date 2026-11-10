@@ -1,0 +1,6 @@
+# rebalance-1110: pinky22 next-1107-r2 head; its tail (4 rows) moved to pinky02
+# rebalance-1110 step 3: 37 rows (ironlock group) moved to brain09
+# pinky22, 2026-11-06 23:xx: Phase B-D Offline next sizes (owner 2026-11-06 23:20; plan/phaseCD-offline/NEXT-SIZES.md)
+# exports (C3E TraceForge, XCE/XJE JMC) then merge joins with needok on both exports; 48 h tier (.c48h, 172800 s); JMC heap -Xmx8g per JVM; after the node's live queue
+XJE.raft-rs.spec_correct_2_1_1_fifo.w16.c48h 80 172800 env JAVA_TOOL_OPTIONS=-Xmx8g "$DAAVAR"/scripts/jmc-run.sh raft-rs 'bench.microraft.MicroRaft:spec,correct,2,1,1' must 0 1 export.jsonl 172800 --split 16 --k 1
+XJ2.raft-rs.impl_reorder_2_1_1_fifo.jmcspec-tfimpl.c48h.m 80 172800 needok:XJE.raft-rs.spec_correct_2_1_1_fifo.w16.c48h,C3E.raft-rs.impl_reorder_2_1_1_fifo.t16.c48h "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/XJE.raft-rs.spec_correct_2_1_1_fifo.w16.c48h/export.jsonl "$EVAL_OUT"/C3E.raft-rs.impl_reorder_2_1_1_fifo.t16.c48h/export.jsonl

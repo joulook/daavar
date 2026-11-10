@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.a2-store.impl_misroute_4_3_2_fifo.t16.c48h	C	a2-store	4,3,2	fifo	misroute	export	16		Phase B-D next size (owner 2026-11-06 23:20)	c48h	export	traceforge	traceforge	rust	rust	offline-batch	full	a2-store		
+XCE.a2-store.impl_misroute_4_3_2_fifo.w16.c48h	X	a2-store	4,3,2	fifo	misroute	must-split	16		Phase B-D next size (owner 2026-11-06 23:20)	c48h	export	jmc	jmc	java	java	offline-batch	full	a2-store		
+XC1.a2-store.impl_misroute_4_3_2_fifo.jimpl-tfimpl.c48h.m	X	a2-store	4,3,2	fifo	misroute	join	1	twin	Phase B-D next size (owner 2026-11-06 23:20)	c48h	twin-cf	jmc	traceforge	java	rust	offline-batch	full	a2-store	a2-store.impl_misroute_4_3_2_fifo	a2-store.impl_misroute_4_3_2_fifo
+XC2.a2-store.impl_misroute_4_3_2_fifo.tfimpl-jimpl.c48h.m	X	a2-store	4,3,2	fifo	misroute	join	1	twin	Phase B-D next size (owner 2026-11-06 23:20)	c48h	twin-cf	traceforge	jmc	rust	java	offline-batch	full	a2-store	a2-store.impl_misroute_4_3_2_fifo	a2-store.impl_misroute_4_3_2_fifo

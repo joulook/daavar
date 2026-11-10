@@ -1,0 +1,4 @@
+# rebalance-1110: volta07 next-1107-r2 head; its tail (4 rows) moved to volta13
+# rebalance-1110 step 3: 14 rows (kv-exactly-once-grove group) moved to brain09
+# volta07, 2026-11-06 23:xx: Phase B-D Offline next sizes (owner 2026-11-06 23:20; plan/phaseCD-offline/NEXT-SIZES.md)
+# exports (C3E TraceForge, XCE/XJE JMC) then merge joins with needok on both exports; 48 h tier (.c48h, 172800 s); JMC heap -Xmx24g per JVM; after the node's live queue
