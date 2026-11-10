@@ -1,2 +1,15 @@
 # dagger (completed smaller size) rows suppressed by the owner's orders (2026-11-10 01:30): program, variant, model, size ("*" = no dagger row for the instance)
 2pc-lb	counting-bug	bag	*
+# owner order 2026-11-10 23:12 (plan/eval2/tables12/OWNER-ORDERS-2026-11-10.md): the dagger rows 2pc-ds 3, pbkv 3,3 and 4,2 (Table 1), 2pc-ds-sal 2, chan-ns 4, reset 10,9, lock-wr 2,4 and 2,5, replog-co-er 3 (Table 2) dropped ('*': no dagger row of these instances remains)
+2pc-ds	correct	bag	*
+pbkv	pb	fifo	*
+2pc-ds	skip-ack-loop	bag	*
+chan	no-seqno	bag	*
+reset	reset	bag	*
+lock	wrong-round	fifo	*
+replog-co	early-reply	fifo	*
+# same order: the dropped listed sizes commit 12,12, 2pc-ab 8 (Table 1), 2pc-ea 4,2, 2pc-ab-off1 8 (Table 2) would return as dagger rows of the larger listed size (a limit there); '*' keeps them out (a dropped size never returns as a dagger row)
+commit	impl	fifo	*
+2pc-ab	correct	bag	*
+2pc	early-abort	fifo	*
+2pc-ab	off-by-one	bag	*

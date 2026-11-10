@@ -1,31 +1,22 @@
 # owner orders 2026-11-10 01:30 (plan/eval2/tables12/OWNER-ORDERS-2026-11-10.md) applied by the coordinator 19:30: dropped sizes replaced by the kept ones
 # Table 2 of the paper (owner, 2026-11-03): the rows, in order. program<TAB>variant<TAB>model<TAB>size; a row without results shows empty cells until they land
-chain	impl	fifo	2048
-chain	impl	fifo	4096
+# owner order 2026-11-10 23:12 (plan/eval2/tables12/OWNER-ORDERS-2026-11-10.md): dropped from the paper's Table 1 (generator table2), listed rows: chain 2048, chain 4096, commit 12,12, 2pc 4,2, 2pc-ab 8, 2pc-le 9, bcast 4, hermes 3,2, lb-hash 4,4,4, zab 3
 chain	impl	fifo	8192
-commit	impl	fifo	12,12
 commit	impl	fifo	16,16
 commit	impl	fifo	20,20
 share	correct	fifo	24,24
-2pc	correct	fifo	4,2
 2pc	correct	fifo	4,3
-2pc-ab	correct	bag	8
 2pc-ab	correct	bag	9
 2pc-ds	correct	bag	4
 2pc-lb	correct	bag	6
-2pc-le	ring-conf	fifo	9
 2pc-le	ring-conf	fifo	10
 2pc-tr	correct	bag	8
-bcast	correct	bag	4
 chan	correct	bag	6
 ewd998	correct	bag	4
-hermes	impl	bag	3,2
 hermes	impl	bag	3,3
 lb	hash-a4a	fifo	3,3,3
-lb	hash-a4a	fifo	4,4,4
 lock	fifo	fifo	3,4
 pbkv	pb	fifo	6,2
 pbkv	pb	fifo	4,4
 replog-co	correct	fifo	5
 ring-el	correct	bag	6
-zab	correct	fifo	3
