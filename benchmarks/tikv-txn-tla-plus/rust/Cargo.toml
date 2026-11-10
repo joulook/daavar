@@ -1,0 +1,9 @@
+[package]
+name = "bench_tikv_tla_plus"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+
+[workspace]
