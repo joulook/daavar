@@ -29,8 +29,13 @@ def kept(prog, var):
     return hit if KEEP is not None else (not hit if DROP is not None else True)
 DV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 def load(name):
-    try: return list(csv.DictReader(open(f"{T}/{name}.csv")))
+    try: rows = list(csv.DictReader(open(f"{T}/{name}.csv")))
     except OSError: return []
+    # these tables hold one row per instance: a candidate against ITS specification. A join against another reference (TiKV's S_dt+, run ids
+    # with .vs-plus.) has the instance's key and would take the place of the join against the specification; it did so in the
+    # cross-application tables for S1, P2 and the async/1PC variants of X2 (found 2026-11-10 20:42). Such joins are rows of the TiKV table
+    # only (tikv-table.py reads the campaign CSVs, which keep one row per join).
+    return [r for r in rows if ".vs-plus." not in r.get("run id", "")]
 SYN = {"naive", "share", "commit", "chain", "reset", "width"}; REAL = {"raft", "omnipaxos"}
 P2T = {"caspaxos", "chain-replication", "hermes", "flexible-paxos", "ricart-agrawala", "vrr", "ben-or"}
 def group(p): return "synthetic" if p in SYN else ("realsw" if p in REAL else "application")
