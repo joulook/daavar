@@ -31,7 +31,7 @@ Invisible messages:
 - `SkIn::Fetch { from, term, lo, hi }` / `PIn::FetchReply { from, data: Option<Vec<u8>> }`: INTERFACE 5.2 step 4;
   answered outside `process_msg` with the WAL store's bytes [lo, hi) iff the acceptor's term equals `term`.
 
-Safekeeper thread (INTERFACE 5.3): buffers messages that arrive before its Setup; owns
+Safekeeper thread (INTERFACE 5.3): first receives its Setup (tag 2, D21), then the proposers' messages; owns
 `SafeKeeper::new(TimelineState::new(InMemoryState{initial_state()}), MemWalStore::new(), NodeId(j))`;
 `process_msg` is polled once with `std::task::Waker::noop()` (`poll_once`, `Pending` panics); `Ok(Some(m))` ->
 reply, `Ok(None)` -> nothing, `Err` -> `Reset` and the connection closed. Library panics are not caught.
@@ -100,8 +100,10 @@ edits listed below).
 - E7 utils lsn.rs: lines 1-299 (through `AddAssign<u64>`) kept, minus line 6 (`use std::sync::atomic::...`, used
   only by `AtomicLsn`, dropped) and line 11 (`use crate::seqwait::MonotonicCounter`, module not vendored);
   `AtomicLsn`, `RecordLsn`, `LsnSampler` (rand) and tests (300-) dropped.
-- E8 utils id.rs: lines 1-368 kept minus line 7 (`use rand::Rng`), 105-110 (`Id::generate`), 185-188
-  (`generate` in `id_newtype!`), 316-319 (`TenantTimelineId::generate`); tests (370-) dropped. Reason: `rand` is
+- E8 utils id.rs: lines 1-368 kept minus line 7 (`use rand::Rng`), 105-110 (`Id::generate`), 183-186
+  (`generate` in `id_newtype!`; the cut script removed 185-188, the function and its trailing blank line, which
+  removes the same bytes as 183-186, the preceding `}` and blank line and the function's first two lines: the
+  lines 183-184 and 187-188 are identical), 316-319 (`TenantTimelineId::generate`); tests (370-) dropped. Reason: `rand` is
   not a permitted dependency and `generate` is not used by the acceptor.
 - E9 utils bin_ser.rs: lines 1-262 verbatim (tests dropped).
 - E10 utils pageserver_feedback.rs: lines 1-116 kept (struct 19-39, `empty` and `serialize` of the impl from 40) with
@@ -114,7 +116,7 @@ edits listed below).
   30-34 dropped. Reason: const_format not permitted, constants unused.
 - E12 safekeeper_api models.rs: line 1 (module doc), `use serde::{Deserialize, Serialize};`, a new alias `pub type
   TimestampTz = i64;` (replaces `postgres_ffi_types::TimestampTz`; i64 as sk.rs:808 puts it on the wire), lines
-  77-97 (`FullTransactionId`, `HotStandbyFeedback`, `INVALID_FULL_TRANSACTION_ID`, `empty`) and 286-291
+  77-98 (`FullTransactionId`, `HotStandbyFeedback`, `INVALID_FULL_TRANSACTION_ID`, `empty`) and 286-291
   (`TimelineTermBumpResponse`) verbatim.
 - E13 postgres_versioninfo lib.rs: copied whole (the items the README lists cover nearly all of it; the rest compiles
   with serde, serde_repr and thiserror), so no edit.
@@ -227,11 +229,48 @@ Legacy mode (generation 0, `Configuration::empty()`), proto v3. Function names a
   [START_LSN, availableLsn) (Fetch reply + own records).
 - D18 The harness reaches anyhow, bytes, utils, safekeeper_api, postgres_ffi, postgres_versioninfo through re-exports
   of the vendored crate (E6), keeping the Cargo.toml dependencies exactly traceforge + the vendored crate.
-- D19 `init` sends Setup to the safekeepers (untagged) then to the proposers (tagged); writers get `(i, p, r, prop)`
-  at spawn (proposers are spawned before writers) and receive no Setup. The safekeeper buffers early proposer
-  messages; the proposer's first `PIn` is its Setup (it sends nothing before).
+- D19 `init` sends Setup to the safekeepers (tagged `TAG_SETUP = 2`, D21) then to the proposers (tagged `TAG_P`);
+  writers get `(i, p, r, prop)` at spawn (proposers are spawned before writers) and receive no Setup. The proposer's
+  first `PIn` is its Setup (it sends nothing before).
 - D20 `SystemTime::now()` (state.rs:149) and `Instant::now()` (`last_persist_at`, never called) are left as in the
   source; neither is read by the acceptor's logic.
+- D21 (review round 1) A safekeeper receives its Setup first, by a dedicated receive
+  `recv_tagged_msg_block(tag == Some(2))`, and afterwards only untagged messages (the proposers'); a proposer message
+  that arrives earlier waits in the mailbox. Before this change the safekeeper received whatever came first and
+  buffered proposer messages until its Setup, so the position of Setup among the receives (before or after a
+  greeting) was an extra choice of the exploration without any effect: Setup is not protocol traffic, the
+  `SafeKeeper` was built only after it and the buffered messages were processed in their receive order. Hence the
+  sequences of proposer messages each acceptor processes, with their contents, and therefore every reply, every
+  proposer step and every writer word, are the same with and without the change; only executions that differ in
+  where Setup sits are merged. The source has the same order: the acceptor exists before it processes the first
+  proposer message. With a start LSN, as here, the timeline is created by a creation request before the compute
+  writes (state.rs:92-93, "in the normal creaiton; see `TimelineCreateRequest`"); in the simulator the timeline is
+  created when the first greeting is processed, before `process_msg` runs on it (sim/safekeeper.rs:340-353 calling
+  `create`, 88-124). In both cases timeline setup comes before any protocol processing, which is what the dedicated
+  receive enforces. Nothing else in the protocol changed.
+- D22 (review round 1) Parameter domain: values and positions are `u8` (INTERFACE 4), so `parse` refuses `p*r > 255`
+  (every value 1..p*r and every committed position, at most p*r, then fits); it also refuses `bad-quorum` with
+  n/2 = 0 (n = 1), where wp.c:2025's `responses[n - quorum]` would index past the array. A refused instance panics
+  in `parse` with the usage text before anything is spawned, like every other invalid argument. The writer code is
+  unchanged; the proposer's position cast is now a checked conversion (harness fault if above 255, unreachable
+  after the check).
+- D23 (review round 1, the coordinator's decision on 9.3; wording corrected in review round 2) Streaming start beyond
+  the available end. This is a **deliberate abstraction by the coordinator of a fault path that production does not
+  define**, not a reproduction of production C. When a safekeeper's `start_streaming_at` exceeds `availableLsn`
+  (SendProposerElected takes the safekeeper's flush_lsn when the last common term is the proposer's own,
+  wp.c:1494-1497), `SendAppendRequests` sends the complete AppendRequest header `[begin = streamingAt, end =
+  availableLsn)` with no WAL bytes and sets `streamingAt = end`; the acceptor's `parse` refuses `begin_lsn >
+  end_lsn` (sk.rs:581-585), which the safekeeper thread maps to `Reset` (D7). Production differs: with
+  `Assert(sk->startStreamingAt <= wp->availableLsn)` (1507) and `Assert(endLsn >= beginLsn)` (1590) compiled out,
+  SendAppendRequests clamps `endLsn` below `beginLsn` (1676-1683), passes the negative difference to
+  `enlargeStringInfo` (1700), assigns it to `int req_len` (1710), adds it to the buffer length (1738) and writes
+  that length (1740): with req_len = -8 the 45-byte v3 header becomes a 37-byte write, a truncated header, not a
+  complete one. **No conclusion about production behaviour on this path is drawn from the harness.** The harness
+  assert stays for `begin < START_LSN`. The path is reached only when two proposers are elected in one term, i.e.
+  only under `bad-quorum` (review round 2, finding 2, confirms this and gives a `bad-quorum 2 2 1` schedule): with a
+  majority quorum two elections in one term need two vote quorums that intersect in a safekeeper that would have
+  voted twice in that term, which `handle_vote_request` refuses (sk.rs:1078-1086). The writer-visible fault of
+  `bad-quorum` (two writers told `Committed(1)`, 9.2) occurs before this path (review round 2, finding 7).
 
 ## 6. Build
 
@@ -295,8 +334,10 @@ Command exited with non-zero status 124
 wall=600.00 s maxrss=6116 KB
 ```
 
-`count` explores past errors (`keep_going_after_error`) and prints no error count, so these runs say nothing about
-whether a library assert or a harness panic was reached.
+Correction (review round 1): a Rust panic in a model thread (a library `assert!` or a harness `assert!`/`panic!`)
+is not absorbed by `count`'s `keep_going_after_error`: it aborts the run with exit 101 and the panic message, as
+the `bad-quorum 2 2 1` run of section 9 shows. So the runs above reached no panic in the part of the state space
+they explored; they do not establish that none is reachable.
 
 Sanity check (not one of the prompt's runs; a scratch copy of this main.rs in
 /local/home/mkhoshechin/tmp/claude-build/neon-rust/probe whose writer additionally asserts on its reply under an
@@ -315,3 +356,77 @@ asserting `Ended` never arrives, `correct 1 1 1` finished with `execs=0 blocked=
   everything cached.
 - The binary is under CARGO_TARGET_DIR (section 6), so runs used that path instead of `target/release/...`.
 - Unit tests and the probe in section 7 are additions for checking, not deliverables.
+
+## 9. Review round 1 (Astra, plan/case-studies/neon/review/REVIEW-astra-rust.md)
+
+### 9.1 Findings and changes
+
+| # | Finding | Change |
+|---|---|---|
+| 1 | MUST-FIX: `p*r > 255` accepted; `value(i,j,p)` and the position cast overflow `u8` | `parse` refuses `p*r > 255` (checked multiply) before anything is spawned; the position cast is `u8::try_from(..)` (harness fault if above 255, unreachable now). Writer code unchanged. D22. |
+| 2 | NOTE: vendoring byte-identical, hashes match | none |
+| 3 | SHOULD-FIX: E8 range 183-186, E12 range 77-98 | E12 corrected to 77-98 (line 98 is the blank line the file has). E8 now says 183-186, with the note that the cut script removed 185-188 and that both ranges remove the same bytes (lines 183-184 equal 187-188), so the file is unchanged. |
+| 4 | NOTE: proposer faithful | none |
+| 5 | NOTE: `bad-quorum 1 1 1` gives quorum 0 and indexes past `responses` | `parse` refuses `bad-quorum` when n/2 = 0. D22. |
+| 6 | NOTE: interface and lifecycle match | none |
+| 7 | NOTE: D2 is bounded arbitration | none |
+| 8 | SHOULD-FIX (plan estimates); the setup-before/after-greeting choice is an avoidable factor (8 at 3 1 1) | a safekeeper receives its Setup first by a dedicated tagged receive (`TAG_SETUP = 2`; the proposers' messages stay untagged and wait). D21 argues that no writer-visible behaviour is removed. STUDY-PLAN.md not touched (the coordinator records the estimates). |
+| 9 | NOTE: no reachable panic under `correct` at the registered sizes (argument) | none; see 9.3 for a harness assert reached under `bad-quorum` |
+
+src/main.rs after items 1-5 of this round: md5 82dfe1916d39a87ef3d6a426c51aeee5 (after D23: 9.4). Rebuilt with `--offline` (nothing fetched);
+the eight unit tests pass again (same output as section 3).
+
+### 9.2 Measurements (workstation, one thread per run, `timeout 600`, binary of 9.1)
+
+| command (`$B count impl --model fifo -- ...`) | result | wall | last line / progress |
+|---|---|---|---|
+| `correct 1 1 1` | complete | 0.00 s (wall_ms 1) | `execs=0 blocked=3` (6 before item 8) |
+| `correct 2 1 1` | complete | 0.08 s (wall_ms 80) | `execs=0 blocked=688` (2752 before item 8 = 688 x 2^2: the setup factor 2 per safekeeper) |
+| `correct 2 2 1` | timeout | 600.00 s | `Executions attempted so far: 4000000 total 0 finished normally 4000000 blocked (7259.53/sec).` |
+| `bad-quorum 2 2 1` | **harness panic**, exit 101 | 383.30 s | `Executions attempted so far: 2000000 total 0 finished normally 2000000 blocked (6688.96/sec).` then `panicked at src/main.rs:833:13: harness fault: streaming range` |
+| `correct 3 1 1` | timeout | 600.00 s | `Executions attempted so far: 2000000 total 0 finished normally 2000000 blocked (3696.86/sec).` |
+
+Load: `correct 3 1 1` ran while three other runs (the first `correct 2 2 1`/`bad-quorum 2 2 1` pass and the probe)
+were running, which explains its lower rate than in section 7 (3,700/s against 8,400/s alone); its progress line is
+therefore not comparable with section 7's. The first pass of `correct 2 2 1` and `bad-quorum 2 2 1` printed only
+the exit lines (the progress lines were filtered); both were rerun together, with full logs: those reruns are the
+rows above. Refusals checked: `correct 3 2 128` and `bad-quorum 1 1 1` exit with the usage panic.
+
+Two writers told the same position, `bad-quorum 2 2 1`: **yes**. The scratch probe (main.rs of 9.1 with the writer
+additionally recording each `Committed(k)` in a per-execution global and exiting on a second writer with the same
+k) stopped after 0.71 s: `PROBE: duplicate position 1: w1 and [(0, 1)]` (w0 and w1 both received `Committed(1)`).
+The same probe on `correct 2 2 1` ran to the 600 s limit without that event (`1000000` executions explored; not
+exhaustive).
+
+### 9.3 A harness assert reached under `bad-quorum 2 2 1` (resolved by D23)
+
+`SendAppendRequests` asserts `end >= begin` (src/main.rs:833). Under `bad-quorum` (quorum 1 of 2), both proposers can
+be elected in the same term; a safekeeper whose vote-reply history already contains that term from the other
+proposer, with WAL past this proposer's term start, gets `start_streaming_at` = its flush_lsn (wp.c:1494-1497,
+the last common term is the own term) which exceeds `availableLsn`. This reading of the schedule is a hand
+derivation, not traced. wp.c's `Assert(sk->startStreamingAt <= wp->availableLsn)` (1507) and
+`Assert(endLsn >= beginLsn)` (1590) are compiled out in production; there SendAppendRequests clamps `endLsn` to
+`availableLsn` below `beginLsn`, sends a header with begin_lsn > end_lsn and a negative `req_len` added to
+`outbuf.len` (wp.c:1700, 1710, 1738, 1740), so production writes a truncated header (37 of 45 bytes for
+req_len = -8); production does not define this fault path. The coordinator decided (D23) to abstract it: the harness
+sends the complete header without WAL, which the acceptor's `parse` refuses (`begin_lsn > end_lsn`, sk.rs:581-585)
+-> `Reset` (D7). This is a deliberate abstraction, not production behaviour, and no conclusion about production on
+this path is drawn from it. The writer-visible fault of `bad-quorum` (two writers told `Committed(1)`, 9.2) occurs
+before this path.
+
+### 9.4 After D23
+
+src/main.rs md5 3c18d1dfc8a0045dc810366b78d22b3f; rebuilt with `--offline`; the eight unit tests pass.
+`timeout 600 $B count impl --model fifo -- bad-quorum 2 2 1`: no panic; it reached the 600 s limit (exit 124,
+wall 600.00 s, peak RSS 6312 KB), last progress line `Executions attempted so far: 4000000 total 0 finished
+normally 4000000 blocked (7874.02/sec).` (it passed the 2,000,000-execution point where the previous binary
+panicked). The duplicate `Committed(1)` to w0 and w1 was found by the probe of 9.2 (before D23; D23 changes only
+the path after which the probe had already stopped).
+
+### 9.5 Review round 2 (review/REVIEW-astra-rust-r2.md)
+
+Finding 1 (MUST-FIX, wording): D23, the code comment at src/main.rs `SendAppendRequests` and 9.3 now state that
+D23 is the coordinator's deliberate abstraction of a fault path production does not define (production writes a
+truncated header, wp.c:1700, 1710, 1738, 1740), reached only under `bad-quorum`, and that no conclusion about
+production on that path is drawn; the writer-visible fault occurs before it (finding 7). No code behaviour changed:
+only the comment. src/main.rs md5 49a3c434c01c4f4182c0017ebecabd5b; `cargo build --offline --release -j 2` compiles.

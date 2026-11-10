@@ -59,6 +59,8 @@ fn writer(i: u8, p: u8, r: u8, prop: ThreadId) {
 const START_LSN: u64 = 0x0100_0000;
 /// The tag of every message to a proposer except its writer's (which is untagged).
 const TAG_P: u32 = 1;
+/// The tag of `init`'s Setup to a safekeeper, which the safekeeper receives first (review round 1, finding 8).
+const TAG_SETUP: u32 = 2;
 /// Tenant and timeline ids, both [1u8; 16] (INTERFACE section 6), as the hex cstring
 /// walproposer.c sends (neon.tenant_id / neon.timeline_id).
 const ID_HEX: &str = "01010101010101010101010101010101";
@@ -239,20 +241,20 @@ fn poll_once<F: Future>(f: F) -> F::Output {
 // ---------------------------------------------------------- safekeeper ----
 
 fn safekeeper_thread(j: usize) {
-    // A proposer's message may overtake init's Setup (different senders): buffer it.
-    let mut early: VecDeque<SkIn> = VecDeque::new();
-    let setup = loop {
-        match recv_msg_block::<SkIn>() {
-            SkIn::Setup(s) => break s,
-            m => early.push_back(m),
-        }
+    // The Setup first, by a dedicated tagged receive: a proposer's message that arrives earlier
+    // stays in the mailbox until then (review round 1; NOTES.md D21). The timeline exists before
+    // any proposer message is processed, as in the source (the timeline is created on the
+    // safekeepers before the compute connects).
+    let setup = match recv_tagged_msg_block::<_, SkIn>(|_, tag| tag == Some(TAG_SETUP)) {
+        SkIn::Setup(s) => s,
+        m => panic!("harness fault: s{j} got {m:?} as its Setup"),
     };
     let ctrl = InMemoryState { persisted_state: initial_state() };
     let mut sk = SafeKeeper::new(TimelineState::new(ctrl), MemWalStore::new(), NodeId(j as u64))
         .expect("SafeKeeper::new");
     let mut closed = vec![false; setup.props.len()];
     loop {
-        let m = early.pop_front().unwrap_or_else(recv_msg_block::<SkIn>);
+        let m = recv_tagged_msg_block::<_, SkIn>(|_, tag| tag.is_none());
         match m {
             SkIn::Pa { from, bytes } => {
                 if closed[from] {
@@ -828,8 +830,18 @@ impl WalProposer {
             sent_anything = true;
             let begin = self.sk[j].streaming_at;
             let end = (begin + MAX_SEND_SIZE as u64).min(self.available_lsn);
-            assert!(begin >= START_LSN && end >= begin, "harness fault: streaming range");
-            let data = self.wal[(begin - START_LSN) as usize..(end - START_LSN) as usize].to_vec();
+            assert!(begin >= START_LSN, "harness fault: streaming range");
+            // NOTES.md D23: a start beyond availableLsn (two proposers elected in one term, reached only
+            // under bad-quorum) gives end < begin. This is the coordinator's deliberate abstraction of a
+            // fault path production does not define: with its Asserts (1507, 1590) compiled out, wp.c
+            // (1700, 1710, 1738, 1740) writes a truncated header (req_len < 0), not a complete header.
+            // Here the complete header goes without WAL, the acceptor's parse refuses it
+            // (sk.rs:581-585) -> Reset. No conclusion about production on this path is drawn from it.
+            let data = if end >= begin {
+                self.wal[(begin - START_LSN) as usize..(end - START_LSN) as usize].to_vec()
+            } else {
+                Vec::new()
+            };
             let msg = Self::ser_append(self.prop_term, begin, end, self.commit_lsn, self.truncate_lsn, &data);
             self.send_to_sk(j, msg, true);
             self.sk[j].streaming_at = end;
@@ -898,7 +910,7 @@ impl WalProposer {
                 break;
             }
             self.pending.pop_front();
-            let k = ((end - START_LSN) / 8) as u8;
+            let k = u8::try_from((end - START_LSN) / 8).expect("harness fault: position above 255");
             send_msg(self.writer, WRep::Committed(k));
         }
     }
@@ -1027,7 +1039,7 @@ fn harness(variant: Variant, n: usize, p: usize, r: u8) -> Prog {
         // main performs no message-passing event: an invisible `init` does.
         named("init", move || {
             for s in &sks {
-                send_msg(*s, SkIn::Setup(setup.clone()));
+                send_tagged_msg(*s, TAG_SETUP, SkIn::Setup(setup.clone()));
             }
             for q in &props {
                 send_tagged_msg(*q, TAG_P, PIn::Setup(setup.clone()));
@@ -1062,7 +1074,10 @@ fn parse(a: &[String]) -> Args {
     };
     let num = |i: usize| -> usize { a[i].parse().unwrap_or_else(|_| usage(a)) };
     let (n, p, r) = (num(1), num(2), num(3));
-    if n < 1 || p < 1 || r < 1 || p > 255 || r > 255 {
+    // Values and positions are u8 (INTERFACE 4): every value 1..p*r and every committed position
+    // must fit, so p*r <= 255 (review round 1, finding 1). bad-quorum's quorum n/2 must not be 0
+    // (finding 5: n = 1 would index past the responses in GetAcknowledgedByQuorumWALPosition).
+    if n < 1 || p < 1 || r < 1 || p.checked_mul(r).is_none_or(|x| x > 255) || (variant == Variant::BadQuorum && n / 2 == 0) {
         usage(a);
     }
     Args { variant, n, p, r: r as u8 }
