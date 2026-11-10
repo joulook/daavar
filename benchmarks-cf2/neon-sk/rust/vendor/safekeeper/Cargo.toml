@@ -1,0 +1,24 @@
+[package]
+name = "safekeeper"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
+anyhow = "1.0"
+byteorder = "1.4"
+bytes = "1.9"
+futures = "0.3"
+hex = { version = "0.4", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+tracing = "0.1"
+postgres_ffi = { path = "../postgres_ffi" }
+postgres_versioninfo = { path = "../postgres_versioninfo" }
+pq_proto = { path = "../pq_proto" }
+safekeeper_api = { path = "../safekeeper_api" }
+storage_broker = { path = "../storage_broker" }
+utils = { path = "../utils" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }

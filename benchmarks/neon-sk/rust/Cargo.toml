@@ -1,0 +1,11 @@
+[package]
+name = "bench_neon_sk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+traceforge = { path = "../../../traceforge/traceforge" }
+# Neon's safekeeper acceptor (neondatabase/neon fa50421), vendored: see NOTES.md.
+safekeeper = { path = "vendor/safekeeper" }
+
+[workspace]

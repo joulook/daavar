@@ -1,0 +1,12 @@
+[package]
+name = "safekeeper_api"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+postgres_versioninfo = { path = "../postgres_versioninfo" }
+pq_proto = { path = "../pq_proto" }
+utils = { path = "../utils" }
