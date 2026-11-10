@@ -64,7 +64,7 @@ def cell_M(r):
     if not decided(r): return ""
     v = num(r.get("peak MB")); return "" if v is None else f"{v:.0f}"
 def pref(r): return (bool(re.search(r"\.p(?=\.|$)", r.get("run id", ""))), r.get("contended") != "yes", r.get("started") or "")
-CUR = ("9a0629e", "367cdc6")
+CUR = ("9a0629e", "367cdc6", "0722274")
 def fresh(r, offline=False):   # paper-tables.py: a cell from a run at the current pins; blue on the reserved machine (.p), orange when contended, else red
     if r is None: return None
     if (r.get("pin") or "")[:7] not in CUR: return None

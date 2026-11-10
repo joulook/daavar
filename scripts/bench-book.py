@@ -9,7 +9,7 @@ leave out (skipped, tool errors) come from brain-data. usage: bench-book.py <bra
 [--build]   groups: synthetic | application | realsw | agentic"""
 import csv, glob, os, re, sys, collections, subprocess, datetime
 BD, DV, T, GROUP = sys.argv[1:5]; BUILD = "--build" in sys.argv
-TF_PIN = "367cdc6"; TF_EQUIV = {"9a0629e", "367cdc6"}; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"   # 9a0629e is equivalent to 367cdc6 for every row kind but the join
+TF_PIN = "367cdc6"; TF_EQUIV = {"9a0629e", "367cdc6", "0722274"}; JMC_PIN = "3c43b2d2"; JOIN_PIN = "367cdc6"   # 9a0629e is equivalent to 367cdc6 for every row kind but the join
 GROUPS = {"synthetic": [("naive", "s1-naive"), ("share", "s2-share"), ("commit", "s3-commit"), ("chain", "s4-chain"), ("reset", "s5-reset"), ("width", "s6-width")],
           "application": [("2pc", "a1-commit"), ("2pc-ab", "two-pc-abstain-kragl"), ("2pc-ds", "two-pc-disel"), ("2pc-lb", "two-pc-lbinria"), ("2pc-le", "election"), ("2pc-tr", "two-pc-trillium"),
                           ("bcast", "broadcast-consensus-civl"), ("chan", "reliable-channel-aneris"), ("ewd998", "ewd998-termination"), ("lb", "a4-balancer"), ("lock", "a3-lock"), ("pbkv", "a2-store"),

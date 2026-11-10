@@ -264,7 +264,7 @@ if not FULL and KEEP is None:
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
             # owner 2026-11-03 21:10: a cell from the reserved machine (suffix .p, brain04, at most four rows at a time) is blue; an earlier campaign cell stays, in red, until its .p rerun lands
-            if (r.get("pin") or "")[:7] not in ("9a0629e", "367cdc6"): return None   # 367cdc6 is equivalent to 9a0629e except for joins (which must be merge joins)
+            if (r.get("pin") or "")[:7] not in ("9a0629e", "367cdc6", "0722274"): return None   # 367cdc6 is equivalent to 9a0629e except for joins (which must be merge joins)
             if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
             if limit(r) and num(r.get("timeout s")) != 172800: return None
             r = dict(r); r["colour"] = "blue" if re.search(r"\.p(?=\.|$)", r.get("run id", "")) else ("orange" if r.get("contended") == "yes" else "red")   # orange (owner 2026-11-04 12:40): the run shared its NUMA node with another run; its time is not trusted
@@ -283,7 +283,7 @@ if not FULL and KEEP is None:
                     # the owner's eligibility rules hold on this path too (data audit 3, 2026-11-05): a limit marker only at the 48 h tier, an offline cell only with current exports and a merge join
                     if limit(r) and num(r.get("timeout s")) != 172800: return None
                     if offline and not (r.get("exports current") == "yes" and r.get("join mode") == "merge"): return None
-                    r = dict(r); cur = (r.get("pin") or "")[:7] in ("9a0629e", "367cdc6")
+                    r = dict(r); cur = (r.get("pin") or "")[:7] in ("9a0629e", "367cdc6", "0722274")
                     r["colour"] = "orange" if (r.get("contended") == "yes" or not cur) else "red"; return r
                 if c2 is None and older(m.get("stateless")) is not None: c2 = older(m.get("stateless")); fb_note.append("nested:older")
                 if c1 is None and older(m.get("stateful")) is not None: c1 = older(m.get("stateful")); fb_note.append("online:older")
