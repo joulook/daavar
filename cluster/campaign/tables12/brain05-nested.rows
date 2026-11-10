@@ -1,0 +1,3 @@
+# tables12 campaign, 2026-11-10 13:50: the two Nested marks of PLAN.md Q4 whose rows were never started (naive 10 was pending in brain05's stopped paper2 queue; ewd998-nb 4 was planned as a mark). brain05 NUMA 4 and 6 are idle; 48 h tier; ids .p.r3 (blue).
+C2.s1-naive.impl_naive_10_bag.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh s1-naive conf --engine stateless --threads 16 --model bag -- naive 10
+C2.ewd998-termination.impl_4_bag_no-black-on-receive.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh ewd998-termination conf --engine stateless --threads 16 --model bag -- 4 no-black-on-receive

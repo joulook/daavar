@@ -1,0 +1,3 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C2.s1-naive.impl_naive_10_bag.t16.p.r3	A	s1-naive	10	bag	naive	stateless-parallel	16		tables12 (owner orders 2026-11-10)	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	s1-naive	s1-naive.spec_naive_10_bag	s1-naive.impl_naive_10_bag
+C2.ewd998-termination.impl_4_bag_no-black-on-receive.t16.p.r3	A	ewd998-termination	4	bag	no-black-on-receive	stateless-parallel	16		tables12 (owner orders 2026-11-10)	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	ewd998-termination	ewd998-termination.spec_4_bag	ewd998-termination.impl_4_bag_no-black-on-receive
