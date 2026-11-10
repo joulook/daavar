@@ -283,7 +283,7 @@ if not FULL and KEEP is None:
             return any(kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(s) and all(a <= b for a, b in zip(sz(kk[4]), s)) and sz(kk[4]) != s and timed_out(inst[kk].get(eng)) for kk in inst)
         _kl = os.path.join(DV, "cluster", "campaign", "inputs", "known-limits.tsv")
         KLIM = {tuple(l.rstrip("\n").split("\t")[:5]) for l in open(_kl) if l.strip() and not l.startswith("#")} if os.path.exists(_kl) else set()
-        KNOWN = "\\faClock$^{\\ast}$"   # not run to the end: the limit is known from a smaller size or, for Nested, from Online at the same size
+        KNOWN = "\\faClock{}"   # owner 2026-11-10 20:00: a known limit prints as the plain clock (no asterisk, no caption note); the braces only keep it apart in the CSV ("t/o (known)")   # not run to the end: the limit is known from a smaller size or, for Nested, from Online at the same size
         def paint(r, cell):
             cell = cell.replace("$_{\\mathrm{48h}}$", "")   # the curated tables show \faClock without its tier (owner 2026-11-08): the setup states the 48 h limit
             return f"\\textcolor{{{r['colour']}}}{{{cell}}}" if r is not None and cell != "" else cell
@@ -360,10 +360,10 @@ if not FULL and KEEP is None:
                 for ix, eng, own in ((iT2, "stateless", x2), (iT1, "stateful", x1), (iT3, "offline", x3)):
                     if xcells[ix] == "" and not decided(own) and known_limit(prog, var, model, ex[3], eng, mx.get("stateful")): xcells[ix] = KNOWN; xown[ix] = None
                 if decided(x1) and decided(x3): BRK.append((tname, nm_full, ex[3], x1, x3))   # the dagger row's pair belongs to Table 4 too (its colours are its own)
-                grp.append((sz(ex[3]), f" & {ex[3]}$^\\ddagger$ & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\",   # size and counts in black (owner 2026-11-10)
+                grp.append((sz(ex[3]), f" & {ex[3]} & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\",   # size and counts in black (owner 2026-11-10)
                             [prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace(KNOWN, "t/o (known)").replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size]))
         flush()
-        cap = what + " \\faClock$^{\\ast}$: the run was not made or has not ended, and the limit is known from a measured limit at a smaller size of the instance, for \\nested from \\online at the same size, or from the number of reference graphs \\nested must explore."   # owner 2026-11-10: a known limit is shown, labelled as not measured (R10)
+        cap = what   # owner 2026-11-10 20:00: no caption note for the known limits   # owner 2026-11-10: a known limit is shown, labelled as not measured (R10)
         base = 5 if viol else 4
         nN, nO = (5, 3) if viol else (4, 2)
         hdr1 = f"instance & size & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{{nN}}}{{c}}{{\\nested}} & \\multicolumn{{{nO}}}{{c}}{{\\online}} & \\multicolumn{{2}}{{c}}{{\\offline}} \\\\"
