@@ -1,0 +1,3 @@
+# Measured Offline limits where no join exists because an export reached its limit (coordinator 2026-11-10 19:40; records in brain-data). program, variant, model, size, verdict, export run id (the record), candidate graphs from the finished implementation export (or empty)
+lb	hash-a4a	fifo	4,4,4	oom	C3E.a4-balancer.spec_hash_a4a_4_4_4_fifo.t16.p.r3	63063000
+lb	rr-a4a	fifo	4,4,4	oom	C3E.a4-balancer.spec_hash_a4a_4_4_4_fifo.t16.p.r3	63063000

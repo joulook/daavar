@@ -1,18 +1,20 @@
+# owner orders 2026-11-10 01:30 (plan/eval2/tables12/OWNER-ORDERS-2026-11-10.md) applied by the coordinator 19:30: dropped sizes replaced by the kept ones
 # Table 3 of the paper (owner, 2026-11-03): the synthetic violating pairs, in order. program<TAB>variant<TAB>model<TAB>size
 naive	naive	bag	10
 reset	reset	bag	20,11
 2pc	early-abort	fifo	4,2
-2pc	early-abort	fifo	5,3
+2pc	early-abort	fifo	4,3
 2pc-ab	off-by-one	bag	8
 2pc-ab	off-by-one	bag	9
 2pc-ds	skip-ack-loop	bag	4
 2pc-lb	counting-bug	bag	6
 2pc-lb	counting-bug	bag	7
-2pc-le	ring-split	fifo	11
+2pc-le	ring-split	fifo	10
+2pc-tr	ignore-abort-vote	bag	7
 2pc-tr	ignore-abort-vote	bag	8
-bcast	decide-early	bag	5
+bcast	decide-early	bag	4
 chan	no-seqno	bag	7
-ewd998	no-black-on-receive	bag	5
+ewd998	no-black-on-receive	bag	4
 lb	rr-a4a	fifo	3,3,3
 lb	rr-a4a	fifo	4,4,4
 lock	wrong-round	fifo	3,4

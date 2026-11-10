@@ -259,7 +259,13 @@ if not FULL and KEEP is None:
         TF_ = os.path.join(DV, "cluster", "campaign", "inputs", tname + ".tsv")
         if not os.path.exists(TF_): continue
         want = [l.rstrip("\n").split("\t") for l in open(TF_) if l.strip() and not l.startswith("#")]
-        body = []; csvrows = []; prev = None; EXTRA = []; DONE_EXTRA = set()
+        body = []; csvrows = []; prev = None; EXTRA = []; DONE_EXTRA = set(); grp = []; grp_name = [""]
+        def flush():   # owner 2026-11-10 19:15: the rows of an instance sorted by size, the name on the first
+            if not grp: return
+            if body: body.append("\\midrule")
+            for i, (_, tail, crow) in enumerate(sorted(grp, key=lambda g: g[0])):
+                body.append((grp_name[0] if i == 0 else "") + tail); csvrows.append(crow)
+            grp.clear()
         def fresh(r, offline=False):   # the owner's rule for the curated tables (2026-11-03 18:30): a cell only from runs at the current pins;
             # a limit marker only from a run at the 48 h tier (an older tier's clock is superseded by the queued rerun)
             if r is None: return None
@@ -269,12 +275,22 @@ if not FULL and KEEP is None:
             if limit(r) and num(r.get("timeout s")) != 172800: return None
             r = dict(r); r["colour"] = "blue" if re.search(r"\.p(?=\.|$)", r.get("run id", "")) else ("orange" if r.get("contended") == "yes" else "red")   # orange (owner 2026-11-04 12:40): the run shared its NUMA node with another run; its time is not trusted
             return r
+        def timed_out(r): return r is not None and r.get("verdict") == "t/o" and num(r.get("timeout s")) == 172800
+        def known_limit(prog, var, model, size, eng, online_row=None):   # owner 2026-11-10 (OWNER-ORDERS-2026-11-10.md; 19:15 "when we know that the timeout is going to happen we should see it")
+            if eng == "stateless" and timed_out(online_row): return True   # Nested is never faster than Online on the same size
+            s = sz(size)
+            return any(kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(s) and all(a <= b for a, b in zip(sz(kk[4]), s)) and sz(kk[4]) != s and timed_out(inst[kk].get(eng)) for kk in inst)
+        KNOWN = "\\faClock$^{\\ast}$"   # not run to the end: the limit is known from a smaller size or, for Nested, from Online at the same size
         def paint(r, cell):
             cell = cell.replace("$_{\\mathrm{48h}}$", "")   # the curated tables show \faClock without its tier (owner 2026-11-08): the setup states the 48 h limit
             return f"\\textcolor{{{r['colour']}}}{{{cell}}}" if r is not None and cell != "" else cell
         for prog, var, model, size in want:
-            k = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
-            m = inst.get(k, {}) if k else {}
+            ks = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size and kk[2] in ("", prog)]   # a join may name the program's own specification (share: "share") where the other engines leave it empty (2026-11-10)
+            k = ks[0] if ks else next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == size), None)
+            m = dict(inst.get(k, {})) if k else {}
+            for kk in ks[1:]:
+                for e, r in inst[kk].items():
+                    if e not in m or pref(r) > pref(m[e]): m[e] = r
             c2, c1, c3 = fresh(m.get("stateless")), fresh(m.get("stateful")), fresh(m.get("offline"), True)
             fb_size = ""; fb_note = []
             if FALLBACK:
@@ -297,41 +313,54 @@ if not FULL and KEEP is None:
                     shown = sz(size)
                     import math
                     def same_shape(a, b): return all((a[i] == a[j]) == (b[i] == b[j]) for i in range(len(a)) for j in range(i + 1, len(a)))   # owner 2026-11-08: no 20,10 under 20,20; a dagger size keeps the equalities of the listed size
-                    cands = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and len(sz(kk[4])) == len(shown) and all(a <= b for a, b in zip(sz(kk[4]), shown)) and sz(kk[4]) != shown and same_shape(sz(kk[4]), shown)
+                    _dd = os.path.join(DV, "cluster", "campaign", "inputs", "dagger-drop.tsv")   # owner's orders 2026-11-10: a dropped size never returns as a dagger row
+                    DDROP = {tuple(l.rstrip("\n").split("\t")) for l in open(_dd) if l.strip() and not l.startswith("#")} if os.path.exists(_dd) else set()
+                    cands = [kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and (prog, var, model, kk[4]) not in DDROP and (prog, var, model, "*") not in DDROP and len(sz(kk[4])) == len(shown) and all(a <= b for a, b in zip(sz(kk[4]), shown)) and sz(kk[4]) != shown and same_shape(sz(kk[4]), shown)
                              and any(decided(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))
                              and not any(limit(inst[kk].get(e)) for e in ("stateful", "offline", "stateless"))]   # completed = every engine that ran at that size finished, none hit a limit
                     if cands:
                         import math
                         kk = max(cands, key=lambda x: (math.prod(sz(x[4])), sz(x[4])))   # every parameter at most the listed one, the largest by their product; when it is already a row of the table, the information is there: no extra row
                         if kk[4] not in listed_sizes: EXTRA.append((prog, var, model, kk[4], "completed"))
+            _ol = os.path.join(DV, "cluster", "campaign", "inputs", "offline-limits.tsv")
+            OLIM = {tuple(l.rstrip("\n").split("\t")[:4]): l.rstrip("\n").split("\t")[4:] for l in open(_ol) if l.strip() and not l.startswith("#")} if os.path.exists(_ol) else {}
+            if c3 is None and (prog, var, model, size) in OLIM:   # an export reached its limit, so no join exists: the Offline cell shows the export's limit (a measurement; the record is named in the file)
+                _v, _rid, _gi = (OLIM[(prog, var, model, size)] + ["", "", ""])[:3]
+                c3 = {"verdict": _v, "timeout s": "172800", "run id": _rid, "impl graphs": _gi, "spec graphs": "", "colour": "blue" if re.search(r"\.p(?=\.|$)", _rid) else "red", "mem GB": ""}
             dec = [r for r in (c1, c3, c2) if decided(r)] + ([c3] if exported(c3) and not decided(c3) else [])
-            gi_r = next((r for r in dec if r["impl graphs"]), None); gi = gi_r["impl graphs"] if gi_r else ""
+            gi_r = next((r for r in dec if r["impl graphs"]), None) or (c3 if c3 is not None and c3.get("impl graphs") and limit(c3) else None); gi = gi_r["impl graphs"] if gi_r else ""
             gs_r = next((r for r in (c1, c3) if (decided(r) or exported(r)) and r["spec graphs"]), None); gs = gs_r["spec graphs"] if gs_r else ""
             gx_r = next((r for r in dec if r.get("uncovered") not in ("", None)), None) if viol else None; gx = gx_r.get("uncovered", "") if gx_r else ("" if viol else None)
             CURATED_NAMES = {("lb", "hash-a4a"): "lb-hash", ("2pc", "early-abort"): "2pc-ea", ("2pc-ab", "off-by-one"): "2pc-ab-off1", ("2pc-ds", "skip-ack-loop"): "2pc-ds-sal", ("2pc-lb", "counting-bug"): "2pc-lb-cb", ("2pc-le", "ring-conf"): "2pc-le", ("2pc-le", "ring-split"): "2pc-le-split", ("2pc-tr", "ignore-abort-vote"): "2pc-tr-iav", ("bcast", "decide-early"): "bcast-de", ("chan", "no-seqno"): "chan-ns", ("ewd998", "no-black-on-receive"): "ewd998-nb", ("lb", "rr-a4b"): "lb", ("lb", "rr-a4a"): "lb-strict", ("lock", "fifo"): "lock", ("lock", "wrong-round"): "lock-wr", ("pbkv", "pb"): "pbkv", ("pbkv", "early-ack"): "pbkv-ea", ("replog-co", "early-reply"): "replog-co-er", ("ring-el", "no-compare"): "ring-el-nc", ("zab", "issue 1"): "zab-issue1"}   # the owner's names for the curated tables (2026-11-03)
             nm = f"\\textsf{{{esc(CURATED_NAMES[(prog, var)])}}}" if (prog, var) in CURATED_NAMES else f"\\textsf{{{esc(prog)}}}" + (f"$_{{\\mathit{{{esc(var)}}}}}$" if var not in ("", "impl", "correct", prog) else "")   # a variant named as the program is the program (owner: "only call it reset")
             nm_full = nm; nm = nm if (prog, var) != prev else ""; prev = (prog, var)
             if decided(c1) and decided(c3): BRK.append((tname, nm_full, size, c1, c3))   # Table 4 (owner 2026-11-08): the time components of the pairs both algorithms finished
-            if nm and body: body.append("\\midrule")
+            if nm: flush(); grp_name[0] = nm
             expl = esc(c2.get("spec graphs explored", "")) if c2 is not None and decided(c2) else ""   # the stateless engine's own counts: sweeps kept in the witness cache, specification graphs explored (repeats counted)
             sweeps = esc(c2.get("sweeps", "")) if c2 is not None and decided(c2) else ""
             cT = cell_Tp if viol else cell_T
             cells = [sweeps, expl] + ([cell_T1(c2, False)] if viol else []) + [cT(c2), cell_M(c2)] + ([cell_T1(c1, True)] if viol else []) + [cT(c1), cell_M(c1), cT(c3), cell_M_off(c3)]
-            owners = [c2, c2] + ([c2] if viol else []) + [c2, c2] + ([c1] if viol else []) + [c1, c1, c3, c3]
+            owners = [None, None] + ([c2] if viol else []) + [c2, c2] + ([c1] if viol else []) + [c1, c1, c3, c3]   # counts in black (owner 2026-11-10: graph counts are fixed, not timings)
+            iT2, iT1, iT3 = (2 + (1 if viol else 0)), (4 + (2 if viol else 0)), (6 + (2 if viol else 0))   # the T cells of Nested, Online, Offline
+            for ix, eng, own in ((iT2, "stateless", c2), (iT1, "stateful", c1), (iT3, "offline", c3)):
+                if cells[ix] == "" and not decided(own) and known_limit(prog, var, model, size, eng, m.get("stateful")): cells[ix] = KNOWN; owners[ix] = None
             size_cell = size
-            body.append(f"{nm} & {size_cell} & {paint(gi_r, gi)} & {paint(gs_r, gs)}" + (f" & {paint(gx_r, gx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\")
-            csvrows.append([prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", c2), ("online", c1), ("offline", c3)) if r is not None)] + ([";".join(fb_note)] if FALLBACK else []))
+            grp.append((sz(size), f" & {size_cell} & {gi} & {gs}" + (f" & {gx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(owners, cells)) + " \\\\",
+                        [prog, var, model, size, gi, gs] + ([gx] if viol else []) + [c.replace(KNOWN, "t/o (known)").replace("\\faClock", "t/o") for c in cells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", c2), ("online", c1), ("offline", c3)) if r is not None)] + ([";".join(fb_note)] if FALLBACK else [])))
             for ex in [e for e in EXTRA if e[:3] == (prog, var, model) and e not in DONE_EXTRA]:
                 DONE_EXTRA.add(ex); kx = next((kk for kk in inst if kk[0] == prog and kk[1] == var and kk[3] == model and kk[4] == ex[3]), None); mx = inst.get(kx, {}) if kx else {}
                 x2, x1, x3 = best(mx.get("stateless")), best(mx.get("stateful")), best(mx.get("offline"), True)
                 dx = [r for r in (x1, x3, x2) if decided(r)]; gxi_r = next((r for r in dx if r["impl graphs"]), None); gxi = gxi_r["impl graphs"] if gxi_r else ""; gxs_r = next((r for r in (x1, x3) if decided(r) and r["spec graphs"]), None); gxs = gxs_r["spec graphs"] if gxs_r else ""
                 gxx_r = next((r for r in dx if r.get("uncovered") not in ("", None)), None) if viol else None; gxx = gxx_r.get("uncovered", "") if gxx_r else ("" if viol else None)   # the counts of a dagger row carry the colour of the run that supplies them, as in the other rows (reviews r9)
                 xcells = [esc(x2.get("sweeps", "")) if x2 is not None and decided(x2) else "", esc(x2.get("spec graphs explored", "")) if x2 is not None and decided(x2) else ""] + ([cell_T1(x2, False)] if viol else []) + [(cell_Tp if viol else cell_T)(x2), cell_M(x2)] + ([cell_T1(x1, True)] if viol else []) + [(cell_Tp if viol else cell_T)(x1), cell_M(x1), (cell_Tp if viol else cell_T)(x3), cell_M_off(x3)]
-                xown = [x2, x2] + ([x2] if viol else []) + [x2, x2] + ([x1] if viol else []) + [x1, x1, x3, x3]
+                xown = [None, None] + ([x2] if viol else []) + [x2, x2] + ([x1] if viol else []) + [x1, x1, x3, x3]
+                for ix, eng, own in ((iT2, "stateless", x2), (iT1, "stateful", x1), (iT3, "offline", x3)):
+                    if xcells[ix] == "" and not decided(own) and known_limit(prog, var, model, ex[3], eng, mx.get("stateful")): xcells[ix] = KNOWN; xown[ix] = None
                 if decided(x1) and decided(x3): BRK.append((tname, nm_full, ex[3], x1, x3))   # the dagger row's pair belongs to Table 4 too (its colours are its own)
-                body.append(f" & \\textcolor{{orange}}{{{ex[3]}$^\\ddagger$}} & {paint(gxi_r, gxi)} & {paint(gxs_r, gxs)}" + (f" & {paint(gxx_r, gxx)}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\")
-                csvrows.append([prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size])
-        cap = what   # the curated caption carries the column definitions (owner, 2026-11-05: short captions)
+                grp.append((sz(ex[3]), f" & {ex[3]}$^\\ddagger$ & {gxi} & {gxs}" + (f" & {gxx}" if viol else "") + " & " + " & ".join(paint(o, c) for o, c in zip(xown, xcells)) + " \\\\",   # size and counts in black (owner 2026-11-10)
+                            [prog, var, model, ex[3], gxi, gxs] + ([gxx] if viol else []) + [c.replace(KNOWN, "t/o (known)").replace("\\faClock", "t/o") for c in xcells] + [",".join(f"{e}={r['colour']}" for e, r in (("nested", x2), ("online", x1), ("offline", x3)) if r is not None), "completed-size-for:" + size]))
+        flush()
+        cap = what + " \\faClock$^{\\ast}$: the limit is known from a smaller size of the instance or, for \\nested, from \\online at the same size, and the run was not made or has not ended."   # owner 2026-11-10: a known limit is shown, labelled as not measured (R10)
         base = 5 if viol else 4
         nN, nO = (5, 3) if viol else (4, 2)
         hdr1 = f"instance & size & $G_{{\\mathit{{cand}}}}$ & $G_{{\\mathit{{ref}}}}${' & $G_x$' if viol else ''} & \\multicolumn{{{nN}}}{{c}}{{\\nested}} & \\multicolumn{{{nO}}}{{c}}{{\\online}} & \\multicolumn{{2}}{{c}}{{\\offline}} \\\\"
