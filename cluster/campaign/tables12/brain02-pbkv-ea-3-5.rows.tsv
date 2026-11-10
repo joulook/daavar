@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C2.a2-store.impl_early-ack_3_5_fifo.t16.p.r3	A	a2-store	3,5	fifo	early-ack	stateless-parallel	16	violation	paper2	c48h	conf-traceforge	traceforge	traceforge	rust	rust	in-process	full	a2-store	a2-store.spec_pb_3_5_fifo	a2-store.impl_early-ack_3_5_fifo
+C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3	A	a2-store	3,5	fifo	pb	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a2-store	a2-store.spec_pb_3_5_fifo	
+C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3	A	a2-store	3,5	fifo	early-ack	export	16		paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a2-store		a2-store.impl_early-ack_3_5_fifo
+C3J.a2-store.impl_early-ack_3_5_fifo.vs-pb.p.r3.m	A	a2-store	3,5	fifo	early-ack	join	16	violation	paper2	c48h	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	a2-store	a2-store.spec_pb_3_5_fifo	a2-store.impl_early-ack_3_5_fifo

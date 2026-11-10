@@ -1,0 +1,5 @@
+# tables12 campaign: the pbkv-ea 3,5 rows moved from brain01's tables12-pbkv2 queue (slots=1, sequential behind the running C1 3,5) to brain02's five idle NUMA nodes (coordinator 2026-11-10 15:30, owner's 08:30 authorization: patch instances to any brain; never idle a node). C1.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 keeps running on brain01.
+C2.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store conf --engine stateless --threads 16 --model fifo -- early-ack 3 5
+C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export spec --out export.jsonl --threads 16 --model fifo -- pb 3 5
+C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 250 172800 "$DAAVAR"/scripts/rust-run.sh a2-store export impl --out export.jsonl --threads 16 --model fifo -- early-ack 3 5
+C3J.a2-store.impl_early-ack_3_5_fifo.vs-pb.p.r3.m 250 172800 needok:C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3,C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.a2-store.spec_pb_3_5_fifo.t16.p.r3/export.jsonl "$EVAL_OUT"/C3E.a2-store.impl_early-ack_3_5_fifo.t16.p.r3/export.jsonl
