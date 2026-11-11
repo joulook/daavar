@@ -28,7 +28,7 @@ cores_of() {  # $1: comma list of numa nodes -> the cpus of those nodes from lsc
 width_of() { case "$1" in *-t64*) echo 4;; *-t32*) echo 2;; *) echo 1;; esac; }
 busy_threads() {  # physical cores held by every running row on this node, across all output trees and queues
   local t=0 s nw w
-  for s in /local/mkhoshechin/eval/out*/*/status "$EVAL_OUT"/*/status; do
+  for s in $(for d in /local/mkhoshechin/eval/out*/; do readlink -f "$d"; done | sort -u | sed "s#$#/*/status#"); do   # 2026-11-11: each real output tree once (symlink out-367cdc6)
     [ -f "$s" ] && grep -q '^state=running' "$s" 2>/dev/null || continue
     nw=$(sed -n 's/^numa=//p' "$s" | head -1); w=${nw#*+}; t=$((t + 16*${w:-1}))
   done; echo $t; }
@@ -154,7 +154,7 @@ while [ ${#PENDING[@]} -gt 0 ] || [ -e "$QDIR/keepalive" ]; do
     # dispatcher launched are counted from JMCPID while their row subshell lives; the status scan counts the other queues' rows.
     case "$cmd" in *jmc-run.sh*) _jm=0; declare -A _ours=()
       for _p in "${!JMCPID[@]}"; do if kill -0 "$_p" 2>/dev/null; then _jm=$((_jm+1)); _ours[${JMCPID[$_p]}]=1; else unset "JMCPID[$_p]"; fi; done
-      for _s in /local/mkhoshechin/eval/out*/*/status; do [ -n "${_ours[$(basename "$(dirname "$_s")")]:-}" ] && continue; grep -q '^state=running' "$_s" 2>/dev/null && grep -q 'jmc-run.sh' "$(dirname "$_s")/cmd.txt" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$_s" | head -1)" 2>/dev/null && _jm=$((_jm+1)); done; unset _ours
+      for _s in $(for _d in /local/mkhoshechin/eval/out*/; do readlink -f "$_d"; done | sort -u | sed "s#\$#/*/status#"); do [ -n "${_ours[$(basename "$(dirname "$_s")")]:-}" ] && continue; grep -q '^state=running' "$_s" 2>/dev/null && grep -q 'jmc-run.sh' "$(dirname "$_s")/cmd.txt" 2>/dev/null && kill -0 "$(sed -n 's/^pid=//p' "$_s" | head -1)" 2>/dev/null && _jm=$((_jm+1)); done; unset _ours
       if [ "$_jm" -ge "${JMC_MAX:-$(case "$(hostname -s)" in brain*) echo 3;; *) echo 1;; esac)}" ]; then NEXT+=("$line"); continue; fi;; esac
     if [ "$FOREIGN_LOAD_POLICY" != ignore ] && foreign_load; then echo "$(date -Is) waiting: foreign load $(cut -d' ' -f1 /proc/loadavg) ours=$(busy_threads)" >> "$QDIR/queue.log"; NEXT+=("$line"); continue; fi
     ( eval "run_row '$id' '$mem' '$to' '$first' '$w' $cmd" ) & p=$!

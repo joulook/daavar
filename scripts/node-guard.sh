@@ -30,11 +30,12 @@ tree_pids() {  # a process and all its descendants
   ps -e -o pid=,ppid= | awk -v root="$1" '{pp[$1]=$2} END {for (p in pp) {q=p; while (q && q!=root && (q in pp)) q=pp[q]; if (q==root) print p}}'
 }
 tree_rss_kb() { local p s=0; for p in $(tree_pids "$1"); do s=$((s + $(ps -o rss= -p "$p" 2>/dev/null || echo 0))); done; echo $s; }
+out_trees() { local d; for d in "$EVAL"/out-*/; do readlink -f "$d"; done | sort -u; }   # 2026-11-11: out-367cdc6 is a symlink to out-9a0629e on brain01-05; a row counted twice made "JMC 6 exports" of three and killed the youngest
 running_rows() {  # "<rowdir> <pid>" for every row whose status says running and whose pid is alive
-  local s p; for s in "$EVAL"/out-*/*/status; do
+  local s p t; for t in $(out_trees); do for s in "$t"/*/status; do
     grep -q '^state=running' "$s" 2>/dev/null || continue
     p=$(sed -n 's/^pid=//p' "$s" | head -1); [ -n "$p" ] && kill -0 "$p" 2>/dev/null && echo "$(dirname "$s") $p"
-  done
+  done; done
 }
 kill_row() {  # rowdir pid marker
   local d="$1" p="$2" why="$3" q
