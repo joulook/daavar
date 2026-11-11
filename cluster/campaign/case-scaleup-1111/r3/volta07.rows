@@ -1,0 +1,6 @@
+# case-scaleup-1111 round 3 rows for volta07 (coordinator 2026-11-11; plan/eval2/case-scaleup-1111/r3/, scripts/case-scaleup-1111-r3/r3.py): Offline only, tier cinf, mem 200; groups: B-tikv-M2_0_0_1_fifo; est 13.1 h on volta (planning only, R10); exports before their joins; one JMC export at a time on this host (dispatcher)
+# heap -Xmx16g for JMC exports
+# group B-tikv-M2_0_0_1_fifo [part B; est 13.10 h on volta, peak 14.12 GB]
+C3E.tikv-txn-tla-plus.spec_M2_0_0_1_fifo.t16.cinf.r2 200 8640000 "$DAAVAR"/scripts/rust-run.sh tikv-txn-tla-plus export spec --out export.jsonl --threads 16 --program tikv_txn --size M2,0,0,1 --model fifo -- M2 0 0 1
+XCE.tikv-txn.impl_M2_0_0_1_fifo.w1.cinf.r2 200 8640000 env JAVA_TOOL_OPTIONS=-Xmx16g "$DAAVAR"/scripts/jmc-run.sh cf-tikv-txn 'bench.tikv.TxnKv:impl,M2,0,0,1,fifo' must 0 1 export.jsonl 8640000
+XJ1.tikv-txn.impl_M2_0_0_1_fifo.vs-plus.tfspec-jmcimpl.cinf.m 200 8640000 needok:C3E.tikv-txn-tla-plus.spec_M2_0_0_1_fifo.t16.cinf.r2,XCE.tikv-txn.impl_M2_0_0_1_fifo.w1.cinf.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.tikv-txn-tla-plus.spec_M2_0_0_1_fifo.t16.cinf.r2/export.jsonl "$EVAL_OUT"/XCE.tikv-txn.impl_M2_0_0_1_fifo.w1.cinf.r2/export.jsonl

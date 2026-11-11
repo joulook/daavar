@@ -1,0 +1,6 @@
+# case-scaleup-1111 round 3 rows for pinky18 (coordinator 2026-11-11; plan/eval2/case-scaleup-1111/r3/, scripts/case-scaleup-1111-r3/r3.py): Offline only, tier cinf, mem 80; groups: A-neon-no-prev-term-rule-3; est 0.5 h on pinky (planning only, R10); exports before their joins; one JMC export at a time on this host (dispatcher)
+# heap -Xmx8g for JMC exports
+# group A-neon-no-prev-term-rule-3 [part A; est 0.53 h on pinky, peak 0.03 GB]
+C3E.neon-sk-tla.spec_3_1_1_fifo.t16.cinf.r3 80 8640000 "$DAAVAR"/scripts/rust-run.sh neon-sk-tla export spec --out export.jsonl --threads 16 --program neon_sk --size 3,1,1 --model fifo -- correct 3 1 1
+C3E.neon-sk.impl_no-prev-term-rule_3_1_1_fifo.t16.cinf 80 8640000 "$DAAVAR"/scripts/rust-run.sh neon-sk export impl --out export.jsonl --threads 16 --program neon_sk --size 3,1,1 --model fifo -- no-prev-term-rule 3 1 1
+C3J.neon-sk.impl_no-prev-term-rule_3_1_1_fifo.cinf.m 80 8640000 needok:C3E.neon-sk-tla.spec_3_1_1_fifo.t16.cinf.r3,C3E.neon-sk.impl_no-prev-term-rule_3_1_1_fifo.t16.cinf "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.neon-sk-tla.spec_3_1_1_fifo.t16.cinf.r3/export.jsonl "$EVAL_OUT"/C3E.neon-sk.impl_no-prev-term-rule_3_1_1_fifo.t16.cinf/export.jsonl

@@ -1,0 +1,6 @@
+# case-scaleup-1111 round 3 rows for pinky25 (coordinator 2026-11-11; plan/eval2/case-scaleup-1111/r3/, scripts/case-scaleup-1111-r3/r3.py): Offline only, tier cinf, mem 80; groups: B-tikv-L1_0_0_1_fifo; est 0.0 h on pinky (planning only, R10); exports before their joins; one JMC export at a time on this host (dispatcher)
+# heap -Xmx8g for JMC exports
+# group B-tikv-L1_0_0_1_fifo [part B; est 0.00 h on pinky, peak 0.22 GB]
+C3E.tikv-txn-tla-plus.spec_L1_0_0_1_fifo.t16.cinf.r2 80 8640000 "$DAAVAR"/scripts/rust-run.sh tikv-txn-tla-plus export spec --out export.jsonl --threads 16 --program tikv_txn --size L1,0,0,1 --model fifo -- L1 0 0 1
+XCE.tikv-txn.impl_L1_0_0_1_fifo.w1.cinf.r2 80 8640000 env JAVA_TOOL_OPTIONS=-Xmx8g "$DAAVAR"/scripts/jmc-run.sh cf-tikv-txn 'bench.tikv.TxnKv:impl,L1,0,0,1,fifo' must 0 1 export.jsonl 8640000
+XJ1.tikv-txn.impl_L1_0_0_1_fifo.vs-plus.tfspec-jmcimpl.cinf.m 80 8640000 needok:C3E.tikv-txn-tla-plus.spec_L1_0_0_1_fifo.t16.cinf.r2,XCE.tikv-txn.impl_L1_0_0_1_fifo.w1.cinf.r2 "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.tikv-txn-tla-plus.spec_L1_0_0_1_fifo.t16.cinf.r2/export.jsonl "$EVAL_OUT"/XCE.tikv-txn.impl_L1_0_0_1_fifo.w1.cinf.r2/export.jsonl
