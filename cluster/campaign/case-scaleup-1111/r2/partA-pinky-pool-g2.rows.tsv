@@ -1,0 +1,5 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.cassandra-derived.spec_4_v1nolin_fifo.t16.cinf		cassandra-derived	4						case-scaleup-1111 r2 part A next size	cinf	export					offline-batch	full			
+C3E.cassandra-cas.spec_4_v1nolin_fifo.t16.cinf		cassandra-cas	4						case-scaleup-1111 r2 part A next size	cinf	export					offline-batch	full			
+C3J.cassandra-cas.spec_4_v1nolin_fifo.vs-derived.cinf.m		C3J.cassandra-cas.spec_v1nolin_fifo.vs-derived	4						case-scaleup-1111 r2 part A stale re-proposed	cinf	join					offline-batch	full			
+C3J.cassandra-derived.spec_4_v1nolin_fifo.vs-hand.cinf.m		C3J.cassandra-derived.spec_v1nolin_fifo.vs-hand	4						case-scaleup-1111 r2 part A stale re-proposed	cinf	join					offline-batch	full			
