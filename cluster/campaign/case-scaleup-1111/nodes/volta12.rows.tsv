@@ -1,0 +1,3 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XCE.crdb-pc.impl_2_2_2_1_fifo.w1.cinf	X	crdb-pc	2,2,2,1	fifo	impl	must	1		Phase C/D Offline (owner 2026-11-06 20:00); no --split (split mode refuses the payload) scaleup-1110	cinf	export	jmc	jmc	java	java	offline-batch	full	crdb-pc		
+XC2.crdb-pc.impl_2_2_2_1_fifo.vs-pc-rust-sol.tfimpl-jimpl.cinf.m	X	crdb-pc	2,2,2,1	fifo	impl	join	1	twin	Phase C/D Offline (owner 2026-11-06 20:00) scaleup-1110	cinf	twin-cf	traceforge	jmc	rust	java	offline-batch	full	crdb-pc	crdb-pc-rust-sol.impl_2_2_2_1_fifo	crdb-pc.impl_2_2_2_1_fifo

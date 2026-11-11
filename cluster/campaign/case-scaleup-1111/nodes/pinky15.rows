@@ -1,0 +1,5 @@
+# case-scaleup-1111 rows for pinky15 (coordinator 2026-11-11 01:48; groups from the pools, see ../*-pool.rows line 1-2; tier cinf, no time limit)
+# group 15 [pinky, priority 1; est worst row 0.15 h on pinky, peak 37.3 GB]: XC1.omnipaxos-spec.impl_fifo.vs-paper.jimpl-jimpl 1,2,1->1,4,1
+XCE.omnipaxos-paper.impl_1_4_1_fifo.w16.cinf 80 8640000 env JAVA_TOOL_OPTIONS=-Xmx8g "$DAAVAR"/scripts/jmc-run.sh cf-omnipaxos-paper 'bench.omnipaxos_paper.OmniPaxosPaper:impl,1,4,1,fifo' must 0 1 export.jsonl 8640000 --split 16 --k 1
+XCE.omnipaxos-spec.impl_1_4_1_fifo.w16.cinf 80 8640000 env JAVA_TOOL_OPTIONS=-Xmx8g "$DAAVAR"/scripts/jmc-run.sh cf-omnipaxos-spec 'bench.omnipaxos_spec.OmniPaxosSpec:impl,1,4,1,fifo' must 0 1 export.jsonl 8640000 --split 16 --k 1
+XC1.omnipaxos-spec.impl_1_4_1_fifo.vs-paper.jimpl-jimpl.cinf.m 80 8640000 needok:XCE.omnipaxos-paper.impl_1_4_1_fifo.w16.cinf,XCE.omnipaxos-spec.impl_1_4_1_fifo.w16.cinf "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/XCE.omnipaxos-paper.impl_1_4_1_fifo.w16.cinf/export.jsonl "$EVAL_OUT"/XCE.omnipaxos-spec.impl_1_4_1_fifo.w16.cinf/export.jsonl

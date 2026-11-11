@@ -1,0 +1,5 @@
+# case-scaleup-1111 rows for pinky13 (coordinator 2026-11-11 01:48; groups from the pools, see ../*-pool.rows line 1-2; tier cinf, no time limit)
+# group 10 [pinky, priority 1; est worst row 0.76 h on pinky, peak 0.5 GB]: C3J.omnipaxos.impl_reorder_fifo 2,0,1->4,0,1
+C3E.omnipaxos.spec_correct_4_0_1_fifo.t16.cinf.r2 80 8640000 "$DAAVAR"/scripts/rust-run.sh omnipaxos export spec --out export.jsonl --threads 16 --model fifo -- correct 4 0 1
+C3E.omnipaxos.impl_reorder_4_0_1_fifo.t16.cinf 80 8640000 "$DAAVAR"/scripts/rust-run.sh omnipaxos export impl --out export.jsonl --threads 16 --model fifo -- reorder 4 0 1
+C3J.omnipaxos.impl_reorder_4_0_1_fifo.cinf.m 80 8640000 needok:C3E.omnipaxos.spec_correct_4_0_1_fifo.t16.cinf.r2,C3E.omnipaxos.impl_reorder_4_0_1_fifo.t16.cinf "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.omnipaxos.spec_correct_4_0_1_fifo.t16.cinf.r2/export.jsonl "$EVAL_OUT"/C3E.omnipaxos.impl_reorder_4_0_1_fifo.t16.cinf/export.jsonl

@@ -1,0 +1,4 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XCE.omnipaxos-paper.impl_1_4_1_fifo.w16.cinf		omnipaxos-paper	1,4,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.omnipaxos-spec.impl_1_4_1_fifo.w16.cinf		omnipaxos-spec	1,4,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XC1.omnipaxos-spec.impl_1_4_1_fifo.vs-paper.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec.impl_fifo.vs-paper.jimpl-jimpl	1,4,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			

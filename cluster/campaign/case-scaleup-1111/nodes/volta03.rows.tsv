@@ -1,0 +1,16 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.cassandra-rr-derived.spec_3_none_fifo.t16.cinf		cassandra-rr-derived	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust.impl_3_none_fifo.t16.cinf.r2		cassandra-rr-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_3_none_fifo.t16.cinf		cassandra-rr	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust-sol.impl_3_none_fifo.t16.cinf		cassandra-rr-rust-sol	3						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.cassandra-rr-sol.impl_3_none_fifo.w16.cinf		cassandra-rr-sol	3						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-derived	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-rust-sol.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-rust-sol	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-derived	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-rust.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-rust	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC1.cassandra-rr-sol.impl_3_none_fifo.jimpl-tfimpl.cinf.m		XC1.cassandra-rr-sol.impl_none_fifo.jimpl-tfimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC2.cassandra-rr-sol.impl_3_none_fifo.tfimpl-jimpl.cinf.m		XC2.cassandra-rr-sol.impl_none_fifo.tfimpl-jimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_3_none_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-derived.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_3_none_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			

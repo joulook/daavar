@@ -1,0 +1,7 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.omnipaxos-derived.spec_correct_2_0_2_fifo.t16.cinf	C	omnipaxos-derived	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+C3E.omnipaxos.impl_correct_2_0_2_fifo.t16.cinf.r2	C	omnipaxos	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.raft-rs.impl_correct_2_0_2_fifo.t16.cinf	C	raft-rs	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	raft-rs		
+C3J.omnipaxos.impl_correct_2_0_2_fifo.vs-derived.cinf.m	C	omnipaxos	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_correct_2_0_2_fifo.vs-raft-rs.cinf.m	C	omnipaxos	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.raft-rs.impl_correct_2_0_2_fifo.vs-omnipaxos.cinf.m	C	raft-rs	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	raft-rs		

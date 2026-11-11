@@ -1,0 +1,9 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XCE.cassandra-rr-sol.impl_2_blocking_fifo.w16.cinf		cassandra-rr-sol	2						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust-sol.impl_2_blocking_fifo.t16.cinf		cassandra-rr-rust-sol	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-derived.spec_2_blocking_fifo.t16.cinf		cassandra-rr-derived	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_2_blocking_fifo.t16.cinf		cassandra-rr	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XC1.cassandra-rr-sol.impl_2_blocking_fifo.jimpl-tfimpl.cinf.m		XC1.cassandra-rr-sol.impl_blocking_fifo.jimpl-tfimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC2.cassandra-rr-sol.impl_2_blocking_fifo.tfimpl-jimpl.cinf.m		XC2.cassandra-rr-sol.impl_blocking_fifo.tfimpl-jimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_blocking_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_blocking_fifo.vs-derived.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_blocking_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_blocking_fifo.vs-hand.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			

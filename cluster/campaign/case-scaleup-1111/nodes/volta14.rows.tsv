@@ -1,0 +1,8 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XCE.omnipaxos-spec.impl_1_2_1_fifo.w16.cinf		omnipaxos-spec	1,2,1						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.omnipaxos-spec-sol.impl_1_2_1_fifo.w16.cinf		omnipaxos-spec-sol	1,2,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.omnipaxos-derived.spec_correct_1_2_1_fifo.t16.cinf	C	omnipaxos-derived	1,2,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+C3E.omnipaxos.spec_correct_1_2_1_fifo.t16.cinf	C	omnipaxos	1,2,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XC1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-spec.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-derived.tfspec-jmcimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-hand.tfspec-jmcimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			

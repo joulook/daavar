@@ -1,0 +1,2 @@
+# case-scaleup-1111 rows for volta15 (coordinator 2026-11-11 01:56): the pending case-study rows of its earlier queues, in their order; new rows arrive through volta15.rows.more
+XC2.cassandra-rr.impl_3_none_fifo.vs-rust.tfimpl-jimpl.cinf.m 200 8640000 needok:C3E.cassandra-rr-rust.impl_3_none_fifo.t16.cinf,XCE.cassandra-rr.impl_3_none_fifo.w16.cinf "$EVAL_OUT"/tf-merge-target/release/conf-join --merge "$EVAL_OUT"/C3E.cassandra-rr-rust.impl_3_none_fifo.t16.cinf/export.jsonl "$EVAL_OUT"/XCE.cassandra-rr.impl_3_none_fifo.w16.cinf/export.jsonl

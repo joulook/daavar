@@ -1,0 +1,18 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.pineapple-lin.spec_3_fifo.t16.cinf		pineapple-lin	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-code-rust.impl_3_mixed_fifo.t16.cinf		chainpaxos-code-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-code-rust-sol.impl_3_local_fifo.t16.cinf		chainpaxos-code-rust-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_3_local_fifo.t16.cinf		chainpaxos-paper-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_3_mixed_fifo.t16.cinf		chainpaxos-paper-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-code.impl_3_mixed_fifo.w16.cinf		chainpaxos-code	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-code-sol.impl_3_local_fifo.w16.cinf		chainpaxos-code-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-paper-sol.impl_3_local_fifo.w16.cinf		chainpaxos-paper-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-paper-sol.impl_3_mixed_fifo.w16.cinf		chainpaxos-paper-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3J.chainpaxos-code-rust.impl_3_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-code-rust.impl_mixed_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-code-rust-sol.impl_3_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-code-rust-sol.impl_local_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_3_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-paper-rust.impl_local_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_3_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-paper-rust.impl_mixed_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-code.impl_3_mixed_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-code.impl_mixed_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-code-sol.impl_3_local_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-code-sol.impl_local_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-paper-sol.impl_3_local_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-paper-sol.impl_local_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-paper-sol.impl_3_mixed_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-paper-sol.impl_mixed_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			

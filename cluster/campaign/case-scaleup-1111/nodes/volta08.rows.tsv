@@ -1,0 +1,16 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.pineapple-lin.spec_5_fifo.t16.cinf		pineapple-lin	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-derived.spec_5_local_fifo.t16.cinf		chainpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-derived.spec_5_mixed_fifo.t16.cinf		chainpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_5_local_fifo.t16.cinf	C	chainpaxos-paper-rust	5	fifo	local	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	chainpaxos-paper-rust		
+C3E.pineapple-derived.spec_5_fifo.t16.cinf		pineapple-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.swiftpaxos-derived.spec_5_fifo.t16.cinf		swiftpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.chainpaxos-derived.spec_5_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-derived.spec_local_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-derived.spec_5_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-derived.spec_mixed_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_5_local_fifo.vs-derived.cinf.m	C	chainpaxos-paper-rust	5	fifo	local	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	chainpaxos-paper-rust		
+C3J.pineapple-derived.spec_5_fifo.vs-hand.cinf.m		C3J.pineapple-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-chainderived-local.cinf.m		C3J.pineapple-lin.spec_fifo.vs-chainderived-local	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-chainderived-mixed.cinf.m		C3J.pineapple-lin.spec_fifo.vs-chainderived-mixed	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-derived.cinf.m		C3J.pineapple-lin.spec_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-swiftderived.cinf.m		C3J.pineapple-lin.spec_fifo.vs-swiftderived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.swiftpaxos-derived.spec_5_fifo.vs-hand.cinf.m		C3J.swiftpaxos-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			

@@ -1,0 +1,2 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+XC2.cassandra-rr.impl_3_none_fifo.vs-rust.tfimpl-jimpl.cinf.m	X	cassandra-rr	3	fifo	none	join	1	twin	transliteration twin-spec=none scaleup-1110	cinf	twin-cf	traceforge	jmc	rust	java	offline-batch	full	cassandra-rr	cassandra-rr-rust.impl_3_none_fifo	cassandra-rr.impl_3_none_fifo

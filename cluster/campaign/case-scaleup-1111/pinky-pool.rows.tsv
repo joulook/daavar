@@ -1,0 +1,170 @@
+id	table	family	size	model	variant	engine	threads	expected_verdict	note	tier	kind	spec_tool	impl_tool	spec_lang	impl_lang	mode	exploration	benchmark	spec_case	impl_case
+C3E.bk-ledger.spec_5_fifo.t16.cinf		bk-ledger	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.bk-derived.spec_5_fifo.t16.cinf		bk-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.bk-rust.impl_5_fifo.t16.cinf		bk-rust	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.bk-derived.spec_5_fifo.vs-hand.cinf.m		C3J.bk-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-ledger.spec_5_fifo.vs-derived.cinf.m		C3J.bk-ledger.spec_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust.impl_5_fifo.vs-derived.cinf.m		C3J.bk-rust.impl_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust.impl_5_fifo.vs-hand.cinf.m		C3J.bk-rust.impl_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.cassandra-rr-derived.spec_3_none_fifo.t16.cinf		cassandra-rr-derived	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust.impl_3_none_fifo.t16.cinf.r2		cassandra-rr-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_3_none_fifo.t16.cinf		cassandra-rr	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust-sol.impl_3_none_fifo.t16.cinf		cassandra-rr-rust-sol	3						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.cassandra-rr-sol.impl_3_none_fifo.w16.cinf		cassandra-rr-sol	3						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-derived	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_3_none_fifo.vs-rust-sol.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-rust-sol	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-derived	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust-sol.impl_3_none_fifo.vs-rust.cinf.m		C3J.cassandra-rr-rust-sol.impl_none_fifo.vs-rust	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC1.cassandra-rr-sol.impl_3_none_fifo.jimpl-tfimpl.cinf.m		XC1.cassandra-rr-sol.impl_none_fifo.jimpl-tfimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC2.cassandra-rr-sol.impl_3_none_fifo.tfimpl-jimpl.cinf.m		XC2.cassandra-rr-sol.impl_none_fifo.tfimpl-jimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_3_none_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-derived.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_3_none_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.pineapple-lin.spec_5_fifo.t16.cinf		pineapple-lin	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-derived.spec_5_local_fifo.t16.cinf		chainpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-derived.spec_5_mixed_fifo.t16.cinf		chainpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_5_local_fifo.t16.cinf	C	chainpaxos-paper-rust	5	fifo	local	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	chainpaxos-paper-rust		
+C3E.pineapple-derived.spec_5_fifo.t16.cinf		pineapple-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.swiftpaxos-derived.spec_5_fifo.t16.cinf		swiftpaxos-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.chainpaxos-derived.spec_5_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-derived.spec_local_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-derived.spec_5_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-derived.spec_mixed_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_5_local_fifo.vs-derived.cinf.m	C	chainpaxos-paper-rust	5	fifo	local	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	chainpaxos-paper-rust		
+C3J.pineapple-derived.spec_5_fifo.vs-hand.cinf.m		C3J.pineapple-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-chainderived-local.cinf.m		C3J.pineapple-lin.spec_fifo.vs-chainderived-local	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-chainderived-mixed.cinf.m		C3J.pineapple-lin.spec_fifo.vs-chainderived-mixed	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-derived.cinf.m		C3J.pineapple-lin.spec_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.pineapple-lin.spec_5_fifo.vs-swiftderived.cinf.m		C3J.pineapple-lin.spec_fifo.vs-swiftderived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.swiftpaxos-derived.spec_5_fifo.vs-hand.cinf.m		C3J.swiftpaxos-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XCE.omnipaxos-spec.impl_1_2_1_fifo.w16.cinf		omnipaxos-spec	1,2,1						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.omnipaxos-spec-sol.impl_1_2_1_fifo.w16.cinf		omnipaxos-spec-sol	1,2,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.omnipaxos-derived.spec_correct_1_2_1_fifo.t16.cinf	C	omnipaxos-derived	1,2,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+C3E.omnipaxos.spec_correct_1_2_1_fifo.t16.cinf	C	omnipaxos	1,2,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XC1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-spec.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-derived.tfspec-jmcimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_2_1_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-hand.tfspec-jmcimpl	1,2,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.bk-ledger.spec_4_fifo.t16.cinf		bk-ledger	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.bk-derived.spec_4_fifo.t16.cinf		bk-derived	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.bk-rust.impl_4_fifo.t16.cinf		bk-rust	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.bk-rust-sol.impl_4_fifo.t16.cinf		bk-rust-sol	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.bk-derived.spec_4_fifo.vs-hand.cinf.m		C3J.bk-derived.spec_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-ledger.spec_4_fifo.vs-derived.cinf.m		C3J.bk-ledger.spec_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust.impl_4_fifo.vs-derived.cinf.m		C3J.bk-rust.impl_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust.impl_4_fifo.vs-hand.cinf.m		C3J.bk-rust.impl_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust.impl_4_fifo.vs-rust-sol.cinf.m		C3J.bk-rust.impl_fifo.vs-rust-sol	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust-sol.impl_4_fifo.vs-derived.cinf.m		C3J.bk-rust-sol.impl_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust-sol.impl_4_fifo.vs-hand.cinf.m		C3J.bk-rust-sol.impl_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.bk-rust-sol.impl_4_fifo.vs-rust.cinf.m		C3J.bk-rust-sol.impl_fifo.vs-rust	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.omnipaxos-derived.spec_correct_1_3_2_fifo.t16.cinf	C	omnipaxos-derived	1,3,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+XCE.omnipaxos-derived-impl.impl_1_3_2_fifo.w16.cinf	X	omnipaxos-derived-impl	1,3,2	fifo	impl	must-split	16		case-scaleup-1111 next size	cinf	export	jmc	jmc	java	java	offline-batch	full	omnipaxos-derived-impl		
+C3E.omnipaxos.spec_correct_1_3_2_fifo.t16.cinf	C	omnipaxos	1,3,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XJ1.omnipaxos-derived-impl.impl_1_3_2_fifo.vs-derived.tfspec-jmcimpl.cinf.m	X	omnipaxos-derived-impl	1,3,2	fifo	impl	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	jmc	rust	java	offline-batch	full	omnipaxos-derived-impl		
+XJ1.omnipaxos-derived-impl.impl_1_3_2_fifo.vs-hand.tfspec-jmcimpl.cinf.m	X	omnipaxos-derived-impl	1,3,2	fifo	impl	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	jmc	rust	java	offline-batch	full	omnipaxos-derived-impl		
+C3E.omnipaxos-derived.spec_correct_1_2_2_fifo.t16.cinf	C	omnipaxos-derived	1,2,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+XCE.omnipaxos-derived-impl.impl_1_2_2_fifo.w16.cinf	X	omnipaxos-derived-impl	1,2,2	fifo	impl	must-split	16		case-scaleup-1111 next size	cinf	export	jmc	jmc	java	java	offline-batch	full	omnipaxos-derived-impl		
+C3E.omnipaxos.spec_correct_1_2_2_fifo.t16.cinf	C	omnipaxos	1,2,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XJ1.omnipaxos-derived-impl.impl_1_2_2_fifo.vs-derived.tfspec-jmcimpl.cinf.m	X	omnipaxos-derived-impl	1,2,2	fifo	impl	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	jmc	rust	java	offline-batch	full	omnipaxos-derived-impl		
+XJ1.omnipaxos-derived-impl.impl_1_2_2_fifo.vs-hand.tfspec-jmcimpl.cinf.m	X	omnipaxos-derived-impl	1,2,2	fifo	impl	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	jmc	rust	java	offline-batch	full	omnipaxos-derived-impl		
+C3E.omnipaxos.spec_correct_4_0_1_fifo.t16.cinf.r2	C	omnipaxos	4,0,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.omnipaxos.impl_reorder_4_0_1_fifo.t16.cinf	C	omnipaxos	4,0,1	fifo	reorder	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_reorder_4_0_1_fifo.cinf.m	C	omnipaxos	4,0,1	fifo	reorder	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.pineapple-lin.spec_3_fifo.t16.cinf		pineapple-lin	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-code-rust.impl_3_mixed_fifo.t16.cinf		chainpaxos-code-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-code-rust-sol.impl_3_local_fifo.t16.cinf		chainpaxos-code-rust-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_3_local_fifo.t16.cinf		chainpaxos-paper-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.chainpaxos-paper-rust.impl_3_mixed_fifo.t16.cinf		chainpaxos-paper-rust	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-code.impl_3_mixed_fifo.w16.cinf		chainpaxos-code	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-code-sol.impl_3_local_fifo.w16.cinf		chainpaxos-code-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-paper-sol.impl_3_local_fifo.w16.cinf		chainpaxos-paper-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XCE.chainpaxos-paper-sol.impl_3_mixed_fifo.w16.cinf		chainpaxos-paper-sol	3						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3J.chainpaxos-code-rust.impl_3_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-code-rust.impl_mixed_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-code-rust-sol.impl_3_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-code-rust-sol.impl_local_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_3_local_fifo.vs-hand.cinf.m		C3J.chainpaxos-paper-rust.impl_local_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.chainpaxos-paper-rust.impl_3_mixed_fifo.vs-hand.cinf.m		C3J.chainpaxos-paper-rust.impl_mixed_fifo.vs-hand	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-code.impl_3_mixed_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-code.impl_mixed_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-code-sol.impl_3_local_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-code-sol.impl_local_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-paper-sol.impl_3_local_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-paper-sol.impl_local_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.chainpaxos-paper-sol.impl_3_mixed_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.chainpaxos-paper-sol.impl_mixed_fifo.vs-hand.tfspec-jmcimpl	3						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.craq-lin.spec_5_fifo.t16.cinf		craq-lin	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.craq-derived.spec_5_fifo.t16.cinf		craq-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.craq-rust.impl_5_fifo.t16.cinf		craq-rust	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.craq-derived.spec_5_fifo.vs-hand.cinf.m		C3J.craq-derived.spec_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-lin.spec_5_fifo.vs-derived.cinf.m		C3J.craq-lin.spec_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-rust.impl_5_fifo.vs-derived.cinf.m		C3J.craq-rust.impl_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-rust.impl_5_fifo.vs-hand.cinf.m		C3J.craq-rust.impl_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.omnipaxos.spec_correct_3_0_2_fifo.t16.cinf	C	omnipaxos	3,0,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.omnipaxos.impl_reorder_3_0_2_fifo.t16.cinf	C	omnipaxos	3,0,2	fifo	reorder	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_reorder_3_0_2_fifo.cinf.m	C	omnipaxos	3,0,2	fifo	reorder	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XCE.cassandra-rr-sol.impl_2_blocking_fifo.w16.cinf		cassandra-rr-sol	2						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust-sol.impl_2_blocking_fifo.t16.cinf		cassandra-rr-rust-sol	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-derived.spec_2_blocking_fifo.t16.cinf		cassandra-rr-derived	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_2_blocking_fifo.t16.cinf		cassandra-rr	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XC1.cassandra-rr-sol.impl_2_blocking_fifo.jimpl-tfimpl.cinf.m		XC1.cassandra-rr-sol.impl_blocking_fifo.jimpl-tfimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC2.cassandra-rr-sol.impl_2_blocking_fifo.tfimpl-jimpl.cinf.m		XC2.cassandra-rr-sol.impl_blocking_fifo.tfimpl-jimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_blocking_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_blocking_fifo.vs-derived.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_blocking_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_blocking_fifo.vs-hand.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XCE.omnipaxos-paper.impl_1_4_1_fifo.w16.cinf		omnipaxos-paper	1,4,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.omnipaxos-spec.impl_1_4_1_fifo.w16.cinf		omnipaxos-spec	1,4,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XC1.omnipaxos-spec.impl_1_4_1_fifo.vs-paper.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec.impl_fifo.vs-paper.jimpl-jimpl	1,4,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.omnipaxos-derived.spec_correct_2_0_2_fifo.t16.cinf	C	omnipaxos-derived	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+C3E.omnipaxos.impl_correct_2_0_2_fifo.t16.cinf.r2	C	omnipaxos	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.raft-rs.impl_correct_2_0_2_fifo.t16.cinf	C	raft-rs	2,0,2	fifo	correct	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	raft-rs		
+C3J.omnipaxos.impl_correct_2_0_2_fifo.vs-derived.cinf.m	C	omnipaxos	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_correct_2_0_2_fifo.vs-raft-rs.cinf.m	C	omnipaxos	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.raft-rs.impl_correct_2_0_2_fifo.vs-omnipaxos.cinf.m	C	raft-rs	2,0,2	fifo	correct	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	raft-rs		
+C3E.omnipaxos.spec_correct_3_0_1_fifo.t16.cinf.r2	C	omnipaxos	3,0,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.omnipaxos.impl_reorder_3_0_1_fifo.t16.cinf	C	omnipaxos	3,0,1	fifo	reorder	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_reorder_3_0_1_fifo.cinf.m	C	omnipaxos	3,0,1	fifo	reorder	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XCE.cassandra-rr-sol.impl_2_none_fifo.w16.cinf		cassandra-rr-sol	2						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust-sol.impl_2_none_fifo.t16.cinf		cassandra-rr-rust-sol	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr-derived.spec_2_none_fifo.t16.cinf		cassandra-rr-derived	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_2_none_fifo.t16.cinf		cassandra-rr	2						case-scaleup-1111 re-export	cinf	export					offline-batch	full			
+XC1.cassandra-rr-sol.impl_2_none_fifo.jimpl-tfimpl.cinf.m		XC1.cassandra-rr-sol.impl_none_fifo.jimpl-tfimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC2.cassandra-rr-sol.impl_2_none_fifo.tfimpl-jimpl.cinf.m		XC2.cassandra-rr-sol.impl_none_fifo.tfimpl-jimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_none_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-derived.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.cassandra-rr-sol.impl_2_none_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.cassandra-rr-sol.impl_none_fifo.vs-hand.tfspec-jmcimpl	2						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.cassandra-rr-derived.spec_4_none_fifo.t16.cinf		cassandra-rr-derived	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_4_none_fifo.t16.cinf		cassandra-rr	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr-rust.impl_4_none_fifo.t16.cinf		cassandra-rr-rust	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr.spec_4_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr.spec_none_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-derived.spec_4_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-derived.spec_none_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_4_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-rust.impl_4_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-rust.impl_none_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XCE.omnipaxos-spec.impl_1_3_1_fifo.w16.cinf		omnipaxos-spec	1,3,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.omnipaxos-paper.impl_1_3_1_fifo.w16.cinf		omnipaxos-paper	1,3,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+XCE.omnipaxos-spec-sol.impl_1_3_1_fifo.w16.cinf		omnipaxos-spec-sol	1,3,1						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.omnipaxos-derived.spec_correct_1_3_1_fifo.t16.cinf.r2	C	omnipaxos-derived	1,3,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos-derived		
+XCE.omnipaxos-derived-impl.impl_1_3_1_fifo.w16.cinf	X	omnipaxos-derived-impl	1,3,1	fifo	impl	must-split	16		case-scaleup-1111 next size	cinf	export	jmc	jmc	java	java	offline-batch	full	omnipaxos-derived-impl		
+C3E.omnipaxos.spec_correct_1_3_1_fifo.t16.cinf.r2	C	omnipaxos	1,3,1	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+XC1.omnipaxos-paper.impl_1_3_1_fifo.vs-spec.jimpl-jimpl.cinf.m	X	omnipaxos-paper	1,3,1	fifo	impl	join	1	twin	case-scaleup-1111 next size	cinf	twin-cf	jmc	traceforge	java	rust	offline-batch	full	omnipaxos-paper		
+XC1.omnipaxos-spec.impl_1_3_1_fifo.vs-paper.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec.impl_fifo.vs-paper.jimpl-jimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XC1.omnipaxos-spec-sol.impl_1_3_1_fifo.vs-spec.jimpl-jimpl.cinf.m		XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-derived-impl.impl_1_3_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m	X	omnipaxos-derived-impl	1,3,1	fifo	impl	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	jmc	rust	java	offline-batch	full	omnipaxos-derived-impl		
+XJ1.omnipaxos-paper.impl_1_3_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-paper.impl_fifo.vs-derived.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-paper.impl_1_3_1_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-paper.impl_fifo.vs-hand.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec.impl_1_3_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec.impl_fifo.vs-derived.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec.impl_1_3_1_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec.impl_fifo.vs-hand.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_3_1_fifo.vs-derived.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-derived.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+XJ1.omnipaxos-spec-sol.impl_1_3_1_fifo.vs-hand.tfspec-jmcimpl.cinf.m		XJ1.omnipaxos-spec-sol.impl_fifo.vs-hand.tfspec-jmcimpl	1,3,1						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.craq-lin.spec_4_fifo.t16.cinf		craq-lin	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.craq-derived.spec_4_fifo.t16.cinf		craq-derived	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.craq-rust.impl_4_fifo.t16.cinf		craq-rust	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.craq-derived.spec_4_fifo.vs-hand.cinf.m		C3J.craq-derived.spec_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-lin.spec_4_fifo.vs-derived.cinf.m		C3J.craq-lin.spec_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-rust.impl_4_fifo.vs-derived.cinf.m		C3J.craq-rust.impl_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.craq-rust.impl_4_fifo.vs-hand.cinf.m		C3J.craq-rust.impl_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.omnipaxos.spec_correct_2_0_2_fifo.t16.cinf.r2	C	omnipaxos	2,0,2	fifo	spec-correct	must-partitioned	16	readme	case-scaleup-1111 re-export	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.omnipaxos.impl_reorder_2_0_2_fifo.t16.cinf	C	omnipaxos	2,0,2	fifo	reorder	must-partitioned	16	readme	case-scaleup-1111 next size	cinf	export	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3J.omnipaxos.impl_reorder_2_0_2_fifo.cinf.m	C	omnipaxos	2,0,2	fifo	reorder	join	1	readme	case-scaleup-1111 next size	cinf	cross-language	traceforge	traceforge	rust	rust	offline-batch	full	omnipaxos		
+C3E.cassandra-rr-derived.spec_4_blocking_fifo.t16.cinf		cassandra-rr-derived	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_4_blocking_fifo.t16.cinf		cassandra-rr	4						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr.spec_4_blocking_fifo.vs-derived.cinf.m		C3J.cassandra-rr.spec_blocking_fifo.vs-derived	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-derived.spec_4_blocking_fifo.vs-hand.cinf.m		C3J.cassandra-rr-derived.spec_blocking_fifo.vs-hand	4						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.cassandra-rr-derived.spec_5_blocking_fifo.t16.cinf		cassandra-rr-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_5_blocking_fifo.t16.cinf		cassandra-rr	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr.spec_5_blocking_fifo.vs-derived.cinf.m		C3J.cassandra-rr.spec_blocking_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-derived.spec_5_blocking_fifo.vs-hand.cinf.m		C3J.cassandra-rr-derived.spec_blocking_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3E.cassandra-rr-derived.spec_5_none_fifo.t16.cinf		cassandra-rr-derived	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3E.cassandra-rr.spec_5_none_fifo.t16.cinf		cassandra-rr	5						case-scaleup-1111 next size	cinf	export					offline-batch	full			
+C3J.cassandra-rr.spec_5_none_fifo.vs-derived.cinf.m		C3J.cassandra-rr.spec_none_fifo.vs-derived	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			
+C3J.cassandra-rr-derived.spec_5_none_fifo.vs-hand.cinf.m		C3J.cassandra-rr-derived.spec_none_fifo.vs-hand	5						case-scaleup-1111 next size	cinf	join					offline-batch	full			

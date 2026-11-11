@@ -109,8 +109,14 @@ skip_row() {  # id mem to cmd dep
   [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
   echo "row $id skipped ($dep not ok) $(date -Is)" >> "$QDIR/queue.log"
 }
-while [ ${#PENDING[@]} -gt 0 ]; do
-  free_finished
+MORE="$ROWS.more"; MORE_N=0   # rows appended to <rows-file>.more after the start join the pending list at the next pass (the coordinator feeds live queues, 2026-11-11; their attributes are appended to $ROWS_TSV the same way)
+take_more() { [ -f "$MORE" ] || return 0; local n k=0 line; n=$(wc -l < "$MORE"); [ "$n" -gt "$MORE_N" ] || return 0
+  while IFS= read -r line; do case "$line" in ""|\#*) continue;; esac; PENDING+=("$line"); k=$((k+1)); done < <(sed -n "$((MORE_N+1)),${n}p" "$MORE")
+  MORE_N=$n; echo "$(date -Is) took $k more row(s) from $MORE (lines to $n)" >> "$QDIR/queue.log"; }
+# keepalive (2026-11-11): while $QDIR/keepalive exists the dispatcher waits for more rows instead of finishing when its list is empty
+while [ ${#PENDING[@]} -gt 0 ] || [ -e "$QDIR/keepalive" ]; do
+  free_finished; take_more
+  if [ ${#PENDING[@]} -eq 0 ]; then sleep 60; continue; fi
   NEXT=(); launched_any=0; hold=0   # hold=1: memory or disk below the guard, no launch this pass (the rows stay pending: before 2026-11-07 the memory guard's `continue` dropped the row from the list)
   for line in "${PENDING[@]}"; do
     read -r id mem to cmd <<< "$line"
