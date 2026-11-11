@@ -16,6 +16,37 @@ if _malformed: print(f"malformed record lines left out (field count differs from
 attrs = {}
 for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv") + glob.glob(DV + "/cluster/campaign/*/*.rows.tsv"):
     for r in csv.DictReader(open(f), delimiter="\t"): attrs[r["id"].replace("'", "")] = {k: (v or "").replace("'", "") for k, v in r.items()}  # early row files carried stray quotes (the runner strips them from the id)
+# 2026-11-11 (audit 1111-0227, defects 3-5): the case-scaleup-1111 sidecars below campaign/<queue>/ (r2/, r2/later/, nodes/) were not
+# read, so their rows had no identity (blank program); they fill only ids no row file above names (an id already named keeps its attributes)
+for f in sorted(glob.glob(DV + "/cluster/campaign/*/**/*.rows.tsv", recursive=True)):
+    if f.count("/") <= (DV + "/cluster/campaign/x/y").count("/"): continue   # campaign/*/*.rows.tsv: read above
+    for r in csv.DictReader(open(f), delimiter="\t"): attrs.setdefault(r["id"].replace("'", ""), {k: (v or "").replace("'", "") for k, v in r.items()})
+# 2026-11-11 (audit 1111-0227, defects 3-5): the case-scaleup-1111 generator wrote its next-size join sidecars without an identity (no table,
+# no model; the family field holds an id template such as XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl), and the tables printed
+# that template as the program name. Such a row takes the attributes of the generator's own sidecar row of the same case at another
+# size (same id with the size numbers removed), with its size and the size in spec_case/impl_case replaced; never a run-id fragment as
+# a label. A row with no such sibling keeps its attributes (and stays visibly unnamed).
+def _case_tpl(i):
+    p = re.sub(r"(\.c(1|48)h|\.cinf|\.j2|\.m|\.r\d+|\.p|\.t\d+|\.w\d+)+$", "", i).split(".")
+    if len(p) < 3: return None, []
+    toks = p[2].split("_"); return ".".join(p[:2] + ["_".join(t for t in toks if not t.isdigit())] + p[3:]), [t for t in toks if t.isdigit()]
+_named = {}
+for _i, _a in attrs.items():
+    if _a.get("table") and _a.get("model") and "." not in (_a.get("family") or ""):
+        _t, _n = _case_tpl(_i)
+        if _t and _n: _named.setdefault(_t, []).append((bool(re.search(r"\.(c1h|c48h|cinf|j2|m|r\d+|p)$", _i)), len(_i), _i, _n))   # the plain id of the case first
+_fixed = 0
+for _i, _a in list(attrs.items()):
+    if _a.get("table") or _a.get("model"): continue
+    _t, _n = _case_tpl(_i)
+    if not _t or not _n or _t not in _named: continue
+    _src_id, _sn = sorted(_named[_t])[0][2:]
+    _b = dict(attrs[_src_id]); _old, _new = "_".join(_sn), "_".join(_n)
+    for _c in ("spec_case", "impl_case"):
+        if _b.get(_c): _b[_c] = re.sub(r"(?<=_)" + re.escape(_old) + r"(?=_)", _new, _b[_c], count=1)
+    _b.update(id=_a.get("id", _i), size=_a.get("size") or ",".join(_n), tier=_a.get("tier", _b.get("tier", "")), note=(_b.get("note", "") + " [" + _a.get("note", "") + "; identity of " + _src_id + ", audit 1111-0227]").strip())   # the case's note first: twin_spec() reads twin-spec= from it
+    attrs[_i] = _b; _fixed += 1
+if _fixed: print(f"sidecar rows without an identity named from their case's sidecar at another size (audit 1111-0227): {_fixed}")
 # latest record per id wins (reruns append)
 import subprocess
 PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
@@ -356,6 +387,16 @@ for pre, fname, title in CAMP:
                     r["wall_ms"] = None; r["peak_rss_kb"] = None; r["_export_missing"] = ",".join(e for e, x in zip(ex, (sp, im)) if not x)
                     DROPPED.append((r["run_id"], "offline row without the record of its export " + r["_export_missing"] + " (time and memory withheld)"))
                 r["_join_mode"] = "merge" if "--merge" in (r.get("command") or "") else "in-memory"
+                # 2026-11-11 (audit 1111-0227, defect 1): the zero-election-timeout rule of paper-extra.py (NOT RESULTS, 2026-11-09): a join
+                # one of whose exports is a raft-rs or MicroRaft export (directory raft-rs: C3E.raft-rs.*, XJE.raft-rs.*) at a size (e,t,c)
+                # with t = 0 election timeouts (no leader is elected, every client blocks: 0 complete graphs) is a vacuous 'conforms', not a
+                # result; left out below, with its reason. The test is the size, as in paper-extra.py: raft-rs records every graph as
+                # blocked at every size, so a 0 complete count alone does not tell the vacuous sizes apart
+                for _e in ex:
+                    _p = _e.split(".")
+                    if _p[1:2] == ["raft-rs"] and len(_p) > 2:
+                        _nn = [t for t in _p[2].split("_") if t.isdigit()]
+                        if len(_nn) == 3 and _nn[1] == "0": r["_vacuous"] = _e
                 r["_contended"] = max(r.get("_contended") or 0, (sp or {}).get("_contended") or 0, (im or {}).get("_contended") or 0)
                 parts = [num(x) for x in (r.get("spec_export_ms"), r.get("impl_export_ms"), r.get("join_ms"))]
                 if all(x is not None for x in parts): r["wall_ms"] = max(parts[0], parts[1]) + parts[2]   # the two exports are independent jobs run side by side: T = the longer export plus the join (owner, 2026-11-03 19:40)
@@ -431,6 +472,9 @@ for pre, fname, title in CAMP:
     _u = [r for r in rs if r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")]]
     if _u: print(f"{pre}: {len(_u)} rows of a program whose cross-language twins disagree on a value rendering left out (inputs/undecidable.tsv): " + ", ".join(sorted({r['a'].get('family','') for r in _u})))
     rs = drop(rs, lambda r: r["a"].get("family") in UNDECIDABLE and pre in UNDECIDABLE[r["a"].get("family")], "undecidable rendering (inputs/undecidable.tsv)")
+    _x = [r for r in rs if r.get("_vacuous")]   # 2026-11-11 (audit 1111-0227, defect 1): after the one-per-instance choice, so no older run resurfaces
+    if _x: print(f"{pre}: {len(_x)} vacuous joins left out (a raft-rs/MicroRaft export at 0 election timeouts; audit 1111-0227): " + ", ".join(sorted(r["run_id"] for r in _x)))
+    rs = drop(rs, lambda r: bool(r.get("_vacuous")), "NOT A RESULT: zero-election-timeout rule (the export of a side has 0 complete graphs, no leader is elected; audit 1111-0227)")
     _x = [r for r in rs if (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY]
     if _x: print(f"{pre}: {len(_x)} exploratory-variant rows left out: " + ", ".join(sorted({r['a'].get('family','') + ':' + r['a'].get('variant','') for r in _x})))
     rs = drop(rs, lambda r: (r["a"].get("family"), r["a"].get("variant")) in EXPLORATORY, "exploratory variant")
