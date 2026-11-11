@@ -21,32 +21,61 @@ for f in [DV + "/cluster/rows.tsv"] + glob.glob(DV + "/cluster/bench/*.rows.tsv"
 for f in sorted(glob.glob(DV + "/cluster/campaign/*/**/*.rows.tsv", recursive=True)):
     if f.count("/") <= (DV + "/cluster/campaign/x/y").count("/"): continue   # campaign/*/*.rows.tsv: read above
     for r in csv.DictReader(open(f), delimiter="\t"): attrs.setdefault(r["id"].replace("'", ""), {k: (v or "").replace("'", "") for k, v in r.items()})
-# 2026-11-11 (audit 1111-0227, defects 3-5): the case-scaleup-1111 generator wrote its next-size join sidecars without an identity (no table,
-# no model; the family field holds an id template such as XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl), and the tables printed
-# that template as the program name. Such a row takes the attributes of the generator's own sidecar row of the same case at another
-# size (same id with the size numbers removed), with its size and the size in spec_case/impl_case replaced; never a run-id fragment as
-# a label. A row with no such sibling keeps its attributes (and stays visibly unnamed).
-def _case_tpl(i):
-    p = re.sub(r"(\.c(1|48)h|\.cinf|\.j2|\.m|\.r\d+|\.p|\.t\d+|\.w\d+)+$", "", i).split(".")
-    if len(p) < 3: return None, []
-    toks = p[2].split("_"); return ".".join(p[:2] + ["_".join(t for t in toks if not t.isdigit())] + p[3:]), [t for t in toks if t.isdigit()]
-_named = {}
+# 2026-11-11 (audit 1111-0227, defects 3-5; extended after audit 1111-0307): the case-scaleup-1111 generator wrote its next-size join
+# sidecars without an identity (no table, no model; the family field holds an id template such as
+# XC1.omnipaxos-spec-sol.impl_fifo.vs-spec.jimpl-jimpl), and some records (.cinf.m.r2) have no sidecar at all; the tables printed the
+# template, or nothing, as the program. Such a row takes the attributes of a sibling: a named sidecar row (any file loaded above) with the
+# same engine prefix, program directory, side, variant words, model, reference (vs-) and engine pair, at any size; its size and the size
+# in spec_case/impl_case replaced. With no sibling, the identity is parsed from the id (directory and variant words are id tokens, the
+# paper name comes from inputs/paper-names.tsv via paper_name(); table, kind and tools from a row of the same engine prefix, as
+# rows-attrs.py's template() does) and the note says so. Never an id fragment as a label.
+_MODELS = {"bag", "fifo", "p2p", "asyn", "causal"}
+def _pid(i):   # the parsed fields of a run id: (prefix, directory, side, variant words, model, vs-word, engine pair) and the size numbers
+    p = re.sub(r"(\.(c1h|c4h|c48h|cinf|j2|m|p|g|r\d+|t\d+|w\d+|x\d+|f\d+))+$", "", i).split(".")
+    if len(p) < 3 or "_" not in p[2]: return None
+    toks = p[2].split("_"); side = toks[0]; toks = toks[1:]
+    vs = next((x[3:] for x in p[3:] if x.startswith("vs-")), ""); role = ".".join(x for x in p[3:] if not x.startswith("vs-"))
+    _sz = lambda t: t.isdigit() or bool(re.fullmatch(r"[A-Z][A-Za-z]*\d[A-Za-z0-9]*", t))   # a size token: a number, or a scenario name (TiKV L1, X2r: size L1,0,0,1)
+    words = tuple(t for t in toks if not _sz(t) and t not in _MODELS); model = next((t for t in reversed(toks) if t in _MODELS), "")
+    return (p[0], p[1], side, words, model, vs, role), [t for t in toks if _sz(t)]
+def _named_ok(a): return bool(a.get("table") and a.get("model") and "." not in (a.get("family") or "") and "_" not in (a.get("size") or ""))   # a size in the id's shape (L1_0_0_1_fifo, case-scaleup-1111 r3 TiKV rows) is no identity
+_sibs = {}; _bypre = {}
 for _i, _a in attrs.items():
-    if _a.get("table") and _a.get("model") and "." not in (_a.get("family") or ""):
-        _t, _n = _case_tpl(_i)
-        if _t and _n: _named.setdefault(_t, []).append((bool(re.search(r"\.(c1h|c48h|cinf|j2|m|r\d+|p)$", _i)), len(_i), _i, _n))   # the plain id of the case first
+    if not _named_ok(_a): continue
+    _q = _pid(_i)
+    if _q and _q[1]: _sibs.setdefault(_q[0], []).append((bool(re.search(r"\.(c1h|c48h|cinf|j2|m|r\d+|p)$", _i)), len(_i), _i, _q[1]))   # the plain id of the case first
+    _bypre.setdefault(_i.split(".")[0], (_i, _a))
+def _identity(i, a=None, command=""):   # a sidecar row for id i (its own malformed one as a, or none): from a sibling, else parsed from the id
+    a = a or {}; q = _pid(i)
+    if not q or not q[1]: return None
+    (pre, d, side, words, model, vs, role), nums = q
+    if q[0] in _sibs:
+        src, sn = sorted(_sibs[q[0]])[0][2:]
+        b = dict(attrs[src]); old, new = "_".join(sn), "_".join(nums)
+        for c in ("spec_case", "impl_case"):
+            if b.get(c): b[c] = re.sub(r"(?<=_)" + re.escape(old) + r"(?=_)", new, b[c], count=1)
+        _st = (b.get("size") or "").split(","); _ts = src.split(".")[2].split("_") if src.count(".") >= 2 else []; _tt = re.sub(r"(\.(c1h|c4h|c48h|cinf|j2|m|p|g|r\d+|t\d+|w\d+|x\d+|f\d+))+$", "", i).split(".")[2].split("_")
+        _sz, _k = [], 0   # the size in the sibling's own shape (TiKV: scenario,e,a,o = L1,0,0,1): each size token of the sibling taken at the same id position in this id
+        for _x in _st:
+            while _k < len(_ts) and _ts[_k] != _x: _k += 1
+            if _k >= len(_ts) or len(_tt) != len(_ts): _sz = None; break
+            _sz.append(_tt[_k]); _k += 1
+        b.update(id=a.get("id", i), size=a.get("size") or (",".join(_sz) if _sz else ",".join(nums)), tier=a.get("tier") or b.get("tier", ""), note=(b.get("note", "") + " [" + a.get("note", "") + "; identity of " + src + ", audit 1111-0227]").strip())   # the case's note first: twin_spec() reads twin-spec= from it
+        return b
+    t = _bypre.get(pre)
+    if not t: return None
+    b = {k: t[1].get(k, "") for k in ("table", "engine", "threads", "kind", "spec_tool", "impl_tool", "spec_lang", "impl_lang", "mode", "exploration")}
+    ex = [re.sub(r"\.vs-[A-Za-z0-9-]+", "", re.sub(r"(\.(c1h|c4h|c48h|cinf|j2|m|p|g|r\d+|t\d+|w\d+|x\d+|f\d+))+$", "", e)) for e in re.findall(r"/([A-Za-z0-9._-]+)/export\.jsonl", command or "")]
+    b.update(id=i, family=d, benchmark=d, size=a.get("size") or ",".join(nums), model=model, variant="-".join(words) if words else "impl", expected_verdict="",   # no expectation: never a guessed one
+             tier=a.get("tier", ""), spec_case=(ex[0].split(".", 1)[1] if len(ex) == 2 and "." in ex[0] else ""), impl_case=(ex[1].split(".", 1)[1] if len(ex) == 2 and "." in ex[1] else ""),
+             note=((a.get("note", "") + "; ") if a.get("note") else "") + "identity parsed from the id (no sidecar), audit 1111-0307")
+    return b
 _fixed = 0
 for _i, _a in list(attrs.items()):
     if _a.get("table") or _a.get("model"): continue
-    _t, _n = _case_tpl(_i)
-    if not _t or not _n or _t not in _named: continue
-    _src_id, _sn = sorted(_named[_t])[0][2:]
-    _b = dict(attrs[_src_id]); _old, _new = "_".join(_sn), "_".join(_n)
-    for _c in ("spec_case", "impl_case"):
-        if _b.get(_c): _b[_c] = re.sub(r"(?<=_)" + re.escape(_old) + r"(?=_)", _new, _b[_c], count=1)
-    _b.update(id=_a.get("id", _i), size=_a.get("size") or ",".join(_n), tier=_a.get("tier", _b.get("tier", "")), note=(_b.get("note", "") + " [" + _a.get("note", "") + "; identity of " + _src_id + ", audit 1111-0227]").strip())   # the case's note first: twin_spec() reads twin-spec= from it
-    attrs[_i] = _b; _fixed += 1
-if _fixed: print(f"sidecar rows without an identity named from their case's sidecar at another size (audit 1111-0227): {_fixed}")
+    _b = _identity(_i, _a)
+    if _b and _b.get("note", "").find("identity parsed") < 0: attrs[_i] = _b; _fixed += 1   # a sidecar without identity: from a sibling here; the parse fallback runs per record below (it reads the command)
+if _fixed: print(f"sidecar rows without an identity named from a sibling sidecar (audit 1111-0227/0307): {_fixed}")
 # latest record per id wins (reruns append)
 import subprocess
 PIN = subprocess.run(["git", "-C", DV + "/traceforge", "rev-parse", "--short=7", "HEAD"], capture_output=True, text=True).stdout.strip()
@@ -143,7 +172,15 @@ for r in rows:  # an id run on several pins: a real measurement, then the 48 h t
     else: DROPPED.append((r["run_id"], "same id, superseded by " + cur["run_id"]))
 rows = list(byid.values())
 # an id of the first phase-1 generation carried a `.vs-<spec>` segment the current rows file does not: same command, same attributes
-for r in rows: r["a"] = attrs.get(r["run_id"]) or attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})   # exact id first: sidecars written since 11-06 key a row by its full id (tier suffix included); older ones by the base id
+for r in rows: r["a"] = attrs.get(r["run_id"]) or attrs.get(base_id(r["run_id"])) or attrs.get(re.sub(r"\.vs-[A-Za-z0-9-]+", "", base_id(r["run_id"])), {})
+_named_rec = collections.Counter()
+for r in rows:   # 2026-11-11 (audit 1111-0307): a record whose id no sidecar names (C3J.swiftpaxos-derived.spec_6_fifo.vs-hand.cinf.m.r2: the sidecar keys .cinf.m), or names without an identity
+    if r["a"] and _named_ok(r["a"]): continue
+    if r["run_id"].split(".")[0] not in ("C3J", "XJ1", "XJ2", "XT1", "XT2", "XC1", "XC2"): continue   # the offline joins only (the defect family); other unnamed records keep their old handling
+    if r["a"] and (r["a"].get("table") or r["a"].get("model")): continue   # a sidecar with its own (partial) identity keeps it
+    _b = _identity(r["run_id"], dict(r["a"]) if r["a"] else None, r.get("command", ""))
+    if _b: r["a"] = _b; _named_rec["parsed from the id" if "identity parsed" in _b.get("note", "") else "from a sibling"] += 1
+if _named_rec: print(f"records without a named sidecar given an identity (audit 1111-0307): {dict(_named_rec)}")   # exact id first: sidecars written since 11-06 key a row by its full id (tier suffix included); older ones by the base id
 # naive(k): the spawn-encoding argument e is dropped (owner, 2026-11-03); the rows recorded as k,1 are the program's rows, size k; k,2 rows are left out
 _n = len(rows); rows = drop(rows, lambda r: r["a"].get("family") == "s1-naive" and re.fullmatch(r"\d+,2", r["a"].get("size", "")), "naive: second spawn encoding")
 for r in rows:
