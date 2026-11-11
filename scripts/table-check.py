@@ -185,7 +185,7 @@ for f in sorted(glob.glob(os.path.join(TB, "campaign-*.csv")) + [os.path.join(TB
             for c, v in r.items():
                 def same(a, b):   # a change of formatting only (e.g. 0.0 -> 0.040 when the phase columns went to ms precision) is no change
                     if a == b: return True
-                    x, y = num(a), num(b); return x is not None and y is not None and round(x, 1) == round(y, 1)
+                    x, y = num(a), num(b); return x is not None and y is not None and round(x, 3) == round(y, 3)   # 2026-11-11 (audit 1111-0209): one decimal hid 0.025 -> 0.028 in a first-report column printed to the millisecond
                 if not same(old[k].get(c, ""), v) and c not in ("started", "directory"): diff.append(f"{fn}: ~ {k}: {c}: '{old[k].get(c, '')}' -> '{v}' (run id {r.get('run id', '')})"); fchg += 1
         for k in old:
             if k not in cur: diff.append(f"{fn}: - {k} (row gone)"); fchg += 1
