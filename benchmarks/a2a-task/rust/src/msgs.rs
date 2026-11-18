@@ -136,6 +136,8 @@ pub struct Args {
     /// `true`: the delegation scenario (two servers; the first one's executor is a client of the
     /// second).
     pub delegation: bool,
+    /// Nonzero: the deliberately wrong server of that number (spec-strength check), impl side.
+    pub mutant: u8,
 }
 
 pub fn t1() -> String {

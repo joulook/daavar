@@ -14,15 +14,24 @@
 //! callback is answered: the text gives the answer no deadline ("attempts to cancel the specified
 //! task and returns its updated state", spec.md:260).
 //!
+//! Two readings of "The stream MUST close when the task reaches a terminal state" (spec.md:187)
+//! are both encoded: the terminal state as stored (the stream's tail goes out in the step that
+//! commits it) and the terminal state as published on the stream (the tail may be deferred to a
+//! later step, the stored state staying unpublished meanwhile). An executor report rejected
+//! because the task is already terminal is, while the stream is still open, either ignored or
+//! answered on the stream by an error item and the end of the stream: the text neither requires
+//! nor forbids that error item, so both are allowed. Status events are optional ("zero or more",
+//! spec.md:187) but at most one per state change: a status event is "sent by the agent to notify
+//! the client of a change in a task's status" (proto `TaskStatusUpdateEvent`).
+//!
 //! Restrictions this program adds to the text, deliberately (they make it narrower than the text):
-//! * exactly one status event per state change after creation (the text allows "zero or more");
-//! * the stream closes in the step that makes the task terminal, with no final Task item;
+//! * no final Task item before the end of the stream;
 //! * `fin` = the state is terminal (the proto has no such field);
-//! * no authentication, authorization or system error ever occurs;
+//! * no authentication, authorization or system error ever occurs (the error answers are the
+//!   not-found answer to a cancel of a task whose Task object has not been returned yet, and the
+//!   error item for a rejected executor report);
 //! * a cancel that loses to completion is answered with the not-cancelable error, never with the
 //!   completed task;
-//! * an executor report that arrives after the task became terminal is received and ignored: no
-//!   output and no state change (in particular no error item on the stream);
 //! * the executor is started at once on the streaming send; a refused cancel calls nothing back.
 //!
 //! The server handles one received message per atomic step and never waits inside a step.
@@ -52,8 +61,9 @@ enum Out {
 struct Server {
     client: ThreadId,
     exec: ThreadId,
-    /// The task's committed state (`None`: not created). Terminal states are never left
-    /// (life-of-a-task.md:79-80, "it cannot restart").
+    /// The task's committed state (`None`: no streaming send yet). `Submitted` also covers a task
+    /// whose creation is not yet visible: until its Task item is sent it may still be reported
+    /// not found. Terminal states are never left (life-of-a-task.md:79-80, "it cannot restart").
     ts: Option<State>,
     strm: Strm,
     /// The Task item is still owed: the stream "MUST begin with the Task object" (spec.md:187).
@@ -66,6 +76,8 @@ struct Server {
     cb_out: u32,
     /// A decided cancel answer not yet sent (held while a callback is outstanding).
     held: Option<ToClient>,
+    /// A terminal state committed but not yet published on the stream (the stream is still open).
+    unpublished: Option<State>,
     /// Requests answered so far (each request is answered at most once).
     answered: Vec<u32>,
 }
@@ -111,22 +123,36 @@ impl Server {
         }
     }
 
-    /// The task reached the terminal state `c`: its status event, then the end of the stream
-    /// (spec.md:187, "The stream MUST close when the task reaches a terminal state"), with the
-    /// cancel answer `ans`, if any, at any position among them: the text orders the events of
-    /// one stream (spec.md:660) but never a stream against another request's answer.
-    /// With `may_hold` (a callback is outstanding after this step) the answer may instead be held.
-    fn terminal_items(&mut self, ans: Option<ToClient>, c: State, may_hold: bool) -> Vec<Out> {
-        assert!(c.terminal());
+    /// The stream's tail for the terminal state `c`: the owed Task item, if any (the stream
+    /// "MUST begin with the Task object", spec.md:187), the terminal status event or none, and the
+    /// end of the stream.
+    fn tail(&mut self, c: State) -> Vec<Out> {
         let mut items = Vec::new();
         if self.item_owed {
-            // A cancel took effect before any executor report: the stream still begins with the
-            // Task object.
             self.item_owed = false;
             items.push(Out::Client(task_item()));
         }
-        items.push(Out::Client(ToClient::Status { req: 1, task: t1(), state: c, fin: true }));
+        if nondet() {
+            self.evs.push(c);
+            items.push(Out::Client(ToClient::Status { req: 1, task: t1(), state: c, fin: true }));
+        }
         items.push(Out::Client(ToClient::StreamClose { req: 1 }));
+        items
+    }
+
+    /// The task reached the terminal state `c`. The stream's tail goes out now (state as stored) or
+    /// later (state as published; see [`Self::late`]). The cancel answer `ans`, if any, goes at any
+    /// position among the step's stream items: the text orders the events of one stream
+    /// (spec.md:660) but never a stream against another request's answer. With `may_hold` (a
+    /// callback is outstanding after this step) the answer may instead be held.
+    fn terminal_items(&mut self, ans: Option<ToClient>, c: State, may_hold: bool) -> Vec<Out> {
+        assert!(c.terminal());
+        let mut items = if nondet() {
+            self.tail(c)
+        } else {
+            self.unpublished = Some(c);
+            Vec::new()
+        };
         if let Some(a) = ans {
             if may_hold && nondet() {
                 self.hold(a);
@@ -135,8 +161,35 @@ impl Server {
                 items.insert(k, Out::Client(a));
             }
         }
-        self.evs.push(c);
         items
+    }
+
+    /// A later step of a task whose terminal state is not yet published: the tail goes out now or
+    /// stays deferred; at an executor report the task rejects (`rejected`), the stream may instead
+    /// end with an error item.
+    fn late(&mut self, rejected: bool) -> Vec<Out> {
+        let c = match self.unpublished {
+            Some(c) => c,
+            None => return Vec::new(),
+        };
+        match (0..(if rejected { 3 } else { 2 })).nondet() {
+            0 => Vec::new(),
+            1 => {
+                self.unpublished = None;
+                self.tail(c)
+            }
+            _ => {
+                self.unpublished = None;
+                let mut items = Vec::new();
+                if self.item_owed {
+                    self.item_owed = false;
+                    items.push(Out::Client(task_item()));
+                }
+                items.push(Out::Client(ToClient::Err { req: 1, code: ErrCode("rejected report") }));
+                items.push(Out::Client(ToClient::StreamClose { req: 1 }));
+                items
+            }
+        }
     }
 
     fn hold(&mut self, a: ToClient) {
@@ -177,17 +230,26 @@ impl Server {
 
     /// Invariants after every step.
     fn check(&self) {
-        match self.ts {
-            None | Some(State::Submitted) => assert!(self.evs.is_empty()),
-            Some(State::Working) => assert_eq!(self.evs, vec![State::Working]),
-            // A cancel may take effect before the executor's first report (no `Working` event).
-            Some(c) => assert!(self.evs == vec![State::Working, c] || self.evs == vec![c]),
-        }
+        // The status events are a subsequence of [Working, terminal state].
+        let allowed = match self.ts {
+            None | Some(State::Submitted) => vec![],
+            Some(State::Working) => vec![State::Working],
+            Some(c) => vec![State::Working, c],
+        };
+        let mut it = allowed.iter();
+        assert!(self.evs.iter().all(|e| it.any(|a| a == e)), "status events {:?}", self.evs);
         if self.ts.is_some() {
-            assert_eq!(self.strm == Strm::Closed, self.term(), "the stream is closed iff terminal");
+            assert_eq!(
+                self.strm == Strm::Closed,
+                self.term() && self.unpublished.is_none(),
+                "the stream is closed iff the terminal state is published"
+            );
         }
-        if self.ts.map_or(false, |s| s != State::Submitted) {
-            assert!(!self.item_owed, "the Task item precedes every status event");
+        if self.unpublished.is_some() {
+            assert!(self.term());
+        }
+        if self.ts == Some(State::Working) || self.strm == Strm::Closed {
+            assert!(!self.item_owed, "the Task item precedes every other stream item");
         }
         if self.pc.is_some() {
             assert!(self.cb_out > 0 && !self.term());
@@ -223,7 +285,13 @@ impl Server {
                 // The executor's hand-over: the deferred Task item, if any, goes out now. (After a
                 // cancel that took effect before it, the task is terminal and nothing is owed.)
                 assert!(self.ts.is_some(), "the hand-over follows the streaming send");
-                if self.item_owed {
+                if self.term() {
+                    // Rejected (the task is terminal): the deferred tail, an error item, or nothing;
+                    // a held cancel answer may go out at any executor report.
+                    let outs = self.late(true);
+                    let outs = self.release(outs, false);
+                    self.send_all(outs);
+                } else if self.item_owed {
                     self.item_owed = false;
                     self.send_all(vec![Out::Client(task_item())]);
                 }
@@ -232,7 +300,10 @@ impl Server {
                 assert!(self.ts.is_some(), "the report follows the streaming send");
                 if self.term() {
                     // A cancel took effect before the executor reported: terminal states are
-                    // absorbing and the stream is closed; no output, no change.
+                    // absorbing; the report is rejected (see `late`); a held answer may go out.
+                    let outs = self.late(true);
+                    let outs = self.release(outs, false);
+                    self.send_all(outs);
                     self.check();
                     return;
                 }
@@ -243,16 +314,19 @@ impl Server {
                     outs.push(Out::Client(task_item()));
                 }
                 self.ts = Some(State::Working);
-                self.evs.push(State::Working);
-                outs.push(Out::Client(ToClient::Status { req: 1, task: t1(), state: State::Working, fin: false }));
+                if nondet() {
+                    self.evs.push(State::Working);
+                    outs.push(Out::Client(ToClient::Status { req: 1, task: t1(), state: State::Working, fin: false }));
+                }
                 self.send_all(outs);
             }
             ToServer::Completed { .. } => {
                 assert!(!matches!(self.ts, None | Some(State::Submitted)));
                 if self.term() {
-                    // Terminal states are absorbing; the stream is closed: no output, no change
-                    // (a held answer may go out here).
-                    let outs = self.release(Vec::new(), false);
+                    // Terminal states are absorbing: the report is rejected (see `late`); a held
+                    // answer may go out here.
+                    let outs = self.late(true);
+                    let outs = self.release(outs, false);
                     self.send_all(outs);
                 } else if self.pc.is_none() {
                     self.ts = Some(State::Completed);
@@ -275,25 +349,33 @@ impl Server {
                 if self.term() {
                     // Nothing to cancel; whether the executor is still called back is not
                     // something the text speaks of.
+                    // A deferred tail may go out in this step too.
+                    let mut outs = self.late(false);
                     let a = self.answer_terminal(req);
-                    let outs = if nondet() {
+                    let callback = nondet();
+                    if callback && nondet() {
                         // With a callback the answer may be held until the callback returns.
-                        let outs = if nondet() {
-                            self.hold(a);
-                            Vec::new()
-                        } else {
-                            vec![Out::Client(a)]
-                        };
-                        Self::with_callback(outs)
+                        self.hold(a);
                     } else {
-                        vec![Out::Client(a)]
-                    };
+                        let k = (0..=outs.len()).nondet();
+                        outs.insert(k, Out::Client(a));
+                    }
+                    let outs = if callback { Self::with_callback(outs) } else { outs };
                     self.send_all(outs);
                 } else {
                     // "The server will attempt to cancel the task, but success is not guaranteed
                     // (e.g., [...] cancellation might not be supported at its current stage)"
                     // (spec.md:243). The text names no point at which a cancel takes effect.
-                    match (0..3usize).nondet() {
+                    // While the Task object has not been returned the task id is not known to exist:
+                    // "TaskNotFoundError: The task ID does not exist or is not accessible"
+                    // (spec.md:256); the agent "MAY create a new Task" (spec.md:157) and nothing fixes
+                    // the creation earlier than the Task object, so the task may not exist yet: the
+                    // cancel may then be answered not-found, with no effect on the task.
+                    let n = if self.item_owed && self.ts == Some(State::Submitted) { 4 } else { 3 };
+                    match (0..n).nondet() {
+                        3 => {
+                            self.send_all(vec![Out::Client(ToClient::Err { req, code: ErrCode("TaskNotFound") })]);
+                        }
                         0 => {
                             // The cancel takes effect now; the answer is the updated task
                             // (spec.md:260).
@@ -334,7 +416,8 @@ impl Server {
                     self.send_all(outs);
                 } else {
                     let forced = self.cb_out == 0;
-                    let outs = self.release(Vec::new(), forced);
+                    let outs = self.late(false);
+                    let outs = self.release(outs, forced);
                     self.send_all(outs);
                 }
             }
@@ -367,6 +450,7 @@ fn server(client: ThreadId, exec: ThreadId) {
         pc: None,
         cb_out: 0,
         held: None,
+        unpublished: None,
         answered: Vec::new(),
     };
     let mut shutdown = false;

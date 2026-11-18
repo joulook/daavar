@@ -10,7 +10,8 @@
 //! Both run the same client and executor (`env.rs`) and the same messages (`msgs.rs`).
 //!
 //! ARGS: `<spec|impl|spec2|impl2>,<a|b>[,recancel]` (one comma-separated argument); `spec2`/`impl2`
-//! select the delegation scenario (client, serverA, execA, serverB, execB; no recancel).
+//! select the delegation scenario (client, serverA, execA, serverB, execB; no recancel); `mutant<n>` (n = 1..4)
+//! runs a deliberately wrong server of experiment 1 on the impl side (`count impl -- mutant1,a`).
 //! * `a`: the executor hands the task over before reporting `working`; `b`: it reports
 //!   `working` first;
 //! * `recancel`: after the read, the client cancels the terminal task again.
@@ -24,6 +25,7 @@
 mod env;
 mod imp;
 mod msgs;
+mod mutants;
 mod spec;
 
 use std::process::ExitCode;
@@ -41,9 +43,14 @@ fn parse(args: &[String]) -> Args {
     if !(2..=3).contains(&f.len()) {
         panic!("{PROGRAM}: expected 2 or 3 fields in `{}`; ARGS are {USAGE}", args[0]);
     }
+    let mut mutant = 0u8;
     let delegation = match f[0] {
         "spec" | "impl" => false,
         "spec2" | "impl2" => true,
+        s if s.starts_with("mutant") => {
+            mutant = s[6..].parse().unwrap_or_else(|_| panic!("{PROGRAM}: bad mutant `{s}`"));
+            false
+        }
         s => panic!("{PROGRAM}: unknown side `{s}`; ARGS are {USAGE}"),
     };
     let task_first = match f[1] {
@@ -59,7 +66,7 @@ fn parse(args: &[String]) -> Args {
     if delegation && recancel {
         panic!("{PROGRAM}: no recancel in the delegation scenario; ARGS are {USAGE}");
     }
-    Args { task_first, recancel, delegation }
+    Args { task_first, recancel, delegation, mutant }
 }
 
 fn main() -> ExitCode {
@@ -74,7 +81,14 @@ fn main() -> ExitCode {
                 names.iter().map(|n| n.to_string()).collect()
             },
             spec: &|a| env::entry(parse(a), spec::run),
-            imp: &|a| env::entry(parse(a), imp::run),
+            imp: &|a| {
+                let p = parse(a);
+                if p.mutant > 0 {
+                    env::entry(p, mutants::run)
+                } else {
+                    env::entry(p, imp::run)
+                }
+            },
         },
         traceforge::ConsType::FIFO,
     )

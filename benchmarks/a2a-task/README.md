@@ -76,3 +76,11 @@ Spec, brain03, cores 80-127, TraceForge `387e30d`:
 | `spec,b,recancel` | execs=7023 blocked=3 | 7026 |
 
 Joins: see `plan/case-studies/a2a/RESULTS-1.md` (github-jmc plan tree).
+
+## Experiment 2 (delegation)
+
+ARGS `spec2,<a|b>` / `impl2,<a|b>`. Roles `client`, `serverA`, `serverB` (visible) and `execA`, `execB`. One server
+function runs as two instances. Wiring and execA's contract are in `rust/src/env.rs` (`launch2`, `exec_a`); the
+design is `SPEC-DESIGN-2.md`. Spec (rev 10), brain03: `spec2,a` execs=363489 blocked=1017, 173400 observations;
+`spec2,b` execs=229821 blocked=729, 102138 observations. Joins: `plan/case-studies/a2a/RESULTS-2.md`.
+

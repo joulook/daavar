@@ -43,6 +43,11 @@ import java.util.List;
  * fifo. The messages, the client and the executor mirror the Rust twin's ({@code msgs.rs},
  * {@code env.rs}) event for event.
  *
+ * <p>Delegation, {@code impl2,<a|b>}: two instances of the same server. Instance A
+ * ({@code serverA}) serves {@code client} and its executor {@code execA}. Instance B ({@code serverB})
+ * serves {@code execA}, which delegates the task to it as an A2A client, and the single-server
+ * executor {@code execB}. Visible: {@code client}, {@code serverA}, {@code serverB}.
+ *
  * <p>Termination (no daemons, no messages from main): the client's last send is {@code Shutdown};
  * the server records it and, once every cancel callback it sent has been answered by a
  * {@code Canceled}, sends {@code Shutdown} to the executor and ends; the executor ends on
@@ -138,14 +143,22 @@ public final class A2ATask implements MpProgram {
 
     private final boolean submitFirst;
     private final boolean recancel;
+    /** The delegation scenario: two server instances, the first one's executor a client of the second. */
+    private final boolean delegation;
 
     /**
-     * @param args {@code impl}, {@code a} or {@code b}, optionally {@code recancel}
+     * @param args {@code impl} or {@code impl2}, {@code a} or {@code b}, optionally (not with
+     *     {@code impl2}) {@code recancel}
      */
     public A2ATask(String... args) {
-        if (args.length < 2 || args.length > 3 || !args[0].trim().equals("impl")) {
-            throw new IllegalArgumentException("A2ATask takes impl,<a|b>[,recancel]");
+        if (args.length < 2 || args.length > 3) {
+            throw new IllegalArgumentException("A2ATask takes impl,<a|b>[,recancel] or impl2,<a|b>");
         }
+        this.delegation = switch (args[0].trim()) {
+            case "impl" -> false;
+            case "impl2" -> true;
+            default -> throw new IllegalArgumentException("side must be impl or impl2, was " + args[0]);
+        };
         this.submitFirst = switch (args[1].trim()) {
             case "a" -> true;
             case "b" -> false;
@@ -155,6 +168,9 @@ public final class A2ATask implements MpProgram {
             throw new IllegalArgumentException("third argument must be recancel, was " + args[2]);
         }
         this.recancel = args.length == 3;
+        if (delegation && recancel) {
+            throw new IllegalArgumentException("no recancel in the delegation scenario");
+        }
     }
 
     @Override
@@ -164,7 +180,7 @@ public final class A2ATask implements MpProgram {
 
     @Override
     public String size() {
-        return (submitFirst ? "a" : "b") + (recancel ? "-recancel" : "");
+        return (delegation ? "2" : "") + (submitFirst ? "a" : "b") + (recancel ? "-recancel" : "");
     }
 
     @Override
@@ -174,12 +190,14 @@ public final class A2ATask implements MpProgram {
 
     @Override
     public List<String> rolesInSpawnOrder() {
-        return List.of("server", "exec", "client");
+        return delegation
+                ? List.of("serverA", "execA", "client", "serverB", "execB")
+                : List.of("server", "exec", "client");
     }
 
     @Override
     public List<String> visibleRoles() {
-        return List.of("client", "server");
+        return delegation ? List.of("client", "serverA", "serverB") : List.of("client", "server");
     }
 
     /**
@@ -188,6 +206,10 @@ public final class A2ATask implements MpProgram {
      */
     @Override
     public void run() {
+        if (delegation) {
+            launch2();
+            return;
+        }
         MpProcess.Pending server = MpProcess.create("server");
         MpProcess.Pending exec = MpProcess.create("exec");
         MpProcess.Pending client = MpProcess.create("client");
@@ -200,6 +222,99 @@ public final class A2ATask implements MpProgram {
         hs.await();
         he.await();
         hc.await();
+    }
+
+    // ---------------------------------------------------------------- delegation wiring
+
+    /**
+     * The delegation scenario. The Rust twin's spawn tree is: main spawns {@code serverA}; serverA
+     * spawns {@code execA}, then {@code client}; execA spawns {@code serverB}; serverB spawns
+     * {@code execB}. JMC's export requires main to create every process, so main creates all five
+     * here, then starts them and waits for them. In the tree, each spawn comes before the spawning
+     * process's first message event, so the tree orders no two message events. The exported words
+     * and their causal order are therefore the same. serverA runs the server for (client, execA),
+     * execA the delegating executor, serverB the same server for (execA, execB), and execB the
+     * single-server executor. Shutdown chain: client, serverA, execA, serverB, execB.
+     */
+    private void launch2() {
+        MpProcess.Pending serverA = MpProcess.create("serverA");
+        MpProcess.Pending execA = MpProcess.create("execA");
+        MpProcess.Pending client = MpProcess.create("client");
+        MpProcess.Pending serverB = MpProcess.create("serverB");
+        MpProcess.Pending execB = MpProcess.create("execB");
+        Tid a = serverA.tid();
+        Tid ea = execA.tid();
+        Tid c = client.tid();
+        Tid b = serverB.tid();
+        Tid eb = execB.tid();
+        List<MpProcess.Handle> hs = List.of(
+                serverA.start(() -> new Server(c, ea).run()),
+                execA.start(() -> execA(a, b)),
+                client.start(() -> client(a)),
+                serverB.start(() -> new Server(ea, eb).run()),
+                execB.start(() -> exec(b)));
+        for (MpProcess.Handle h : hs) {
+            h.await();
+        }
+    }
+
+    /**
+     * The delegating executor of server A. Towards B it is a client with requests 1 (streaming send)
+     * and 2 (cancel). On {@code Exec}: in variant a {@code Submit} to A; {@code Working} to A;
+     * {@code SendStream{1}} to B. From B's stream: a final {@code Status} remembers its state; a
+     * {@code TaskItem}, a non-final {@code Status} or an {@code Err} does nothing (not relayed);
+     * {@code StreamClose{1}}: if the remembered state is {@code Completed}, {@code Completed} to A
+     * (once). {@code CancelCb} from A (at most one): {@code Cancel{2,t1}} to B. Any message for
+     * request 2 is B's answer. After every message: once a callback arrived, B answered and B's stream
+     * closed, exactly one {@code Canceled} to A. {@code Shutdown} from A: {@code Shutdown} to B, and
+     * it ends.
+     */
+    private void execA(Tid a, Tid b) {
+        State bFinal = null;
+        boolean bClosed = false;
+        boolean cb = false;
+        boolean answered = false;
+        boolean completedSent = false;
+        boolean canceledSent = false;
+        while (true) {
+            MpMessage m = Channel.recv(M);
+            if (m instanceof Exec x) {
+                if (submitFirst) {
+                    Channel.send(M, a, new Submit(x.task()));
+                }
+                Channel.send(M, a, new Working(x.task()));
+                Channel.send(M, b, new SendStream(1));
+            } else if (m instanceof CancelCb) {
+                if (cb) {
+                    throw new AssertionError("execA: one cancel callback");
+                }
+                cb = true;
+                Channel.send(M, b, new Cancel(2, T1));
+            } else if (m instanceof Shutdown) {
+                Channel.send(M, b, new Shutdown());
+                return;
+            } else if (m instanceof Status st && st.req() == 1 && st.fin()) {
+                bFinal = st.state();
+            } else if (m instanceof TaskItem ti && ti.req() == 1
+                    || m instanceof Status st && st.req() == 1
+                    || m instanceof Err er && er.req() == 1) {
+                // nothing: B's other stream items are not relayed
+            } else if (m instanceof StreamClose sc && sc.req() == 1) {
+                bClosed = true;
+                if (bFinal == State.Completed && !completedSent) {
+                    completedSent = true;
+                    Channel.send(M, a, new Completed(T1));
+                }
+            } else if (reqOf(m) == 2) {
+                answered = true;
+            } else {
+                throw new IllegalStateException("execA: unexpected " + m);
+            }
+            if (cb && answered && bClosed && !canceledSent) {
+                canceledSent = true;
+                Channel.send(M, a, new Canceled(T1));
+            }
+        }
     }
 
     // ---------------------------------------------------------------- client

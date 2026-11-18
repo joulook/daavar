@@ -12,6 +12,9 @@
 //! (with no callback, the stream closed only after `Completed` was read), so no message is left
 //! unread. Thread ids: the server spawns the executor and the client and
 //! knows both; each receives the server's id at its spawn (no setup messages).
+//!
+//! Delegation scenario ([`launch2`]): the same rules per server; the observed roles are `client`,
+//! `serverA` and `serverB`; the delegating executor [`exec_a`] is not observed.
 
 use std::sync::Arc;
 

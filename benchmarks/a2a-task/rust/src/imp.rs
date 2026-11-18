@@ -422,6 +422,13 @@ fn server(client: ThreadId, exec: ThreadId) {
     }
 }
 
+/// One server (`env::launch`), or two instances of the same server function wired for delegation
+/// (`env::launch2`: the first serves the client and a delegating executor, the second serves that
+/// executor and the scripted one).
 pub fn run(args: Args) {
-    env::launch(args, server);
+    if args.delegation {
+        env::launch2(args, server);
+    } else {
+        env::launch(args, server);
+    }
 }
