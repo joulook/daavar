@@ -77,6 +77,7 @@ def read_tail(p, n=64*1024*1024):  # logs can be >100 GB; everything we parse is
             return f.read().decode(errors="replace")
     except OSError: return ""
 out = read_tail(d / "stdout.log")
+err = read_tail(d / "stderr.log", 1024 * 1024)   # a refused online run (exit 2) prints its report, with the verdict line, on stderr
 # TraceForge EVALROW record
 m = re.search(r"EVALROW\t(.*)", out)
 if m and dv:
@@ -150,7 +151,7 @@ if "rust-run.sh" in rec["command"] and "--- measurements" in out:
     mm = re.search(r"^exported: (\d+) lines from (\d+) graphs", out, re.M)   # the exporter's own count
     if mm: rec["impl_summaries"] = mm.group(1); rec.setdefault("impl_complete", mm.group(2)); rec["impl_complete"] = rec.get("impl_complete") or mm.group(2)
     # the online check's own lines
-    mm = re.search(r"^verdict:\s*(\S+)", out, re.M)
+    mm = re.search(r"^verdict:\s*(\S+)", out, re.M) or re.search(r"^verdict:\s*(refused)\b", err, re.M)
     if mm: rec["verdict"] = {"reports": "violation"}.get(mm.group(1), mm.group(1))
     mm = re.search(r"^uncovered:\s*(\d+) graphs \((\d+) distinct", out, re.M)
     if mm: rec["uncovered_total"] = mm.group(1); rec["uncovered_distinct"] = mm.group(2)

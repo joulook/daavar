@@ -10,6 +10,7 @@ import org.mpi_sws.jmc.mp.summary.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Safra's termination detection (EWD 998, candidate N14) against a termination oracle: the Java
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * <p>Arguments: {@code <spec|impl>,<N>,<fifo|bag>,<variant>}; N nodes, K = 1 payload per node,
  * R = 2 probes. Variants: {@code correct}, {@code no-black-on-receive}. Visible: {@code app0..}.
- * Rust's {@code sent: Option<u8>} is {@code sent}, -1 for {@code None}.
+ * Rust's {@code sent: Option<u8>} is {@code Optional<Integer> sent} (exported as Some/None like Rust).
  */
 public final class Ewd998 implements MpProgram {
 
@@ -31,7 +32,7 @@ public final class Ewd998 implements MpProgram {
 
     /** An app's report on going idle. */
     @Tag("Idle")
-    public record Idle(int node, int sent, int got) implements Msg {}
+    public record Idle(int node, Optional<Integer> sent, int got) implements Msg {}
 
     /** The token. */
     @Tag("Tok")
@@ -141,13 +142,13 @@ public final class Ewd998 implements MpProgram {
     }
 
     /** One active phase: SendMsg (once per node) then Deactivate; returns the new {@code sent}. */
-    private int phase(int i, int sent, int got, Tid[] t, int report) {
-        if (sent < 0) {
+    private Optional<Integer> phase(int i, Optional<Integer> sent, int got, Tid[] t, int report) {
+        if (sent.isEmpty()) {
             int c = Nondet.chooseIndex(n);
             if (c > 0) {
                 int j = (i + c) % n;
                 Channel.send(m, t[n + j], new Pl(i));
-                sent = j;
+                sent = Optional.of(j);
             }
         }
         Channel.send(m, t[report], new Idle(i, sent, got));
@@ -155,7 +156,7 @@ public final class Ewd998 implements MpProgram {
     }
 
     private void app(int i, Tid[] t, int report) {
-        int sent = -1;
+        Optional<Integer> sent = Optional.empty();
         int got = 0;
         sent = phase(i, sent, got, t, report);
         for (int s = 0; s < n; s++) {
@@ -171,21 +172,24 @@ public final class Ewd998 implements MpProgram {
         }
     }
 
-    /** The oracle's test (Rust {@code terminated}); {@code view[i] = {sent, got}} or null. */
-    private boolean terminated(int[][] view) {
-        for (int[] v : view) {
+    /** {@code view[i] == null}: no report yet; otherwise the latest kept report of node i. */
+    private record View(Optional<Integer> sent, int got) {}
+
+    /** The oracle's test (Rust {@code terminated}). */
+    private boolean terminated(View[] view) {
+        for (View v : view) {
             if (v == null) {
                 return false;
             }
         }
         for (int i = 0; i < n; i++) {
-            int sent = view[i][0];
-            int got = view[i][1];
-            if (sent >= 0 && (view[sent][1] & (1 << i)) == 0) {
+            Optional<Integer> sent = view[i].sent();
+            int got = view[i].got();
+            if (sent.isPresent() && (view[sent.get()].got() & (1 << i)) == 0) {
                 return false;
             }
             for (int k = 0; k < n; k++) {
-                if ((got & (1 << k)) != 0 && view[k][0] != i) {
+                if ((got & (1 << k)) != 0 && !view[k].sent().equals(Optional.of(i))) {
                     return false;
                 }
             }
@@ -194,15 +198,15 @@ public final class Ewd998 implements MpProgram {
     }
 
     private void oracle(Tid[] t) {
-        int[][] view = new int[n][];
+        View[] view = new View[n];
         while (true) {
             Msg x = recv();
             if (!(x instanceof Idle r)) {
                 throw new IllegalStateException("oracle got " + x);
             }
-            int[] old = view[r.node()];
-            if (old == null || Integer.bitCount(r.got()) > Integer.bitCount(old[1])) {
-                view[r.node()] = new int[] {r.sent(), r.got()};
+            View old = view[r.node()];
+            if (old == null || Integer.bitCount(r.got()) > Integer.bitCount(old.got())) {
+                view[r.node()] = new View(r.sent(), r.got());
             }
             if (terminated(view)) {
                 if (Nondet.chooseBoolean()) {
@@ -254,7 +258,7 @@ public final class Ewd998 implements MpProgram {
                 outstanding++;
                 Channel.send(m, t[i], new Pl(p.from()));
             } else if (x instanceof Idle r) {
-                if (r.sent() >= 0 && !sentCounted) {
+                if (r.sent().isPresent() && !sentCounted) {
                     counter++;
                     sentCounted = true;
                 }

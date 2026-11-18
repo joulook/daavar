@@ -247,7 +247,8 @@ fn parse(args: &[String]) -> Args {
 }
 
 fn main() -> std::process::ExitCode {
-    traceforge::program::main(traceforge::program::Program {
+    // `Prepare` carries the coordinator's id, so `coord` may be named in a visible payload.
+    traceforge::program::main_with_payload_names(traceforge::program::Program {
         visible: &|a| {
             let _ = parse(a);
             vec!["p0".to_string(), "p1".to_string()]
@@ -257,5 +258,5 @@ fn main() -> std::process::ExitCode {
             let p = parse(a);
             a1_impl(p.n, p.r, p.kind)
         },
-    })
+    }, traceforge::ConsType::FIFO, &|_| vec!["coord".to_string()])
 }

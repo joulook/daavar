@@ -147,6 +147,12 @@ public final class A1Commit implements MpProgram {
         return List.of("p0", "p1");
     }
 
+    /** {@code Prepare} carries the coordinator's id, so {@code coord} may be named in a visible payload. */
+    @Override
+    public List<String> payloadNameableRoles() {
+        return List.of("coord");
+    }
+
     @Override
     public void run() {
         Support.Threads ts = new Support.Threads();
