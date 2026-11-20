@@ -118,11 +118,11 @@ variant, so the filter is a type test, and the Java side uses `Channel.recv(M, R
   --model M -- <K> [variant]`; default K 1, default variant `batched`. `--model` left out means
   `bag`, this benchmark's model, which the crate declares. The `out/fault-check` crate is a separate
   copy, not on the shared main: it keeps the old positional CLI `<spec|impl> <size>
-  [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
+  [fifo|bag|causal] [variant]`, so its commands stand as run. See `scripts/rust-run.sh`.
 - `java/`: package `bench.calculator_disel`, class `Calculator` (args
   `<spec|impl>,<K>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `batcher | memo | memo, delegator`, then
-  `c0, c1`. Visible roles `c0`, `c1` on both sides. See `_tools/run-java.sh`.
+  `c0, c1`. Visible roles `c0`, `c1` on both sides. See `scripts/jmc-run.sh`.
 - `out/runs.log`: every plain-Must command and its output; `out/fault-check/`: the reachability
   crate; `out/fault-check.log`: every reachability command and its output.
 
@@ -167,6 +167,12 @@ so each faulty variant has its correct twin's counts.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `K ∈ {1, 2, 3, 4}`, `v ∈ {batched, batched-swap, memo, memo-ignore-args, delegating, delegating-prev}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/calculator-disel count spec --model bag -- <K>

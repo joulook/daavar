@@ -112,12 +112,12 @@ which also removes the `Fresh` round trip, hence its smaller counts.
   the two sides spawn in different orders, and `conf` compares typed values, so it reports every
   implementation graph; use `online` or `conf-join`, which compare role names. The `out/fault-check`
   crate is a separate copy, not on the shared main: it keeps the old positional CLI `<spec|impl>
-  <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See `_tools/run-rust.sh`.
+  <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See `scripts/rust-run.sh`.
 - `java/`: package `bench.kv_exactly_once_grove`, class `ExactlyOnceKv` (args
   `<spec|impl>,<keys>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, c1`; impl `server, p0, p1, c0, c1`. Visible roles
   `c0`, `c1` on both sides. Rust `op_id: Option<u8>` is Java `opId`, −1 for `None`. See
-  `_tools/run-java.sh`.
+  `scripts/jmc-run.sh`.
 - `out/runs.log`: every plain-Must command and its output; `out/fault-check/`: the reachability
   crate; `out/fault-check.log`: every reachability command and its output.
 
@@ -145,6 +145,12 @@ blocked (the server's final receive, §3). keys = 4 was not run: the JMC run of
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `k ∈ {1, 2, 3}`, `v ∈ {exactly-once, no-request-id}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/kv-exactly-once-grove count spec --model bag -- <k>

@@ -1,7 +1,7 @@
 # bench_craq_port: 3FS chain replication (CRAQ) of one chunk, ported to TraceForge's Must API
 
-Sources: `plan/case-studies/3fs/craq-src` (3FS main, commit 22fca04); interface: `plan/case-studies/3fs/craq/INTERFACE-agents.md`.
-Line numbers below refer to the files in craq-src.
+Sources: 3FS (github.com/deepseek-ai/3FS), main at commit 22fca04; interface: the study's interface document for the program's authors (not published), called INTERFACE.md below.
+Line numbers below refer to the files of 3FS at that commit.
 
 ## Roles (threads)
 
@@ -79,9 +79,13 @@ Line numbers below refer to the files in craq-src.
 
 ## Compile and runs
 
+Build (in this directory): `cargo build --release --locked`.
+
+Historical runs (before 2026-11-06), of an earlier version of `src/main.rs` than the one in this directory (a staging
+copy, before the harness change below); the counts are not those of this program:
+
 ```
-cd /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks-cf2/craq/rust
-TMPDIR=/local/home/mkhoshechin/tmp cargo build --release -j 2
+cargo build --release -j 2
     Finished `release` profile [optimized] target(s) in 2m 01s      (no warnings)
 
 timeout 600 target/release/bench_craq_port count impl --model fifo -- 1
@@ -101,6 +105,6 @@ Check (temporary, removed): logging every `NotCommit` at q=1 showed retries from
 
 ## Coordinator harness change (2026-11-06)
 
-This is a coordinator harness change made on the owner's decision (plan/case-studies/3fs/craq/INTERFACE.md, revision 2026-11-06), not part of this program's own design; its author did not make this change.
+This is a coordinator harness change made on the owner's decision (revision of INTERFACE.md of 2026-11-06), not part of this program's own design; its author did not make this change.
 
 At the per-target retry cut (a read attempt receives from a target the same not-committed answer an earlier attempt of the same read got from it), the read's retry loop in the client no longer calls `assume(false)`: it sends the visible reply `Rep::Unavailable(i)` (an invisible self-send) and the read ends; the client loop accepts `Value` or `Unavailable` as the end of a read. `Rep` gained the variant `Unavailable(usize)`. The cut condition and the retry are otherwise unchanged; the counts recorded above predate the change.

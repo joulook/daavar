@@ -1,8 +1,8 @@
 # <Benchmark name>
 
-**Family:** <related-work | popl-conf application | synthetic>  **Source:** <paper, file paths under
-`related-work-papers/sources/`, or the TraceForge fixture>  **Expected verdict:** **CONFORMS** |
-**DOES NOT REFINE** (<why, in one line>)
+**Family:** <literature benchmark | application | synthetic | case study>  **Source:** <the paper, repository and
+commit, or document the programs are written from; the copied files are in `source/` with `PROVENANCE.md`>
+**Expected verdict:** **CONFORMS** | **DOES NOT REFINE** (<why, in one line>)
 
 ## 1. The protocol
 
@@ -34,13 +34,15 @@ Each variant in this directory: its name, how it differs, its expected verdict a
 ## 6. Files
 
 - `source/`: the original program(s) in the paper's language, copied verbatim, with provenance.
-- `rust/`: the Must-API Rust crate (`spec`/`impl` sides, sizes, model) — see `_tools/run-rust.sh`.
-- `java/`: the Must-API Java programs (`MpProgram`s) — see `_tools/run-java.sh`.
+- `rust/`: the Must-API Rust crate (`spec`/`impl` sides, sizes, model) with its `Cargo.lock`; run with
+  `scripts/rust-run.sh <dir> <args...>` after `scripts/setup-node.sh`.
+- `java/`: the Must-API Java programs (`MpProgram`s); run with
+  `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> <seed> <export|-> <timeoutS>`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
 
 | side | size | model | TraceForge execs / blocked | JMC complete / blocked | equal? |
 |---|---|---|---|---|---|
 
-Commands used, exactly. Any disagreement is reported here, with the smaller tool's partial
+Commands used, exactly (with the `scripts/` helpers). Any disagreement is reported here, with the smaller tool's partial
 counts, not reconciled by editing a program.

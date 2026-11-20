@@ -1,15 +1,15 @@
 # bench_tikv_tla_plus: S_dt+, the second reference of the TiKV study
 
 S_dt+ = S_dt (`../../tikv-txn-tla/rust`, `src/main.rs` md5 `360590b7d87f15f6b14bf3cc49ee4d80`, Astra r4
-ACCEPTED; identical to `benchmarks-cf2/tikv-txn-tla/rust/src/main.rs`) with exactly three changes A, B, C
-(owner's decision 2026-11-10 18:40; causes A, B, C of `plan/case-studies/tikv/VERDICT-correct-r1.md`).
+ACCEPTED) with exactly three changes A, B, C
+(owner's decision 2026-11-10 18:40; A, B, C are the three causes that the review of the correct port's verdict
+against S_dt attributed its violations to).
 S_dt stays the paper's reference; S_dt+ only tests the attribution. This program: `src/main.rs` md5
 `f6f6dad5ca894a79763e6029cd490472`. Every change is marked `// PLUS-A:`, `// PLUS-B:` or `// PLUS-C:` in
 the source. S_dt's NOTES.md (D1-D17) applies to everything else.
 
 Citations: **DT:n** = `DistributedTransaction.tla` (pingcap/tla-plus 5649f86); **C:** =
-`plan/case-studies/tikv/client-src/src/transaction/` (client-rust 1b883bf); **T:** =
-`plan/case-studies/tikv/tikv-src/src/storage/txn/` (tikv 96033a2).
+`src/transaction/` of tikv/client-rust 1b883bf; **T:** = `src/storage/txn/` of tikv/tikv 96033a2.
 
 ## 1. The three changes
 
@@ -148,8 +148,7 @@ Non-behavioural edits:
 
 ## 4. Build and runs (this workstation, 2026-11-10)
 
-    TMPDIR=/local/home/mkhoshechin/tmp CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/claude-build/tikv-plus \
-      cargo build --release -j 2 --offline
+    cargo build --release --locked     # in this directory
 
 The build prints S_dt's one warning (`Op::GetForUpdate` never constructed). Export, one size at a time,
 under `timeout 3600`:
@@ -158,13 +157,12 @@ under `timeout 3600`:
       --size <sc>,<as>,<op>,<a> --model fifo -- <sc> <as> <op> <a>
 
 Join, under `timeout 3600`: `conf-join --merge --decide <spec export> <impl export>`.
-- conf-join: `/local/home/mkhoshechin/tmp/claude-build/daavar-tf/release/conf-join`.
-- The port's and S_dt's exports are the cluster ones,
-  `/home/mkhoshechin/.claude/jobs/28580aa5/tmp/tikv-b09/exports/C3E.tikv-txn-{rust.impl,tla.spec}_<size>_fifo[_f1|_f2].t16.cinf/export.jsonl`.
+- conf-join: TraceForge's `conf-join`, built from the pinned submodule (`traceforge/target/release/conf-join`).
+- The port's and S_dt's exports are those of the evaluation runs
+  `C3E.tikv-txn-{rust.impl,tla.spec}_<size>_fifo[_f1|_f2].t16.cinf`.
 
-Outputs:
-- exports: `/local/home/mkhoshechin/tmp/claude-build/tikv-plus/exports/`;
-- joins: `/local/home/mkhoshechin/tmp/claude-build/tikv-plus/joins/`.
+Outputs: the S_dt+ exports and the joins were written to a scratch directory and are not kept here; section 5 gives
+the results.
 
 ## 5. Results
 

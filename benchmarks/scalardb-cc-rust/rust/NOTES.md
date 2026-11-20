@@ -1,7 +1,7 @@
 # ScalarDB Consensus Commit: Rust port (TraceForge Must API)
 
-Source: scalar-labs/scalardb at 416cdc2, the cut in plan/case-studies/scalardb/cc-src (`C/` =
-core/src/main/java/com/scalar/db/transaction/consensuscommit/). Interface: INTERFACE-agents.md.
+Source: scalar-labs/scalardb (github.com/scalar-labs/scalardb) at 416cdc2 (`C/` =
+core/src/main/java/com/scalar/db/transaction/consensuscommit/). Interface: the study's interface document for the program's authors (not published), called INTERFACE-agents.md below.
 Code: src/main.rs. Crate: `bench_scalardb_port` (see decision D1).
 
 ## Roles (threads, started in this order)
@@ -176,8 +176,7 @@ absent -> abortIfExpired (best-effort); Rollback -> rollbackRecord; NoMutation i
 ## Compile
 
 ```
-cd /local/home/mkhoshechin/Documents/github-jmc/daavar/benchmarks-cf2/scalardb-cc/rust
-TMPDIR=/local/home/mkhoshechin/tmp cargo build --release -j 2
+cargo build --release --locked     # in this directory
 ```
 Result: Finished `release` profile; 2 warnings (variants `Rep::Unknown` and `Cond::Unconditional` never
 constructed: D5, and no unconditional mutation in the cut).

@@ -67,11 +67,11 @@ The source ships no faults. The model is the fault.
 - `source/`: `ProducerConsumer.bpl` and `ProducerConsumer.bpl.expect` copied verbatim, with
   provenance in `source/PROVENANCE.md`.
 - `rust/`: the Must-API Rust crate `bench_producer_consumer_civl`. CLI: `<spec|impl> <k> [fifo|bag]`
-  (the spec ignores the model). See `_tools/run-rust.sh`.
+  (the spec ignores the model). See `scripts/rust-run.sh`.
 - `java/`: package `bench.producer_consumer_civl`, with `Spec` (args `k[,model]`, model ignored;
   it declares P2P whatever its argument, so a JMC conformance run takes each side's own model:
   the spec P2P, the impl ASYN) and `Impl` (args `k,model`), both on the shared `ProducerConsumer` base. The spawn order is
-  consumer, then producer. See `_tools/run-java.sh`.
+  consumer, then producer. See `scripts/jmc-run.sh`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
 
@@ -98,6 +98,12 @@ by construction (§2).
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `side ∈ {spec, impl}`, `k ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/producer-consumer-civl <side> <k> <m>

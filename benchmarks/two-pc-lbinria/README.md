@@ -107,9 +107,9 @@ The source's alternative "alt1" (the TM does not send the final commit) and the
   means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
   conformance check of `impl <variant>` against `spec` with visible threads `rm0..rm{N-1}`
   (`--engine enumerator` for the diagnosing engine; the old `all` suffix, which kept every report,
-  is gone: the shared `conf` has no flag for it). See `_tools/run-rust.sh`.
+  is gone: the shared `conf` has no flag for it). See `scripts/rust-run.sh`.
 - `java/`: package `bench.two_pc_lbinria`: `TwoPcLbinria` (args `<spec|impl>,N[,model[,variant]]`)
-  and `Support` (model parsing, construct-first spawning). See `_tools/run-java.sh`.
+  and `Support` (model parsing, construct-first spawning). See `scripts/jmc-run.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-bag.log`, and the all-reports conformance log.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
@@ -142,6 +142,12 @@ finished although the program as a whole is blocked.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `N ∈ {2, 3, 4}`, `v ∈ {correct, counting-bug}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/two-pc-lbinria count spec --model bag -- <N> correct

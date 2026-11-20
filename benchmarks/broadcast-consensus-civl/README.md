@@ -89,11 +89,11 @@ the `decide-early` counts equal `correct`'s, because n!/1! = n! orders per node.
 - `rust/`: the Must-API Rust crate `bench_broadcast_consensus_civl`. CLI, the shared main: `<bin>
   count|export|conf|online … --model M -- <n> [correct|decide-early]`; defaults: n 2, model `bag`,
   variant `correct`. Each node has one `Input` channel and one `Val` channel. See
-  `_tools/run-rust.sh`.
+  `scripts/rust-run.sh`.
 - `java/`: package `bench.broadcast_consensus_civl`, with `Spec` (args `n,model`) and `Impl` (args
   `n,model,variant`). A node's two Rust channels are two type guards (`Input.class`, `Val.class`)
   on its mailbox. Spawn order: spec `oracle, c0..`; impl `node0.., c0..`. See
-  `_tools/run-java.sh`.
+  `scripts/jmc-run.sh`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
 
@@ -120,6 +120,12 @@ agree on every row both finished.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `n ∈ {2, 3, 4}`, `v ∈ {correct, decide-early}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/broadcast-consensus-civl count spec --model bag -- <n>

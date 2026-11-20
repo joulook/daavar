@@ -1,3 +1,0 @@
-# reserve rows for pinky01 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
-C1.broadcast-consensus-civl.impl_10_correct_bag.x4.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateful --threads 16 --model bag -- 10 correct
-C1.ring-election-igloo.impl_8_no-compare_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 8 no-compare

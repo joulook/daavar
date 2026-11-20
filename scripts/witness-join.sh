@@ -7,9 +7,9 @@
 #      --cols-per-row 3 for a graph of more than three threads), which writes <outdir>/graphs/<rank>.tex and <rank>.dot
 #      (nearest graphs: <rank>.nearest-<k>.{tex,dot});
 #   3. <outdir>/WITNESS.md: verdict line, uncovered count, index.tsv, per-graph file list, check/render results;
-#      <outdir>/summary.txt: key=value lines (exit, uncovered, graphs, check_failures, render_failures), read by mkrecord.py.
+#      <outdir>/summary.txt: key=value lines (exit, uncovered, graphs, check_failures, render_failures).
 # usage: witness-join.sh --render <outdir> <join-stdout> <join-stderr> <join-exit> <spec-export> <impl-export> [conf-join args...]
-#   steps 2-3 only, after a join that already ran with --witness-dir <outdir>/graphs (run-queue.sh's join rows).
+#   steps 2-3 only, after a join that already ran with --witness-dir <outdir>/graphs.
 # Exit: conf-join's exit code (0 conforms, 1 violation, 2 refused). A check or render failure is a tool defect: it is
 # printed on stderr and in WITNESS.md, and does not change the exit code. Nothing is silent: a missing store is
 # reported per uncovered line by conf-join (index.tsv reason no-store / no-graph) and summarised here.

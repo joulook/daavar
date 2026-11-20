@@ -1,7 +1,7 @@
 # Specification of Omni-Paxos log replication: derivation notes
 
-Source: `plan/twins-contextfree/omnipaxos-derived/PAPER-EXCERPT.md` (sections 3-5, text extracted from the PDF).
-Interface: `plan/twins-contextfree/omnipaxos-derived/INTERFACE.md`. Code: `src/main.rs`.
+Source: the Omni-Paxos paper (Ng, Haridi, Carbone, "Omni-Paxos: Breaking the Barriers of Partial Connectivity",
+EuroSys 2023), sections 3-5. Interface: the study's interface document for the program's authors (not published), called INTERFACE.md below. Code: `src/main.rs`.
 
 ## The specification (one internal thread `log`)
 
@@ -184,7 +184,7 @@ At `correct 1 1 1` the bound is 1 × 1 = 1 replay, as in revision 4; the count i
 
 ## Build and run
 
-    cd daavar/benchmarks-cf2/omnipaxos-derived/rust
+    cd daavar/benchmarks/omnipaxos-derived/rust
     cargo build --release -j 2        # compiled, 0 warnings
     target/release/bench_omnipaxos_derived count spec --model fifo -- correct 1 1 1
 

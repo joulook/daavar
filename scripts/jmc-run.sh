@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Run JMC's launcher on one benchmark program, in the current (row) directory: fresh report dir,
-# classpath from setup-node.sh, stdin closed. (EVAL-J1-J2.md)
+# Run JMC's launcher on one benchmark program, in the current directory: fresh report dir,
+# classpath from setup-node.sh, stdin closed.
 # usage: jmc-run.sh <benchdir-name> <Class[:a,b]> <strategy> <iterations> <seed> <export|-> <timeoutS> [--spec <file>]
 set -uo pipefail
 . "$(dirname "$0")/env.sh"

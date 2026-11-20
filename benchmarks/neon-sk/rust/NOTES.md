@@ -1,9 +1,8 @@
 # bench_neon_sk: Neon's safekeeper acceptor (unmodified) under TraceForge's Must API
 
-Source: neondatabase/neon fa504217c61bbcaf5c512d75830564541f917f8f, from the cut in
-`plan/case-studies/neon/neon-src/` (abbreviations: sk.rs = safekeeper/src/safekeeper.rs, wp.c =
-pgxn/neon/walproposer.c, INTERFACE = plan/case-studies/neon/INTERFACE-agents.md, cut README =
-plan/case-studies/neon/cut/README.md). Harness: `src/main.rs`. Vendored crate: `vendor/safekeeper` with
+Source: neondatabase/neon (github.com/neondatabase/neon) fa504217c61bbcaf5c512d75830564541f917f8f
+(abbreviations: sk.rs = safekeeper/src/safekeeper.rs, wp.c = pgxn/neon/walproposer.c, INTERFACE =
+the study's interface document for the program's authors (not published), cut README = the study's notes on the source cut (not published)). Harness: `src/main.rs`. Vendored crate: `vendor/safekeeper` with
 the shim crates `vendor/{utils,safekeeper_api,postgres_ffi,postgres_versioninfo,pq_proto,storage_broker}`.
 
 ## 1. Roles and messages
@@ -135,7 +134,7 @@ safekeeper.rs and state.rs are not edited; nothing in the acceptor is fixed or c
 
 ## 3. Unit tests (sk.rs:1508-1797) against the vendored crate
 
-Command (in this directory): `TMPDIR=/local/home/mkhoshechin/tmp CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/claude-build/neon-rust/target cargo test --offline -j 2 -p safekeeper`
+Command (in this directory): `cargo test --offline -j 2 -p safekeeper`
 
 ```
 running 8 tests
@@ -275,10 +274,9 @@ Legacy mode (generation 0, `Configuration::empty()`), proto v3. Function names a
 ## 6. Build
 
 ```
-cd daavar/benchmarks-cf2/neon-sk/rust
-TMPDIR=/local/home/mkhoshechin/tmp CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/claude-build/neon-rust/target cargo build --release -j 2
+cargo build --release --locked     # in this directory
 ```
-The binary is `$CARGO_TARGET_DIR/release/bench_neon_sk` (with the default target dir it is `target/release/bench_neon_sk`).
+The binary is `target/release/bench_neon_sk` (`$CARGO_TARGET_DIR/release/bench_neon_sk` when that is set).
 Cargo.lock was seeded from daavar/traceforge/Cargo.lock; the resolution added bincode 1.3.3, hex 0.4.3,
 serde_repr 0.1.21 (plus anyhow, byteorder, tracing-attributes already compatible). See section 8 for what the
 fetch downloaded.
@@ -286,7 +284,7 @@ fetch downloaded.
 ## 7. Runs
 
 All on the workstation (16 cores), one thread each (`count` without `--threads`), 2026-11-10,
-binary `B=/local/home/mkhoshechin/tmp/claude-build/neon-rust/target/release/bench_neon_sk` built from this
+binary `B=target/release/bench_neon_sk` built from this
 directory as in section 6, each command under `/usr/bin/time` and `timeout 600`. The `correct 3 1 1` run ran alone;
 the four `3 2 1` runs ran concurrently (four processes on 16 cores, load about 7). Every run reached the 600 s
 limit (exit 124), so none printed `execs=.. blocked=..` or the measurement block; the counts below are the last
@@ -339,8 +337,8 @@ is not absorbed by `count`'s `keep_going_after_error`: it aborts the run with ex
 the `bad-quorum 2 2 1` run of section 9 shows. So the runs above reached no panic in the part of the state space
 they explored; they do not establish that none is reachable.
 
-Sanity check (not one of the prompt's runs; a scratch copy of this main.rs in
-/local/home/mkhoshechin/tmp/claude-build/neon-rust/probe whose writer additionally asserts on its reply under an
+Sanity check (not one of the prompt's runs; a scratch copy of this main.rs (not kept)
+whose writer additionally asserts on its reply under an
 environment variable, same vendored crate): `count impl --model fifo -- correct 1 1 1` with the writer asserting
 `Committed` never arrives panicked with `probe: Committed Committed(1)` (a record does commit); with the writer
 asserting `Ended` never arrives, `correct 1 1 1` finished with `execs=0 blocked=6` and `correct 1 1 2` with
@@ -357,7 +355,7 @@ asserting `Ended` never arrives, `correct 1 1 1` finished with `execs=0 blocked=
 - The binary is under CARGO_TARGET_DIR (section 6), so runs used that path instead of `target/release/...`.
 - Unit tests and the probe in section 7 are additions for checking, not deliverables.
 
-## 9. Review round 1 (Astra, plan/case-studies/neon/review/REVIEW-astra-rust.md)
+## 9. Review round 1 (Astra)
 
 ### 9.1 Findings and changes
 

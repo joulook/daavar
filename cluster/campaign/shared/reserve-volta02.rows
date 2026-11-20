@@ -1,3 +1,0 @@
-# reserve rows for volta02 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
-C1.reliable-channel-aneris.impl_8_no-seqno_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris conf --engine stateful --threads 16 --model bag -- 8 no-seqno
-C1.two-pc-lbinria.impl_14_counting-bug_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 14 counting-bug

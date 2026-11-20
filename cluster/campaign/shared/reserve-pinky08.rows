@@ -1,3 +1,0 @@
-# reserve rows for pinky08 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
-C1.broadcast-consensus-civl.impl_12_decide-early_bag.x6.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateful --threads 16 --model bag -- 12 decide-early
-C1.two-pc-abstain-kragl.impl_14_correct_bag.x4.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateful --threads 16 --model bag -- 14 correct

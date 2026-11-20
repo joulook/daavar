@@ -226,11 +226,11 @@ source, which `Service_Correspondence` (a predicate over a set of packets) admit
   programs this README names `spec` and `spec-ring`; anything else panics. Old `spec-ring <n> <m>`
   is new `count spec --model <m> -- <n> correct ring`; `conf` and `export spec` read the spec-kind
   too. The variant is used only by `impl` and the spec-kind only by `spec`. See
-  `_tools/run-rust.sh`.
+  `scripts/rust-run.sh`.
 - `java/`: package `bench.ironlock`, with `Spec` (IronFleet's specification, args `n,model`),
   `SpecRing` (`spec-ring`, args `n,model`) and `Impl` (args `n,model,variant`). Shared parts are
   in `Lock.java`: `NodeMsg` = `Transfer` | `Stop`, `Wire` = `Locked` | `End`, and the observer. Spawn order: both
-  specs `oracle, obs0..`; impl `node0.., obs0..`. See `_tools/run-java.sh`.
+  specs `oracle, obs0..`; impl `node0.., obs0..`. See `scripts/jmc-run.sh`.
 - `out/logs/`: one log per run below, `rust-<side>-<n>-<model>.log` and
   `java-<side>-<n>-<model>.log`, where `<side>` is `spec`, `spec-ring` or `impl-<variant>`.
 
@@ -286,6 +286,12 @@ time, for `n ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`, `v ∈ {correct, double-hold, 
 (logs to `$B/ironlock/out/logs/`; the six commands below write, in order,
 `rust-spec-<n>-<m>.log`, `rust-spec-ring-<n>-<m>.log`, `rust-impl-<v>-<n>-<m>.log`,
 `java-spec-<n>-<m>.log`, `java-spec-ring-<n>-<m>.log` and `java-impl-<v>-<n>-<m>.log`):
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/ironlock count spec --model <m> -- <n>

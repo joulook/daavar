@@ -145,7 +145,7 @@ Each against `spec` under the same model. The source ships no fault.
   count|export|conf|online … --model M -- <W> [correct|asyn-fault]`; default W 2, default model
   `fifo`, default variant `correct`. The `out/fault-check` crate is a separate copy, not on the
   shared main: it keeps the old positional CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so
-  its commands stand as run. See `_tools/run-rust.sh`.
+  its commands stand as run. See `scripts/rust-run.sh`.
 - `java/`: package `bench.replicated_log_aneris`, class `RepDb` (args
   `<spec|impl>,<W>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `follower, leader, writer, reader`; impl `leader, follower, writer, reader`.
@@ -180,6 +180,12 @@ Size = W (writes, and as many reads). Both models for every side. W = 4 was run 
 The spec rows are from the second specification (leader + follower, after the review); the first specification's rows remain in `out/runs.log`, marked superseded. All runs exhausted on both tools. No disagreement. `correct` has the same counts under both models (one outstanding request per channel leaves nothing to reorder).
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `W ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`, `v ∈ {correct, asyn-fault}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 timeout 600 $B/_tools/run-rust.sh $B/replicated-log-aneris count spec --model <m> -- <W>

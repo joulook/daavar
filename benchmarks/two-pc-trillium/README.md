@@ -92,9 +92,9 @@ of the source (CATALOGUE-coq-iris.md lists TM-side early commits as the natural 
   out means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
   conformance check with visible threads `obs0..obs{N-1}` (`--engine enumerator` for the diagnosing
   engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has no flag for
-  it). See `_tools/run-rust.sh`.
+  it). See `scripts/rust-run.sh`.
 - `java/`: package `bench.two_pc_trillium`: `TwoPcTrillium` (args `<spec|impl>,N[,model[,variant]]`)
-  and `Support`. See `_tools/run-java.sh`.
+  and `Support`. See `scripts/jmc-run.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-bag.log`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
@@ -122,6 +122,12 @@ is why its reports (§4) are drawn from these graphs.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `N ∈ {2, 3, 4}`, `v ∈ {correct, ignore-abort-vote}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/two-pc-trillium count spec --model bag -- <N> correct

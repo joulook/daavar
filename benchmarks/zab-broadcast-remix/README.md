@@ -133,12 +133,12 @@ reverting it lets `s2` miss the commit of a transaction it holds, after which ev
   `out/fault-check` crate is a separate copy, not on the shared main: it keeps the old positional
   CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so its commands stand as run. Each thread
   has an inbox channel built by main before any spawn (the servers address each other). See
-  `_tools/run-rust.sh`.
+  `scripts/rust-run.sh`.
 - `java/`: package `bench.zab_broadcast_remix`, class `ZabBroadcast` (args
   `<spec|impl>,<Q>,<fifo|bag>,<variant>`), `Support` (the model argument and a thread registry
   that mints every id before any thread starts, as in `ironlock/`). Spawn order: spec
   `server, c0, c1`; impl `s0, s1, s2, c0, c1`. Visible roles `c0`, `c1` on both sides and in both
-  languages. See `_tools/run-java.sh`.
+  languages. See `scripts/jmc-run.sh`.
 - `out/runs.log`: every plain-Must command and its output; `out/fault-check/`: the reachability
   crate; `out/fault-check.log`: every reachability command and its output.
 
@@ -162,6 +162,12 @@ Q = 3 was not run, because Q = 2 already took more than a minute on JMC (`correc
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `Q ∈ {1, 2}`, `v ∈ {correct, issue1-propose-to-ackld}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/zab-broadcast-remix count spec --model fifo -- <Q>

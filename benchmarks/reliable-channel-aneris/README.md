@@ -131,12 +131,12 @@ not built.
   `out/fault-check` crate is a separate copy, not on the shared main: it keeps the old positional
   CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so its commands stand as run. Each thread
   has an inbox channel built by main before any spawn (the endpoints address each other). See
-  `_tools/run-rust.sh`.
+  `scripts/rust-run.sh`.
 - `java/`: package `bench.reliable_channel_aneris`, class `ReliableChannel` (args
   `<spec|impl>,<K>,<fifo|bag>,<variant>`), `Support` (the model argument and a thread registry
   that mints every id before any thread starts, as in `ironlock/`). Spawn order: `ep_s, ep_r,
   sender, receiver` on both sides. Visible roles `sender`, `receiver` on both sides and in both
-  languages. See `_tools/run-java.sh`.
+  languages. See `scripts/jmc-run.sh`.
 - `out/runs.log`: every plain-Must command and its output; `out/fault-check/`: the reachability
   crate; `out/fault-check.log`: every reachability command and its output.
 
@@ -158,6 +158,12 @@ than a minute on JMC (`out/runs.log`).
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `K ∈ {2, 3}`, `v ∈ {correct, no-seqno}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/reliable-channel-aneris count spec --model bag -- <K>

@@ -1,10 +1,10 @@
 # bench_tikv_port: notes
 
 A Rust/Must transliteration of TiKV's transaction protocol: the client from tikv/client-rust 1b883bf and the
-server actions from tikv/tikv 96033a2. Interface: `plan/case-studies/tikv/INTERFACE-agents.md` (called INTERFACE.md
-below). Source cut and rules A1-A6, T1-T6, P1-P2: `plan/case-studies/tikv/cut/README.md` (called README below).
-Source paths below are relative to `plan/case-studies/tikv/client-src/src/` (prefix `C:`) and
-`plan/case-studies/tikv/tikv-src/` (prefix `S:`). Each changed line in `src/main.rs` carries `// PORT:` and its
+server actions from tikv/tikv 96033a2. Interface: the study's interface document for the program's authors (not published) (called INTERFACE.md
+below). Source cut and rules A1-A6, T1-T6, P1-P2: the study's notes on the source cut (not published; called README
+below). Source paths below are relative to `src/` of tikv/client-rust at 1b883bf (prefix `C:`) and to the root of
+tikv/tikv at 96033a2 (prefix `S:`). Each changed line in `src/main.rs` carries `// PORT:` and its
 reason (94 markers after review round 1).
 
 ## Files
@@ -19,13 +19,10 @@ reason (94 markers after review round 1).
 ## Compile and run
 
 ```
-cd daavar/benchmarks-cf2/tikv-txn/rust
-export TMPDIR=/local/home/mkhoshechin/tmp CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/claude-build/tikv-rust
-cargo build --release -j 2
-timeout 600 $CARGO_TARGET_DIR/release/bench_tikv_port count impl --model fifo -- S1 0 0 1
+cargo build --release --locked     # in this directory
+timeout 600 target/release/bench_tikv_port count impl --model fifo -- S1 0 0 1
 ```
-With the default target directory, the binary is at `target/release/bench_tikv_port`, as the prompt's run command
-has it. The build has no warnings.
+With `CARGO_TARGET_DIR` set, the binary is at `$CARGO_TARGET_DIR/release/bench_tikv_port`. The build has no warnings.
 
 ## Roles and messages
 

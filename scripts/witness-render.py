@@ -783,7 +783,6 @@ STANDALONE_HEAD = r"""\documentclass[border=4pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
-% from plan/case-studies/a2a/report/macros.tex 159-160, 335, 359-377
 \newcommand{\sendop}{\ensuremath{\mathsf{send}}}
 \newcommand{\recvop}{\ensuremath{\mathsf{recv}}}
 \newcommand{\kw}[1]{\ensuremath{\mathsf{#1}}}

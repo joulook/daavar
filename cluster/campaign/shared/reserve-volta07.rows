@@ -1,3 +1,0 @@
-# reserve rows for volta07 (coordinator, 2026-11-05 04:35): ladders extended by up to six sizes, each size an independent row (gates dropped), joins with their exports; no synthetic, no stateless; the watch starts this file when the node's shard is exhausted.
-C1.replicated-log-aneris.impl_12_asyn-fault_fifo.x2.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateful --threads 16 --model fifo -- 12 asyn-fault
-C1.two-pc-trillium.impl_10_ignore-abort-vote_bag.x1.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 10 ignore-abort-vote

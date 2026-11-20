@@ -126,7 +126,7 @@ Two pairs against the one `spec`. The source's fault is `si` itself (the comment
   reports every implementation graph; use `online` or `conf-join`, which compare role names. The
   `out/fault-check` crate is a separate copy, not on the shared main: it keeps the old positional
   CLI `<spec|impl> <size> [fifo|bag|causal] [variant]`, so its commands stand as run. See
-  `_tools/run-rust.sh`.
+  `scripts/rust-run.sh`.
 - `java/`: package `bench.kv_snapshot_isolation_tla`, class `KvSnap` (args
   `<spec|impl>,<n>,<fifo|bag>,<variant>`), `Support` (the model argument, copied from
   `H1Support`). Spawn order: spec `server, c0, …`; impl `store, t0, …, c0, …`. Visible roles
@@ -152,6 +152,12 @@ Model `fifo` (p2p) throughout. Size = n (clients = keys). n = 4 was run for ever
 All runs exhausted on both tools (JMC: "stack exhausted"). No disagreement. The two implementation variants differ only in the commit test (a value), so they have equal counts.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for `n ∈ {2, 3, 4}`, `v ∈ {si, serializable}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 timeout 600 $B/_tools/run-rust.sh $B/kv-snapshot-isolation-tla count spec --model fifo -- <n>

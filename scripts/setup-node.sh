@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# One-time setup of a node after `git pull && git submodule update` in $DAAVAR (R1).
-# Builds TraceForge (lib tests = the eval child, and the bins incl. conf-join), JMC (classes +
-# classpath file), every benchmark's Rust crate and Java sources. Idempotent. Logs to $EVAL_OUT/setup.log.
+# Build a checkout after `git submodule update --init`: TraceForge (its binaries, including conf-join), JMC (classes
+# and the classpath file $JMC_CP_FILE), every benchmark's Rust crate and Java sources, each followed by its source
+# manifest. Idempotent. Paths from env.sh; JOBS = parallel build jobs (default: nproc). Logs to $EVAL_OUT/setup.log.
 # usage: setup-node.sh
 set -euo pipefail
 . "$(dirname "$0")/env.sh"
+: "${JOBS:=$(nproc)}"
 exec > >(tee -a "$EVAL_OUT/setup.log") 2>&1
 echo "== setup $(hostname) $(date -Is) daavar=$(git -C "$DAAVAR" rev-parse --short HEAD)"
-for t in zstd jq python3 taskset /usr/bin/time git; do command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }; done
+for t in git jq python3 cargo java javac; do command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }; done
 # Tool commits (witness contract §1.2.2): node trees may have no .git, so the tools' build scripts read the
 # commit from TRACEFORGE_COMMIT / JMC_COMMIT, set here from daavar's submodule pins (an exported value wins).
 # A readable submodule checkout that differs from the pin (other HEAD, or modified) gives its own HEAD[-dirty].
@@ -25,16 +26,9 @@ pin_commit() {  # <submodule dir>
 export TRACEFORGE_COMMIT JMC_COMMIT; echo "TRACEFORGE_COMMIT=$TRACEFORGE_COMMIT JMC_COMMIT=$JMC_COMMIT"
 # TraceForge
 cd "$DAAVAR/traceforge"
-cargo build --release -p traceforge --bins -j 16
-EXE=$(cargo test --release -p traceforge --lib --no-run --message-format=json -j 16 \
-      | jq -r 'select(.profile.test==true and .target.kind[0]=="lib") | .executable' | tail -1)
-[ -x "$EXE" ] || { echo "no lib test executable"; exit 1; }
-ln -sfn "$EXE" target/release/tf-lib-tests
-echo "tf-lib-tests -> $EXE"; ls -la target/release/conf-join
-# JMC: compile and record the classpath (the launcher lives in core's test classes)
-# Gradle: a per-node user home seeded from the NFS one (avoids the shared lock and the downloads); no daemon
-if [ ! -d "$GRADLE_USER_HOME" ] && [ -d "$HOME/.gradle" ]; then rsync -a --exclude '*.lock' --exclude daemon "$HOME/.gradle/" "$GRADLE_USER_HOME/"; fi
-mkdir -p "$GRADLE_USER_HOME"
+cargo build --release -p traceforge --bins -j "$JOBS"
+ls -la target/release/conf-join
+# JMC: compile and record the classpath (the launcher lives in core's test classes); no Gradle daemon
 cd "$DAAVAR/jmc"
 ./gradlew -q --no-daemon --offline :core:testClasses </dev/null || ./gradlew -q --no-daemon :core:testClasses </dev/null
 ./gradlew -q --no-daemon -I "$DAAVAR/scripts/print-classpath.gradle" :core:printTestClasspath </dev/null   # writes jmc/cp.txt (a build output, not source)
@@ -50,22 +44,17 @@ for b in "$DAAVAR"/benchmarks/*/; do
       && echo "javac ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" java "$b" "$EVAL_OUT/javaout/$(basename "$b")" || echo "manifest FAILED: $(basename "$b")"; } \
       || echo "javac FAILED: $(basename "$b")"
   fi
+  # variants with their own Java sources: context-free/java (context-free rewrites), port-java/java (ports of existing
+  # code); compiled into javaout/<bench>@<variant>, the name jmc-run.sh takes
+  for v in context-free port-java; do
+    [ -d "$b/$v/java" ] || continue
+    k="$(basename "$b")@$v"; mkdir -p "$EVAL_OUT/javaout/$k"
+    javac -d "$EVAL_OUT/javaout/$k" -cp "$CP" $(find "$b/$v/java" -name '*.java' -not -path '*/out/*') \
+      && echo "javac ok: $k" && { "$DAAVAR/scripts/source-manifest.sh" java "$b/$v" "$EVAL_OUT/javaout/$k" || echo "manifest FAILED: $k"; } \
+      || echo "javac FAILED: $k"
+  done
   if [ -f "$b/rust/Cargo.toml" ]; then
-    (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
-      && echo "cargo ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" rust "$b/rust" "$EVAL_OUT/bench-target/release" || echo "manifest FAILED: $(basename "$b")"; } \
-      || echo "cargo FAILED: $(basename "$b")"
-  fi
-done
-# context-free Java twins (owner's experiment 2026-11-02): compiled into javaout/cf-<dir>
-for b in "$DAAVAR"/benchmarks-cf/*/; do
-  if [ -d "$b/java" ]; then
-    mkdir -p "$EVAL_OUT/javaout/cf-$(basename "$b")"
-    javac -d "$EVAL_OUT/javaout/cf-$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
-      && echo "javac ok: cf-$(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" java "$b" "$EVAL_OUT/javaout/cf-$(basename "$b")" || echo "manifest FAILED: $(basename "$b")"; } \
-      || echo "javac FAILED: cf-$(basename "$b")"
-  fi
-  if [ -f "$b/rust/Cargo.toml" ]; then
-    (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
+    (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j "$JOBS") \
       && echo "cargo ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" rust "$b/rust" "$EVAL_OUT/bench-target/release" || echo "manifest FAILED: $(basename "$b")"; } \
       || echo "cargo FAILED: $(basename "$b")"
   fi

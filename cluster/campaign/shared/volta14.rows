@@ -1,3 +1,0 @@
-# shared-node rows for volta14 (coordinator, 2026-11-05 01:55): stale cf rows removed; studies at q/e = 2 and 3 added; dependency components whole; no synthetic, no stateless.
-XCE.chainpaxos-code.impl_3_mixed_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-chainpaxos-code 'bench.chainpaxos_code.ChainpaxosCode:impl,3,mixed,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
-XCE.two-pc-disel.spec_4_bag.w16 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-two-pc-disel 'bench.two_pc_disel.TwoPcDisel:spec,4,bag,correct' must 0 1 export.jsonl 172800 --split 16 --k 1

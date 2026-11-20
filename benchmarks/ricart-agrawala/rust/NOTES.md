@@ -47,15 +47,19 @@ Node-to-node messages: `Request { seq, from }` (the paper's REQUEST(k, j)) and `
 6. Integer type: sequence numbers and node numbers are `i32` (the paper's INTEGER).
 
 ## Compile
+In this directory: `cargo build --release --locked`.
+
+The compile and the run below are historical (2026-11-02), of a staging copy of this crate whose `src/main.rs` has
+no `src/spec.rs` and uses `entry` as the specification too; the implementation (`entry`, what `count impl` runs)
+is the same code as here, but the run was not repeated on this directory.
 ```
-cd daavar/benchmarks-cf2/ricart-agrawala/rust
-CARGO_TARGET_DIR=/local/home/mkhoshechin/tmp/cf2-ra-target cargo build --release -j 2
+cargo build --release -j 2
 ```
 Result: `Finished release profile [optimized] target(s) in 2m 21s`.
 
 ## The one run
 ```
-timeout 300 /local/home/mkhoshechin/tmp/cf2-ra-target/release/bench_ricart_agrawala count impl --model bag -- 3
+timeout 300 target/release/bench_ricart_agrawala count impl --model bag -- 3
 ```
 Exit 0 in 7.7 s. The measurement block after the result reports `impl_complete: 32800`,
 `impl_blocked: 0` (so the result line is `execs=32800 blocked=0`); the last output line is

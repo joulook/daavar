@@ -115,9 +115,9 @@ reachable only with F1 and untagged receives) are not built.
   means `bag`, this benchmark's model, which the crate declares. `conf` runs TraceForge's
   conformance check with visible threads `p0..p{N-1}` (`--engine enumerator` for the diagnosing
   engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has no flag for
-  it). See `_tools/run-rust.sh`.
+  it). See `scripts/rust-run.sh`.
 - `java/`: package `bench.two_pc_disel`: `TwoPcDisel` (args `<spec|impl>,N[,model[,variant]]`) and
-  `Support`. See `_tools/run-java.sh`.
+  `Support`. See `scripts/jmc-run.sh`.
 - `out/logs/`: the JMC logs, `java-<side>-<N>-<model>.log`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
@@ -151,6 +151,12 @@ derived here).
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `N ∈ {2, 3}`, `m ∈ {bag, fifo}`, `v ∈ {correct, skip-ack-loop}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/two-pc-disel count spec --model <m> -- <N> correct

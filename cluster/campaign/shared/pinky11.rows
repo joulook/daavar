@@ -1,6 +1,0 @@
-# shared-node rows for pinky11 (coordinator, 2026-11-05 01:55): stale cf rows removed; studies at q/e = 2 and 3 added; dependency components whole; no synthetic, no stateless.
-C3E.chainpaxos-paper-rust.impl_3_local_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh chainpaxos-paper-rust export impl --out export.jsonl --threads 16 --model fifo -- 3 local
-C1.raft-rs.impl_correct_2_1_1_fifo.t16.c48h 250 172800 "$DAAVAR"/scripts/rust-run.sh raft-rs conf --engine stateful --threads 16 --model fifo -- correct 2 1 1
-XJE.two-pc-abstain-kragl.spec_10_bag.w16 250 172800 "$DAAVAR"/scripts/jmc-run.sh two-pc-abstain-kragl 'bench.two_pc_abstain_kragl.TwoPc:spec,10,bag' must 0 1 export.jsonl 172800 --split 16 --k 1
-XON2.two-pc-abstain-kragl.impl_10_off-by-one_bag.t16 250 172800 needok:XJE.two-pc-abstain-kragl.spec_10_bag.w16 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl online --threads 16 --model bag --spec "$EVAL_OUT"/XJE.two-pc-abstain-kragl.spec_10_bag.w16/export.jsonl -- 10 off-by-one
-XON2.two-pc-abstain-kragl.impl_10_correct_bag.t16 250 172800 needok:XJE.two-pc-abstain-kragl.spec_10_bag.w16 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl online --threads 16 --model bag --spec "$EVAL_OUT"/XJE.two-pc-abstain-kragl.spec_10_bag.w16/export.jsonl -- 10 correct

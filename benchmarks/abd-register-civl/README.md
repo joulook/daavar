@@ -147,12 +147,12 @@ catalogue's (b) (quorums of 1) and (c) (the writer reuses `ts`) are not built.
 - `rust/`: the Must-API Rust crate `bench_abd_register_civl`. CLI, the shared main: `<bin>
   count|export|conf|online … --model M -- <replicas> [correct|read-no-writeback]`; defaults: 3
   replicas, model `bag`, variant `correct`. The old fifth argument `witness` is removed (§4). One
-  channel per receiver and message type. See `_tools/run-rust.sh`.
+  channel per receiver and message type. See `scripts/rust-run.sh`.
 - `java/`: package `bench.abd_register_civl`, with `Spec` (args `replicas,model`) and `Impl` (args
   `replicas,model,variant`). Shared parts are in `Abd.java`. A proxy's three Rust channels (`Op`,
   `QueryReply`, `UpdateAck`) and `r2`'s two (`Done`, `Reply`) are type guards. Spawn order: spec
   `register, w, r1, r2`; impl `rep0.., wp, rp1, rp2, w, r1, r2`. The Java side has no witness
-  diagnostic. See `_tools/run-java.sh`.
+  diagnostic. See `scripts/jmc-run.sh`.
 
 ## 7. Plain-Must exploration counts (both tools, one run each)
 
@@ -178,6 +178,12 @@ and superseded by a run made alone.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `n ∈ {2, 3}`, `v ∈ {correct, read-no-writeback}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 timeout 600 $B/_tools/run-rust.sh $B/abd-register-civl count spec --model bag -- <n> correct

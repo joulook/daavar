@@ -2,7 +2,7 @@
 
 **Family:** related-work  **Source:** Bílý, Pereira, Müller, OOPSLA 2025 §5.3,
 `related-work-papers/sources/oopsla25-artifact/oopsla552-artefact-amd64/refinement-lib/refinement-examples/src/bin/ex05_paxos.rs`
-(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B1)  **Expected verdict:**
+(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B1, kept at tag `pldi27-artifact`)  **Expected verdict:**
 `correct`: **CONFORMS** (Paxos agreement: every learner receives the same value, and that value
 causally descends from the proposal of the client that supplied it). The four faults: **DOES NOT
 REFINE at L = 2** (two learners receive different values); **conforming controls at L = 1** (one
@@ -149,6 +149,12 @@ no proposer decides, and the learner count does not change those.
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `L ∈ {1, 2}`, `v ∈ {correct, ignore-max-vote, skip-2a-check, half-majority, 1b-none}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/paxos-oopsla25 count spec --model bag -- <L>

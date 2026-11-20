@@ -146,12 +146,12 @@ in between, so the count reaches the token at the same rounds.
   `bag`, this benchmark's model, which the crate declares. The `out/fault-check` crate is a separate
   copy, not on the shared main: it keeps the old positional CLI `<spec|impl> <size>
   [fifo|bag|causal] [variant]`, so its commands stand as run. Each thread has an inbox channel built
-  by main before any spawn (detectors, stubs and apps address each other). See `_tools/run-rust.sh`.
+  by main before any spawn (detectors, stubs and apps address each other). See `scripts/rust-run.sh`.
 - `java/`: package `bench.ewd998_termination`, class `Ewd998` (args
   `<spec|impl>,<N>,<fifo|bag>,<variant>`), `Support` (the model argument and a thread registry
   that mints every id before any thread starts, as in `ironlock/`). Spawn order: spec
   `oracle, det0.., app0..`; impl `det0.., app0..`. Visible roles `app0..app{N-1}` on both sides
-  and in both languages. See `_tools/run-java.sh`.
+  and in both languages. See `scripts/jmc-run.sh`.
 - `out/runs.log`: every plain-Must command and its output; `out/fault-check/`: the reachability
   crate; `out/fault-check.log`: every reachability command and its output.
 
@@ -179,6 +179,12 @@ N = 4 was not run: N = 3 took more than a minute on both tools (`out/runs.log`).
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `N ∈ {2, 3}`, `v ∈ {correct, no-black-on-receive}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/ewd998-termination count spec --model bag -- <N>

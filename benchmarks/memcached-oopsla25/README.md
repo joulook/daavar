@@ -3,7 +3,7 @@
 **Family:** related-work  **Source:** Bílý, Pereira, Müller, "A Refinement Methodology for
 Distributed Programs in Rust", OOPSLA 2025 §5.1,
 `related-work-papers/sources/oopsla25-artifact/oopsla552-artefact-amd64/refinement-lib/case-study-memcached/`
-(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B5)  **Expected verdict:**
+(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B5, kept at tag `pldi27-artifact`)  **Expected verdict:**
 `v3`: **CONFORMS** (identity hash: a bucket serves exactly one key, so each bucket thread is that key's
 server, with an invisible relay in front); `shared-bucket`: **CONFORMS** (one bucket for both keys
 orders more than the per-key specification, and extra order is accepted; TraceForge's check is silent
@@ -130,7 +130,7 @@ implementations (only v3 is in the artefact).
   --model M -- <Q> [v3|shared-bucket|lost-set]`; defaults: Q 1, model `fifo`, variant `v3`. `conf`
   runs TraceForge's conformance check with visible threads `c0`, `c1` (`--engine enumerator` for the
   diagnosing engine; the old `all` suffix, which kept every report, is gone: the shared `conf` has
-  no flag for it). See `_tools/run-rust.sh`.
+  no flag for it). See `scripts/rust-run.sh`.
 - `java/`: package `bench.memcached_oopsla25`: `Memcached` (args `<spec|impl>,<Q>[,<fifo|bag>[,<variant>]]`)
   and `Support` (the model argument and construct-first spawning, copied from the H1 idiom). Spawn
   order: spec `k0, k1, c0, c1`; impl `b0[, b1], w0, w1, c0, c1`. Visible roles `c0`, `c1` on both
@@ -163,6 +163,12 @@ interleavings of two closed-loop clients at one server, C(2Q, Q) = 2, 6, 20. Q =
 
 Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmarks`, for
 `Q ∈ {1, 2, 3}`, `v ∈ {v3, shared-bucket, lost-set}`:
+
+> The commands below are the record of the runs, made in the benchmark collection's working copy with the
+> former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
+> `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 
 ```
 $B/_tools/run-rust.sh $B/memcached-oopsla25 count spec --model fifo -- <Q>

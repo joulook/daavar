@@ -1,4 +1,0 @@
-# shared-node rows for volta11 (coordinator, 2026-11-05 01:55): stale cf rows removed; studies at q/e = 2 and 3 added; dependency components whole; no synthetic, no stateless.
-XCE.chainpaxos-code-sol.impl_3_local_fifo.w16.c48h 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-chainpaxos-code-sol 'bench.chainpaxos_code_sol.ChainpaxosCodeSol:impl,3,local,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
-XCE.election.spec_ring_conf_9_fifo.w16 250 172800 "$DAAVAR"/scripts/jmc-run.sh cf-election 'bench.election.Election:spec,9,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1
-XCE.election.spec_ring_conf_10_fifo.w16 250 172800 needok:XCE.election.spec_ring_conf_9_fifo.w16 "$DAAVAR"/scripts/jmc-run.sh cf-election 'bench.election.Election:spec,10,fifo' must 0 1 export.jsonl 172800 --split 16 --k 1

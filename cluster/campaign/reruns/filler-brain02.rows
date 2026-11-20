@@ -1,9 +1,0 @@
-C1.reliable-channel-aneris.impl_8_bag_no-seqno.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh reliable-channel-aneris conf --engine stateful --threads 16 --model bag -- 8 no-seqno
-C1.two-pc-abstain-kragl.impl_11_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateful --threads 16 --model bag -- 11 correct
-C1.two-pc-trillium.impl_10_bag_ignore-abort-vote.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-trillium conf --engine stateful --threads 16 --model bag -- 10 ignore-abort-vote
-C1.two-pc-lbinria.impl_8_bag_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 8 correct
-C1.broadcast-consensus-civl.impl_7_bag_decide-early.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh broadcast-consensus-civl conf --engine stateful --threads 16 --model bag -- 7 decide-early
-C1.replicated-log-aneris.impl_12_fifo_correct.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh replicated-log-aneris conf --engine stateful --threads 16 --model fifo -- 12 correct
-C1.two-pc-abstain-kragl.impl_12_off-by-one_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-abstain-kragl conf --engine stateful --threads 16 --model bag -- 12 off-by-one
-C1.ring-election-igloo.impl_9_correct_bag.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh ring-election-igloo conf --engine stateful --threads 16 --model bag -- 9 correct
-C1.two-pc-lbinria.impl_10_bag_counting-bug.t16 250 172800 "$DAAVAR"/scripts/rust-run.sh two-pc-lbinria conf --engine stateful --threads 16 --model bag -- 10 counting-bug
