@@ -72,6 +72,7 @@ fn server(client: ThreadId, exec: ThreadId, n: u8) {
                     send_msg(exec, ToExec::CancelCb { task: t1() });
                 }
             },
+            ToServer::Reply { .. } => panic!("mutant: the mutants run with the fixed executor scripts only"),
             ToServer::Canceled { .. } => {
                 cb_out -= 1;
                 if let Some(req) = pending.take() {

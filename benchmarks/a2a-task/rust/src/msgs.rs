@@ -76,6 +76,8 @@ pub enum ToServer {
     Completed { task: String },
     /// The executor stopped the task after a cancel callback.
     Canceled { task: String },
+    /// The executor answered with a plain Message instead of opening a task (internal).
+    Reply { task: String },
 }
 
 /// Everything the client can receive (all from the server).
@@ -87,6 +89,8 @@ pub enum ToClient {
     Status { req: u32, task: String, state: State, fin: bool },
     /// The end of the stream of request `req`.
     StreamClose { req: u32 },
+    /// A stream item carrying a Message (the stream of a request answered without a task).
+    MessageItem { req: u32 },
     /// A successful cancel answer: the task as it is after the request.
     CancelOk { req: u32, task: String, state: State },
     /// A cancel refused because the task is not cancelable.
@@ -111,6 +115,7 @@ impl ToClient {
             ToClient::TaskItem { req, .. }
             | ToClient::Status { req, .. }
             | ToClient::StreamClose { req }
+            | ToClient::MessageItem { req }
             | ToClient::CancelOk { req, .. }
             | ToClient::CancelErr { req, .. }
             | ToClient::GetOk { req, .. }
@@ -138,6 +143,21 @@ pub struct Args {
     pub delegation: bool,
     /// Nonzero: the deliberately wrong server of that number (spec-strength check), impl side.
     pub mutant: u8,
+    /// Delegation scenario only: the delegating executor sends its cancel downstream only after the
+    /// downstream stream has shown `Status{Working}` (gated contract).
+    pub gated: bool,
+    /// The executor is the agent's model as a nondeterministic procedure (`call_llm`): it answers a
+    /// Message, or opens a task and reports it in any of the scripted ways; the variants `a`/`b`
+    /// are its two former fixed scripts.
+    pub llm: bool,
+    /// Delegation with `llm` only, to split one exploration into parts: 0 every choice; 1 A answers
+    /// locally; 2 A delegates; 3 A delegates and B answers with a Message; 4 A delegates and B opens
+    /// a task.
+    pub split: u8,
+    /// With split 4 only, B's task branch: `b_kind` 0 any, 1 `Submit` first, 2 `Working` first;
+    /// `b_cont` 0 any, 1 `Completed` at once, 2 `Working` then `Completed` or nothing more.
+    pub b_kind: u8,
+    pub b_cont: u8,
 }
 
 pub fn t1() -> String {

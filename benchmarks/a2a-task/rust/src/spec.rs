@@ -21,8 +21,9 @@
 //! because the task is already terminal is, while the stream is still open, either ignored or
 //! answered on the stream by an error item and the end of the stream: the text neither requires
 //! nor forbids that error item, so both are allowed. Status events are optional ("zero or more",
-//! spec.md:187) but at most one per state change: a status event is "sent by the agent to notify
-//! the client of a change in a task's status" (proto `TaskStatusUpdateEvent`).
+//! spec.md:187): at most one per change of state, except that a repeated working report may be
+//! published again (a status event is "sent by the agent to notify the client of a change in a
+//! task's status", proto `TaskStatusUpdateEvent`, which does not exclude a repeated one).
 //!
 //! Restrictions this program adds to the text, deliberately (they make it narrower than the text):
 //! * no final Task item before the end of the stream;
@@ -80,6 +81,8 @@ struct Server {
     unpublished: Option<State>,
     /// Requests answered so far (each request is answered at most once).
     answered: Vec<u32>,
+    /// The streaming send was answered with a Message: no task exists (spec.md:185).
+    msg_only: bool,
 }
 
 fn task_item() -> ToClient {
@@ -230,15 +233,16 @@ impl Server {
 
     /// Invariants after every step.
     fn check(&self) {
-        // The status events are a subsequence of [Working, terminal state].
-        let allowed = match self.ts {
-            None | Some(State::Submitted) => vec![],
-            Some(State::Working) => vec![State::Working],
-            Some(c) => vec![State::Working, c],
-        };
-        let mut it = allowed.iter();
-        assert!(self.evs.iter().all(|e| it.any(|a| a == e)), "status events {:?}", self.evs);
-        if self.ts.is_some() {
+        // The status events are some working statuses followed by at most the terminal state.
+        let n = self.evs.len();
+        let body = if n > 0 && self.evs[n - 1] != State::Working { &self.evs[..n - 1] } else { &self.evs[..] };
+        assert!(body.iter().all(|e| *e == State::Working), "status events {:?}", self.evs);
+        match self.ts {
+            None | Some(State::Submitted) => assert!(self.evs.is_empty(), "status events {:?}", self.evs),
+            Some(State::Working) => assert!(body.len() == n, "status events {:?}", self.evs),
+            Some(c) => assert!(body.len() == n || self.evs[n - 1] == c, "status events {:?}", self.evs),
+        }
+        if self.ts.is_some() && !self.msg_only {
             assert_eq!(
                 self.strm == Strm::Closed,
                 self.term() && self.unpublished.is_none(),
@@ -298,6 +302,17 @@ impl Server {
             }
             ToServer::Working { .. } => {
                 assert!(self.ts.is_some(), "the report follows the streaming send");
+                if self.ts == Some(State::Working) {
+                    // A second working report changes no state. The stream may carry "zero or more"
+                    // status events (spec.md:187), so a repeated working status is allowed, not
+                    // required.
+                    if nondet() {
+                        self.evs.push(State::Working);
+                        self.send_all(vec![Out::Client(ToClient::Status { req: 1, task: t1(), state: State::Working, fin: false })]);
+                    }
+                    self.check();
+                    return;
+                }
                 if self.term() {
                     // A cancel took effect before the executor reported: terminal states are
                     // absorbing; the report is rejected (see `late`); a held answer may go out.
@@ -320,8 +335,24 @@ impl Server {
                 }
                 self.send_all(outs);
             }
-            ToServer::Completed { .. } => {
-                assert!(!matches!(self.ts, None | Some(State::Submitted)));
+            ToServer::Reply { .. } if !self.term() && self.ts == Some(State::Submitted) && self.item_owed
+                && self.pc.is_none() && self.cb_out == 0 =>
+            {
+                // The agent answered with a Message: "the stream MUST contain exactly one Message
+                // object and then close immediately" (spec.md:185); nothing is prepended and no task
+                // exists afterwards.
+                self.item_owed = false;
+                self.msg_only = true;
+                self.send_all(vec![
+                    Out::Client(ToClient::MessageItem { req: 1 }),
+                    Out::Client(ToClient::StreamClose { req: 1 }),
+                ]);
+            }
+            ToServer::Completed { .. } | ToServer::Reply { .. } => {
+                // A `Reply` here comes after the Task object was returned (or with a cancel in
+                // progress): the stream is a task's stream, so the agent's answer is taken as the
+                // task's completion (restriction: no other handling is modelled).
+                assert!(self.ts.is_some(), "the report follows the streaming send");
                 if self.term() {
                     // Terminal states are absorbing: the report is rejected (see `late`); a held
                     // answer may go out here.
@@ -343,6 +374,13 @@ impl Server {
                     // Here the pending cancel wins: the completion report is not committed and
                     // the executor's `Canceled` (always sent after a callback) commits the cancel.
                 }
+            }
+            ToServer::Cancel { req, .. } if self.msg_only => {
+                // No task exists: "The task ID does not exist or is not accessible" (spec.md:256).
+                self.send_all(vec![Out::Client(ToClient::Err { req, code: ErrCode("TaskNotFound") })]);
+            }
+            ToServer::Get { req, .. } if self.msg_only => {
+                self.send_all(vec![Out::Client(ToClient::Err { req, code: ErrCode("TaskNotFound") })]);
             }
             ToServer::Cancel { req, .. } => {
                 assert!(self.ts.is_some(), "cancel of a task that exists");
@@ -452,6 +490,7 @@ fn server(client: ThreadId, exec: ThreadId) {
         held: None,
         unpublished: None,
         answered: Vec::new(),
+        msg_only: false,
     };
     let mut shutdown = false;
     loop {

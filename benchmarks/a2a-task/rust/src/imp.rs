@@ -13,12 +13,22 @@
 //! task (`handler.rs:1029`) while each request is its own future; here every incoming message is
 //! one atomic step of this process. Waits on the store, registry and snapshot locks happen inside
 //! a step. A step ends where a2a-rs waits for the executor: the execute stream's next event
-//! (`handler.rs:520`) arrives as `Submit`, `Working` or `Completed`; the cancel stream's next event
-//! (`handler.rs:1229`) arrives as `Canceled`, and the cancel that asked for it stays pending until
-//! then.
+//! (`handler.rs:520`) arrives as `Submit`, `Working`, `Completed` or `Reply`; the cancel stream's
+//! next event (`handler.rs:1229`) arrives as `Canceled`, and the cancel that asked for it stays
+//! pending until then. `Reply` is taken as the executor answering with a Message and returning:
+//! its execute stream yields that one item and ends, so the drive reads the item and then the end
+//! of the stream in that step. (An executor that keeps working never ends its stream.)
+//!
+//! Order of outputs inside one step: in a2a-rs the cancel's answer and the stream travel on
+//! separate connections, and nothing orders them: the cancel publishes its item
+//! (`handler.rs:1247`), the stream forwards it and ends on its own polls
+//! (`handler.rs:466-484`), and the cancel returns its answer on its own future
+//! (`handler.rs:1297`). The step that answers a cancel therefore sends the answer at a
+//! nondeterministic position among that step's stream items (before, between or after them); the
+//! stream items keep their own order.
 
 use traceforge::thread::ThreadId;
-use traceforge::{recv_msg_block, send_msg};
+use traceforge::{recv_msg_block, send_msg, Nondet};
 
 use crate::env;
 use crate::msgs::*;
@@ -61,6 +71,9 @@ enum Error {
     TaskNotFound,
     /// `TASK_NOT_CANCELABLE` (`inmemory.rs:128-130`, `handler.rs:1183-1184`).
     TaskNotCancelable,
+    /// `INVALID_AGENT_RESPONSE`, an executor stream with a Message and task events
+    /// (`handler.rs:527-530`).
+    InvalidAgentResponse,
 }
 
 impl Error {
@@ -69,6 +82,7 @@ impl Error {
             Error::InvalidRequest => "InvalidRequest",
             Error::TaskNotFound => "TaskNotFound",
             Error::TaskNotCancelable => "TaskNotCancelable",
+            Error::InvalidAgentResponse => "InvalidAgentResponse",
         }
     }
 }
@@ -80,6 +94,8 @@ enum Item {
     Task(St),
     /// `StreamResponse::StatusUpdate` with the new state.
     Status(St),
+    /// `StreamResponse::Message`.
+    Message,
     /// An `Err` item.
     Error(Error),
 }
@@ -110,12 +126,38 @@ struct Server {
     driving: bool,
     /// `current_task` of `drive_execution` (`handler.rs:511-514`).
     drive_current: Option<St>,
+    /// `answered` and `tracked` of `drive_execution` (`handler.rs:517-518`): a Message was read, a
+    /// task event was read.
+    answered: bool,
+    tracked: bool,
     pending: Option<PendingCancel>,
+    /// While the cancel's answer is being placed: the step's stream items, held back.
+    held: Option<Vec<ToClient>>,
 }
 
 impl Server {
-    fn to_client(&self, m: ToClient) {
-        send_msg(self.client, m);
+    fn to_client(&mut self, m: ToClient) {
+        match &mut self.held {
+            Some(v) => v.push(m),
+            None => send_msg(self.client, m),
+        }
+    }
+
+    /// Sends the step's held stream items with the cancel's answer `answer` at a nondeterministic
+    /// position among them (no ordering exists between the two connections).
+    fn answer_among_stream(&mut self, answer: ToClient) {
+        let items = self.held.take().expect("stream items held");
+        let k = if items.is_empty() { 0 } else { (0..items.len() + 1).nondet() };
+        let mut answer = Some(answer);
+        for (i, m) in items.into_iter().enumerate() {
+            if i == k {
+                send_msg(self.client, answer.take().unwrap());
+            }
+            send_msg(self.client, m);
+        }
+        if let Some(a) = answer {
+            send_msg(self.client, a);
+        }
     }
 
     fn to_exec(&self, m: ToExec) {
@@ -189,6 +231,8 @@ impl Server {
                 }
                 self.save_task(s).map(Some)
             }
+            // `handler.rs:403`: a Message leaves the store alone.
+            Item::Message => Ok(current),
             Item::Error(_) => unreachable!("an executor event is never an error here"),
         }
     }
@@ -197,7 +241,7 @@ impl Server {
     fn terminal_event(item: Item) -> bool {
         match item {
             Item::Task(s) | Item::Status(s) => s.terminal(),
-            Item::Error(_) => false,
+            Item::Message | Item::Error(_) => false,
         }
     }
 
@@ -218,6 +262,7 @@ impl Server {
             Item::Status(s) => {
                 ToClient::Status { req: 1, task: t1(), state: s.observed(), fin: s.terminal() }
             }
+            Item::Message => ToClient::MessageItem { req: 1 },
             Item::Error(e) => ToClient::Err { req: 1, code: ErrCode(e.name()) },
         };
         self.to_client(m);
@@ -266,6 +311,8 @@ impl Server {
         // the spawned `drive_execution` (`handler.rs:1029-1031`, `511-515`).
         self.driving = true;
         self.drive_current = self.snapshot;
+        self.answered = false;
+        self.tracked = false;
         self.to_exec(ToExec::Exec { task: t1() });
     }
 
@@ -281,12 +328,23 @@ impl Server {
             self.drive_end(None);
             return;
         }
+        // `handler.rs:527-533`: after a Message any further event, and a Message after a task
+        // event, is an invalid agent response.
+        let message = matches!(item, Item::Message);
+        if self.answered || (message && self.tracked) {
+            self.drive_end(Some(Error::InvalidAgentResponse));
+            return;
+        }
+        self.answered = message;
+        self.tracked |= !message;
         // `handler.rs:535-560` (push is a no-op).
         match self.apply_event_to_task(self.drive_current, item) {
             Ok(updated) => {
                 self.drive_current = updated;
                 self.publish(item, updated);
-                if Self::terminal_event(item) {
+                // A Message is not terminal (`handler.rs:256-262`): the loop reads on and finds
+                // the end of the executor's stream (`handler.rs:520`).
+                if Self::terminal_event(item) || message {
                     self.drive_end(None);
                 }
             }
@@ -295,6 +353,10 @@ impl Server {
     }
 
     /// `handler.rs:569-574`: on a failure, `fail_task` and the error published; then `finish`.
+    /// When the drive returns, the execution's last owners are gone unless a cancel still holds it
+    /// (`handler.rs:1212`): the broadcast sender is dropped, the subscriber's `recv` sees `Closed`
+    /// and its stream ends (`handler.rs:498`). A stream that a terminal or error item already
+    /// ended is not open any more; a held one ends with the cancel's terminal item.
     fn drive_end(&mut self, failure: Option<Error>) {
         if let Some(e) = failure {
             let failed = self.fail_task(self.drive_current);
@@ -302,6 +364,10 @@ impl Server {
         }
         self.finish();
         self.driving = false;
+        if self.subscribed && !self.pending.is_some_and(|p| p.execution) {
+            self.subscribed = false;
+            self.to_client(ToClient::StreamClose { req: 1 });
+        }
     }
 
     /// `cancel_task` up to its wait on the executor's cancel stream (`handler.rs:1169-1229`).
@@ -343,7 +409,8 @@ impl Server {
                 return self.to_client(ToClient::Err { req: p.req, code: ErrCode(e.name()) });
             }
         };
-        // `handler.rs:1246-1248`.
+        // `handler.rs:1246-1248`; the stream items it causes are held until the answer is placed.
+        self.held = Some(Vec::new());
         if p.execution {
             self.publish(item, updated);
         }
@@ -353,12 +420,11 @@ impl Server {
             self.finish();
         }
         // `handler.rs:1284`, `1297` (`release` has no waiting subscriptions here).
-        match self.load_task() {
-            Ok(s) => {
-                self.to_client(ToClient::CancelOk { req: p.req, task: t1(), state: s.observed() })
-            }
-            Err(e) => self.to_client(ToClient::Err { req: p.req, code: ErrCode(e.name()) }),
-        }
+        let answer = match self.load_task() {
+            Ok(s) => ToClient::CancelOk { req: p.req, task: t1(), state: s.observed() },
+            Err(e) => ToClient::Err { req: p.req, code: ErrCode(e.name()) },
+        };
+        self.answer_among_stream(answer);
     }
 
     /// `get_task` (`handler.rs:1119-1132`).
@@ -384,7 +450,10 @@ fn server(client: ThreadId, exec: ThreadId) {
         subscribed: false,
         driving: false,
         drive_current: None,
+        answered: false,
+        tracked: false,
         pending: None,
+        held: None,
     };
     loop {
         match recv_msg_block::<ToServer>() {
@@ -409,6 +478,10 @@ fn server(client: ThreadId, exec: ThreadId) {
             ToServer::Completed { task } => {
                 assert_eq!(task, T1);
                 s.drive(Item::Status(St::Completed))
+            }
+            ToServer::Reply { task } => {
+                assert_eq!(task, T1);
+                s.drive(Item::Message)
             }
             ToServer::Canceled { task } => {
                 assert_eq!(task, T1);
