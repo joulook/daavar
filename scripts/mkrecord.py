@@ -192,7 +192,7 @@ if "conf-join" in rec["command"] or re.search(r"^spec: tool=\S+ program=", out, 
     if not rec.get("verdict") and rec.get("stop_reason") == "ok":
         mu = re.search(r"^uncovered_distinct:\s*(\d+)", out, re.M)
         if mu: rec["verdict"] = "violation" if int(mu.group(1)) > 0 else "conforms"; rec["uncovered_distinct"] = rec.get("uncovered_distinct") or mu.group(1); rec["uncovered_total"] = rec.get("uncovered_total") or mu.group(1)
-    mm = re.search(r"refused", out); 
+    mm = re.search(r"(?<![A-Za-z_])refused", out)   # not the measurement key witness_refused of a --witness-dir join
     if mm: rec["verdict"] = "refused"
     rec["join_ms"] = rec.get("wall_ms")
     # conf-join exits 1 on a violation and 2 when it refuses an input: a verdict means the row ran fine
@@ -203,8 +203,15 @@ mm = re.search(r"^execs=(\d+) blocked=(\d+)", out, re.M)
 if mm and "impl_complete" not in rec:
     rec["impl_complete"], rec["impl_blocked"] = mm.group(1), mm.group(2)
     rec.setdefault("kind", "must-standalone"); rec.setdefault("impl_tool", "traceforge"); rec.setdefault("impl_lang", "rust"); rec.setdefault("engine", "must")
-# durability
-summ = [str(p.relative_to(d)) for p in d.rglob("*.jsonl*")]
+# witness graph store of an export (contract §2.1: `graph_store: written=W refused=R ms=T`, ms empty under --split) and the
+# witness step of a join (run-queue.sh witness_step: witness/summary.txt, key=value). Extra keys, set only when present.
+_gs = re.findall(r"^graph_store: written=(\d*) refused=(\d*) ms=(\d*)\s*$", out, re.M)
+if _gs:
+    for k, v in zip(("graphs_written", "graphs_refused", "graphs_ms"), _gs[-1]): rec[k] = v or None
+if (d / "witness" / "summary.txt").exists():
+    for k, v in kv(read(d / "witness" / "summary.txt")).items(): rec["witness_" + k] = v
+# durability (a witness graph store, *.graphs.jsonl, is not a summary file)
+summ = [str(p.relative_to(d)) for p in d.rglob("*.jsonl*") if not p.name.endswith(".graphs.jsonl")]
 rec["summaries_kept"] = "yes" if summ else "no"; rec["summaries_paths"] = ";".join(summ)
 rec["stdout_path"] = "stdout.log"; rec["stderr_path"] = "stderr.log"; rec["timev_path"] = "time-v.txt"
 rec["replay_path"] = ";".join(str(p.relative_to(d)) for p in d.glob("*replay*")) or None

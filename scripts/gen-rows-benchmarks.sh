@@ -7,6 +7,9 @@
 # B-export-java.rows, B-join-java.rows, B-online-java.rows (+ a .tsv sidecar each, read by mkrecord.py). Run the export queue before the
 # join and online queues (they read the exports from $EVAL_OUT/<export-row-id>/export.jsonl).
 # usage: gen-rows-benchmarks.sh <outdir> [timeoutS=3600] [memGB=250]
+# env: GRAPHS=1: export rows also write the witness graph store export.jsonl.graphs.jsonl (witness contract §2.1:
+#      `--graphs`, with `--graphs-limit 0` on specification exports); GRAPHS=0: without it. Unset: probed once per tool,
+#      on when the pinned build takes the flag (probe_graphs), so rows on an older pin stay byte-identical.
 set -euo pipefail
 . "$(dirname "$0")/env.sh"
 O="$1"; TO="${2:-3600}"; MEM="${3:-250}"; mkdir -p "$O"
@@ -16,6 +19,25 @@ san() { printf '%s' "$1" | tr ':,/ ' '____'; }
 row() { printf '%s %s %s %s\n' "$1" "$MEM" "$TO" "$2" >> "$O/B-$3.rows"; }
 tsv() { printf '%s\n' "$1" >> "$O/B-$2.rows.tsv"; }
 tier=c1h; [ "$TO" -ge 86400 ] && tier=c24h
+probe_graphs() {  # tf|jmc -> 0 when the pinned build takes --graphs. Neither CLI has --help, and running a benchmark
+  # binary or the launcher may start an exploration, so the probe reads the flag's literal from the built binary (a Rust
+  # benchmark binary in bench-target; MpLauncher.class on the JMC classpath), else from the pinned source.
+  local f=""
+  case "$1" in
+    tf)  f=$(find "$EVAL_OUT/bench-target/release" -maxdepth 1 -type f -perm -u+x 2>/dev/null | head -1)
+         [ -n "$f" ] || f="$DAAVAR/traceforge/traceforge/src/program.rs";;
+    jmc) local e; for e in $(tr ':' ' ' < "$JMC_CP_FILE" 2>/dev/null); do
+           [ -f "$e/org/mpi_sws/jmc/mp/launch/MpLauncher.class" ] && { f="$e/org/mpi_sws/jmc/mp/launch/MpLauncher.class"; break; }; done
+         [ -n "$f" ] || f="$DAAVAR/jmc/core/src/test/java/org/mpi_sws/jmc/mp/launch/MpLauncher.java";;
+  esac
+  PROBED="$f"; [ -f "$f" ] && grep -qa -- '--graphs-limit' "$f"
+}
+for _t in tf jmc; do
+  if [ -n "${GRAPHS:-}" ]; then _v=$GRAPHS; _why="GRAPHS=$GRAPHS"; elif probe_graphs $_t; then _v=1; _why="probe: $PROBED takes --graphs"; else _v=0; _why="probe: $PROBED has no --graphs"; fi
+  printf -v "GRAPHS_$_t" '%s' "$_v"; echo "gen-rows-benchmarks: graph stores for $_t export rows: $([ "$_v" = 0 ] && echo off || echo on) ($_why)" >&2
+done
+gflags() {  # tool side -> the store flags of an export row (leading space), or nothing when the tool's stores are off
+  local v="GRAPHS_$1"; [ "${!v}" = 0 ] && return 0; printf ' --graphs export.jsonl.graphs.jsonl'; [ "$2" != spec ] || printf ' --graphs-limit 0'; }
 # The Rust cases of the crates whose log has no usable line. A bad list must not pass as a short queue.
 CASES="$(dirname "$0")/B-rust-readme-cases.tsv"
 [ -s "$CASES" ] || { echo "gen-rows-benchmarks: $CASES is missing or empty" >&2; exit 1; }
@@ -42,10 +64,10 @@ rustcase() {  # sid side model ARGS size variant note [options]; every row has a
   if cut -f1 "$CAPPED" | grep -qxF "$id"; then
     printf '%s %s %s %s\n' "$id.c24h" "$MEM" 86400 "$cmd count $side --model $model$opts -- $a" >> "$O/B-long-rust.rows"
     tsv "$id.c24h	B	$dir	$size	$model	$var	must	1	n/a	plain count, 24 h tier (capped in the builders' run)${note#plain count}	c24h	must-standalone	traceforge	traceforge	rust	rust	n/a	full	$dir" long-rust
-    printf '%s %s %s %s\n' "$xid" "$MEM" 86400 "$cmd export $side --out export.jsonl --model $model$opts -- $a" >> "$O/B-long-rust.rows"
+    printf '%s %s %s %s\n' "$xid" "$MEM" 86400 "$cmd export $side --out export.jsonl$(gflags tf "$side") --model $model$opts -- $a" >> "$O/B-long-rust.rows"
     tsv "$xid	B	$dir	$size	$model	$var	must	1	n/a	summary export, 24 h tier (capped in the builders' run)${note#plain count}	c24h	export	traceforge	traceforge	rust	rust	offline-batch	full	$dir" long-rust
   else
-    row "$xid" "$cmd export $side --out export.jsonl --model $model$opts -- $a" export-rust
+    row "$xid" "$cmd export $side --out export.jsonl$(gflags tf "$side") --model $model$opts -- $a" export-rust
     tsv "$xid	B	$dir	$size	$model	$var	must	1	n/a	summary export${note#plain count}	$tier	export	traceforge	traceforge	rust	rust	offline-batch	full	$dir" export-rust
   fi
 }
@@ -90,7 +112,7 @@ for b in "$DAAVAR"/benchmarks/*/; do
     sid=$(san "$cls")
     row "BJ.count.$dir.$sid" "\"\$DAAVAR\"/scripts/jmc-run.sh $dir '$cls' must 0 1 - $TO" count-java
     tsv "BJ.count.$dir.$sid	B	$dir	$size	$model	$var	must	1	n/a	plain count	$tier	must-standalone	jmc	jmc	java	java	n/a	full	$dir" count-java
-    row "BJ.export.$dir.$sid" "\"\$DAAVAR\"/scripts/jmc-run.sh $dir '$cls' must 0 1 export.jsonl $TO" export-java
+    row "BJ.export.$dir.$sid" "\"\$DAAVAR\"/scripts/jmc-run.sh $dir '$cls' must 0 1 export.jsonl $TO$(gflags jmc "$side")" export-java
     tsv "BJ.export.$dir.$sid	B	$dir	$size	$model	$var	must	1	n/a	summary export	$tier	export	jmc	jmc	java	java	offline-batch	full	$dir" export-java
   done
   # joins and online: every impl against the spec of the same size and model (Java/Java, until the Rust exports exist)

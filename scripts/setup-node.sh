@@ -8,6 +8,21 @@ set -euo pipefail
 exec > >(tee -a "$EVAL_OUT/setup.log") 2>&1
 echo "== setup $(hostname) $(date -Is) daavar=$(git -C "$DAAVAR" rev-parse --short HEAD)"
 for t in zstd jq python3 taskset /usr/bin/time git; do command -v "$t" >/dev/null || { echo "missing $t"; exit 1; }; done
+# Tool commits (witness contract §1.2.2): node trees may have no .git, so the tools' build scripts read the
+# commit from TRACEFORGE_COMMIT / JMC_COMMIT, set here from daavar's submodule pins (an exported value wins).
+# A readable submodule checkout that differs from the pin (other HEAD, or modified) gives its own HEAD[-dirty].
+pin_commit() {  # <submodule dir>
+  local pin head
+  pin=$(git -C "$DAAVAR" rev-parse -q --verify "HEAD:$1" 2>/dev/null || true)
+  head=$(git -C "$DAAVAR/$1" rev-parse -q --verify HEAD 2>/dev/null || true)
+  if [ -n "$head" ]; then
+    [ -z "$(git -C "$DAAVAR/$1" status --porcelain --untracked-files=no 2>/dev/null)" ] || head="$head-dirty"
+    [ -z "$pin" ] || [ "$head" = "$pin" ] || echo "WARNING: $1 checkout $head is not the pin $pin; using the checkout" >&2
+    echo "$head"
+  else echo "${pin:-unknown}"; fi
+}
+: "${TRACEFORGE_COMMIT:=$(pin_commit traceforge)}"; : "${JMC_COMMIT:=$(pin_commit jmc)}"
+export TRACEFORGE_COMMIT JMC_COMMIT; echo "TRACEFORGE_COMMIT=$TRACEFORGE_COMMIT JMC_COMMIT=$JMC_COMMIT"
 # TraceForge
 cd "$DAAVAR/traceforge"
 cargo build --release -p traceforge --bins -j 16
@@ -32,11 +47,13 @@ for b in "$DAAVAR"/benchmarks/*/; do
   if [ -d "$b/java" ]; then
     mkdir -p "$EVAL_OUT/javaout/$(basename "$b")"
     javac -d "$EVAL_OUT/javaout/$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
-      && echo "javac ok: $(basename "$b")" || echo "javac FAILED: $(basename "$b")"
+      && echo "javac ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" java "$b" "$EVAL_OUT/javaout/$(basename "$b")" || echo "manifest FAILED: $(basename "$b")"; } \
+      || echo "javac FAILED: $(basename "$b")"
   fi
   if [ -f "$b/rust/Cargo.toml" ]; then
     (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
-      && echo "cargo ok: $(basename "$b")" || echo "cargo FAILED: $(basename "$b")"
+      && echo "cargo ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" rust "$b/rust" "$EVAL_OUT/bench-target/release" || echo "manifest FAILED: $(basename "$b")"; } \
+      || echo "cargo FAILED: $(basename "$b")"
   fi
 done
 # context-free Java twins (owner's experiment 2026-11-02): compiled into javaout/cf-<dir>
@@ -44,11 +61,13 @@ for b in "$DAAVAR"/benchmarks-cf/*/; do
   if [ -d "$b/java" ]; then
     mkdir -p "$EVAL_OUT/javaout/cf-$(basename "$b")"
     javac -d "$EVAL_OUT/javaout/cf-$(basename "$b")" -cp "$CP" $(find "$b/java" -name '*.java' -not -path '*/out/*') \
-      && echo "javac ok: cf-$(basename "$b")" || echo "javac FAILED: cf-$(basename "$b")"
+      && echo "javac ok: cf-$(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" java "$b" "$EVAL_OUT/javaout/cf-$(basename "$b")" || echo "manifest FAILED: $(basename "$b")"; } \
+      || echo "javac FAILED: cf-$(basename "$b")"
   fi
   if [ -f "$b/rust/Cargo.toml" ]; then
     (cd "$b/rust" && CARGO_TARGET_DIR="$EVAL_OUT/bench-target" cargo build --release -q -j 8) \
-      && echo "cargo ok: $(basename "$b")" || echo "cargo FAILED: $(basename "$b")"
+      && echo "cargo ok: $(basename "$b")" && { "$DAAVAR/scripts/source-manifest.sh" rust "$b/rust" "$EVAL_OUT/bench-target/release" || echo "manifest FAILED: $(basename "$b")"; } \
+      || echo "cargo FAILED: $(basename "$b")"
   fi
 done
 echo "== setup done $(date -Is)"

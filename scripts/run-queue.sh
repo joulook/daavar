@@ -11,7 +11,8 @@
 # usage: run-queue.sh <rows-file> <queue-name> [slots=8]
 # env: ROWS_TSV (attributes sidecar, default <rows-file>.tsv), FOREIGN_LOAD_POLICY=wait|kill|ignore, MEM_CAP (GB, shared nodes)
 #      (default wait: do not launch while foreign load is present; kill: also kill a running row
-#      and mark it invalid), FOREIGN_LOAD_MARGIN (load-average units, default 8), PUBLISH=1.
+#      and mark it invalid), FOREIGN_LOAD_MARGIN (load-average units, default 8), PUBLISH=1,
+#      WITNESS=1|0 (conf-join rows: --witness-dir <row>/witness/graphs, then the render; unset: on when the impl export has a store, see witness_args).
 set -uo pipefail
 . "$(dirname "$0")/env.sh"
 S="$(cd "$(dirname "$0")" && pwd)"
@@ -51,11 +52,37 @@ sampler() {  # $1 rowdir $2 pid-of-row: every 10 s append the process tree's res
     if [ "$FOREIGN_LOAD_POLICY" = kill ] && [ $strikes -ge 3 ]; then echo "foreign-load" > "$d/killed"; pkill -KILL -P "$rp" 2>/dev/null; kill -KILL "$rp" 2>/dev/null; break; fi
   done
 }
+witness_args() {  # rowdir cmd... -> 0 and WJ_POS (spec impl), WJ_EXTRA (flags) when the row is a conf-join row that gets the witness
+  # step (witness contract §5). WITNESS=1/0 forces it on/off; unset, on when the implementation export has a store beside it
+  # (<impl>.graphs.jsonl, or --impl-graphs). A row that passes its own --witness-dir is left alone.
+  local d="$1" a prev="" ig=""; shift; WJ_POS=(); WJ_EXTRA=()
+  [ "${WITNESS:-}" = 0 ] && return 1
+  [ "$(basename -- "${1:-}")" = conf-join ] || return 1
+  shift
+  for a in "$@"; do [ "$a" = --witness-dir ] && return 1; done
+  for a in "$@"; do
+    if [ -n "$prev" ]; then WJ_EXTRA+=("$prev" "$a"); [ "$prev" = --impl-graphs ] && ig="$a"; prev=""; continue; fi
+    case "$a" in --decide-budget|--impl-graphs|--spec-graphs|--witness-limit|--witness-nearest) prev="$a";; --merge|--decide) WJ_EXTRA+=("$a");; *) WJ_POS+=("$a");; esac
+  done
+  [ ${#WJ_POS[@]} -eq 2 ] || return 1
+  [ -n "${WITNESS:-}" ] || ( cd "$d" && [ -f "${ig:-${WJ_POS[1]}.graphs.jsonl}" ] )
+}
+witness_render() {  # id rowdir memGB timeoutS cores exit: render the graphs the row's conf-join wrote into <rowdir>/witness/graphs
+  # (scripts/witness-join.sh --render: --check, .tex/.dot, WITNESS.md, summary.txt) under the row's cores, memory and timeout.
+  # Runs before mkrecord.py, which copies summary.txt into the record (witness_* keys); it never changes the row's reason.
+  local id="$1" d="$2" mem="$3" to="$4" cores="$5" st="$6"
+  local ts=(taskset -c "$cores"); [ "$PIN" = 1 ] || ts=()
+  ( ulimit -v $((mem*1024*1024)); cd "$d" && exec "${ts[@]}" timeout --signal=KILL "$to" \
+      "$S/witness-join.sh" --render "$d/witness" "$d/stdout.log" "$d/stderr.log" "$st" "${WJ_POS[@]}" "${WJ_EXTRA[@]}" ) </dev/null > "$d/witness.log" 2>&1
+  local wst=$?
+  echo "row $id witness exit=$wst$([ $wst -eq "$st" ] || echo " (the join's was $st: see $d/witness.log)") $(grep -m1 '^witness-join: exit' "$d/witness.log" | cut -c1-200) $(date -Is)" >> "$QDIR/queue.log"
+}
 run_row() {  # id memGB timeoutS numa-list width cmd...
   local id="$1" mem="$2" to="$3" first="$4" w="$5"; shift 5
   [ -n "${MEM_CAP:-}" ] && [ "$mem" -gt "$MEM_CAP" ] && mem=$MEM_CAP   # shared nodes (2026-11-05): never more than MEM_CAP GB per row
   local d="$EVAL_OUT/$id"; mkdir -p "$d"
   local cores; cores=$(cores_of "$first")
+  local wj=0; if witness_args "$d" "$@"; then wj=1; rm -rf "$d/witness"; set -- "$1" --witness-dir "$d/witness/graphs" "${@:2}"; fi   # one join, graphs from the start
   printf '%s\n' "$*" > "$d/cmd.txt"
   local start; start=$(date +%s)
   { echo "state=running"; echo "id=$id"; echo "host=$(hostname)"; echo "queue=$QNAME"; echo "start=$(date -Is -d @$start)"; echo "start_epoch=$start"
@@ -77,6 +104,7 @@ run_row() {  # id memGB timeoutS numa-list width cmd...
   grep -qi "out of memory\|memory allocation of\|Cannot allocate\|OutOfMemoryError" "$d/stderr.log" "$d/stdout.log" 2>/dev/null && reason=memory
   { echo "state=done"; echo "end=$(date -Is)"; echo "exit=$st"; echo "reason=$reason"; echo "wall_s=$(( $(date +%s) - start ))"; } >> "$d/status"
   sed -i 's/^state=running/state=finished/' "$d/status"
+  [ $wj = 1 ] && witness_render "$id" "$d" "$mem" "$to" "$cores" "$st"
   python3 -I "$S/mkrecord.py" "$d" >> "$EVAL_OUT/results.tsv" 2>>"$d/mkrecord.err" || echo "mkrecord failed for $id" >> "$QDIR/queue.log"
   touch "$d/done"
   [ "$PUBLISH" = 1 ] && "$S/publish.sh" "$d" >> "$QDIR/publish.log" 2>&1
