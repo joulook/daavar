@@ -1,6 +1,7 @@
 """The build cache (DRIVER-DESIGN §3.2): `~/.cache/daavar/` (`DAAVAR_CACHE` overrides it, D7).
 
-  tools/<tool>-<identity>/       conf-join; JMC's core classes and cp.txt; cli.json (the --help probe)
+  tools/<tool>-<identity>/       conf-join; JMC's core classes and cp.txt
+  tools/jmc-<identity>.cli.json  the JMC CLI form `cli = "auto"` resolved to (S15)
   target/<tf-identity>/<key12>/  Cargo target directories (one per project path)
   artifacts/<build-key>/         a built artifact, read-only: build.json, out/ (the binary and its
                                  manifest, or the classes directory with SOURCE.md5), build.log

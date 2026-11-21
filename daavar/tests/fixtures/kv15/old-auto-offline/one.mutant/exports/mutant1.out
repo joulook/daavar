@@ -1,0 +1,45 @@
+Executions attempted so far: 1 total 1 finished normally 0 blocked.
+exported: 3 lines from 3 graphs to /local/mkhoshechin/driver-dev/t15/cache-old/exports/.tmp-9w8gppy1/export.jsonl
+graph_store: written=3 refused=0 ms=0
+--- measurements
+wall_ms: 4
+explore_ms: 0
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 2
+graphs_complete: 3
+graphs_blocked: 0
+summaries_distinct: 3
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 5776
+max_message_events: 16
+max_porf_pairs: 11
+max_graph_events: 29
+mean_graph_events: 27.667
+max_visible_events: 13
+mean_visible_events: 11.667
+max_summary_bytes: 511
+max_porf_count: 6
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 0
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 3
+impl_blocked: 0
+spec_summaries: 0
+impl_summaries: 3
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 0
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 3
+graphs_refused: 0
+graphs_ms: 0

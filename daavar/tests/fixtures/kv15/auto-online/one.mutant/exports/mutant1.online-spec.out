@@ -1,0 +1,55 @@
+Executions attempted so far: 1 total 1 finished normally 0 blocked.
+spec:       /local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184923Z-one-165198-20d0bf/one.mutant/exports/spec.jsonl (program kv-cancel, size spec, model p2p, tool traceforge; 5 lines, 5 distinct summaries held, 0 duplicates)
+lookups:    3 (2 found, 1 signature misses, 0 not found)
+verdict:    reports
+mode:       full
+first miss: iteration 1, 0 ms
+uncovered:  1 graphs (1 distinct summaries)
+witness:    {"statuses":{"client":"done","server":"done"},"words":{"client":[{"s":{"t":"Put","f":[1,"k",1]}},{"s":{"t":"Cancel","f":[1]}},{"r":{"t":"CancelOk","f":[1]}},{"r":{"t":"PutOk","f":[1]}},{"s":{"t":"Shutdown","f":[]}}],"server":[{"r":{"t":"Put","f":[1,"k",1]}},{"s":{"t":"Write","f":[1,"k",1]}},{"r":{"t":"Cancel","f":[1]}},{"s":{"t":"CancelOk","f":[1]}},{"r":{"t":"Written","f":[1]}},{"s":{"t":"PutOk","f":[1]}},{"r":{"t":"Shutdown","f":[]}},{"s":{"t":"Shutdown","f":[]}}]},"counts":[0,0,4,6,6,1,1,2,2,2,2,5,5]}
+at:         iteration 1, NoSig (no specification summary has this signature)
+graph_store: written=3 refused=0 ms=0
+--- measurements
+wall_ms: 3
+explore_ms: 0
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 1
+graphs_complete: 3
+graphs_blocked: 0
+summaries_distinct: 3
+iterations: 3
+stop_reason: exhausted
+peak_rss_kb: 5988
+max_message_events: 16
+max_porf_pairs: 11
+first_miss_iteration: 1
+first_miss_wall_ms: 0
+uncovered_total: 1
+max_graph_events: 29
+mean_graph_events: 27.667
+max_visible_events: 13
+mean_visible_events: 11.667
+max_summary_bytes: 511
+max_porf_count: 6
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 0
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 3
+impl_blocked: 0
+spec_summaries: 5
+impl_summaries: 3
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 3
+graphs_refused: 0
+graphs_ms: 0

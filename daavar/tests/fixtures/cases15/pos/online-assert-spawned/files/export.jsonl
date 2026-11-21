@@ -1,0 +1,1 @@
+{"format":1,"minor":1,"tool":"jmc","program":"fx","size":"impl,assert-spawned","visible":["client","server"],"roles":["client","server"],"model":"p2p","enumeration":"aborted","first_miss_iteration":0,"first_miss_wall_ms":0,"uncovered_total":0,"encoding":1}

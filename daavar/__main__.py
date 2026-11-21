@@ -108,7 +108,7 @@ def cmd_build(args) -> int:
                 print(f"(cd {shlex.quote(c['cwd'])} && {env + ' ' if env else ''}{shlex.join(c['argv'])})",
                       file=sys.stderr)
         if code:
-            print("daavar build: the JMC CLI form is auto and no --help probe is cached; run `daavar build` once",
+            print("daavar build: the JMC CLI form is auto and not yet resolved for this JMC build; run `daavar build` once",
                   file=sys.stderr)
         return _emit(args, "build", code, "DRY-RUN" if code == 0 else "REFUSED", (), {"commands": cmds})
     try:
@@ -201,7 +201,7 @@ def cmd_check(args) -> int:
         code, cmds = c.plan()
         _print_plan(args, cmds)
         if code:
-            print("daavar check: the JMC CLI form is auto and no --help probe is cached; run `daavar build` once",
+            print("daavar check: the JMC CLI form is auto and not yet resolved for this JMC build; run `daavar build` once",
                   file=sys.stderr)
         return _emit(args, "check", code, "DRY-RUN" if code == 0 else "REFUSED", (), {"commands": cmds})
     res = c.run()

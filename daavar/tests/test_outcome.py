@@ -297,16 +297,6 @@ class Adapters(unittest.TestCase):
         o = tf.export_outcome(0, False, out, err, files / "nothing.jsonl")
         self.assertEqual((o.kind, o.reason), ("refused", "unparsable"))
 
-    def test_cli_probe(self):
-        r, _, err, _ = case("jmc-help")
-        self.assertEqual(jmc.cli_from_probe(r["exit"], err), "positional")
-        self.assertEqual(jmc.cli_from_probe(0), "named")
-        # Review S1-S6 F5: anything else decides nothing (no java, a crash, a timeout): not cached.
-        self.assertIsNone(jmc.cli_from_probe(127, "java: not found"))
-        self.assertIsNone(jmc.cli_from_probe(1, ""))
-        self.assertIsNone(jmc.cli_from_probe(2, err, timed_out=True))
-
-
 class Joins(unittest.TestCase):
     def join(self, name, d=None):
         r, out, err, files = case(name)

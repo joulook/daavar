@@ -1,0 +1,48 @@
+program:    bench.kv_cancel.KvCancel
+strategy:   must
+iterations: unbounded, timeout 60 s
+seed:       1
+reportPath: report
+exportFile: /local/mkhoshechin/driver-dev/t15/cache-old/exports/.tmp-gv4622o3/export.jsonl
+2026-11-21 19:50:39,676 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:50:39,686 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:50:39,686 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-21 19:50:39,746 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-21 19:50:39,785 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-11-21 19:50:39,785 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-11-21 19:50:39,785 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-21 19:50:39,785 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-21 19:50:39,785 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       35.1 iterations/s
+elapsed:    0.114 s
+observed:   bench.kv_cancel.KvCancel@5542c4ed
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/mkhoshechin/driver-dev/t15/cache-old/exports/.tmp-gv4622o3/export.jsonl
+graph_store: written=4 refused=0 ms=6
+--- measurements
+wall_ms: 503
+explore_ms: 103
+summarise_ms: 10
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 179172
+max_message_events: 16
+max_porf_pairs: 11
+max_graph_events: 31
+mean_graph_events: 30.000
+max_visible_events: 13
+mean_visible_events: 12.000
+max_summary_bytes: 515
+max_porf_count: 6
+graphs_written: 4
+graphs_refused: 0
+graphs_ms: 6

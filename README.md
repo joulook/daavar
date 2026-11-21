@@ -38,8 +38,8 @@ implementation, `MAP.md`, `SPEC-DESIGN.md`, `README.md` and `daavar.toml`. `docs
 and flag.
 
 Java programs can also be written against the released library without this repository's checkout: JMC 0.2.0 is on
-Maven Central as `org.mpi-sws.jmc:jmc:0.2.0` (the Must API, the launcher and the exporter); the TraceForge crate is
-the pinned submodule.
+Maven Central as `org.mpi-sws.jmc:jmc:0.2.0` (the Must API and the exporter; the launcher joins the jar in 0.3.0);
+the TraceForge crate is the pinned submodule.
 
 ## Two ways people use it
 - **Paper to implementation.** Hand an agent a systems paper or a protocol text; it writes the specification program

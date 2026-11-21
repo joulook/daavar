@@ -1,0 +1,56 @@
+program:    fx.Fx
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+exportFile: export.jsonl
+spec:       /local/mkhoshechin/driver-dev/work/cases/tf-export-spec-ok/export.jsonl (program fx, size spec,ok, model p2p, tool traceforge; 1 lines, 1 distinct summaries held, 0 duplicates)
+2026-11-21 19:45:40,768 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:45:40,778 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:45:40,778 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-21 19:45:40,816 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-21 19:45:40,833 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 1 iterations
+2026-11-21 19:45:40,833 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 1 completed iterations
+2026-11-21 19:45:40,833 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-21 19:45:40,833 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-21 19:45:40,833 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        1 iterations
+blocked:    0 (counted by the strategy)
+completed:  1
+rate:       14.4 iterations/s
+elapsed:    0.069 s
+observed:   fx.Fx@41a2befb
+graphs:     1 distinct complete, 0 distinct blocked; stack exhausted
+lookups:    1 (1 found, 0 signature misses, 0 not found)
+verdict:    conforms
+mode:       full
+uncovered:  0 graphs (0 distinct summaries)
+exported:   1 iterations as 1 distinct summaries (complete, 0 not exported) to export.jsonl
+graph_store: written=1 refused=0 ms=2
+--- measurements
+wall_ms: 479
+explore_ms: 63
+summarise_ms: 5
+index_ms: 22
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 1
+graphs_blocked: 0
+summaries_distinct: 1
+iterations: 1
+stop_reason: exhausted
+peak_rss_kb: 194112
+max_message_events: 6
+max_porf_pairs: 5
+first_miss_iteration: 0
+first_miss_wall_ms: 0
+uncovered_total: 0
+max_graph_events: 16
+mean_graph_events: 16.000
+max_visible_events: 6
+mean_visible_events: 6.000
+max_summary_bytes: 269
+max_porf_count: 3
+graphs_written: 1
+graphs_refused: 0
+graphs_ms: 2

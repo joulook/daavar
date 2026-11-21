@@ -1,0 +1,3 @@
+2026-11-21T18:45:45.579240627Z main ERROR Console contains an invalid element or attribute "level"
+MpLauncher: specification /local/mkhoshechin/driver-dev/work15/cases15/pos/export-impl-bug-bounded/export.jsonl refused: specification /local/mkhoshechin/driver-dev/work15/cases15/pos/export-impl-bug-bounded/export.jsonl has enumeration "bounded"; a file whose enumeration is not complete is never accepted as a specification
+usage: MpLauncher <program class[:args]> [strategy=mp-random] [iterations=1000] [seed] [reportPath] [exportFile] [timeoutSeconds] [--spec <file> [--stop-at-first] [--witness <file or dir/>]] [--graphs <store> [--graphs-limit N]] [--split W [--k K]] [--worker <run dir> <id>]

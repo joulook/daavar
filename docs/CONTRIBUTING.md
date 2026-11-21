@@ -37,7 +37,9 @@ strategy supports the first two, `causal` is Rust-only (see `docs/concepts.md`).
 
 ## Pins and releases
 The tools are pinned by commit in the submodules. A pin moves only when both tools pass the cross-tool check on the
-pinned binaries; the daavar commit that moves a pin says why. A release of the framework tags daavar, names the two
+pinned binaries; the daavar commit that moves a pin says why. When the TraceForge pin changes the crate's version, the
+`traceforge` entry of every benchmark and example `Cargo.lock` is updated in the same commit (builds run with
+`--locked`). A release of the framework tags daavar, names the two
 tool versions (the JMC jar on Maven Central, the TraceForge crate tag), and ships the examples checked end to end on
 the tagged pins.
 

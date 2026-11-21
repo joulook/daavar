@@ -1,0 +1,13 @@
+MpLauncher: cannot load and construct fx.Fx:impl,nope: java.lang.IllegalArgumentException: usage: fx.Fx:<spec|impl>,<ok|bug|assert-spawned|assert-main|mainsend|novisible|float|sleep>
+java.lang.IllegalArgumentException: usage: fx.Fx:<spec|impl>,<ok|bug|assert-spawned|assert-main|mainsend|novisible|float|sleep>
+	at fx.Fx.<init>(Fx.java:48)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+	at org.mpi_sws.jmc.mp.cli.MpLauncher.runBody(MpLauncher.java:380)
+	at org.mpi_sws.jmc.mp.cli.MpLauncher.run(MpLauncher.java:188)
+	at org.mpi_sws.jmc.mp.cli.MpLauncher.main(MpLauncher.java:162)
+	at org.mpi_sws.jmc.mp.launch.MpLauncher.main(MpLauncher.java:19)
+usage: MpLauncher export --program <class[:args]> [--strategy must|mp-random] [--model <m>] [--iterations N] [--seed N] [--report-dir <dir>] [--timeout S] --out <file> [--graphs <store> [--graphs-limit N]]   (MpLauncher export --help)

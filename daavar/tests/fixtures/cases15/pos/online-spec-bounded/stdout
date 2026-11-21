@@ -1,0 +1,24 @@
+--- measurements
+wall_ms: 367
+explore_ms: 0
+summarise_ms: 0
+index_ms: 8
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 0
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 0
+stop_reason: error
+peak_rss_kb: 136804
+max_message_events: 
+max_porf_pairs: 0
+first_miss_iteration: 0
+first_miss_wall_ms: 0
+uncovered_total: 0
+max_graph_events: 
+mean_graph_events: 
+max_visible_events: 
+mean_visible_events: 
+max_summary_bytes: 0
+max_porf_count: 0

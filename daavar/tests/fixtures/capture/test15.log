@@ -1,0 +1,14 @@
+cli = "positional"
+cli = "named"
+cli = "auto"
+cli = "auto"
+== positional-offline: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184813Z-one-113762-34c517
+== positional-online: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184923Z-one-165198-20d0bf
+== named-offline: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd
+== named-online: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184926Z-one-165664-2a6592
+== auto-offline: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/auto/examples/kv-cancel/out/20261121T184928Z-one-165891-27c459
+== auto-online: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/auto/examples/kv-cancel/out/20261121T184929Z-one-166081-9180a3
+== old-auto-offline: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t15/old-auto/examples/kv-cancel/out/20261121T184930Z-one-166255-9fa7d7
+jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622.cli.json
+{"cli": "named", "probe": "org/mpi_sws/jmc/mp/cli/MpLauncher.class"}
+{"cli": "positional", "probe": "org/mpi_sws/jmc/mp/cli/MpLauncher.class"}

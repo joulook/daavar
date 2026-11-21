@@ -1,0 +1,48 @@
+model:      p2p
+program:    fx.Fx
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+exportFile: export.jsonl
+2026-11-21 19:43:18,982 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:43:18,991 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:43:18,991 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-21 19:43:19,023 [main] ERROR o.m.j.c.JmcModelChecker - Assertion error in iteration 0: fx: planted assert in main
+2026-11-21 19:43:19,023 [main]  WARN o.m.j.r.s.Scheduler - Recording trace is not supported by the current scheduling strategy
+2026-11-21 19:43:19,026 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-21 19:43:19,041 [main] ERROR o.m.j.c.JmcModelChecker - Model checking failed: Assertion error in iteration 0: fx: planted assert in main
+2026-11-21 19:43:19,041 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 completed iterations
+2026-11-21 19:43:19,042 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-21 19:43:19,042 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+elapsed:    0.065 s
+2026-11-21 19:43:19,042 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+observed:   fx.Fx@4218d6a3
+graphs:     0 distinct complete, 0 distinct blocked; stack exhausted
+exported:   0 iterations as 0 distinct summaries (aborted, 1 not exported) to export.jsonl
+graph_store: written=0 refused=0 ms=1
+--- measurements
+wall_ms: 443
+explore_ms: 64
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 0
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 1
+stop_reason: error
+peak_rss_kb: 158556
+max_message_events: 
+max_porf_pairs: 0
+max_graph_events: 
+mean_graph_events: 
+max_visible_events: 
+mean_visible_events: 
+max_summary_bytes: 0
+max_porf_count: 0
+graphs_written: 0
+graphs_refused: 0
+graphs_ms: 1
+FAILED:     Assertion error in iteration 0: fx: planted assert in main

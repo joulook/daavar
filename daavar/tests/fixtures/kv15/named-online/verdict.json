@@ -1,0 +1,285 @@
+{
+ "name": "kv-cancel",
+ "status": "CONFORMS",
+ "exit": 0,
+ "gating": "conforms",
+ "all": "conforms",
+ "run": "20261121T184926Z-one-165664-2a6592",
+ "model": "fifo",
+ "mode": "online",
+ "vocab": "IDENTICAL",
+ "cells": [
+  {
+   "cell": "one.impl",
+   "status": "conforms",
+   "directions": [
+    {
+     "direction": "rust<=spec",
+     "form": "impl<=spec",
+     "gating": true,
+     "status": "conforms",
+     "label": "conforms",
+     "aggregates_as": "conforms",
+     "note": "",
+     "reason": "decide",
+     "checked": {
+      "program": "rust",
+      "kind": "online",
+      "key": "d8567ac18c897b4983a2d82ca12ef1529319423484333c4a979276a29261b651",
+      "enumeration": "complete"
+     },
+     "ref": {
+      "program": "spec",
+      "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+      "enumeration": "complete"
+     },
+     "uncovered": [],
+     "join": "one.impl/joins/rust-in-spec"
+    },
+    {
+     "direction": "java<=spec",
+     "form": "impl<=spec",
+     "gating": true,
+     "status": "conforms",
+     "label": "conforms",
+     "aggregates_as": "conforms",
+     "note": "",
+     "reason": "decide",
+     "checked": {
+      "program": "java",
+      "kind": "online",
+      "key": "ffe2f13811adaef95cb4b3f72693f2d797c4410aabf0fc3cc7dbc6f14d3c1213",
+      "enumeration": "complete"
+     },
+     "ref": {
+      "program": "spec",
+      "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+      "enumeration": "complete"
+     },
+     "uncovered": [],
+     "join": "one.impl/joins/java-in-spec"
+    },
+    {
+     "direction": "java<=rust",
+     "form": "impl<=impl",
+     "gating": false,
+     "status": "conforms",
+     "label": "conforms",
+     "aggregates_as": "conforms",
+     "note": "",
+     "reason": "decide",
+     "checked": {
+      "program": "java",
+      "kind": "offline",
+      "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+      "enumeration": "complete"
+     },
+     "ref": {
+      "program": "rust",
+      "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+      "enumeration": "complete"
+     },
+     "uncovered": [],
+     "join": "one.impl/joins/java-in-rust"
+    },
+    {
+     "direction": "rust<=java",
+     "form": "impl<=impl",
+     "gating": false,
+     "status": "conforms",
+     "label": "conforms",
+     "aggregates_as": "conforms",
+     "note": "",
+     "reason": "decide",
+     "checked": {
+      "program": "rust",
+      "kind": "offline",
+      "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+      "enumeration": "complete"
+     },
+     "ref": {
+      "program": "java",
+      "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+      "enumeration": "complete"
+     },
+     "uncovered": [],
+     "join": "one.impl/joins/rust-in-java"
+    }
+   ]
+  },
+  {
+   "cell": "one.mutant",
+   "status": "conforms",
+   "directions": [
+    {
+     "direction": "mutant1<=spec",
+     "form": "mutant<=reference",
+     "gating": true,
+     "status": "violation",
+     "label": "rejected",
+     "aggregates_as": "conforms",
+     "note": "1 Decide-confirmed violation(s)",
+     "reason": "decide",
+     "checked": {
+      "program": "mutant1",
+      "kind": "online",
+      "key": "b41750ededd5bdf73e26b5bf531bc83b25e73352df474cdbdceec2df9abb9f58",
+      "enumeration": "complete"
+     },
+     "ref": {
+      "program": "spec",
+      "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+      "enumeration": "complete"
+     },
+     "uncovered": [
+      {
+       "n": 1,
+       "class": "no-slot",
+       "line": {
+        "statuses": {
+         "client": "done",
+         "server": "done"
+        },
+        "words": {
+         "client": [
+          {
+           "s": {
+            "t": "Put",
+            "f": [
+             1,
+             "k",
+             1
+            ]
+           }
+          },
+          {
+           "s": {
+            "t": "Cancel",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "r": {
+            "t": "CancelOk",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "r": {
+            "t": "PutOk",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "s": {
+            "t": "Shutdown",
+            "f": []
+           }
+          }
+         ],
+         "server": [
+          {
+           "r": {
+            "t": "Put",
+            "f": [
+             1,
+             "k",
+             1
+            ]
+           }
+          },
+          {
+           "s": {
+            "t": "Write",
+            "f": [
+             1,
+             "k",
+             1
+            ]
+           }
+          },
+          {
+           "r": {
+            "t": "Cancel",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "s": {
+            "t": "CancelOk",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "r": {
+            "t": "Written",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "s": {
+            "t": "PutOk",
+            "f": [
+             1
+            ]
+           }
+          },
+          {
+           "r": {
+            "t": "Shutdown",
+            "f": []
+           }
+          },
+          {
+           "s": {
+            "t": "Shutdown",
+            "f": []
+           }
+          }
+         ]
+        },
+        "counts": [
+         0,
+         0,
+         4,
+         6,
+         6,
+         1,
+         1,
+         2,
+         2,
+         2,
+         2,
+         5,
+         5
+        ]
+       },
+       "decide": {
+        "outcome": "violation",
+        "k": 0,
+        "k_min": 0,
+        "states": 0
+       },
+       "graph": "1.graph.json",
+       "label": "-",
+       "note": ""
+      }
+     ],
+     "join": "one.mutant/joins/mutant1-in-spec"
+    }
+   ]
+  }
+ ]
+}

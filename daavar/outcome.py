@@ -11,6 +11,7 @@ classify() turns a finished process into an Outcome before any output is read fo
 | failure  | Rust exit 101 (a panic); TraceForge online exit 1 with `FAILED:`; JMC `FAILED:` with   |
 |          | any other throwable (assertions included)                                               |
 | ok       | exit 0 (conf-join: 0 or 1), output parsed by the adapter (§4.2 decides)                 |
+| incomplete | JMC's named form only: exit 3 with `FAILED:` (an unfinished run, jmc._named_outcome)  |
 
 side_verdict() is the table's two columns: on the reference side every non-ok outcome but a timeout
 is refused; on the checked side a program failure is a violation (the message is the witness).
@@ -23,7 +24,7 @@ from dataclasses import dataclass, field
 
 from . import errors
 
-OK, REFUSED, FAILURE, TIMEOUT = "ok", "refused", "failure", "timeout"
+OK, REFUSED, FAILURE, TIMEOUT, INCOMPLETE = "ok", "refused", "failure", "timeout", "incomplete"
 TOOLS = ("tf", "jmc", "conf-join")
 STEPS = ("export", "online", "join")
 
@@ -41,7 +42,7 @@ _PANIC = re.compile(r"thread '.*' (?:\(\d+\) )?panicked at (.*)")
 
 @dataclass
 class Outcome:
-    kind: str  # ok | refused | failure | timeout
+    kind: str  # ok | refused | failure | timeout | incomplete
     message: str  # the deciding line, verbatim ("" for ok)
     category: str | None = None  # errors.CATEGORIES key
     reason: str = ""  # a short machine-readable reason (usage, tool-usage, shape, panic, ...)
@@ -207,7 +208,7 @@ def side_verdict(o: Outcome, role: str) -> str | None:
         raise ValueError(role)
     if o.kind == OK:
         return None
-    if o.kind == TIMEOUT:
+    if o.kind in (TIMEOUT, INCOMPLETE):
         return "incomplete"
     if o.kind == FAILURE and role == "checked":
         return "violation"

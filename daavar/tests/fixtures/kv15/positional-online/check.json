@@ -1,0 +1,1 @@
+{"command": "check", "exit": 0, "status": "CONFORMS", "paths": ["/local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184923Z-one-165198-20d0bf"], "result": {"run": "/local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184923Z-one-165198-20d0bf", "status": "CONFORMS", "exit": 0, "gating": "conforms", "all": "conforms"}}

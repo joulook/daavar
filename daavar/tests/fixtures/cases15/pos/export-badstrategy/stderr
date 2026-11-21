@@ -1,0 +1,2 @@
+MpLauncher: unknown strategy nope
+usage: MpLauncher <program class[:args]> [strategy=mp-random] [iterations=1000] [seed] [reportPath] [exportFile] [timeoutSeconds] [--spec <file> [--stop-at-first] [--witness <file or dir/>]] [--graphs <store> [--graphs-limit N]] [--split W [--k K]] [--worker <run dir> <id>]

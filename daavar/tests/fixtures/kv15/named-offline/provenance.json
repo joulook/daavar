@@ -1,0 +1,741 @@
+{
+ "provenance": 1,
+ "driver": "0.1.0",
+ "run": "20261121T184925Z-one-165436-a785cd",
+ "created": "2026-11-21T18:49:26Z",
+ "host": "brain03",
+ "tmpdir": "/local/mkhoshechin/driver-dev/tmp",
+ "model": "fifo",
+ "mode": "offline",
+ "options": {
+  "scenarios": [],
+  "cells": [],
+  "where": [],
+  "model": null,
+  "mode": null,
+  "stop_at_first": null,
+  "directions": [],
+  "no_build": false,
+  "strict": false,
+  "no_wait": false,
+  "allow_dirty_tools": false,
+  "out": null
+ },
+ "project": {
+  "root": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel",
+  "files": {
+   "daavar.toml": "bdc0dc52cb848b379867e6a14576c2bb",
+   "rust/Cargo.toml": "2e6b3ea41d758b9939e010584d267095",
+   "rust/Cargo.lock": "e254f76a0d29a0d754a267cd525ccd4a",
+   "rust/src/imp.rs": "dc4b5b39a8c0a1769263ceebd553e8a1",
+   "rust/src/msgs.rs": "0c803e7627f97421984483a60c88ea94",
+   "rust/src/env.rs": "3e5f84faca2df991a9e1d7c1e4be421a",
+   "rust/src/spec.rs": "3a69f757f1cc76c7abe72f3e1ebd34ff",
+   "rust/src/main.rs": "7356807c8c683d0c3a1ed9c2efdf8133",
+   "java/bench/kv_cancel/KvCancel.java": "79dbd051f3c75ab8381f6badd4497861"
+  },
+  "case": "snapshot"
+ },
+ "daavar_checkout": "/local/mkhoshechin/driver-dev/daavar",
+ "project_in_daavar": false,
+ "tools": {
+  "traceforge": {
+   "identity": "d775f7034f1303e57485078cea072faf44f1ead7",
+   "commit": "d775f7034f1303e57485078cea072faf44f1ead7",
+   "dirty": false,
+   "dirty_digest": null,
+   "checkout": "/local/mkhoshechin/tmp/xcheck-pins/tf",
+   "literal": "/local/mkhoshechin/driver-dev/t15/named/traceforge",
+   "remotes": [
+    "https://github.com/joulook/TraceForge.git"
+   ],
+   "conf_join_sha256": "cc3db99bac45d4cee08791e1e685fe6cb5bb90503f19fa71a944947aac831a35",
+   "conf_join_inputs": {
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "env": {
+     "CARGO_HOME": "/local/mkhoshechin/cargo",
+     "CARGO_NET_OFFLINE": "true"
+    },
+    "target": "/local/mkhoshechin/driver-dev/t15/cache15/target/d775f7034f1303e57485078cea072faf44f1ead7/traceforge"
+   }
+  },
+  "jmc": {
+   "identity": "fc684f2112d462f0098ae5558148ce2c9bb6f622",
+   "commit": "fc684f2112d462f0098ae5558148ce2c9bb6f622",
+   "dirty": false,
+   "dirty_digest": null,
+   "checkout": "/local/mkhoshechin/driver-dev/jmc-fc684f2",
+   "literal": "/local/mkhoshechin/driver-dev/t15/named/jmc",
+   "remotes": [
+    "/local/mkhoshechin/tmp/xcheck-pins/jmc"
+   ],
+   "classes_sha256": "f68b7cc0c26205cf9f887a64b63a57d13e8d36b6e45440fabc07f83d034f7d54",
+   "jars_sha256": "a301f15a8fb5ae4c8df9745bf7ae8134dc4429c83827ecf791ec89875569d88d"
+  }
+ },
+ "artifacts": {
+  "rust": {
+   "key": "2b295b1e4190c78755497af29312ea0aa144414e0bd4234a6e833624cd3150ae",
+   "dir": "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/2b295b1e4190c78755497af29312ea0aa144414e0bd4234a6e833624cd3150ae",
+   "sha256": {
+    "tf_kv_cancel": "a4f5735141d997c409cdef7fe24f39559dc237992bc990e607b84b00d049b49e",
+    "tf_kv_cancel.SOURCE.md5": "8346862f36d90f6b7b9c274cc5913235696ffd9bbd9c040f6999e64232dafe6f"
+   },
+   "key_inputs": {
+    "kind": "rust",
+    "tool": "d775f7034f1303e57485078cea072faf44f1ead7",
+    "manifest": "8346862f36d90f6b7b9c274cc5913235696ffd9bbd9c040f6999e64232dafe6f",
+    "compilers": {
+     "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+     "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)"
+    },
+    "env": {
+     "CARGO_HOME": "/local/mkhoshechin/cargo",
+     "CARGO_NET_OFFLINE": "true"
+    },
+    "cargo_home_config": {},
+    "flags": [
+     "--release",
+     "--locked"
+    ],
+    "bins": [
+     "tf_kv_cancel"
+    ]
+   }
+  },
+  "java": {
+   "key": "76ce1446b8a4916eb4349b58c752ba354636f0ffc657b7672304a2e41f56c959",
+   "dir": "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/76ce1446b8a4916eb4349b58c752ba354636f0ffc657b7672304a2e41f56c959",
+   "sha256": "fc23d5314f0c96eadbe79adef5f93b1394870d39ea013100f84bfc8bea968388",
+   "key_inputs": {
+    "kind": "java",
+    "tool": "fc684f2112d462f0098ae5558148ce2c9bb6f622",
+    "classpath": [
+     "/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/classes/java/test",
+     "/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/resources/test",
+     "/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/classes/java/main",
+     "/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/resources/main",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/java-smt/6.0.0/3d52ab51cc23df15fb1fa397de21cc6dedc53ae5/java-smt-6.0.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/javasmt-solver-z3/4.16.0/ac05a16781b9f25b7859acc9346ad6cb4a666281/javasmt-solver-z3-4.16.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler/1.9.22/50e5ca7825e15b1301b7ec21a4b837aa67427d78/kotlin-compiler-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.6.0/38166a23afb5bd5520f739b87b3be87f7f0fb96d/commons-cli-1.6.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api-kotlin/1.5.0/491ad52badd5fe7dc66a55a120ddd1f5fec9b0ea/log4j-api-kotlin-1.5.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/common/0.3000-609-g90a352c/82b51ae9ae5e546b48c8dbb7233bf5dc7eaf44b9/common-0.3000-609-g90a352c.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.9.4/71d1be50e7c79317f2cb599b1da571dc5fcd8bf/spotbugs-annotations-4.9.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.25.5/c194a13e18b0a36014e867d2d323b989bf212151/log4j-core-2.25.5.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.25.5/6c80ea65e41f7858f7e15cb390c98c36167c7b3a/log4j-api-2.25.5.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.13.4/d29fc8b6a28d21b8741f299ae4deb3e3aa68b2e8/junit-jupiter-engine-5.13.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.13.4/2817f736551fe4949b79924715ef6f594ee072f4/junit-jupiter-api-5.13.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.13.4/8f63c7ed05b473d95cc63d1082054d7bfcf9c0e5/junit-platform-commons-1.13.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.13.4/e72a4d00af6177569fd57df4c8c4bb241c6aa4b6/junit-platform-launcher-1.13.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.13.4/cdd49063ae6e25494d1a9a08f4a9ab5de2b73bcb/junit-platform-engine-1.13.4.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.7.2-jre/e70def5b06cfb109ea050de99870e79c8ce80dbc/guava-33.7.2-jre.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test/1.9.22/7ca26b94d39b7b166e3bb08046873bfe98a452ad/kotlin-test-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.49.5/f0d119b5a4adb4164e9d6fa9fd3ffa5d0e458963/checker-qual-3.49.5.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.18/f7aa683ea79dc6681ee9fb95756c999acbb62f5d/animal-sniffer-annotations-1.18.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.9.22/c4b17283ad7939e778989663f8301d871987fa5e/kotlin-stdlib-jdk7-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.5.0/d8cebccdcddd029022aa8646a5a953ff88b13ac8/kotlinx-coroutines-core-jvm-1.5.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.22/d6c44cd08d8f3f9bece8101216dbe6553365c6e3/kotlin-stdlib-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.9.22/dea0c11e2fa503ab891c8a090e3b54754472975d/kotlin-stdlib-jdk8-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.9.22/f8139a46fc677ec9badc49ae954392f4f5e7e7c7/kotlin-script-runtime-1.9.22.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps/trove4j/1.0.20200330/3afb14d5f9ceb459d724e907a21145e8ff394f02/trove4j-1.0.20200330.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.3.0/152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e/opentest4j-1.3.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.3/aeaffd00d57023a2c947393ed251f0354f0985fc/failureaccess-1.0.3.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.1/3d60fd98eb8ade73004f4195c37b6317e02cf3d7/jspecify-1.0.1.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.50.0/74ba43e49ab1184d41634af2ef0047e82c4064b0/error_prone_annotations-2.50.0.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/3.1/a892ca9507839bbdb900d64310ac98256cab992f/j2objc-annotations-3.1.jar",
+     "/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar"
+    ],
+    "manifest": "9b7b2000838496e37db20a7b8e2d48de880eb36945fa6cbdb6465b693a776039",
+    "compilers": {
+     "javac": "javac 17.0.21"
+    },
+    "flags": [
+     "-d",
+     "-cp"
+    ]
+   }
+  }
+ },
+ "exports": [
+  {
+   "cell": "one.impl",
+   "program": "spec",
+   "kind": "offline",
+   "ref": null,
+   "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+   "cached": true,
+   "class": "ok",
+   "export": "one.impl/exports/spec.jsonl",
+   "export_sha256": "93bfa2815d69f15fd51e5527de2c1e89c3ea41e9699838d0e1e1184aac0f2a40",
+   "store_sha256": "3c8ea145a78cf84596c74951fbf4d96bb963bc030fe2351a75d635069865867f"
+  },
+  {
+   "cell": "one.impl",
+   "program": "rust",
+   "kind": "offline",
+   "ref": null,
+   "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+   "cached": true,
+   "class": "ok",
+   "export": "one.impl/exports/rust.jsonl",
+   "export_sha256": "08a7ccfb77cbb1eb547d4d07ee4668d6b1adf2c1c594a9e56bb8979cbcabbf8c",
+   "store_sha256": "01e36db75e416b0c01f128345d33c7975e2ce656ef6621bf8288a883cba3b8b1"
+  },
+  {
+   "cell": "one.impl",
+   "program": "spec",
+   "kind": "offline",
+   "ref": null,
+   "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+   "cached": true,
+   "class": "ok",
+   "export": "one.impl/exports/spec.jsonl",
+   "export_sha256": "93bfa2815d69f15fd51e5527de2c1e89c3ea41e9699838d0e1e1184aac0f2a40",
+   "store_sha256": "3c8ea145a78cf84596c74951fbf4d96bb963bc030fe2351a75d635069865867f"
+  },
+  {
+   "cell": "one.impl",
+   "program": "java",
+   "kind": "offline",
+   "ref": null,
+   "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+   "cached": false,
+   "class": "ok",
+   "export": "one.impl/exports/java.jsonl",
+   "export_sha256": "6220adf39c0bb712f0fc2c12d8cb233857b0e1c7a73d8044a60cb03492d13c2c",
+   "store_sha256": "13e0775a41ca59091b15ad95d94a96987ba30980b7c100704858cdf75ad6b47e"
+  },
+  {
+   "cell": "one.impl",
+   "program": "rust",
+   "kind": "offline",
+   "ref": null,
+   "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+   "cached": true,
+   "class": "ok",
+   "export": "one.impl/exports/rust.jsonl",
+   "export_sha256": "08a7ccfb77cbb1eb547d4d07ee4668d6b1adf2c1c594a9e56bb8979cbcabbf8c",
+   "store_sha256": "01e36db75e416b0c01f128345d33c7975e2ce656ef6621bf8288a883cba3b8b1"
+  },
+  {
+   "cell": "one.impl",
+   "program": "java",
+   "kind": "offline",
+   "ref": null,
+   "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+   "cached": false,
+   "class": "ok",
+   "export": "one.impl/exports/java.jsonl",
+   "export_sha256": "6220adf39c0bb712f0fc2c12d8cb233857b0e1c7a73d8044a60cb03492d13c2c",
+   "store_sha256": "13e0775a41ca59091b15ad95d94a96987ba30980b7c100704858cdf75ad6b47e"
+  },
+  {
+   "cell": "one.impl",
+   "program": "java",
+   "kind": "offline",
+   "ref": null,
+   "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+   "cached": false,
+   "class": "ok",
+   "export": "one.impl/exports/java.jsonl",
+   "export_sha256": "6220adf39c0bb712f0fc2c12d8cb233857b0e1c7a73d8044a60cb03492d13c2c",
+   "store_sha256": "13e0775a41ca59091b15ad95d94a96987ba30980b7c100704858cdf75ad6b47e"
+  },
+  {
+   "cell": "one.impl",
+   "program": "rust",
+   "kind": "offline",
+   "ref": null,
+   "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+   "cached": true,
+   "class": "ok",
+   "export": "one.impl/exports/rust.jsonl",
+   "export_sha256": "08a7ccfb77cbb1eb547d4d07ee4668d6b1adf2c1c594a9e56bb8979cbcabbf8c",
+   "store_sha256": "01e36db75e416b0c01f128345d33c7975e2ce656ef6621bf8288a883cba3b8b1"
+  },
+  {
+   "cell": "one.mutant",
+   "program": "spec",
+   "kind": "offline",
+   "ref": null,
+   "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+   "cached": true,
+   "class": "ok",
+   "export": "one.mutant/exports/spec.jsonl",
+   "export_sha256": "93bfa2815d69f15fd51e5527de2c1e89c3ea41e9699838d0e1e1184aac0f2a40",
+   "store_sha256": "3c8ea145a78cf84596c74951fbf4d96bb963bc030fe2351a75d635069865867f"
+  },
+  {
+   "cell": "one.mutant",
+   "program": "mutant1",
+   "kind": "offline",
+   "ref": null,
+   "key": "87ebf4cb7e7e0787cdc1c737f5cc38d8fc4247ae9f6f12d1d9f888351ea0a1ab",
+   "cached": true,
+   "class": "ok",
+   "export": "one.mutant/exports/mutant1.jsonl",
+   "export_sha256": "ee76b04245f8dfa0e73d9a59cecb5d8cdceca3d1eb34256bc1f276d2893df563",
+   "store_sha256": "0fc7b63c880eb9ff4e691071684166d1d5d319780467704c6105068a22bec3c3"
+  }
+ ],
+ "joins": [
+  {
+   "cell": "one.impl",
+   "direction": "rust<=spec",
+   "dir": "one.impl/joins/rust-in-spec",
+   "join_out_sha256": "86c71bbaacedac24a3e54f22f5c30c3ae02672ae8ef6e67c0e3bfb7c8ac310c3",
+   "index_sha256": "37ddd5d6beb041797fcdb798f43be9296be5f5713da43d886d4e510f6d318f65"
+  },
+  {
+   "cell": "one.impl",
+   "direction": "java<=spec",
+   "dir": "one.impl/joins/java-in-spec",
+   "join_out_sha256": "19f41c15ae93668d65da3293fe498ef99ce58e014c07bca920e9e97585b139f6",
+   "index_sha256": "37ddd5d6beb041797fcdb798f43be9296be5f5713da43d886d4e510f6d318f65"
+  },
+  {
+   "cell": "one.impl",
+   "direction": "java<=rust",
+   "dir": "one.impl/joins/java-in-rust",
+   "join_out_sha256": "8e7cac7b1663cf13d8e96b6975ecd2ac7dd4cdf94abbf1388a89c31262e307b4",
+   "index_sha256": "37ddd5d6beb041797fcdb798f43be9296be5f5713da43d886d4e510f6d318f65"
+  },
+  {
+   "cell": "one.impl",
+   "direction": "rust<=java",
+   "dir": "one.impl/joins/rust-in-java",
+   "join_out_sha256": "2a97eea46ba4c8aa8e1e767e2e82b98572aa90a0a59055e08b55db55e443c152",
+   "index_sha256": "37ddd5d6beb041797fcdb798f43be9296be5f5713da43d886d4e510f6d318f65"
+  },
+  {
+   "cell": "one.mutant",
+   "direction": "mutant1<=spec",
+   "dir": "one.mutant/joins/mutant1-in-spec",
+   "join_out_sha256": "8897633dc9a72f6e154c51183af00db95553292765625b04aaf38afdf8b2a52c",
+   "index_sha256": "1fcd8d856d37bd9b5bf7f875478e5947d280733b29263fd38ad5b5bb42f7a0a2"
+  }
+ ],
+ "commands": [
+  {
+   "step": "build:conf-join",
+   "argv": [
+    "cargo",
+    "build",
+    "--release",
+    "--locked",
+    "-p",
+    "traceforge",
+    "--bin",
+    "conf-join"
+   ],
+   "cwd": "/local/mkhoshechin/tmp/xcheck-pins/tf",
+   "env": {
+    "CARGO_TARGET_DIR": "/local/mkhoshechin/driver-dev/t15/cache15/target/d775f7034f1303e57485078cea072faf44f1ead7/traceforge",
+    "TRACEFORGE_COMMIT": "d775f7034f1303e57485078cea072faf44f1ead7"
+   },
+   "cached": true,
+   "class": "ok"
+  },
+  {
+   "step": "build:jmc",
+   "argv": [
+    "./gradlew",
+    "-q",
+    "--no-daemon",
+    "--offline",
+    ":core:testClasses"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/jmc-fc684f2",
+   "env": {
+    "JMC_COMMIT": "fc684f2112d462f0098ae5558148ce2c9bb6f622"
+   },
+   "cached": true,
+   "class": "ok"
+  },
+  {
+   "step": "build:rust",
+   "argv": [
+    "cargo",
+    "build",
+    "--release",
+    "--locked"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/rust",
+   "env": {
+    "CARGO_TARGET_DIR": "/local/mkhoshechin/driver-dev/t15/cache15/target/d775f7034f1303e57485078cea072faf44f1ead7/1c3ebf6f8238",
+    "TRACEFORGE_COMMIT": "d775f7034f1303e57485078cea072faf44f1ead7"
+   },
+   "cached": true,
+   "class": "ok"
+  },
+  {
+   "step": "build:java",
+   "argv": [
+    "/home/mkhoshechin/jdk17/bin/javac",
+    "-d",
+    "<out>",
+    "-cp",
+    "<CP>",
+    "<sources>"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel",
+   "env": {},
+   "cached": true,
+   "class": "ok"
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/2b295b1e4190c78755497af29312ea0aa144414e0bd4234a6e833624cd3150ae/out/tf_kv_cancel",
+    "export",
+    "spec",
+    "--out",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-qijy_jn3/export.jsonl",
+    "--graphs",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-qijy_jn3/export.jsonl.graphs.jsonl",
+    "--model",
+    "fifo",
+    "--program",
+    "kv-cancel",
+    "--",
+    "spec"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184813Z-one-113762-34c517/one.impl/work-spec",
+   "env": {},
+   "exit": 0,
+   "step": "offline-export",
+   "cell": "one.impl",
+   "program": "spec",
+   "class": "ok",
+   "key": "77fb07eb4b6156cfc131cacd65fbd6442a128728c1aca0f233fbae44a3664cab",
+   "cached": true,
+   "wall_ms": null,
+   "peak_rss_kb": null,
+   "cached_from": {
+    "wall_ms": 27,
+    "peak_rss_kb": 17320,
+    "cell": "one.impl"
+   }
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/2b295b1e4190c78755497af29312ea0aa144414e0bd4234a6e833624cd3150ae/out/tf_kv_cancel",
+    "export",
+    "impl",
+    "--out",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-_u213tf1/export.jsonl",
+    "--graphs",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-_u213tf1/export.jsonl.graphs.jsonl",
+    "--model",
+    "fifo",
+    "--program",
+    "kv-cancel",
+    "--",
+    "impl"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184813Z-one-113762-34c517/one.impl/work-rust",
+   "env": {},
+   "exit": 0,
+   "step": "offline-export",
+   "cell": "one.impl",
+   "program": "rust",
+   "class": "ok",
+   "key": "ea4c5cab3132d761274145b774f2323b4881cd0d9ab6a7342190c6e816253b8f",
+   "cached": true,
+   "wall_ms": null,
+   "peak_rss_kb": null,
+   "cached_from": {
+    "wall_ms": 26,
+    "peak_rss_kb": 17320,
+    "cell": "one.impl"
+   }
+  },
+  {
+   "argv": [
+    "/home/mkhoshechin/jdk17/bin/java",
+    "-ea",
+    "-Xss4m",
+    "-Xmx4g",
+    "-cp",
+    "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/76ce1446b8a4916eb4349b58c752ba354636f0ffc657b7672304a2e41f56c959/out:/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/classes/java/test:/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/resources/test:/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/classes/java/main:/local/mkhoshechin/driver-dev/t15/cache15/tools/jmc-fc684f2112d462f0098ae5558148ce2c9bb6f622/tree/core/build/resources/main:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/java-smt/6.0.0/3d52ab51cc23df15fb1fa397de21cc6dedc53ae5/java-smt-6.0.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/javasmt-solver-z3/4.16.0/ac05a16781b9f25b7859acc9346ad6cb4a666281/javasmt-solver-z3-4.16.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler/1.9.22/50e5ca7825e15b1301b7ec21a4b837aa67427d78/kotlin-compiler-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.6.0/38166a23afb5bd5520f739b87b3be87f7f0fb96d/commons-cli-1.6.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api-kotlin/1.5.0/491ad52badd5fe7dc66a55a120ddd1f5fec9b0ea/log4j-api-kotlin-1.5.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.sosy-lab/common/0.3000-609-g90a352c/82b51ae9ae5e546b48c8dbb7233bf5dc7eaf44b9/common-0.3000-609-g90a352c.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.github.spotbugs/spotbugs-annotations/4.9.4/71d1be50e7c79317f2cb599b1da571dc5fcd8bf/spotbugs-annotations-4.9.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.25.5/c194a13e18b0a36014e867d2d323b989bf212151/log4j-core-2.25.5.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.25.5/6c80ea65e41f7858f7e15cb390c98c36167c7b3a/log4j-api-2.25.5.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.13.4/d29fc8b6a28d21b8741f299ae4deb3e3aa68b2e8/junit-jupiter-engine-5.13.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.13.4/2817f736551fe4949b79924715ef6f594ee072f4/junit-jupiter-api-5.13.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.13.4/8f63c7ed05b473d95cc63d1082054d7bfcf9c0e5/junit-platform-commons-1.13.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.13.4/e72a4d00af6177569fd57df4c8c4bb241c6aa4b6/junit-platform-launcher-1.13.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.13.4/cdd49063ae6e25494d1a9a08f4a9ab5de2b73bcb/junit-platform-engine-1.13.4.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.7.2-jre/e70def5b06cfb109ea050de99870e79c8ce80dbc/guava-33.7.2-jre.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test/1.9.22/7ca26b94d39b7b166e3bb08046873bfe98a452ad/kotlin-test-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.49.5/f0d119b5a4adb4164e9d6fa9fd3ffa5d0e458963/checker-qual-3.49.5.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.18/f7aa683ea79dc6681ee9fb95756c999acbb62f5d/animal-sniffer-annotations-1.18.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.9.22/c4b17283ad7939e778989663f8301d871987fa5e/kotlin-stdlib-jdk7-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.5.0/d8cebccdcddd029022aa8646a5a953ff88b13ac8/kotlinx-coroutines-core-jvm-1.5.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.22/d6c44cd08d8f3f9bece8101216dbe6553365c6e3/kotlin-stdlib-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.9.22/dea0c11e2fa503ab891c8a090e3b54754472975d/kotlin-stdlib-jdk8-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.9.22/f8139a46fc677ec9badc49ae954392f4f5e7e7c7/kotlin-script-runtime-1.9.22.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains.intellij.deps/trove4j/1.0.20200330/3afb14d5f9ceb459d724e907a21145e8ff394f02/trove4j-1.0.20200330.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.3.0/152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e/opentest4j-1.3.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.3/aeaffd00d57023a2c947393ed251f0354f0985fc/failureaccess-1.0.3.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.1/3d60fd98eb8ade73004f4195c37b6317e02cf3d7/jspecify-1.0.1.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.50.0/74ba43e49ab1184d41634af2ef0047e82c4064b0/error_prone_annotations-2.50.0.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/3.1/a892ca9507839bbdb900d64310ac98256cab992f/j2objc-annotations-3.1.jar:/local/mkhoshechin/gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+    "org.mpi_sws.jmc.mp.launch.MpLauncher",
+    "export",
+    "--program",
+    "bench.kv_cancel.KvCancel:impl",
+    "--strategy",
+    "must",
+    "--iterations",
+    "0",
+    "--seed",
+    "1",
+    "--report-dir",
+    "report",
+    "--out",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-0022twu4/export.jsonl",
+    "--timeout",
+    "60",
+    "--graphs",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-0022twu4/export.jsonl.graphs.jsonl"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/work-java",
+   "env": {},
+   "exit": 0,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 611,
+   "peak_rss_kb": 150264,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-0022twu4/stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-0022twu4/stderr",
+   "step": "offline-export",
+   "cell": "one.impl",
+   "program": "java",
+   "ref": null,
+   "class": "ok",
+   "key": "df5131ea6bf3a87e3cfc53a2c8675477c03d89320cd65635380612ca18375f7e",
+   "cached": false,
+   "key_inputs": {
+    "tool": "fc684f2112d462f0098ae5558148ce2c9bb6f622",
+    "build_key": "76ce1446b8a4916eb4349b58c752ba354636f0ffc657b7672304a2e41f56c959",
+    "entry": {
+     "class": "bench.kv_cancel.KvCancel"
+    },
+    "manifest": "2be894fb9bf0393df0c446c3ab5ae9937299aa36dd8505f02e4171e5e4c51848",
+    "argv": [
+     "<JAVA>",
+     "-ea",
+     "-Xss4m",
+     "-Xmx4g",
+     "-cp",
+     "<CLASSES>:<CP>",
+     "org.mpi_sws.jmc.mp.launch.MpLauncher",
+     "export",
+     "--program",
+     "bench.kv_cancel.KvCancel:impl",
+     "--strategy",
+     "must",
+     "--iterations",
+     "0",
+     "--seed",
+     "1",
+     "--report-dir",
+     "report",
+     "--out",
+     "<E>",
+     "--timeout",
+     "60",
+     "--graphs",
+     "<G>"
+    ],
+    "header": {
+     "program": "kv-cancel",
+     "size": "impl",
+     "model": "fifo",
+     "side": null,
+     "class": "bench.kv_cancel.KvCancel"
+    },
+    "budgets": {
+     "export_timeout_s": 60,
+     "join_timeout_s": 60,
+     "java_xmx": "4g",
+     "mem_cap_gb": 0
+    },
+    "flags": {
+     "threads": 1,
+     "seed": 1,
+     "timeout_s": 60,
+     "graphs": true,
+     "graphs_limit": null,
+     "mode": "offline",
+     "stop_at_first": false,
+     "java_xmx": "4g",
+     "cli": "named"
+    },
+    "reference": null
+   }
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/spec.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/rust.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-spec",
+    "--decide-budget",
+    "1000000",
+    "--witness-limit",
+    "20",
+    "--witness-nearest",
+    "3"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl",
+   "env": {
+    "WITNESS_CONF_JOIN": "/local/mkhoshechin/driver-dev/t15/cache15/tools/traceforge-d775f7034f1303e57485078cea072faf44f1ead7/conf-join"
+   },
+   "exit": 0,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 48,
+   "peak_rss_kb": 18080,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-spec.stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-spec.stderr",
+   "step": "join",
+   "cell": "one.impl",
+   "direction": "rust<=spec",
+   "class": "ok"
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/spec.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/java.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-spec",
+    "--decide-budget",
+    "1000000",
+    "--witness-limit",
+    "20",
+    "--witness-nearest",
+    "3"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl",
+   "env": {
+    "WITNESS_CONF_JOIN": "/local/mkhoshechin/driver-dev/t15/cache15/tools/traceforge-d775f7034f1303e57485078cea072faf44f1ead7/conf-join"
+   },
+   "exit": 0,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 46,
+   "peak_rss_kb": 18080,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-spec.stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-spec.stderr",
+   "step": "join",
+   "cell": "one.impl",
+   "direction": "java<=spec",
+   "class": "ok"
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/rust.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/java.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-rust",
+    "--decide-budget",
+    "1000000",
+    "--witness-limit",
+    "20",
+    "--witness-nearest",
+    "3"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl",
+   "env": {
+    "WITNESS_CONF_JOIN": "/local/mkhoshechin/driver-dev/t15/cache15/tools/traceforge-d775f7034f1303e57485078cea072faf44f1ead7/conf-join"
+   },
+   "exit": 0,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 46,
+   "peak_rss_kb": 18080,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-rust.stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/java-in-rust.stderr",
+   "step": "join",
+   "cell": "one.impl",
+   "direction": "java<=rust",
+   "class": "ok"
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/java.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/exports/rust.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-java",
+    "--decide-budget",
+    "1000000",
+    "--witness-limit",
+    "20",
+    "--witness-nearest",
+    "3"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl",
+   "env": {
+    "WITNESS_CONF_JOIN": "/local/mkhoshechin/driver-dev/t15/cache15/tools/traceforge-d775f7034f1303e57485078cea072faf44f1ead7/conf-join"
+   },
+   "exit": 0,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 46,
+   "peak_rss_kb": 18080,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-java.stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.impl/joins/rust-in-java.stderr",
+   "step": "join",
+   "cell": "one.impl",
+   "direction": "rust<=java",
+   "class": "ok"
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/t15/cache15/artifacts/2b295b1e4190c78755497af29312ea0aa144414e0bd4234a6e833624cd3150ae/out/tf_kv_cancel",
+    "export",
+    "impl",
+    "--out",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-4_ywzcvt/export.jsonl",
+    "--graphs",
+    "/local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-4_ywzcvt/export.jsonl.graphs.jsonl",
+    "--model",
+    "fifo",
+    "--program",
+    "kv-cancel",
+    "--",
+    "mutant1"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184813Z-one-113762-34c517/one.mutant/work-mutant1",
+   "env": {},
+   "exit": 0,
+   "step": "offline-export",
+   "cell": "one.mutant",
+   "program": "mutant1",
+   "class": "ok",
+   "key": "87ebf4cb7e7e0787cdc1c737f5cc38d8fc4247ae9f6f12d1d9f888351ea0a1ab",
+   "cached": true,
+   "wall_ms": null,
+   "peak_rss_kb": null,
+   "cached_from": {
+    "wall_ms": 25,
+    "peak_rss_kb": 17320,
+    "cell": "one.mutant"
+   }
+  },
+  {
+   "argv": [
+    "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant/exports/spec.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant/exports/mutant1.jsonl",
+    "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant/joins/mutant1-in-spec",
+    "--decide-budget",
+    "1000000",
+    "--witness-limit",
+    "20",
+    "--witness-nearest",
+    "3"
+   ],
+   "cwd": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant",
+   "env": {
+    "WITNESS_CONF_JOIN": "/local/mkhoshechin/driver-dev/t15/cache15/tools/traceforge-d775f7034f1303e57485078cea072faf44f1ead7/conf-join"
+   },
+   "exit": 1,
+   "timed_out": false,
+   "killed": false,
+   "wall_ms": 166,
+   "peak_rss_kb": 20600,
+   "stdout": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant/joins/mutant1-in-spec.stdout",
+   "stderr": "/local/mkhoshechin/driver-dev/t15/named/examples/kv-cancel/out/20261121T184925Z-one-165436-a785cd/one.mutant/joins/mutant1-in-spec.stderr",
+   "step": "join",
+   "cell": "one.mutant",
+   "direction": "mutant1<=spec",
+   "class": "ok"
+  }
+ ],
+ "jmc_main": "org.mpi_sws.jmc.mp.launch.MpLauncher"
+}

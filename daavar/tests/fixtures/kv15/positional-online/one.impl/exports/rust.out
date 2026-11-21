@@ -1,0 +1,45 @@
+Executions attempted so far: 1 total 1 finished normally 0 blocked.
+exported: 4 lines from 4 graphs to /local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-_u213tf1/export.jsonl
+graph_store: written=4 refused=0 ms=0
+--- measurements
+wall_ms: 2
+explore_ms: 0
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 5764
+max_message_events: 16
+max_porf_pairs: 11
+max_graph_events: 29
+mean_graph_events: 28.000
+max_visible_events: 13
+mean_visible_events: 12.000
+max_summary_bytes: 515
+max_porf_count: 6
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 0
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 4
+impl_blocked: 0
+spec_summaries: 0
+impl_summaries: 4
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 0
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 4
+graphs_refused: 0
+graphs_ms: 0

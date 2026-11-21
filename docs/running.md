@@ -1,4 +1,4 @@
-# Running a check (draft 3, 2026-11-21)
+# Running a check (draft 4, 2026-11-21)
 
 Everything a check needs is one command of the driver, `bin/daavar`, run from the repository root. Python 3.11 or
 newer; the two checkers are built on first use from the pinned submodules (a Rust toolchain and JDK 17 required, both
@@ -54,6 +54,17 @@ commit, build key, source manifest, arguments, header metadata, model, budgets a
 their headers (model and visible roles); the checked exports with their graph stores (offline, or online against the
 reference); the joins with Decide and the witness graphs; the verdict files. A program that refuses its arguments
 is reported when its export runs.
+
+**The JMC command line (`[tools.jmc] cli`).** The driver runs JMC's launcher in one of two forms. `cli =
+"positional"` (the default when the key is absent) passes the arguments by position (`<Class:args> must 0 <seed>
+report <export> <timeout> --graphs ... [--spec ...]`), which every JMC pin accepts and JMC 0.3.0 keeps as deprecated.
+`cli = "named"` uses JMC 0.3.0's named commands (`export` or `online`, with `--program`, `--seed`, `--out`,
+`--timeout`, `--graphs`, `--spec`, `--stop-at-first`); it needs a JMC build that has the
+`org.mpi_sws.jmc.mp.cli` package. `cli = "auto"` picks named when the built JMC's classpath holds that package and
+positional otherwise, decided once per JMC build and kept in the cache (`tools/jmc-<identity>.cli.json`); a
+`--dry-run` before the first build cannot tell and exits 2. The two forms run the same exploration and write the
+same export and graph store, byte for byte; only JMC's exit statuses differ (named: 0 conforms, 1 violation, 2
+refused, 3 incomplete), and the driver maps both to the same verdicts.
 
 ## Exit codes and verdicts
 Each direction gets one verdict: conforms, violation, incomplete or refused.

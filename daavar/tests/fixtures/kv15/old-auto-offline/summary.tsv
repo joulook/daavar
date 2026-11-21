@@ -1,0 +1,6 @@
+scenario	cell	model	mode	direction	gating	checked	ref	checked_enum	ref_enum	checked_lines	ref_lines	uncovered	decide_viol	decide_fa	decide_unres	graphs	class_T	class_D	class_A	class_C	verdict	export_ms	join_ms	peak_rss_kb
+one	impl	fifo	offline	rust<=spec	yes	rust	spec	complete	complete	4	5	0	0	0	0	0	0	0	0	0	conforms	27	49	23328
+one	impl	fifo	offline	java<=spec	yes	java	spec	complete	complete	4	5	0	0	0	0	0	0	0	0	0	conforms	631	48	168704
+one	impl	fifo	offline	java<=rust	no	java	rust	complete	complete	4	4	0	0	0	0	0	0	0	0	0	conforms	631	48	168704
+one	impl	fifo	offline	rust<=java	no	rust	java	complete	complete	4	4	0	0	0	0	0	0	0	0	0	conforms	27	48	23328
+one	mutant	fifo	offline	mutant1<=spec	yes	mutant1	spec	complete	complete	3	5	1	1	0	0	1	0	0	0	0	rejected	28	168	23328

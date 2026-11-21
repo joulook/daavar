@@ -575,31 +575,22 @@ def jmc_tool(jid: ToolId, res: BuildResult) -> dict:
     return done()
 
 
-def cli_cache_path(identity: str, main: str) -> Path:
-    return cache.root() / "tools" / f"jmc-{identity}.cli-{hashlib.sha256(main.encode()).hexdigest()[:12]}.json"
+def cli_cache_path(identity: str) -> Path:
+    return cache.root() / "tools" / f"jmc-{identity}.cli.json"
 
 
-def resolve_cli(cfg_cli: str, jtool: dict, main: str, res: BuildResult) -> str:
-    """§3.7: a configured form is used as is; `auto` probes `--help` once per JMC identity and main class."""
+def resolve_cli(cfg_cli: str, jtool: dict) -> str:
+    """§3.7 (S15): a configured form is used as is; `auto` is named when the built JMC's classpath holds the
+    named launcher (org.mpi_sws.jmc.mp.cli.MpLauncher, JMC 0.3.0), positional otherwise; probed once per JMC
+    build (its identity) and cached. No process runs."""
     if cfg_cli != "auto":
         return cfg_cli
-    p = cli_cache_path(jtool["identity"], main)
+    p = cli_cache_path(jtool["identity"])
     if p.is_file():
         return json.loads(p.read_text())["cli"]
-    java, _ = java_tools()
-    argv = jmc.help_probe_argv(java, jtool["classpath"], main)
-    tmp = cache.tmpdir(p.parent)
-    try:
-        r = runner.run(argv, tmp, tmp / "probe.out", tmp / "probe.err", timeout_s=120)
-        form = jmc.cli_from_probe(r.exit, r.read_stderr(), r.timed_out)
-        if form is None:
-            raise BuildError(f"the JMC CLI probe `{' '.join(argv)}` neither succeeded nor refused --help as the "
-                             f"positional launcher does (exit {r.exit}); not cached: set [tools.jmc] cli")
-        cache.ensure("tools")
-        manifest.write(json.dumps({"cli": form, "probe_exit": r.exit, "main": main}) + "\n", p)
-    finally:
-        cache.remove(tmp)
-    res.steps.append(Step("jmc-cli-probe", argv, str(tmp), {}, True, {"exit": r.exit, "cli": form}))
+    form = "named" if jmc.has_named_cli(jtool["classpath"]) else "positional"
+    cache.ensure("tools")
+    manifest.write(json.dumps({"cli": form, "probe": jmc.NAMED_CLI_CLASS}) + "\n", p)
     return form
 
 
@@ -753,7 +744,7 @@ def build(cfg, allow_dirty_tools: bool = False, daavar: Path | None = None, cach
         jc = cfg.tools["jmc"]
         jid = tool_identity("jmc", cfg.tool_path(jc["checkout"]), allow_dirty_tools)
         jt = jmc_tool(jid, res)
-        jt["cli"] = resolve_cli(jc["cli"], jt, jc["main"], res)
+        jt["cli"] = resolve_cli(jc["cli"], jt)
         jt["main"] = jc["main"]
         res.tools["jmc"] = jt
     if "rust" in langs:
@@ -784,7 +775,7 @@ def dry_run(cfg) -> tuple:
         cmds.append({"cwd": staged, "env": {"JMC_COMMIT": jcommit},
                      "argv": ["./gradlew", "-q", "--no-daemon", "--offline", "-I", str(INIT_SCRIPT),
                               "-PdaavarCp=<tmp>/cp.raw", ":core:daavarPrintTestClasspath"]})
-        if jc["cli"] == "auto" and not cli_cache_path(jcommit, jc["main"]).is_file():
+        if jc["cli"] == "auto" and not cli_cache_path(jcommit).is_file():
             code = 2
     if "rust" in cfg.langs:
         cmds.append({"cwd": str(cfg.root / "rust"), "env": {"CARGO_TARGET_DIR": f"{cache.root()}/target/{commit}/<path12>",

@@ -1,0 +1,2 @@
+model:      p2p
+FAILED:     java.lang.IllegalArgumentException: visible roles must be among the spawned roles

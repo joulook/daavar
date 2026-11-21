@@ -221,7 +221,7 @@ class Check:
                 return tf.online_outcome(exit_code, timed_out, out, err, paths["export"])
             return tf.export_outcome(exit_code, timed_out, out, err, paths["export"])
         return jmc.export_outcome(exit_code, timed_out, out, err, paths["export"], online=(kind == "online"),
-                                  graphs=paths["graphs"])
+                                  graphs=paths["graphs"], cli=self.build.tools["jmc"]["cli"])
 
     def preflight(self, er: ExportRun, scenario) -> Outcome:
         """§3.3 step 4: the header's model and visible list, before any join."""
@@ -280,7 +280,7 @@ class Check:
         cli = jc.get("cli", "positional")
         if cli == "auto":
             commit = build.git_head_nofork(cfg.tool_path(jc["checkout"])) or ""
-            p = build.cli_cache_path(commit, jc["main"])
+            p = build.cli_cache_path(commit)
             cli = json.loads(p.read_text())["cli"] if p.is_file() else "positional"
 
         class B:

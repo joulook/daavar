@@ -1,0 +1,9 @@
+program:    fx.Fx
+strategy:   must
+iterations: unbounded, timeout 3 s
+seed:       1
+reportPath: report
+exportFile: export.jsonl
+2026-11-21 19:43:39,657 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:43:39,667 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:43:39,667 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.

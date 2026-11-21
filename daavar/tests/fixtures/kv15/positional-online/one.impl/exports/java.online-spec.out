@@ -1,0 +1,56 @@
+program:    bench.kv_cancel.KvCancel
+strategy:   must
+iterations: unbounded, timeout 60 s
+seed:       1
+reportPath: report
+exportFile: /local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-7uu_5978/export.jsonl
+spec:       /local/mkhoshechin/driver-dev/t15/positional/examples/kv-cancel/out/20261121T184923Z-one-165198-20d0bf/one.impl/exports/spec.jsonl (program kv-cancel, size spec, model p2p, tool traceforge; 5 lines, 5 distinct summaries held, 0 duplicates)
+2026-11-21 19:49:24,189 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:49:24,198 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:49:24,198 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-21 19:49:24,245 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-21 19:49:24,286 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 4 iterations
+2026-11-21 19:49:24,286 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 4 completed iterations
+2026-11-21 19:49:24,286 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-21 19:49:24,286 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-21 19:49:24,286 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        4 iterations
+blocked:    0 (counted by the strategy)
+completed:  4
+rate:       39.1 iterations/s
+elapsed:    0.102 s
+observed:   bench.kv_cancel.KvCancel@7dc0f706
+graphs:     4 distinct complete, 0 distinct blocked; stack exhausted
+lookups:    4 (4 found, 0 signature misses, 0 not found)
+verdict:    conforms
+mode:       full
+uncovered:  0 graphs (0 distinct summaries)
+exported:   4 iterations as 4 distinct summaries (complete, 0 not exported) to /local/mkhoshechin/driver-dev/t15/cache15/exports/.tmp-7uu_5978/export.jsonl
+graph_store: written=4 refused=0 ms=5
+--- measurements
+wall_ms: 517
+explore_ms: 94
+summarise_ms: 7
+index_ms: 25
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 4
+graphs_blocked: 0
+summaries_distinct: 4
+iterations: 4
+stop_reason: exhausted
+peak_rss_kb: 163172
+max_message_events: 16
+max_porf_pairs: 11
+first_miss_iteration: 0
+first_miss_wall_ms: 0
+uncovered_total: 0
+max_graph_events: 31
+mean_graph_events: 30.000
+max_visible_events: 13
+mean_visible_events: 12.000
+max_summary_bytes: 515
+max_porf_count: 6
+graphs_written: 4
+graphs_refused: 0
+graphs_ms: 5

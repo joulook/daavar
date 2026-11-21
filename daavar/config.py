@@ -359,7 +359,7 @@ def _tools(d, programs: dict) -> dict:
         if k not in j:
             raise _err("tools.jmc", f"missing key {k}")
     jm = {k: _scalar(f"tools.jmc.{k}", j[k]) for k in j}
-    jm.setdefault("cli", "auto")
+    jm.setdefault("cli", "positional")  # §3.7, S15: explicit; "auto" only when the config says so
     jm.setdefault("api_package", "org.mpi_sws.jmc.mp.launch")
     if jm["cli"] not in JMC_CLI:
         raise _err("tools.jmc.cli", f"{jm['cli']!r} is not one of {', '.join(JMC_CLI)}")

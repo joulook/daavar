@@ -1,0 +1,48 @@
+program:    fx.Fx
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+exportFile: export.jsonl
+2026-11-21 19:43:14,858 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-21 19:43:14,867 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-21 19:43:14,867 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-21 19:43:14,921 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-21 19:43:14,944 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 2 iterations
+2026-11-21 19:43:14,945 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 2 completed iterations
+2026-11-21 19:43:14,945 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-21 19:43:14,945 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-21 19:43:14,945 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        2 iterations
+blocked:    0 (counted by the strategy)
+completed:  2
+rate:       21.8 iterations/s
+elapsed:    0.092 s
+observed:   fx.Fx@38425407
+graphs:     2 distinct complete, 0 distinct blocked; stack exhausted
+exported:   2 iterations as 2 distinct summaries (complete, 0 not exported) to export.jsonl
+graph_store: written=2 refused=0 ms=3
+--- measurements
+wall_ms: 474
+explore_ms: 83
+summarise_ms: 8
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 2
+graphs_blocked: 0
+summaries_distinct: 2
+iterations: 2
+stop_reason: exhausted
+peak_rss_kb: 166660
+max_message_events: 6
+max_porf_pairs: 5
+max_graph_events: 17
+mean_graph_events: 17.000
+max_visible_events: 6
+mean_visible_events: 6.000
+max_summary_bytes: 269
+max_porf_count: 3
+graphs_written: 2
+graphs_refused: 0
+graphs_ms: 3

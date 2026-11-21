@@ -1,0 +1,68 @@
+Model checks a message-passing program (org.mpi_sws.jmc.api.mp): counts its executions, exports
+their summaries, checks them online against a specification, or replays one execution.
+
+  MpLauncher count --program <class[:args]> [--strategy must|mp-random] [--model <m>] [--iterations N] [--seed N] [--report-dir <dir>] [--timeout S]
+  MpLauncher export --program <class[:args]> [--strategy must|mp-random] [--model <m>] [--iterations N] [--seed N] [--report-dir <dir>] [--timeout S] --out <file> [--graphs <store> [--graphs-limit N]]
+  MpLauncher online --program <class[:args]> [--strategy must|mp-random] [--model <m>] [--iterations N] [--seed N] [--report-dir <dir>] [--timeout S] --spec <file> [--stop-at-first] [--witness <file or dir/>] [--out <file> [--graphs <store> [--graphs-limit N]]]
+  MpLauncher replay --graph <graph.json> [--report <file>] [--allow-source-change] [--allow-tool-change] [--program <class[:args]>]
+
+Commands:
+  count    explore the program and print the number of distinct executions
+  export   explore and write one summary per distinct execution (--out)
+  online   explore and look every execution up in a specification file (--spec)
+  replay   re-run one execution from a stored graph (--graph)
+
+Options of count, export and online:
+  --program <class[:args]>  the program: a Runnable with a public no-argument constructor, or
+                            Class:a,b,... for its public (String...) constructor; export and
+                            online need an MpProgram
+  --strategy <s>            must (default; explores every distinct execution; p2p and asyn
+                            only) or mp-random (samples executions; any model)
+  --model <m>               the communication model the program uses: p2p (alias fifo), asyn
+                            (bag), cd (causal) or mbox; refused if it differs from the model an
+                            MpProgram declares; printed canonically
+  --iterations N            0 means unbounded, until the exploration ends or the timeout (must
+                            only, and its default); default 1000 for mp-random
+  --seed N                  default from the clock, printed
+  --report-dir <dir>        default build/mp-launch/<program simple name>; its plain files are
+                            deleted at the start of the run
+  --timeout S               seconds, default 600 (must)
+
+Options of export and online:
+  --out <file>              the summary file (export: required; online: optional)
+  --graphs <store>          also write the graph of each distinct summary (must, with --out)
+  --graphs-limit N          at most N graphs in the store
+
+Options of online:
+  --spec <file>             the specification file (complete; same program, roles and model)
+  --stop-at-first           stop at the first execution the specification does not cover
+  --witness <file or dir/>  write the first uncovered execution (a file), or one witness per
+                            distinct uncovered summary (a directory ending in /)
+
+Options of replay:
+  --graph <graph.json>      the stored graph (one line of a graph store)
+  --report <file>           also write the result as JSON
+  --allow-source-change     accept a graph recorded from another source of the program
+  --allow-tool-change       accept a graph recorded by another JMC build
+  --program <class[:args]>  optional; must match the class and arguments the graph names
+
+Advanced (must, iterations 0):
+  --split W                 explore with W worker JVMs once the search stack is large enough
+  --k K                     the stack size at which to split, default 8*W
+  --worker <dir> <id>       internal: how the coordinator starts its workers
+
+Exit status:
+  0  conforms, or nothing to report: the exploration was exhausted (count, export), the online
+     verdict is conforms, replay reproduced the execution
+  1  a violation: an online summary the specification does not cover (also a stop at the first
+     one), a failed assertion or an exception in any process or in main, in any iteration
+     including the last, a receive guard that threw; replay deviated
+  2  refused: a usage error, a strategy that is not a message-passing one, a model or value the
+     strategy does not support, a broken rule of the API or of the export format, a refused
+     specification, store, witness target or graph, an output that cannot be written
+  3  partial or incomplete: a timeout, an iteration bound reached before the exploration was
+     exhausted, a sampled strategy (mp-random), an online verdict partial, an unfinished split run
+
+The positional form, MpLauncher <program class[:args]> [strategy] [iterations] [seed]
+[reportPath] [exportFile] [timeoutSeconds] [options], is still accepted and is deprecated; it
+keeps its own exit statuses: 0 the run completed (whatever the verdict), 1 it failed, 2 refused.
