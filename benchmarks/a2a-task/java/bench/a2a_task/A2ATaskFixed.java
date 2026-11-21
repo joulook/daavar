@@ -16,13 +16,12 @@ import java.util.List;
  * One A2A task, one stream, a cancel racing the task's completion: the server core of the FIXED a2a-java
  * rewritten as one sequential process.
  *
- * <p>Fixed SDK: {@link A2ATask} with the task-first-stream patch applied (owner's fork, branch
- * {@code fix/task-first-stream} from main 586fdd54, staged diff {@code plan/case-studies/a2a/fix/java.patch}
- * md5 0cc2be36). Patched lines cited as {@code DRH'}/{@code MEBP'} with their line on the fork branch. Only the
+ * <p>Fixed SDK: {@link A2ATask} with the task-first-stream patch applied (the patch is built on a2a-java main
+ * 586fdd54). Patched lines cited as {@code DRH'}/{@code MEBP'} with their line in the patched source. Only the
  * streaming send changes: when the stream's first executor event is a status update, the stream begins with the
  * baseline Task (SUBMITTED for a new task), then that event; a first Task or Message passes unchanged. Everything
  * else (messages, roles, client, executors, store, blocking/cancel/get paths) is {@link A2ATask} verbatim; the line
- * citations without a prime refer to f40664f8, as there. Map: {@code MAP-java.md} rev 8, "Fixed SDK (A2ATaskFixed)".
+ * citations without a prime refer to f40664f8, as there.
  *
  * <p>Source: a2aproject/a2a-java at {@code f40664f85f61d232fc794dfe9b7cdc8557bcd7b8},
  * {@code server-common/src/main/java/org/a2aproject/sdk/server/}: {@code requesthandlers/DefaultRequestHandler}
@@ -30,9 +29,7 @@ import java.util.List;
  * {@code events/EventConsumer} (EC), {@code tasks/TaskManager} (TM), {@code tasks/ResultAggregator}
  * (RA), {@code tasks/InMemoryTaskStore}; the JSON-RPC transport's
  * {@code transport/jsonrpc/src/main/java/org/a2aproject/sdk/transport/jsonrpc/handler/JSONRPCHandler}
- * (JH). Line numbers below refer to that commit. The source-to-model map {@code MAP-java.md} of the
- * a2a case study lists every collapsed thread, queue, lock and timed wait, every kept decision and
- * every deviation forced by the abstraction.
+ * (JH). Line numbers below refer to that commit.
  *
  * <p>Abstraction: the server handles each incoming message in one atomic step, and a step ends at
  * every external wait. The agent executor is the process {@code exec}, which is not visible. The bus processor's
@@ -765,7 +762,7 @@ public final class A2ATaskFixed implements MpProgram {
             Child ch = new Child(true, r.req());
             // Fix, DRH' 1065-1070: initialTask = mss.task() if the request names a stored task, else a new
             // Task{SUBMITTED, history=[message]}. SendStream carries no task id, so mss.task() is null and the
-            // baseline is SUBMITTED (the store holds the state only, T5: no history, no timestamp).
+            // baseline is SUBMITTED (the store holds the state only: no history, no timestamp).
             ch.initialTask = State.Submitted;
             // Fix, DRH' 1079 (registerInitialTask) with MEBP' 105, 166-168, 283-288, 396-399: the store saves
             // that same Task before TM applies a first status update. In the state-only store this equals what
@@ -871,7 +868,7 @@ public final class A2ATaskFixed implements MpProgram {
             }
             State current = stored;
             // Fix, MEBP' 394-399: a first status update of a new task now saves the registered initialTask
-            // (SUBMITTED) and TM's ensureTask finds it. In the state-only store (T5) that is the SUBMITTED created
+            // (SUBMITTED) and TM's ensureTask finds it. In the state-only store that is the SUBMITTED created
             // here before the patch, so this code is unchanged.
             if (!ev.task() && current == null) {
                 current = State.Submitted;

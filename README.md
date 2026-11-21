@@ -37,6 +37,10 @@ in some gating direction, 2 refused or incomplete. `new` writes a Rust specifica
 implementation, `MAP.md`, `SPEC-DESIGN.md`, `README.md` and `daavar.toml`. `docs/running.md` lists every command
 and flag.
 
+Java programs can also be written against the released library without this repository's checkout: JMC 0.2.0 is on
+Maven Central as `org.mpi-sws.jmc:jmc:0.2.0` (the Must API, the launcher and the exporter); the TraceForge crate is
+the pinned submodule.
+
 ## Two ways people use it
 - **Paper to implementation.** Hand an agent a systems paper or a protocol text; it writes the specification program
   (Rust) from the text with every open point as a nondeterministic branch, writes or ports the implementation (Rust or

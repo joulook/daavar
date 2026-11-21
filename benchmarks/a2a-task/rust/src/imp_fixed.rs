@@ -1,17 +1,15 @@
 //! The implementation program of the FIXED a2a-rs SDK: a copy of `imp.rs` changed only where the
-//! two fixes change `a2a-server/src/handler.rs` (both applied, as in the owner's fork):
-//! `fix/task-first-stream` (diff `plan/case-studies/a2a/fix/rs-task-first.patch`, md5 43b9bff2) and
-//! `fix/message-stream-close` (diff `rs-message-close.patch`, md5 6d054586). Each change is marked
-//! `FIX task-first` or `FIX message-close` with the patched line on that branch (`fork tf:N`,
-//! `fork mc:N`). Every other line, and every `handler.rs:N` citation, is `imp.rs`'s, on the
-//! unfixed source below; the map is MAP-rust.md §10.
+//! two fixes change `a2a-server/src/handler.rs` (both applied): the task-first-stream patch and
+//! the message-stream-close patch, each built on a2a-rs `e9b00bc`. Each change is marked
+//! `FIX task-first` or `FIX message-close` with the line of the patched `handler.rs` (`fork tf:N`
+//! for the task-first patch, `fork mc:N` for the message-close patch). Every other line, and every
+//! `handler.rs:N` citation, is `imp.rs`'s, on the unfixed source below.
 //!
 //! The unfixed program: the server core of a2a-rs (a2aproject/a2a-rs at
 //! 700a6a28eb001f6fc32bc9446078ff87bdd18c6c: `a2a-server/src/handler.rs`,
 //! `a2a-server/src/task_store/store.rs`, `a2a-server/src/task_store/inmemory.rs`) rewritten as one
-//! sequential Must process, run in the shared environment (`env::launch`). Its source-to-model map
-//! is MAP-rust.md of the A2A case study; source lines are cited below as `handler.rs:N`,
-//! `inmemory.rs:N`.
+//! sequential Must process, run in the shared environment (`env::launch`). Source lines are cited
+//! below as `handler.rs:N`, `inmemory.rs:N`.
 //!
 //! Configuration rewritten: `InMemoryTaskStore::new()` (no terminal-task limit), no push-config
 //! store (every push is a no-op, `handler.rs:306-308`), no authorizer, no required extensions, no

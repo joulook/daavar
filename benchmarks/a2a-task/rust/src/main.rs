@@ -6,8 +6,8 @@
 //!   a2aproject/A2A 5f931b8a25fe66789f987ec4a55fc16ee9fe41ee (`spec.rs`);
 //! * impl: the a2a-rs server core at a2aproject/a2a-rs 700a6a28eb001f6fc32bc9446078ff87bdd18c6c,
 //!   rewritten (`imp.rs`);
-//! * implf: the same core with the two fixes of the owner's fork applied (`fix/task-first-stream`,
-//!   `fix/message-stream-close`), rewritten (`imp_fixed.rs`).
+//! * implf: the same core with the two proposed fixes applied (task-first stream and
+//!   message-stream close), rewritten (`imp_fixed.rs`).
 //!
 //! Both run the same client and executor (`env.rs`) and the same messages (`msgs.rs`).
 //!
@@ -17,7 +17,7 @@
 //! after the downstream `Status{Working}`); `implf`/`impl2f`/`impl2gf` run the fixed SDK
 //! (`imp_fixed.rs`) in place of `impl`/`impl2`/`impl2g`, with the same second and third fields;
 //! `mutant<n>` (n = 1..4)
-//! runs a deliberately wrong server of experiment 1 on the impl side (`count impl -- mutant1,a`).
+//! runs a deliberately wrong one-server program on the impl side (`count impl -- mutant1,a`).
 //! * `a`: the executor hands the task over before reporting `working`; `b`: it reports
 //!   `working` first; `n`: the executor is the agent's model as a nondeterministic procedure
 //!   (`env::call_llm`): a plain Message, or a task reported in any of the scripted ways;

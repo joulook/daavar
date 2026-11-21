@@ -1,9 +1,8 @@
 //! The implementation program: the server core of a2a-rs (a2aproject/a2a-rs at
 //! 700a6a28eb001f6fc32bc9446078ff87bdd18c6c: `a2a-server/src/handler.rs`,
 //! `a2a-server/src/task_store/store.rs`, `a2a-server/src/task_store/inmemory.rs`) rewritten as one
-//! sequential Must process, run in the shared environment (`env::launch`). Its source-to-model map
-//! is MAP-rust.md of the A2A case study; source lines are cited below as `handler.rs:N`,
-//! `inmemory.rs:N`.
+//! sequential Must process, run in the shared environment (`env::launch`). Source lines are cited
+//! below as `handler.rs:N`, `inmemory.rs:N`.
 //!
 //! Configuration rewritten: `InMemoryTaskStore::new()` (no terminal-task limit), no push-config
 //! store (every push is a no-op, `handler.rs:306-308`), no authorizer, no required extensions, no

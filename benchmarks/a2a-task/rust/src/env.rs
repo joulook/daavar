@@ -234,7 +234,7 @@ pub fn exec_a(a: ThreadId, b: ThreadId, task_first: bool, gated: bool, llm: bool
 
 /// The delegation scenario's launcher. Spawn tree (thread names in quotes): main spawns
 /// "serverA"; serverA spawns "execA" and "client", then runs `server(client, execA)`; execA spawns
-/// "serverB", then runs [`exec_a`]; serverB spawns "execB" (the experiment-1 executor), then runs
+/// "serverB", then runs [`exec_a`]; serverB spawns "execB" (the one-server executor, [`exec`]), then runs
 /// `server(execA, execB)`. Both servers run the same `server` function. The main thread waits for
 /// serverA. Shutdown chain: client -> serverA -> execA -> serverB -> execB.
 pub fn launch2(args: Args, server: fn(ThreadId, ThreadId)) {

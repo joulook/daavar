@@ -1,8 +1,8 @@
 //! The implementation program: the server core of rmcp (modelcontextprotocol/rust-sdk at
 //! 165f8fd514afb8f6d1be3e86260ee9abfce58541, rmcp v3.11.0: `crates/rmcp/src/service.rs`
 //! `serve_inner`, `crates/rmcp/src/transport/async_rw.rs`) rewritten as one sequential Must
-//! process, run in the shared environment (`env::launch`). Its source-to-model map is MAP-rust.md
-//! of the MCP case study; source lines are cited below as `service.rs:N` and `async_rw.rs:N`.
+//! process, run in the shared environment (`env::launch`). Source lines are cited below as
+//! `service.rs:N` and `async_rw.rs:N`.
 //!
 //! Configuration rewritten: a `ServerHandler` served over `stdio()` (`AsyncRwTransport`), the
 //! `local` feature off, the 2026-07-28 inline lifecycle with complete request metadata, the tool

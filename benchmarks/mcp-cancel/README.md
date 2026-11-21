@@ -7,21 +7,17 @@ basic/patterns/progress.mdx, basic/index.mdx, schema/2026-07-28/schema.ts); Rust
 `165f8fd514afb8f6d1be3e86260ee9abfce58541` (rmcp); Java core modelcontextprotocol/java-sdk
 `779893c0706b01ad565e8768b4a1dbe4367eb058` (modern stack).
 
-**Tools:** TraceForge `387e30d` (feat/conformance), JMC `5ad3c7b4`.
-
-**Design documents** (cited, not copied), in the github-jmc plan tree under `plan/case-studies/mcp/`:
-- `EXPERIMENT-1.md`: the brief;
-- `SPEC-DESIGN.md`: the specification program (rev 5);
-- `MAP-java.md` and `MAP-rust.md`: the source-to-model maps.
+**Tools:** TraceForge `387e30d` (feat/conformance), JMC `5ad3c7b4`. Each rewrite cites its source lines in its
+header and comments; `rust/src/spec.rs` cites the specification text it follows.
 
 ## Programs
 
-| Program | Where | Source | Author |
-|---|---|---|---|
-| spec | `rust/src/spec.rs` | the MCP specification text only | spec author |
-| impl (Rust) | `rust/src/imp.rs` (stub until it lands) | rmcp server core | TraceForge agent |
-| impl (Java) | `java/` | java-sdk server core | JMC agent |
-| mutant1-3 | `rust/src/spec.rs` with `mutant > 0`, run on the impl side | deliberately wrong variants of spec | spec author |
+| Program | Where | Source |
+|---|---|---|
+| spec | `rust/src/spec.rs` | the MCP specification text only |
+| impl (Rust) | `rust/src/imp.rs` | rmcp server core |
+| impl (Java) | `java/bench/mcp_cancel/McpCancel.java` | java-sdk server core |
+| mutant1-3 | `rust/src/spec.rs` with `mutant > 0`, run on the impl side | deliberately wrong variants of spec |
 
 Every program is one sequential Must process per node, handling each received message atomically. All Rust programs
 share `rust/src/msgs.rs` (the vocabulary) and `rust/src/env.rs` (client, both handlers, launcher). The Java twin
@@ -47,11 +43,11 @@ mirrors both field for field and event for event.
 No visibility annotations: every send and receive of `client` and `server` is in the exported word, including the
 server's traffic with the handlers. No non-blocking receives. Model fifo on every link. Messages may be left unread
 at the end. "Sent" means written to the client; the spec server queues per request and flushes nondeterministically
-after each step (SPEC-DESIGN §1.6).
+after each step (`rust/src/spec.rs`, header).
 
-The flush has one labelled restriction, SPEC-DESIGN SD-M10. An item may stay queued across a step only when another
-message to the server is certain to arrive; nothing waits past an uncertain receive. Without a non-blocking receive,
-this is what makes every execution terminate.
+The flush has one restriction. An item may stay queued across a step only when another message to the server is
+certain to arrive; nothing waits past an uncertain receive. Without a non-blocking receive, this is what makes every
+execution terminate.
 
 ## Vocabulary (exported spelling `{"t":tag,"f":[fields in order]}`)
 
@@ -68,9 +64,9 @@ Values: `req` ∈ {1,2}, `token` ∈ {"t1","t2"}, `value` ∈ {1,2}.
 `<spec|impl|mutant1|mutant2|mutant3>[,<h1><h2>]`:
 - `<h1>` ∈ `a b c x` is handler1's branch; `<h2>` ∈ `a b x` is handler2's;
 - `x` = nondeterministic; the default is `xx`.
-- an optional third field selects the spec's reading of the cancellation rule (SPEC-DESIGN SD-M12): `s0` strict
-  (the default), `s1` (sent = handed to the writer), `s2` (a request completed before the cancel is exempt), `s3`
-  (both).
+- an optional third field selects the spec's reading of the cancellation rule: `s0` strict (the default), `s1`
+  (sent = handed to the writer), `s2` (a request completed before the cancel is exempt), `s3` (both);
+- an optional fourth field `c2` lets the client also cancel request 2 (Rust only).
 
 The mutants:
 - 1: a `Result{1}` after the cancel was received;
@@ -88,3 +84,5 @@ $R export impl --out <file> --program mcp-cancel --size mutant1_xx --model fifo 
 An execution is completed when the client has sent `Shutdown` and all four threads have ended. It is blocked when the
 client waits forever. In the spec program that happens only with handler1 in (c) and its first progress dropped: the
 client never cancels, and no response for request 1 comes.
+
+`daavar.toml` lists every cell and direction for `bin/daavar check` (scenarios `pairs`, `pairs-c2`).

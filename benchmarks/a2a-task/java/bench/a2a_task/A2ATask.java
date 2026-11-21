@@ -22,9 +22,7 @@ import java.util.List;
  * {@code events/EventConsumer} (EC), {@code tasks/TaskManager} (TM), {@code tasks/ResultAggregator}
  * (RA), {@code tasks/InMemoryTaskStore}; the JSON-RPC transport's
  * {@code transport/jsonrpc/src/main/java/org/a2aproject/sdk/transport/jsonrpc/handler/JSONRPCHandler}
- * (JH). Line numbers below refer to that commit. The source-to-model map {@code MAP-java.md} of the
- * a2a case study lists every collapsed thread, queue, lock and timed wait, every kept decision and
- * every deviation forced by the abstraction.
+ * (JH). Line numbers below refer to that commit.
  *
  * <p>Abstraction: the server handles each incoming message in one atomic step, and a step ends at
  * every external wait. The agent executor is the process {@code exec}, which is not visible. The bus processor's
