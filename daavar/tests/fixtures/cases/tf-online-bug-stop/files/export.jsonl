@@ -1,0 +1,2 @@
+{"format":1,"minor":1,"tool":"traceforge","program":"fx","size":"impl,bug","visible":["client","server"],"roles":["client","server"],"model":"p2p","enumeration":"aborted","first_miss_iteration":1,"first_miss_wall_ms":0,"uncovered_total":1,"encoding":1}
+{"statuses":{"client":"done","server":"done"},"words":{"client":[{"s":{"t":"Ping","f":[1]}},{"r":{"t":"Pong","f":[2]}},{"s":{"t":"Shutdown","f":[]}}],"server":[{"r":{"t":"Ping","f":[1]}},{"s":{"t":"Pong","f":[2]}},{"r":{"t":"Shutdown","f":[]}}]},"counts":[0,2,2,1,1,3]}

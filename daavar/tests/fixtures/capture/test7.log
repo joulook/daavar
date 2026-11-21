@@ -1,0 +1,53 @@
+== A: check /local/mkhoshechin/driver-dev/t7/A/work/examples/kv-cancel DAAVAR=/local/mkhoshechin/driver-dev/t7/A/work
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/A/work/examples/kv-cancel/out/20261120T223901Z-one-625733-533e91
+== A: --from-run /local/mkhoshechin/driver-dev/t7/A/work.moved/examples/kv-cancel/out/20261120T223901Z-one-625733-533e91
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/A.restore/examples/kv-cancel/out/20261120T224011Z-one-660303-ec579f
+  daavar check: from-run: project cbcfff9683a6ebf4a0d12ad9c5238576e98f8c17 from /local/mkhoshechin/driver-dev/t7/A-origin.git
+  daavar check: from-run: traceforge d775f7034f1303e57485078cea072faf44f1ead7 from /local/mkhoshechin/tmp/xcheck-pins/tf
+  daavar check: from-run: jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c from /local/mkhoshechin/driver-dev/jmc
+  daavar check: artifact differs: rust:tf_kv_cancel: Rust binary rebuilt at another path from the same build key (D15)
+  compared 21 equal True artifacts [('rust:tf_kv_cancel', False), ('rust:tf_kv_cancel.SOURCE.md5', True), ('java:java', True), ('tool:traceforge:identity', True), ('tool:conf-join', True), ('tool:jmc:identity', True), ('tool:jmc:classes', True)]
+== B: check /local/mkhoshechin/driver-dev/t7/B/work/examples/kv-cancel DAAVAR=/local/mkhoshechin/driver-dev/t7/B/work
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/B/work/examples/kv-cancel/out/20261120T224120Z-one-703214-c77e16
+== B: --from-run /local/mkhoshechin/driver-dev/t7/B/work.moved/examples/kv-cancel/out/20261120T224120Z-one-703214-c77e16
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/B.restore/examples/kv-cancel/out/20261120T224230Z-one-742541-850408
+  daavar check: from-run: project cbcfff9683a6ebf4a0d12ad9c5238576e98f8c17 from /local/mkhoshechin/driver-dev/t7/A-origin.git
+  daavar check: from-run: traceforge d775f7034f1303e57485078cea072faf44f1ead7 from /local/mkhoshechin/tmp/xcheck-pins/tf
+  daavar check: from-run: jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c from /local/mkhoshechin/driver-dev/jmc
+  daavar check: artifact differs: rust:tf_kv_cancel: Rust binary rebuilt at another path from the same build key (D15)
+  compared 21 equal True artifacts [('rust:tf_kv_cancel', False), ('rust:tf_kv_cancel.SOURCE.md5', True), ('java:java', True), ('tool:traceforge:identity', True), ('tool:conf-join', True), ('tool:jmc:identity', True), ('tool:jmc:classes', True)]
+== C: check /local/mkhoshechin/driver-dev/t7/C/x/kv-cancel 
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/C/x/kv-cancel/out/20261120T224339Z-one-786156-55cb49
+== C: --from-run /local/mkhoshechin/driver-dev/t7/C/x.moved/kv-cancel/out/20261120T224339Z-one-786156-55cb49
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/C.restore/x/kv-cancel/out/20261120T224448Z-one-818121-9450a6
+  daavar check: from-run: traceforge d775f7034f1303e57485078cea072faf44f1ead7 from /local/mkhoshechin/tmp/xcheck-pins/tf
+  daavar check: from-run: jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c from /local/mkhoshechin/driver-dev/jmc
+  daavar check: artifact differs: rust:tf_kv_cancel: Rust binary rebuilt at another path from the same build key (D15)
+  compared 21 equal True artifacts [('rust:tf_kv_cancel', False), ('rust:tf_kv_cancel.SOURCE.md5', True), ('java:java', True), ('tool:traceforge:identity', True), ('tool:conf-join', True), ('tool:jmc:identity', True), ('tool:jmc:classes', True)]
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+ M traceforge/src/lib.rs
+== D: check /local/mkhoshechin/driver-dev/t7/D/x/kv-cancel 
+  exit 2 daavar check: exit 2 REFUSED
+  (without the flag: daavar: the traceforge checkout /local/mkhoshechin/driver-dev/t7/D/traceforge is dirty (1 changed: traceforge/src/lib.rs)
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/D/x/kv-cancel/out/20261120T224558Z-one-859693-e4b3d8
+commit
+diff.patch
+snapshot
+snapshot.json
+untracked.tar
+== D: --from-run /local/mkhoshechin/driver-dev/t7/D/x.moved/kv-cancel/out/20261120T224558Z-one-859693-e4b3d8
+  exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7/D.restore/x/kv-cancel/out/20261120T224707Z-one-894776-9e92cc
+  daavar check: from-run: traceforge d775f7034f1303e57485078cea072faf44f1ead7 from /local/mkhoshechin/tmp/xcheck-pins/tf
+  daavar check: from-run: jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c from /local/mkhoshechin/driver-dev/jmc
+  daavar check: artifact differs: rust:tf_kv_cancel: Rust binary rebuilt at another path from the same build key (D15)
+  compared 21 equal True artifacts [('rust:tf_kv_cancel', False), ('rust:tf_kv_cancel.SOURCE.md5', True), ('java:java', True), ('tool:traceforge:identity', True), ('tool:conf-join', True), ('tool:jmc:identity', True), ('tool:jmc:classes', True)]
+DONE

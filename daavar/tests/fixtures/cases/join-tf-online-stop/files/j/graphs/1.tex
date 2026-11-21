@@ -1,0 +1,15 @@
+% witness-render 1: 0dfd8c31cd797cec27377f11a0a2a41410c9497457b46d94b5ac76e77e932a29
+\begin{tikzpicture}[>=Stealth, font=\scriptsize, x=1cm, y=0.45cm, ev/.append style={inner ysep=1pt}]
+  \node[font=\scriptsize\itshape] at (0,1.8) {client $C$};
+  \node[font=\scriptsize\itshape] at (4.8,1.8) {server $S$};
+  \node[ev] (c1) at (0,0) {$\sendop(S,\kw{Ping})$};
+  \node[ev] (c2) at (0,-1) {$\recvop()$};
+  \node[ev] (c3) at (0,-2) {$\sendop(S,\kw{Shutdown})$};
+  \node[ev] (s1) at (4.8,0) {$\recvop()$};
+  \node[ev] (s2) at (4.8,-1) {$\sendop(C,\kw{Pong})$};
+  \node[ev] (s3) at (4.8,-2) {$\recvop()$};
+  \foreach \a/\b in {c1/c2,c2/c3,s1/s2,s2/s3} \draw[poe] (\a) -- (\b);
+  \foreach \a/\b in {c1/s1,s2/c2,c3/s3} \draw[rfe] (\a) -- (\b);
+  \node[gbox, fit=(c1)(c2)(c3)(s1)(s2)(s3)] (bx) {};
+  \node[gbadge] at (bx.north west) {$G$: fx impl,bug, 0dfd8c31};
+\end{tikzpicture}

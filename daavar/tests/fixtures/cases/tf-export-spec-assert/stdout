@@ -1,0 +1,40 @@
+Executions attempted so far: 1 total 0 finished normally 1 blocked.
+--- measurements
+wall_ms: 1
+explore_ms: 
+summarise_ms: 
+index_ms: 
+lookup_ms: 
+export_ms: 
+graphs_complete: 
+graphs_blocked: 
+summaries_distinct: 
+iterations: 
+stop_reason: error
+peak_rss_kb: 6332
+max_message_events: 
+max_porf_pairs: 
+max_graph_events: 
+mean_graph_events: 
+max_visible_events: 
+mean_visible_events: 
+max_summary_bytes: 
+max_porf_count: 
+join_ms: 
+spec_phase_ms: 
+impl_phase_ms: 
+explore_spec_ms: 
+explore_impl_ms: 
+spec_complete: 
+spec_blocked: 
+impl_complete: 
+impl_blocked: 
+spec_summaries: 
+impl_summaries: 
+precheck_ms: 
+merge_ms: 
+uncovered_distinct: 
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 

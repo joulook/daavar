@@ -1,0 +1,5 @@
+# root daavar/tests/fixtures/src/fx/rust
+c9a88b1c5031a4b7b65c04133e797a5f  Cargo.lock
+ae15e793fb4439a40c187595106022db  Cargo.toml
+dd9d31edc31ce5f49e90ab0d336761f0  src/main.rs
+1bcce8aa2beb5606d190f6e96a367390  src/msgs.rs

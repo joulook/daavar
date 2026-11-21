@@ -1,0 +1,21 @@
+{
+ "argv": [
+  "/local/mkhoshechin/driver-dev/daavar/scripts/witness-join.sh",
+  "/local/mkhoshechin/driver-dev/work/cases/tf-export-impl-bug/export.jsonl",
+  "/local/mkhoshechin/driver-dev/work/cases/jmc-export-impl-bug/export.jsonl",
+  "j",
+  "--decide-budget",
+  "1000000",
+  "--witness-limit",
+  "20",
+  "--witness-nearest",
+  "3"
+ ],
+ "cwd": "/local/mkhoshechin/driver-dev/work/cases/join-twin-jmc-in-tf",
+ "timeout_s": 300,
+ "env": {
+  "PATH": "/home/mkhoshechin/jdk17/bin:/home/mkhoshechin/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/games",
+  "TMPDIR": "/local/mkhoshechin/driver-dev/work/tmp",
+  "WITNESS_CONF_JOIN": "/local/mkhoshechin/tmp/xcheck-pins/tf/target/release/conf-join"
+ }
+}

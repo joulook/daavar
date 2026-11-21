@@ -1,0 +1,34 @@
+# The S3 fixture program as a two-language project (vocab tests only).
+name = "fx"
+model = "fifo"
+
+[programs.spec]
+kind = "spec"
+lang = "rust"
+side = "spec"
+args = ["spec", "{mode}"]
+
+[programs.rust]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["impl", "{mode}"]
+
+[programs.java]
+kind = "impl"
+lang = "java"
+class = "fx.Fx"
+args = ["impl", "{mode}"]
+
+[scenarios.echo]
+visible = ["client", "server"]
+programs = ["spec", "rust", "java"]
+directions = ["rust<=spec", "java<=spec", "java<=rust"]
+cells = [{ label = "ok", mode = "ok" }, { label = "bug", mode = "bug" }]
+
+[tools]
+traceforge = "../../../../../traceforge"
+
+[tools.jmc]
+checkout = "../../../../../jmc"
+main = "org.mpi_sws.jmc.mp.launch.MpLauncher"

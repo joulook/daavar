@@ -1,0 +1,45 @@
+Executions attempted so far: 1 total 1 finished normally 0 blocked.
+exported: 1158 lines from 1194 graphs to export.jsonl
+graph_store: written=1158 refused=0 ms=75
+--- measurements
+wall_ms: 222
+explore_ms: 80
+summarise_ms: 37
+index_ms: 0
+lookup_ms: 0
+export_ms: 28
+graphs_complete: 1137
+graphs_blocked: 57
+summaries_distinct: 1158
+iterations: 1194
+stop_reason: exhausted
+peak_rss_kb: 20664
+max_message_events: 32
+max_porf_pairs: 25
+max_graph_events: 55
+mean_graph_events: 51.058
+max_visible_events: 26
+mean_visible_events: 24.452
+max_summary_bytes: 1291
+max_porf_count: 14
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 80
+explore_impl_ms: 0
+spec_complete: 1137
+spec_blocked: 57
+impl_complete: 0
+impl_blocked: 0
+spec_summaries: 1158
+impl_summaries: 0
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 0
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 1158
+graphs_refused: 0
+graphs_ms: 75

@@ -1,0 +1,91 @@
+== test 3: --spec java
+daavar: check accepts a Java spec; release 1 does not scaffold one
+daavar new: exit 2 REFUSED
+== test 3: new echo-rust --impl rust
+daavar new: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-rust
+  check exit 0 exit 0 43.6 s
+  planted bug: check exit 1 exit 1
+  replay driver-dev: exit 0 exit 0 daavar replay: reproduced
+  render: daavar render: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-rust/out/renders/20261120T222049Z-1-d4541f
+  run untouched by replay and render: yes
+  graph file rust-in-spec/graphs/1.dot
+  graph file rust-in-spec/graphs/1.graph.json
+  graph file rust-in-spec/graphs/1.tex
+  graph file rust-in-spec/graphs/1.witness.txt
+  VERDICT:    Decide: violation k=0 k_min=0; graph [1.graph.json](one.base/joins/rust-in-spec/graphs/1.graph.json) ([.tex](one.base/joins/rust-in-spec/graphs/1.tex) [.dot](one.base/joins/rust-in-spec/graphs/1.dot) [.witness.txt](one.base/joins/rust-in-spec/gra
+== test 3: new echo-java --impl java
+daavar new: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-java
+  check exit 0 exit 0 46.9 s
+  planted bug: check exit 1 exit 1
+  replay driver-dev: exit 0 exit 0 daavar replay: reproduced
+  render: daavar render: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-java/out/renders/20261120T222140Z-1-2c7024
+  run untouched by replay and render: yes
+  graph file java-in-spec/graphs/1.dot
+  graph file java-in-spec/graphs/1.graph.json
+  graph file java-in-spec/graphs/1.tex
+  graph file java-in-spec/graphs/1.witness.txt
+  VERDICT:    Decide: violation k=0 k_min=0; graph [1.graph.json](one.base/joins/java-in-spec/graphs/1.graph.json) ([.tex](one.base/joins/java-in-spec/graphs/1.tex) [.dot](one.base/joins/java-in-spec/graphs/1.dot) [.witness.txt](one.base/joins/java-in-spec/gra
+== test 3: new echo-rust-java --impl rust,java
+daavar new: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-rust-java
+  check exit 0 exit 0 24.2 s
+  planted bug: check exit 1 exit 1
+  replay driver-dev: exit 0 exit 0 daavar replay: reproduced
+  render: daavar render: exit 0 OK /local/mkhoshechin/driver-dev/t38/with space/echo-rust-java/out/renders/20261120T222209Z-1-b917e9
+  run untouched by replay and render: yes
+  graph file java-in-spec/graphs/1.dot
+  graph file java-in-spec/graphs/1.graph.json
+  graph file java-in-spec/graphs/1.tex
+  graph file java-in-spec/graphs/1.witness.txt
+  graph file rust-in-spec/graphs/1.dot
+  graph file rust-in-spec/graphs/1.graph.json
+  graph file rust-in-spec/graphs/1.tex
+  graph file rust-in-spec/graphs/1.witness.txt
+  VERDICT:    Decide: violation k=0 k_min=0; graph [1.graph.json](one.base/joins/rust-in-spec/graphs/1.graph.json) ([.tex](one.base/joins/rust-in-spec/graphs/1.tex) [.dot](one.base/joins/rust-in-spec/graphs/1.dot) [.witness.txt](one.base/joins/rust-in-spec/gra
+== test 3: an uncommitted scaffold run reproduced (snapshot)
+  exit 1 VIOLATION
+  daavar check: artifact differs: rust:tf_echo_rust_java: Rust binary rebuilt at another path from the same build key (D15)
+  compared 15 equal True
+== Java replay of a JMC-made graph (java<=spec of echo-java with the bug)
+daavar replay: reproduced
+daavar replay: exit 0 REPRODUCED /local/mkhoshechin/driver-dev/t38/with space/echo-java/out/replays/20261120T222318Z-1-35fbfd
+== kv-cancel timing (tools and artifacts cached, exports not)
+exit 0
+  kv-cancel check 1.8 s
+== test 8
+exit 0
+  direction	checked_enum	uncovered	decide_viol	decide_fa	decide_unres	verdict
+  rust<=spec	complete	0	0	0	0	conforms
+  java<=spec	complete	0	0	0	0	conforms
+  java<=rust	complete	0	0	0	0	conforms
+  rust<=java	complete	0	0	0	0	conforms
+  mutant1<=spec	aborted	1	1	0	0	rejected
+exit 1
+  direction	checked_enum	uncovered	decide_viol	decide_fa	decide_unres	verdict
+  java<=spec	complete	1	1	0	0	violation
+  daavar: --stop-at-first needs --mode online
+  daavar check: exit 2 REFUSED
+  daavar: --stop-at-first is refused with threads > 1 (TraceForge refuses it, program.rs:851)
+  daavar check: exit 2 REFUSED
+exit 0
+  direction	checked_enum	uncovered	decide_viol	decide_fa	decide_unres	verdict
+  mutant1<=spec	aborted	1	1	0	0	rejected
+== online equals offline on mcp-cancel pairs.aa.s0
+exit 1
+exit 1
+  direction	uncovered	decide_viol	decide_fa	decide_unres	verdict	uncovered	decide_viol	decide_fa	decide_unres	verdict
+  rust<=spec	302	302	0	0	violation	302	302	0	0	violation
+  java<=spec	4844	4844	0	0	violation	4844	4844	0	0	violation
+  java<=rust	7396	7396	0	0	violation	7396	7396	0	0	violation
+  rust<=java	312	312	0	0	violation	312	312	0	0	violation
+  mutant1<=spec	8689	8689	0	0	rejected	8689	8689	0	0	rejected
+  mutant2<=spec	0	0	0	0	not rejected	0	0	0	0	not rejected
+  mutant3<=spec	3177	3177	0	0	rejected	3177	3177	0	0	rejected
+  java-in-rust uncovered lines offline 6d9c1395 online 6d9c1395 equal
+  java-in-spec uncovered lines offline 7d1953fe online 7d1953fe equal
+  mutant1-in-spec uncovered lines offline e2b37c85 online e2b37c85 equal
+  mutant2-in-spec uncovered lines offline d41d8cd9 online d41d8cd9 equal
+  mutant3-in-spec uncovered lines offline e90d4c4f online e90d4c4f equal
+  rust-in-java uncovered lines offline dbef7ef2 online dbef7ef2 equal
+  rust-in-spec uncovered lines offline a750dce2 online a750dce2 equal
+end
+DONE

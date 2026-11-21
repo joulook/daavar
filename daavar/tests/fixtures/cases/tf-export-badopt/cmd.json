@@ -1,0 +1,19 @@
+{
+ "argv": [
+  "/local/mkhoshechin/driver-dev/work/fx-target/release/tf_fx",
+  "export",
+  "impl",
+  "--out",
+  "export.jsonl",
+  "--frobnicate",
+  "--",
+  "impl,ok"
+ ],
+ "cwd": "/local/mkhoshechin/driver-dev/work/cases/tf-export-badopt",
+ "timeout_s": 120,
+ "env": {
+  "PATH": "/home/mkhoshechin/jdk17/bin:/home/mkhoshechin/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/games",
+  "TMPDIR": "/local/mkhoshechin/driver-dev/work/tmp",
+  "WITNESS_CONF_JOIN": "/local/mkhoshechin/tmp/xcheck-pins/tf/target/release/conf-join"
+ }
+}

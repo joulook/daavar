@@ -1,0 +1,48 @@
+program:    bench.a2a_task.A2ATask
+strategy:   must
+iterations: unbounded, timeout 600 s
+seed:       1
+reportPath: report
+exportFile: export.jsonl
+2026-11-20 20:19:14,698 [main]  INFO o.m.j.c.JmcCheckerConfiguration - Using seed: 1
+2026-11-20 20:19:14,707 [main]  INFO o.m.j.c.JmcModelChecker - JMC checker started
+2026-11-20 20:19:14,707 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread started.
+2026-11-20 20:19:14,775 [main]  INFO o.m.j.c.JmcModelChecker - Completed 0 iterations
+2026-11-20 20:19:14,840 [main]  INFO o.m.j.c.JmcModelChecker - Model checking completed covering: 5 iterations
+2026-11-20 20:19:14,840 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 5 completed iterations
+2026-11-20 20:19:14,841 [main]  INFO o.m.j.c.JmcModelChecker - Model checking explored: 0 blocked iterations
+2026-11-20 20:19:14,840 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Shutting down scheduler thread.
+2026-11-20 20:19:14,841 [Thread-0]  INFO o.m.j.r.s.Scheduler$SchedulerThread - Scheduler thread finished.
+ran:        5 iterations
+blocked:    0 (counted by the strategy)
+completed:  5
+rate:       33.8 iterations/s
+elapsed:    0.148 s
+observed:   bench.a2a_task.A2ATask@9d5509a
+graphs:     5 distinct complete, 0 distinct blocked; stack exhausted
+exported:   5 iterations as 5 distinct summaries (complete, 0 not exported) to export.jsonl
+graph_store: written=5 refused=0 ms=7
+--- measurements
+wall_ms: 531
+explore_ms: 134
+summarise_ms: 13
+index_ms: 0
+lookup_ms: 0
+export_ms: 1
+graphs_complete: 5
+graphs_blocked: 0
+summaries_distinct: 5
+iterations: 5
+stop_reason: exhausted
+peak_rss_kb: 156096
+max_message_events: 30
+max_porf_pairs: 23
+max_graph_events: 45
+mean_graph_events: 44.000
+max_visible_events: 24
+mean_visible_events: 23.000
+max_summary_bytes: 1161
+max_porf_count: 13
+graphs_written: 5
+graphs_refused: 0
+graphs_ms: 7

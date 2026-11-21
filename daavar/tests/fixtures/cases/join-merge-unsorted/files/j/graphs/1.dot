@@ -1,0 +1,13 @@
+digraph "0dfd8c31" {
+  graph [rankdir=TB, newrank=true, nodesep=0.5, ranksep=0.2, labelloc=t, label="fx impl,bug  0dfd8c31"];
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [arrowsize=0.6];
+  subgraph cluster_2 { label="client (C)"; c1 [label="send(S, Ping)"]; c2 [label="recv()"]; c3 [label="send(S, Shutdown)"]; }
+  subgraph cluster_1 { label="server (S)"; s1 [label="recv()"]; s2 [label="send(C, Pong)"]; s3 [label="recv()"]; }
+  edge [color=gray30];
+  c1 -> c2; c2 -> c3;
+  s1 -> s2; s2 -> s3;
+  edge [style=dashed, color="#2e7d32", constraint=false];
+  c1 -> s1; s2 -> c2; c3 -> s3;
+  {rank=same; c1; s1;} {rank=same; c2; s2;} {rank=same; c3; s3;}
+}

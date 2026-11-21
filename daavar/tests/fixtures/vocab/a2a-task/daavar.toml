@@ -1,0 +1,143 @@
+name = "a2a-task"
+model = "fifo"
+
+# ---- programs (language-independent; a Rust program names the shared main's side, a Java one its class)
+[programs.spec]
+kind = "spec"
+lang = "rust"
+side = "spec"
+args = ["{fam.spec}", "{variant}", "{recancel}{split}"]
+
+[programs.rust]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["{fam.impl}", "{variant}", "{recancel}{split}"]
+
+[programs.rust-fixed]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["{fam.implf}", "{variant}", "{recancel}{split}"]
+
+[programs.java]
+kind = "impl"
+lang = "java"
+class = "bench.a2a_task.A2ATask"
+args = ["{fam.impl}", "{variant}", "{recancel}{split}"]
+
+[programs.java-fixed]
+kind = "impl"
+lang = "java"
+class = "bench.a2a_task.A2ATaskFixed"
+args = ["{fam.impl}", "{variant}", "{recancel}{split}"]
+
+[programs.mutant1]
+kind = "mutant"
+reference = "spec"
+lang = "rust"
+side = "impl"
+args = ["mutant1", "{variant}", "{recancel}"]
+
+[programs.mutant2]
+kind = "mutant"
+reference = "spec"
+lang = "rust"
+side = "impl"
+args = ["mutant2", "{variant}", "{recancel}"]
+
+[programs.mutant3]
+kind = "mutant"
+reference = "spec"
+lang = "rust"
+side = "impl"
+args = ["mutant3", "{variant}", "{recancel}"]
+
+# mutants.rs: mutant 4 is expected to be ACCEPTED, so it is a plain impl (it gates as one)
+[programs.mutant4]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["mutant4", "{variant}", "{recancel}"]
+
+# ---- scenario one: client, server (families spec / impl / implf)
+[scenarios.one]
+visible = ["client", "server"]
+programs = ["spec", "rust", "rust-fixed", "java", "java-fixed", "mutant1", "mutant2", "mutant3", "mutant4"]
+fam = { spec = "spec", impl = "impl", implf = "implf" }
+split = ""
+directions = ["rust<=spec", "rust-fixed<=spec", "java<=spec", "java-fixed<=spec",
+              "java<=rust", "rust<=java", "java-fixed<=rust-fixed", "rust-fixed<=java-fixed",
+              "mutant1<=spec", "mutant2<=spec", "mutant3<=spec", "mutant4<=spec"]
+
+[scenarios.one.matrix]
+variant = ["a", "b", "n"]
+recancel = ["", "recancel"]
+label = "{variant}{recancel}"
+
+# ---- scenario deleg: client, serverA, serverB (spec2 / impl2 / impl2f); splits with n only
+[scenarios.deleg]
+visible = ["client", "serverA", "serverB"]
+programs = ["spec", "rust", "rust-fixed", "java", "java-fixed"]
+fam = { spec = "spec2", impl = "impl2", implf = "impl2f" }
+recancel = ""
+directions = ["rust<=spec", "rust-fixed<=spec", "java<=spec", "java-fixed<=spec",
+              "java<=rust", "rust<=java", "java-fixed<=rust-fixed", "rust-fixed<=java-fixed"]
+cells = [
+  { label = "a", variant = "a", split = "" },
+  { label = "b", variant = "b", split = "" },
+  { label = "n", variant = "n", split = "" },
+]
+
+[scenarios.deleg.matrix]
+variant = ["n"]
+split = ["local", "deleg", "delegmsg", "delegtask", "delegtask-s", "delegtask-w",
+         "delegtask-sc", "delegtask-sw", "delegtask-wc", "delegtask-ww"]
+label = "n-{split}"
+
+# ---- scenario gated: as deleg, gated delegation contract (spec2g / impl2g / impl2gf)
+[scenarios.gated]
+visible = ["client", "serverA", "serverB"]
+programs = ["spec", "rust", "rust-fixed", "java", "java-fixed"]
+fam = { spec = "spec2g", impl = "impl2g", implf = "impl2gf" }
+recancel = ""
+directions = ["rust<=spec", "rust-fixed<=spec", "java<=spec", "java-fixed<=spec",
+              "java<=rust", "rust<=java", "java-fixed<=rust-fixed", "rust-fixed<=java-fixed"]
+cells = [
+  { label = "a", variant = "a", split = "" },
+  { label = "b", variant = "b", split = "" },
+  { label = "n", variant = "n", split = "" },
+]
+
+[scenarios.gated.matrix]
+variant = ["n"]
+split = ["local", "deleg", "delegmsg", "delegtask", "delegtask-s", "delegtask-w",
+         "delegtask-sc", "delegtask-sw", "delegtask-wc", "delegtask-ww"]
+label = "n-{split}"
+
+[check]
+mode = "offline"
+decide_budget = 1000000
+witness_limit = 20
+witness_nearest = 3
+merge = false
+threads = 1
+seed = 1
+
+[budgets]
+export_timeout_s = 3600
+join_timeout_s = 3600
+java_xmx = "16g"
+mem_cap_gb = 0
+
+[vocab]
+opaque = ["ErrCode"]
+
+[tools]
+traceforge = "../../traceforge"
+
+[tools.jmc]
+checkout = "../../jmc"
+cli = "positional"
+main = "org.mpi_sws.jmc.mp.launch.MpLauncher"
+api_package = "org.mpi_sws.jmc.mp.launch"

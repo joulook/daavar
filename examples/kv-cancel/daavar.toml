@@ -1,0 +1,71 @@
+# kv-cancel: DRIVER-DESIGN.md Appendix A's schema. One scenario, two cells: "impl" (the two correct
+# rewrites against the spec, both ways, and the twins) and "mutant" (mutant1 must be rejected).
+name = "kv-cancel"
+model = "fifo"
+
+[programs.spec]
+kind = "spec"
+lang = "rust"
+side = "spec"
+args = ["spec"]
+
+[programs.rust]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["impl"]
+cells = ["impl"]
+
+[programs.java]
+kind = "impl"
+lang = "java"
+class = "bench.kv_cancel.KvCancel"
+args = ["impl"]
+cells = ["impl"]
+
+# imp.rs with the injected bug: PutOk after CancelOk
+[programs.mutant1]
+kind = "mutant"
+reference = "spec"
+lang = "rust"
+side = "impl"
+args = ["mutant1"]
+cells = ["mutant"]
+
+# ---- scenario one: client, server (disk unobserved); one client, one request.
+# The reverse joins spec-in-impl are not a direction under DRIVER-DESIGN §2; README "By hand" runs them.
+[scenarios.one]
+visible = ["client", "server"]
+programs = ["spec", "rust", "java", "mutant1"]
+directions = ["rust<=spec", "java<=spec", "java<=rust", "rust<=java", "mutant1<=spec"]
+cells = [
+  { label = "impl" },
+  { label = "mutant" },
+]
+
+[check]
+mode = "offline"
+decide_budget = 1000000
+witness_limit = 20
+witness_nearest = 3
+merge = false
+threads = 1
+seed = 1
+
+[budgets]
+export_timeout_s = 60
+join_timeout_s = 60
+java_xmx = "4g"
+mem_cap_gb = 0
+
+[vocab]
+opaque = []
+
+[tools]
+traceforge = "../../traceforge"
+
+[tools.jmc]
+checkout = "../../jmc"
+cli = "positional"
+main = "org.mpi_sws.jmc.mp.launch.MpLauncher"
+api_package = "org.mpi_sws.jmc.mp.launch"

@@ -1,0 +1,60 @@
+
+=== RAYON PARALLEL EXPLORATION ===
+Pool size: 2, Branching: RevisitQueueRayon, Warmup: 100, IterationsUntilSplit: 100, BatchSize: 1
+Executions attempted so far: 1 total 1 finished normally 0 blocked.
+
+RevisitQueueRayon: root seeded 0 items (0 revisits), batch_size=1, 2 workers
+RevisitQueueRayon per-worker stats:
+  root: 2 execs, 0.0s, max_graph_events=15
+
+=== Rayon Exploration Results ===
+Total time: 1.045564ms
+Number of workers: 1
+Total executions: 2 (2 complete, 0 blocked)
+Max graph events: 15
+=============================================
+
+exported: 2 lines from 2 graphs to export.jsonl
+graph_store: written=0 refused=0 ms=0
+--- measurements
+wall_ms: 4
+explore_ms: 1
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 2
+graphs_complete: 2
+graphs_blocked: 0
+summaries_distinct: 2
+iterations: 2
+stop_reason: exhausted
+peak_rss_kb: 5656
+max_message_events: 6
+max_porf_pairs: 5
+max_graph_events: 16
+mean_graph_events: 16.000
+max_visible_events: 6
+mean_visible_events: 6.000
+max_summary_bytes: 269
+max_porf_count: 3
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 1
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 2
+impl_blocked: 0
+spec_summaries: 0
+impl_summaries: 2
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 0
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 0
+graphs_refused: 0
+graphs_ms: 0

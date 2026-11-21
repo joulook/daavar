@@ -94,14 +94,22 @@ public final class McpCancel implements MpProgram {
     private final Branch h2Branch;
     private final String variant;
 
+    /** The usage text of the constructor's arguments (MpLauncher's {@code Class:args} form). */
+    public static final String USAGE = "usage: bench.mcp_cancel.McpCancel:impl[,<a|b|c|x><a|b|x>]";
+
+    /** A bad argument: the reason and the usage text; MpLauncher reports it with exit 2. */
+    private static IllegalArgumentException bad(String why) {
+        return new IllegalArgumentException("McpCancel: " + why + "; " + USAGE);
+    }
+
     /** @param args {@code impl}, optionally {@code <h1><h2>} */
     public McpCancel(String... args) {
         if (args.length < 1 || args.length > 2 || !args[0].trim().equals("impl")) {
-            throw new IllegalArgumentException("McpCancel takes impl[,<a|b|c|x><a|b|x>]");
+            throw bad("expected impl and at most one variant, got " + java.util.Arrays.toString(args));
         }
         this.variant = args.length == 2 ? args[1].trim() : "xx";
         if (variant.length() != 2) {
-            throw new IllegalArgumentException("the variant must be two letters, was " + variant);
+            throw bad("the variant must be two letters, was " + variant);
         }
         this.h1Branch = branch(variant.charAt(0), true);
         this.h2Branch = branch(variant.charAt(1), false);
@@ -113,12 +121,12 @@ public final class McpCancel implements MpProgram {
             case 'b' -> Branch.B;
             case 'c' -> {
                 if (!third) {
-                    throw new IllegalArgumentException("handler2 has no branch c");
+                    throw bad("handler2 has no branch c");
                 }
                 yield Branch.C;
             }
             case 'x' -> Branch.ANY;
-            default -> throw new IllegalArgumentException("bad branch " + c);
+            default -> throw bad("bad branch " + c);
         };
     }
 

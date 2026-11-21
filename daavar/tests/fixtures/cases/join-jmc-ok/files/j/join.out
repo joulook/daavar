@@ -1,0 +1,57 @@
+spec: tool=traceforge program=fx size=spec,ok model=p2p enumeration=complete
+impl: tool=jmc program=fx size=impl,ok model=p2p enumeration=complete
+verdict: conforms
+uncovered: 0
+decide: uncovered=0 violations=0 false_alarms=0 unresolved=0 max_group=0 states=0 budget=1000000 decide_ms=0
+--- measurements
+wall_ms: 0
+explore_ms: 0
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 0
+graphs_blocked: 0
+summaries_distinct: 1
+iterations: 0
+stop_reason: exhausted
+peak_rss_kb: 3212
+max_message_events: 
+max_porf_pairs: 5
+first_miss_iteration: 0
+first_miss_wall_ms: 0
+uncovered_total: 0
+max_graph_events: 
+mean_graph_events: 
+max_visible_events: 6
+mean_visible_events: 
+max_summary_bytes: 269
+max_porf_count: 3
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 0
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 0
+impl_blocked: 0
+spec_summaries: 1
+impl_summaries: 1
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 0
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+decide_uncovered: 0
+decide_violations: 0
+decide_false_alarms: 0
+decide_unresolved: 0
+decide_max_group: 0
+decide_states: 0
+decide_ms: 0
+witness_written: 0
+witness_missing: 0
+witness_refused: 0

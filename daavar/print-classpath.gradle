@@ -1,0 +1,20 @@
+// Gradle init script of the daavar driver (build.py): writes JMC core's test runtime classpath to the file
+// named by -PdaavarCp=<file>, outside the JMC checkout (scripts/print-classpath.gradle writes cp.txt into the
+// checkout, which would make it dirty; DRIVER-IMPL-NOTES D8).
+allprojects {
+    afterEvaluate { p ->
+        if (p.name == 'core') {
+            p.tasks.register('daavarPrintTestClasspath') {
+                dependsOn p.tasks.named('testClasses')
+                doLast {
+                    def out = p.findProperty('daavarCp')
+                    if (out == null) {
+                        throw new GradleException('daavarPrintTestClasspath needs -PdaavarCp=<file>')
+                    }
+                    def cp = p.sourceSets.test.runtimeClasspath.files.collect { it.absolutePath }.join(':')
+                    new File(out.toString()).text = cp
+                }
+            }
+        }
+    }
+}

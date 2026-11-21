@@ -1,0 +1,5 @@
+exit=1
+uncovered=1
+graphs=1
+check_failures=0
+render_failures=0

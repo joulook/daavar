@@ -1,0 +1,12 @@
+#!/usr/bin/env -S python3 -I -B
+"""The daavar driver's launcher: python3 -I -B (no bytecode written; isolated: no user site, no PYTHON* variables, no working
+directory on sys.path), with this checkout's package directory put on sys.path."""
+import os
+import sys
+
+sys.dont_write_bytecode = True  # -B too: no __pycache__ in the checkout (review S1-S6 A5)
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+from daavar.__main__ import main  # noqa: E402
+
+sys.exit(main(sys.argv[1:]))

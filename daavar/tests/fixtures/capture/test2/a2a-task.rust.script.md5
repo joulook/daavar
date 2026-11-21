@@ -1,0 +1,10 @@
+# root benchmarks/a2a-task/rust
+2b6aaf5d45c0120d3ac43213c878a7bc  Cargo.lock
+d39eff5f3c30905e924dfbc5c5585af1  Cargo.toml
+a486902dd32a6f522fe56191d9549fec  src/env.rs
+85cd2de7a16f044aa72dc613177e4456  src/imp.rs
+06552d140f3486f80832d0abae22f4e1  src/imp_fixed.rs
+c5470d2839030194bb5ed347ba4d1761  src/main.rs
+45600938bd6e02386585d6f86e7b026d  src/msgs.rs
+5fcf0067d7d2b6af6a340b08e1e1d68a  src/mutants.rs
+22c7bbd0082d118510d570505affbfcd  src/spec.rs

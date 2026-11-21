@@ -1,0 +1,24 @@
+{
+ "argv": [
+  "/local/mkhoshechin/driver-dev/work/a2a-target/release/tf_a2a_task",
+  "export",
+  "spec",
+  "--out",
+  "export.jsonl",
+  "--graphs",
+  "export.jsonl.graphs.jsonl",
+  "--model",
+  "fifo",
+  "--program",
+  "a2a-task",
+  "--",
+  "spec,b"
+ ],
+ "cwd": "/local/mkhoshechin/driver-dev/work/cases/a2a-tf-export-spec-b",
+ "timeout_s": 600,
+ "env": {
+  "PATH": "/home/mkhoshechin/jdk17/bin:/home/mkhoshechin/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/games",
+  "TMPDIR": "/local/mkhoshechin/driver-dev/work/tmp",
+  "WITNESS_CONF_JOIN": "/local/mkhoshechin/tmp/xcheck-pins/tf/target/release/conf-join"
+ }
+}

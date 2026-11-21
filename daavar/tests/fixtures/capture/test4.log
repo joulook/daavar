@@ -1,0 +1,129 @@
+== a2a one.n: exit 1 exit 1 97.2 s
+    direction	checked_lines	ref_lines	uncovered	verdict	export_ms	join_ms	peak_rss_kb
+    rust<=spec	16	7537	10	violation	29	1959	109272
+    rust-fixed<=spec	16	7537	1	violation	28	752	108344
+    java<=spec	18	7537	11	violation	750	2098	153768
+    java-fixed<=spec	18	7537	0	conforms	751	631	180532
+    java<=rust	18	16	8	violation	750	1113	153768
+    rust<=java	16	18	6	violation	29	852	25664
+    java-fixed<=rust-fixed	18	16	8	violation	751	1094	180532
+    rust-fixed<=java-fixed	16	18	6	violation	28	873	25668
+  java-fixed-in-rust-fixed: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-fixed-in-spec: uncovered driver 0 hand 0; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: 
+  java-in-rust: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-in-spec: uncovered driver 11 hand 11; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: T=2 T+W2=9
+  rust-fixed-in-java-fixed: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-fixed-in-spec: uncovered driver 1 hand 1; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1
+  rust-in-java: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-in-spec: uncovered driver 10 hand 10; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1 T=4 T+W2=5
+== a2a deleg.n-local: exit 1 exit 1 29.2 s
+    direction	checked_lines	ref_lines	uncovered	verdict	export_ms	join_ms	peak_rss_kb
+    rust<=spec	16	7537	10	violation	29	2019	114128
+    rust-fixed<=spec	16	7537	1	violation	28	811	114020
+    java<=spec	18	7537	11	violation	750	2077	155888
+    java-fixed<=spec	18	7537	0	conforms	771	670	168220
+    java<=rust	18	16	8	violation	750	1073	155888
+    rust<=java	16	18	6	violation	29	792	26692
+    java-fixed<=rust-fixed	18	16	8	violation	771	1094	168220
+    rust-fixed<=java-fixed	16	18	6	violation	28	831	26692
+  java-fixed-in-rust-fixed: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-fixed-in-spec: uncovered driver 0 hand 0; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: 
+  java-in-rust: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-in-spec: uncovered driver 11 hand 11; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: T=2 T+W2=9
+  rust-fixed-in-java-fixed: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-fixed-in-spec: uncovered driver 1 hand 1; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1
+  rust-in-java: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-in-spec: uncovered driver 10 hand 10; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1 T=4 T+W2=5
+== a2a gated.n-local: exit 1 exit 1 29.5 s
+    direction	checked_lines	ref_lines	uncovered	verdict	export_ms	join_ms	peak_rss_kb
+    rust<=spec	16	7537	10	violation	29	2039	114144
+    rust-fixed<=spec	16	7537	1	violation	29	812	114280
+    java<=spec	18	7537	11	violation	750	2199	155192
+    java-fixed<=spec	18	7537	0	conforms	774	691	171628
+    java<=rust	18	16	8	violation	750	1072	155192
+    rust<=java	16	18	6	violation	29	812	26760
+    java-fixed<=rust-fixed	18	16	8	violation	774	1093	171628
+    rust-fixed<=java-fixed	16	18	6	violation	29	812	26760
+  java-fixed-in-rust-fixed: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-fixed-in-spec: uncovered driver 0 hand 0; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: 
+  java-in-rust: uncovered driver 8 hand 8; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K2=3 K2+K3w-J=1 K3w-J=3 Mnf=1
+  java-in-spec: uncovered driver 11 hand 11; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: T=2 T+W2=9
+  rust-fixed-in-java-fixed: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-fixed-in-spec: uncovered driver 1 hand 1; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1
+  rust-in-java: uncovered driver 6 hand 6; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: K3=5 Ma=1
+  rust-in-spec: uncovered driver 10 hand 10; lines EQUAL; classifier exit 0/0, full output EQUAL
+      driver: Ma=1 T=4 T+W2=5
+== mcp pairs.aa.s0: exit 1 exit 1 434.2 s
+    direction	checked_lines	ref_lines	uncovered	verdict	export_ms	join_ms	peak_rss_kb
+    rust<=spec	850	12040	302	violation	170	3365	153908
+    java<=spec	7934	12040	4844	violation	371717	3930	1569436
+  rust-in-spec: uncovered driver 302 hand 302; lines EQUAL; classifier exit 1/1, full output DIFFERENT
+      driver: ii-T1 123
+      driver: ii-T2 78
+      driver: ii-T3 101
+      driver: total 302
+      driver: Traceback (most recent call last):
+      driver:   File "/local/mkhoshechin/mcp-1120s/classify.py", line 100, in <module>
+      driver:     json.dump({c: {'n': C[c], 'info': repr(ex[c][1]), 'example': ex[c][0]} for c in C}, open(sys.argv[2], 'w'), indent=1)
+      driver:                                                                                              ~~~~~~~~^^^
+      driver: IndexError: list index out of range
+      hand:   ii-T1 123
+      hand:   ii-T2 78
+      hand:   ii-T3 101
+      hand:   total 302
+      hand:   Traceback (most recent call last):
+      hand:     File "/local/mkhoshechin/mcp-1120s/classify.py", line 100, in <module>
+      hand:       json.dump({c: {'n': C[c], 'info': repr(ex[c][1]), 'example': ex[c][0]} for c in C}, open(sys.argv[2], 'w'), indent=1)
+      hand:                                                                                                ~~~~~~~~^^^
+      hand:   IndexError: list index out of range
+  java-in-spec: uncovered driver 4844 hand 4844; lines EQUAL; classifier exit 1/1, full output DIFFERENT
+      driver: ii-T1 3411
+      driver: ii-T2 710
+      driver: ii-T3 723
+      driver: total 4844
+      driver: Traceback (most recent call last):
+      driver:   File "/local/mkhoshechin/mcp-1120s/classify.py", line 100, in <module>
+      driver:     json.dump({c: {'n': C[c], 'info': repr(ex[c][1]), 'example': ex[c][0]} for c in C}, open(sys.argv[2], 'w'), indent=1)
+      driver:                                                                                              ~~~~~~~~^^^
+      driver: IndexError: list index out of range
+      hand:   ii-T1 3411
+      hand:   ii-T2 710
+      hand:   ii-T3 723
+      hand:   total 4844
+      hand:   Traceback (most recent call last):
+      hand:     File "/local/mkhoshechin/mcp-1120s/classify.py", line 100, in <module>
+      hand:       json.dump({c: {'n': C[c], 'info': repr(ex[c][1]), 'example': ex[c][0]} for c in C}, open(sys.argv[2], 'w'), indent=1)
+      hand:                                                                                                ~~~~~~~~^^^
+      hand:   IndexError: list index out of range
+  imp.rs 6164627334de018c6559330d33ec886f  /local/mkhoshechin/mcp-1120/tree/benchmarks/mcp-cancel/rust/src/imp.rs
+  imp.rs 6164627334de018c6559330d33ec886f  /local/mkhoshechin/driver-dev/daavar/benchmarks/mcp-cancel/rust/src/imp.rs
+== mcp pairs-c2.aa.s0.c2 (no hand join recorded): exit 1 exit 1 226.5 s
+    direction	checked_lines	ref_lines	uncovered	verdict	export_ms	join_ms	peak_rss_kb
+    rust<=spec	10315	267079	5445	violation	1898	20999	3356488
+comparisons that differ: 2
+pairs-c2.aa.s0.c2: no hand-run join exists (RESULTS-2 has no c2 cell); this part of test 4 is recorded, not compared
+end
+EXIT 1

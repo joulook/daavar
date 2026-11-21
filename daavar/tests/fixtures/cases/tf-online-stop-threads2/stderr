@@ -1,0 +1,17 @@
+tf_fx: online above one thread is full mode and unbounded: it does not take --stop-at-first or --budget
+usage: <bin> count spec|impl [--threads N] [options] [ARGS…]
+       <bin> export spec|impl --out FILE [--threads N] [options] [ARGS…]
+       <bin> conf [--engine stateful|stateless|gated|enumerator] [--threads N] [--stop-at-first] [--distinct] [options] [ARGS…]
+options: --model fifo|bag|causal (default: the program's), --seed N, --threshold N, --dump-large-graph, --program S, --size S; `--` ends the options
+       <bin> row [--model fifo|bag|causal] --seed N [--threshold N] [--dump-large-graph] -- ARGS   (EVAL_ROW, EVAL_COMMIT)
+       <bin> online --spec FILE [--threads N] [--stop-at-first] [--out FILE [--program S] [--size S]] [--budget N] [--model …] [--seed N] [--threshold N] [--dump-large-graph] [ARGS…]
+
+--audit-graphs (export or online, any thread count): exact canonical graph audit.
+Retains graphs; diagnostic only, not for timed rows.
+
+--witness PATH (online or conf --engine stateful, --threads 1): write the first
+uncovered execution to a file, or one per distinct summary to PATH ending in /.
+Witnesses publish at run end; refusal discards staging and preserves existing files.
+Unnamed threads, control characters in names/messages, and write errors stop the run
+(online exit 1; conf exit 2). Online declaration refusals exit 2.
+Positions count printed events; iterations count completions.

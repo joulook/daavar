@@ -1,0 +1,6 @@
+{
+ "md5": "3f03ab9fc45668ed620b363be2ba2b48",
+ "size": 1387099,
+ "lines": 1159,
+ "first_line": "{\"format\":1,\"minor\":1,\"tool\":\"traceforge\",\"program\":\"a2a-task\",\"size\":\"spec,b\",\"visible\":[\"client\",\"server\"],\"roles\":[\"client\",\"server\"],\"model\":\"p2p\",\"enumeration\":\"complete\",\"encoding\":1}"
+}

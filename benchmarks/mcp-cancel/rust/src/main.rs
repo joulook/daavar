@@ -17,6 +17,8 @@
 //! `x` (either). The default is `xx`: every branch nondeterministic. The first field names the side
 //! the arguments are meant for, except `mutant<n>`, which selects the impl-side program.
 //!
+//! Bad arguments print the reason and a `usage:` line on stderr and exit 2 (no panic).
+//!
 //! Visible threads: `client`, `server`. Model: fifo. Example: `<bin> count spec --model fifo -- spec,xx`.
 
 mod env;
@@ -31,43 +33,50 @@ use msgs::{Args, Branch};
 const PROGRAM: &str = "mcp-cancel";
 const USAGE: &str = "`<spec|impl|mutant1|mutant2|mutant3>[,<a|b|c|x><a|b|x>[,s0|s1|s2|s3[,c2]]]`";
 
+/// Reports a bad argument: the reason and the usage line on stderr, exit 2 (the usage convention:
+/// a program never panics on its arguments).
+fn usage(why: String) -> ! {
+    eprintln!("{PROGRAM}: {why}\nusage: <bin> count|export|online spec|impl [options] -- {USAGE}");
+    std::process::exit(2)
+}
+
 fn parse(args: &[String]) -> Args {
     if args.len() != 1 {
-        panic!("{PROGRAM}: expected 1 argument, got {} ({args:?}); ARGS are {USAGE}", args.len());
+        usage(format!("expected 1 argument, got {} ({args:?})", args.len()));
     }
     let f: Vec<&str> = args[0].split(',').collect();
     if !(1..=4).contains(&f.len()) {
-        panic!("{PROGRAM}: expected 1 to 4 fields in `{}`; ARGS are {USAGE}", args[0]);
+        usage(format!("expected 1 to 4 fields in `{}`", args[0]));
     }
     let mutant = match f[0] {
         "spec" | "impl" => 0u8,
         "mutant1" => 1,
         "mutant2" => 2,
         "mutant3" => 3,
-        s => panic!("{PROGRAM}: unknown side `{s}`; ARGS are {USAGE}"),
+        s => usage(format!("unknown side `{s}`")),
     };
     let v: Vec<char> = f.get(1).copied().unwrap_or("xx").chars().collect();
     if v.len() != 2 {
-        panic!("{PROGRAM}: the variant must be two letters; ARGS are {USAGE}");
+        usage("the variant must be two letters".to_string());
     }
     let b = |c: char, third: bool| match c {
         'a' => Branch::A,
         'b' => Branch::B,
         'c' if third => Branch::C,
         'x' => Branch::Any,
-        _ => panic!("{PROGRAM}: bad branch `{c}`; ARGS are {USAGE}"),
+        _ => usage(format!("bad branch `{c}`")),
     };
     let reading = match f.get(2).copied().unwrap_or("s0") {
         "s0" => 0,
         "s1" => 1,
         "s2" => 2,
         "s3" => 3,
-        r => panic!("{PROGRAM}: unknown reading `{r}`; ARGS are {USAGE}"),
+        r => usage(format!("unknown reading `{r}`")),
     };
     let cancel2 = match f.get(3).copied() {
         None => false,
         Some("c2") => true,
-        Some(x) => panic!("{PROGRAM}: unknown option `{x}`; ARGS are {USAGE}"),
+        Some(x) => usage(format!("unknown option `{x}`")),
     };
     Args { h1: b(v[0], true), h2: b(v[1], false), mutant, reading, cancel2 }
 }

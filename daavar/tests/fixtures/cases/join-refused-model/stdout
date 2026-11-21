@@ -1,0 +1,1 @@
+witness-join: exit 2; (no verdict line; conf-join exit 2: conf-join: refused: the two models differ: p2p and asyn ); uncovered -; graphs 0; check failures 0; render failures 0; j/WITNESS.md

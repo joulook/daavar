@@ -1,0 +1,27 @@
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+  /local/mkhoshechin/driver-dev/t7e/E/p/kv/daavar.toml:65:traceforge = "/local/mkhoshechin/driver-dev/t7e/E/tools/tf"
+  /local/mkhoshechin/driver-dev/t7e/E/p/kv/daavar.toml:68:checkout = "/local/mkhoshechin/driver-dev/t7e/E/tools/jmc"
+  /local/mkhoshechin/driver-dev/t7e/E/p/kv/rust/Cargo.toml:7:traceforge = { path = "/local/mkhoshechin/driver-dev/t7e/E/tools/tf/traceforge" }
+== E check: exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7e/E/p/kv/out/20261120T230435Z-one-2242954-7c8b21
+== E --from-run: exit 0 daavar check: exit 0 CONFORMS /local/mkhoshechin/driver-dev/t7e/D.elsewhere/p/kv/out/20261120T230545Z-one-2279372-6a2a10
+  daavar check: from-run: traceforge d775f7034f1303e57485078cea072faf44f1ead7 from /local/mkhoshechin/tmp/xcheck-pins/tf
+  daavar check: from-run: jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c from /local/mkhoshechin/driver-dev/jmc
+  daavar check: from-run: rebased daavar.toml: /local/mkhoshechin/driver-dev/t7e/E/tools/tf -> /local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/tf
+  daavar check: from-run: rebased daavar.toml: /local/mkhoshechin/driver-dev/t7e/E/tools/jmc -> /local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/jmc
+  daavar check: from-run: rebased rust/Cargo.toml: /local/mkhoshechin/driver-dev/t7e/E/tools/tf/traceforge -> /local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/tf/traceforge
+  daavar check: artifact differs: rust:tf_kv_cancel: Rust binary rebuilt at another path from the same build key (D15)
+  daavar check: artifact differs: rust:tf_kv_cancel.SOURCE.md5: the manifest differs only in the rebased rust/Cargo.toml (D18)
+  compared 21 equal True [('rust:tf_kv_cancel', False, True), ('rust:tf_kv_cancel.SOURCE.md5', False, True), ('java:java', True, False), ('tool:traceforge:identity', True, False), ('tool:conf-join', True, False), ('tool:jmc:identity', True, False), ('tool:jmc:classes', True, False)]
+  restored: /local/mkhoshechin/driver-dev/t7e/D.elsewhere/p/kv/daavar.toml:65:traceforge = "/local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/tf"
+  restored: /local/mkhoshechin/driver-dev/t7e/D.elsewhere/p/kv/daavar.toml:68:checkout = "/local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/jmc"
+  restored: /local/mkhoshechin/driver-dev/t7e/D.elsewhere/p/kv/rust/Cargo.toml:7:traceforge = { path = "/local/mkhoshechin/driver-dev/t7e/D.elsewhere/tools/tf/traceforge" }
+end

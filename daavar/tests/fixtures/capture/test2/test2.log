@@ -1,0 +1,15 @@
+tools: tf d775f7034f1303e57485078cea072faf44f1ead7 (0 changed); jmc c1bbf657e41cedc17f3e6bd3454f4e8cdcb1cd0c (0 changed)
+a2a-task build 1: exit 0, 68.3 s, built_anything True [('conf-join', True), ('jmc', True), ('rust', True), ('java', True)]
+a2a-task build 2: exit 0, 0.3 s, built_anything False [('conf-join', False), ('jmc', False), ('rust', False), ('java', False)]
+  same keys on both builds: {'rust': True, 'java': True}
+  rust manifest byte-identical (886abae4, 9 files)
+  java manifest byte-identical (7e280197, 54 files)
+  dr-xr-xr-x /local/mkhoshechin/driver-dev/work/cache/artifacts/c3343f61c2a583919479e7bac54a2a573e46c4596e17e452962daca1a023939b/out
+  -r-xr-xr-x /local/mkhoshechin/driver-dev/work/cache/artifacts/c3343f61c2a583919479e7bac54a2a573e46c4596e17e452962daca1a023939b/out/tf_a2a_task
+mcp-cancel build 1: exit 0, 23.1 s, built_anything True [('conf-join', False), ('jmc', False), ('rust', True), ('java', True)]
+mcp-cancel build 2: exit 0, 0.3 s, built_anything False [('conf-join', False), ('jmc', False), ('rust', False), ('java', False)]
+  same keys on both builds: {'rust': True, 'java': True}
+  rust manifest byte-identical (81dcb31a, 7 files)
+  java manifest byte-identical (b8cf8490, 18 files)
+  dr-xr-xr-x /local/mkhoshechin/driver-dev/work/cache/artifacts/7e301a85af276b5452b936281540b3d99181495d789c2e7035b548af71f9dd29/out
+  -r-xr-xr-x /local/mkhoshechin/driver-dev/work/cache/artifacts/7e301a85af276b5452b936281540b3d99181495d789c2e7035b548af71f9dd29/out/tf_mcp_cancel

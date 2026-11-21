@@ -1,0 +1,13 @@
+{
+ "argv": [
+  "/local/mkhoshechin/tmp/xcheck-pins/tf/target/release/conf-join",
+  "/local/mkhoshechin/driver-dev/work/cases/tf-export-spec-ok/export.jsonl"
+ ],
+ "cwd": "/local/mkhoshechin/driver-dev/work/cases/conf-join-usage",
+ "timeout_s": 60,
+ "env": {
+  "PATH": "/home/mkhoshechin/jdk17/bin:/home/mkhoshechin/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/games",
+  "TMPDIR": "/local/mkhoshechin/driver-dev/work/tmp",
+  "WITNESS_CONF_JOIN": "/local/mkhoshechin/tmp/xcheck-pins/tf/target/release/conf-join"
+ }
+}

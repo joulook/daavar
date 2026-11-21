@@ -1,0 +1,7 @@
+# root daavar/tests/fixtures/src/fx
+3641162c31338cd4cfe77c589e1639f7  classes/fx/Fx$Bad.class
+1a8419d6271faffef10a0d82095fa0c0  classes/fx/Fx$Ping.class
+c378471fb7ac5b54a5654734f9ccd3e6  classes/fx/Fx$Pong.class
+d157c7265648159a1197f8ccba7af05f  classes/fx/Fx$Shutdown.class
+02742079b3bbdf880bb8d020f41327e6  classes/fx/Fx.class
+97f5881d5ddd5e5390f327ec6cf90a00  java/fx/Fx.java

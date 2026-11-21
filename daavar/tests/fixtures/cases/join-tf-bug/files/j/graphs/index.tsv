@@ -1,0 +1,2 @@
+n	class	decide	graph	reason	line
+1	no-slot	violation	1.graph.json	ok	{"statuses":{"client":"done","server":"done"},"words":{"client":[{"s":{"t":"Ping","f":[1]}},{"r":{"t":"Pong","f":[2]}},{"s":{"t":"Shutdown","f":[]}}],"server":[{"r":{"t":"Ping","f":[1]}},{"s":{"t":"Pong","f":[2]}},{"r":{"t":"Shutdown","f":[]}}]},"counts":[0,2,2,1,1,3]}

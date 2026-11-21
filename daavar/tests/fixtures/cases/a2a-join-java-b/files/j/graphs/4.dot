@@ -1,0 +1,17 @@
+digraph "f5ea700a" {
+  graph [rankdir=TB, newrank=true, nodesep=0.5, ranksep=0.2, labelloc=t, label="a2a-task b  f5ea700a"];
+  node [shape=plaintext, fontname="Helvetica", fontsize=10];
+  edge [arrowsize=0.6];
+  subgraph cluster_3 { label="client (C)"; c1 [label="send(S, SendStream)"]; c2 [label="recv()"]; c3 [label="send(S, Cancel)"]; c4 [label="recv()"]; c5 [label="recv()"]; c6 [label="recv()"]; c7 [label="send(S, Get)"]; c8 [label="recv()"]; c9 [label="send(S, Shutdown)"]; }
+  subgraph cluster_1 { label="server (S)"; s1 [label="recv()"]; s2 [label="send(E, Exec)"]; s3 [label="recv()"]; s4 [label="send(C, Status(Working))"]; s5 [label="recv()"]; s6 [label="send(E, CancelCb)"]; s7 [label="recv()"]; s8 [label="send(C, Status(Completed))"]; s9 [label="send(C, StreamClose)"]; s10 [label="recv()"]; s11 [label="send(C, CancelErr(TaskNotCancelable))"]; s12 [label="recv()"]; s13 [label="send(C, GetOk(Completed))"]; s14 [label="recv()"]; s15 [label="send(E, Shutdown)"]; }
+  subgraph cluster_2 { label="exec (E)"; e1 [label="recv()"]; e2 [label="send(S, Working)"]; e3 [label="send(S, Completed)"]; e4 [label="recv()"]; e5 [label="send(S, Canceled)"]; e6 [label="recv()"]; }
+  edge [color=gray30];
+  c1 -> c2 [minlen=3]; c2 -> c3; c3 -> c4 [minlen=3]; c4 -> c5; c5 -> c6 [minlen=2]; c6 -> c7; c7 -> c8; c8 -> c9;
+  s1 -> s2; s2 -> s3; s3 -> s4; s4 -> s5; s5 -> s6; s6 -> s7; s7 -> s8; s8 -> s9; s9 -> s10; s10 -> s11; s11 -> s12; s12 -> s13; s13 -> s14; s14 -> s15;
+  e1 -> e2; e2 -> e3; e3 -> e4 [minlen=2]; e4 -> e5; e5 -> e6 [minlen=8];
+  edge [style=dashed, color="#2e7d32", constraint=false];
+  c1 -> s1; s2 -> e1; e2 -> s3; s4 -> c2; c3 -> s5; s6 -> e4; e3 -> s7; s8 -> c4; s9 -> c5; e5 -> s10; s11 -> c6; c7 -> s12; s13 -> c8; c9 -> s14; s15 -> e6;
+  {rank=same; c1; s1;} {rank=same; s2; e1;} {rank=same; s3; e2;} {rank=same; c2; s4; e3;} {rank=same; c3; s5;}
+  {rank=same; s6; e4;} {rank=same; s7; e5;} {rank=same; c4; s8;} {rank=same; c5; s9;} {rank=same; c6; s11;}
+  {rank=same; c7; s12;} {rank=same; c8; s13;} {rank=same; c9; s14;} {rank=same; s15; e6;}
+}

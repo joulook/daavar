@@ -181,6 +181,14 @@ public final class A2ATask implements MpProgram {
     /** The variant and option fields, for the export header's size. */
     private final String sizeName;
 
+    /** The usage text of the constructor's arguments (MpLauncher's {@code Class:args} form). */
+    public static final String USAGE = "usage: bench.a2a_task.A2ATask:<impl|impl2|impl2g>,<a|b|n>[,recancel|local|deleg|delegmsg|delegtask[-<s|w>[<c|w>]]]";
+
+    /** A bad argument: the reason and the usage text; MpLauncher reports it with exit 2. */
+    private static IllegalArgumentException bad(String why) {
+        return new IllegalArgumentException("A2ATask: " + why + "; " + USAGE);
+    }
+
     /**
      * @param args the Rust twin's ARGS fields: {@code impl}, {@code impl2} or {@code impl2g}; the
      *     variant {@code a}, {@code b} or {@code n}; optionally {@code recancel} (one server only) or,
@@ -189,14 +197,13 @@ public final class A2ATask implements MpProgram {
      */
     public A2ATask(String... args) {
         if (args.length < 2 || args.length > 3) {
-            throw new IllegalArgumentException("A2ATask takes <impl|impl2|impl2g>,<a|b|n>[,<option>]");
+            throw bad("expected 2 or 3 arguments, got " + args.length);
         }
         String side = args[0].trim();
         this.delegation = switch (side) {
             case "impl" -> false;
             case "impl2", "impl2g" -> true;
-            default -> throw new IllegalArgumentException(
-                    "side must be impl, impl2 or impl2g, was " + args[0]);
+            default -> throw bad("side must be impl, impl2 or impl2g, was " + args[0]);
         };
         this.gated = side.equals("impl2g");
         String variant = args[1].trim();
@@ -204,7 +211,7 @@ public final class A2ATask implements MpProgram {
         this.submitFirst = switch (variant) {
             case "a", "n" -> true;
             case "b" -> false;
-            default -> throw new IllegalArgumentException("variant must be a, b or n, was " + args[1]);
+            default -> throw bad("variant must be a, b or n, was " + args[1]);
         };
         String opt = args.length == 3 ? args[2].trim() : null;
         boolean rc = false;
@@ -221,15 +228,15 @@ public final class A2ATask implements MpProgram {
             } else if (opt.startsWith("delegtask")) {
                 sp = 4;
             } else {
-                throw new IllegalArgumentException("unknown option " + opt);
+                throw bad("unknown option " + opt);
             }
         }
         if (sp > 0 && !(delegation && llm)) {
-            throw new IllegalArgumentException(opt + " splits the delegation scenario with n only");
+            throw bad(opt + " splits the delegation scenario with n only");
         }
         this.recancel = rc;
         if (delegation && recancel) {
-            throw new IllegalArgumentException("no recancel in the delegation scenario");
+            throw bad("no recancel in the delegation scenario");
         }
         this.split = sp;
         int kind = 0;
@@ -238,17 +245,17 @@ public final class A2ATask implements MpProgram {
             String x = opt.substring("delegtask".length());
             String r = x.startsWith("-") ? x.substring(1) : x;
             if (!x.isEmpty() && (r.isEmpty() || r.length() > 2 || !x.startsWith("-"))) {
-                throw new IllegalArgumentException("bad split " + opt);
+                throw bad("bad split " + opt);
             }
             if (r.length() >= 1) {
                 if (r.charAt(0) == 'c') {
-                    throw new IllegalArgumentException("bad split " + opt);
+                    throw bad("bad split " + opt);
                 }
                 kind = pick(r.charAt(0), opt);
             }
             if (r.length() == 2) {
                 if (r.charAt(1) == 's') {
-                    throw new IllegalArgumentException("bad split " + opt);
+                    throw bad("bad split " + opt);
                 }
                 cont = pick(r.charAt(1), opt);
             }
@@ -262,7 +269,7 @@ public final class A2ATask implements MpProgram {
         return switch (c) {
             case 's', 'c' -> 1;
             case 'w' -> 2;
-            default -> throw new IllegalArgumentException("bad split " + opt);
+            default -> throw bad("bad split " + opt);
         };
     }
 

@@ -1,0 +1,53 @@
+server
+spec:       /local/mkhoshechin/driver-dev/work/cases/tf-export-spec-ok/export.jsonl (program fx, size spec,ok, model p2p, tool traceforge; 1 lines, 1 distinct summaries held, 0 duplicates)
+lookups:    0 (0 found, 0 signature misses, 0 not found)
+verdict:    partial
+mode:       full
+uncovered:  0 graphs (0 distinct summaries)
+FAILED:     fx: planted panic
+graph_store: written=0 refused=0 ms=0
+--- measurements
+wall_ms: 2
+explore_ms: 0
+summarise_ms: 0
+index_ms: 0
+lookup_ms: 0
+export_ms: 0
+graphs_complete: 0
+graphs_blocked: 0
+summaries_distinct: 0
+iterations: 0
+stop_reason: error
+peak_rss_kb: 6580
+max_message_events: 
+max_porf_pairs: 0
+first_miss_iteration: 0
+first_miss_wall_ms: 0
+uncovered_total: 0
+max_graph_events: 
+mean_graph_events: 
+max_visible_events: 
+mean_visible_events: 
+max_summary_bytes: 0
+max_porf_count: 0
+join_ms: 0
+spec_phase_ms: 0
+impl_phase_ms: 0
+explore_spec_ms: 0
+explore_impl_ms: 0
+spec_complete: 0
+spec_blocked: 0
+impl_complete: 0
+impl_blocked: 0
+spec_summaries: 1
+impl_summaries: 0
+precheck_ms: 0
+merge_ms: 0
+uncovered_distinct: 
+spec_graphs_explored: 
+sweeps: 
+cache_tests: 
+cache_hits: 
+graphs_written: 0
+graphs_refused: 0
+graphs_ms: 0

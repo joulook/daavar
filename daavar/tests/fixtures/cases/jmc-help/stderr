@@ -1,0 +1,11 @@
+MpLauncher: cannot load and construct --help: java.lang.ClassNotFoundException: --help
+java.lang.ClassNotFoundException: --help
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at org.mpi_sws.jmc.mp.launch.MpLauncher.runBody(MpLauncher.java:347)
+	at org.mpi_sws.jmc.mp.launch.MpLauncher.run(MpLauncher.java:173)
+	at org.mpi_sws.jmc.mp.launch.MpLauncher.main(MpLauncher.java:160)
+usage: MpLauncher <program class[:args]> [strategy=mp-random] [iterations=1000] [seed] [reportPath] [exportFile] [timeoutSeconds] [--spec <file> [--stop-at-first] [--witness <file or dir/>]] [--graphs <store> [--graphs-limit N]] [--split W [--k K]] [--worker <run dir> <id>]

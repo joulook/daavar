@@ -1,0 +1,38 @@
+% witness-render 1: ae57cd979a71aece8ee7d498e94f7862a1627d11c6327543ef978a160937c0d6
+\begin{tikzpicture}[>=Stealth, font=\scriptsize, x=1cm, y=0.45cm, ev/.append style={inner ysep=1pt}]
+  \node[font=\scriptsize\itshape] at (0,1.8) {client $C$};
+  \node[font=\scriptsize\itshape] at (4.8,1.8) {server $S$};
+  \node[font=\scriptsize\itshape] at (9.6,1.8) {exec $E$};
+  \node[ev] (c1) at (0,0) {$\sendop(S,\kw{SendStream})$};
+  \node[ev] (c2) at (0,-3) {$\recvop()$};
+  \node[ev] (c3) at (0,-4) {$\sendop(S,\kw{Cancel})$};
+  \node[ev] (c4) at (0,-7) {$\recvop()$};
+  \node[ev] (c5) at (0,-8) {$\recvop()$};
+  \node[ev] (c6) at (0,-9) {$\recvop()$};
+  \node[ev] (c7) at (0,-10) {$\sendop(S,\kw{Get})$};
+  \node[ev] (c8) at (0,-11) {$\recvop()$};
+  \node[ev] (c9) at (0,-12) {$\sendop(S,\kw{Shutdown})$};
+  \node[ev] (s1) at (4.8,0) {$\recvop()$};
+  \node[ev] (s2) at (4.8,-1) {$\sendop(E,\kw{Exec})$};
+  \node[ev] (s3) at (4.8,-2) {$\recvop()$};
+  \node[ev] (s4) at (4.8,-3) {$\sendop(C,\kw{Status}(\kw{Working}))$};
+  \node[ev] (s5) at (4.8,-4) {$\recvop()$};
+  \node[ev] (s6) at (4.8,-5) {$\sendop(E,\kw{CancelCb})$};
+  \node[ev] (s7) at (4.8,-6) {$\recvop()$};
+  \node[ev] (s8) at (4.8,-7) {$\sendop(C,\kw{CancelOk}(\kw{Canceled}))$};
+  \node[ev] (s9) at (4.8,-8) {$\sendop(C,\kw{Status}(\kw{Canceled}))$};
+  \node[ev] (s10) at (4.8,-9) {$\sendop(C,\kw{StreamClose})$};
+  \node[ev] (s11) at (4.8,-10) {$\recvop()$};
+  \node[ev] (s12) at (4.8,-11) {$\sendop(C,\kw{GetOk}(\kw{Canceled}))$};
+  \node[ev] (s13) at (4.8,-12) {$\recvop()$};
+  \node[ev] (s14) at (4.8,-13) {$\sendop(E,\kw{Shutdown})$};
+  \node[ev] (e1) at (9.6,-1) {$\recvop()$};
+  \node[ev] (e2) at (9.6,-2) {$\sendop(S,\kw{Working})$};
+  \node[ev] (e3) at (9.6,-5) {$\recvop()$};
+  \node[ev] (e4) at (9.6,-6) {$\sendop(S,\kw{Canceled})$};
+  \node[ev] (e5) at (9.6,-13) {$\recvop()$};
+  \foreach \a/\b in {c1/c2,c2/c3,c3/c4,c4/c5,c5/c6,c6/c7,c7/c8,c8/c9,s1/s2,s2/s3,s3/s4,s4/s5,s5/s6,s6/s7,s7/s8,s8/s9,s9/s10,s10/s11,s11/s12,s12/s13,s13/s14,e1/e2,e2/e3,e3/e4,e4/e5} \draw[poe] (\a) -- (\b);
+  \foreach \a/\b in {c1/s1,s2/e1,e2/s3,s4/c2,c3/s5,s6/e3,e4/s7,s8/c4,s9/c5,s10/c6,c7/s11,s12/c8,c9/s13,s14/e5} \draw[rfe] (\a) -- (\b);
+  \node[gbox, fit=(c1)(c2)(c3)(c4)(c5)(c6)(c7)(c8)(c9)(s1)(s2)(s3)(s4)(s5)(s6)(s7)(s8)(s9)(s10)(s11)(s12)(s13)(s14)(e1)(e2)(e3)(e4)(e5)] (bx) {};
+  \node[gbadge] at (bx.north west) {$G$: a2a-task impl,b, ae57cd97};
+\end{tikzpicture}
