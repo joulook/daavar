@@ -213,3 +213,20 @@ Pins: JMC `eb58ec75` (merge of `feat/replay-source-files`; the tree of `fa90c0e0
   and a duplicate-key object, JMC refuses them.
 - Exit codes (5.1): JMC's named commands (`count`, `export`, `online`, `replay`) use 0 ok/conforms, 1 a failure of
   the program or `reports`, 2 a refusal, 3 partial or incomplete; the positional form keeps its codes.
+
+## Phase 4b (2026-11-23)
+
+Pins: JMC `bf742b28` (main, merge of `feat/refusal-messages`), TraceForge `f9784da` (`feat/conformance`). `SPEC.md`
+revision 5.2.
+
+- C6: `line N repeats line M` in every pairing check and in JMC's reader. TraceForge's reader keeps `line N: the line
+  repeats line M (each line is one distinct summary)` (per tool, pending 4c).
+- `n`: both readers refuse a non-integer number (a non-numeric value such as `"3"` is still accepted and adds nothing to the total), an integer outside signed 64 bits, `-0` and a repeated key, with the same
+  messages except an exponent (`1e3`: JMC `number ending in "e"`, TraceForge names the number; pending 4c).
+  TraceForge's join total sums `n` in 1 ..= 2^63−1.
+- A refused header stops the pairing check: one refusal, no C13 warnings, in both tools.
+- No usage text after a pairing or reader refusal in JMC, nor after a pairing refusal in TraceForge `online`;
+  TraceForge `online` still prints it after a reader refusal (pending 4c).
+- TraceForge `online --spec` runs the pairing check (`--no-pairing-check` skips it): C3 as model equality only, C13
+  not checked (JMC checks it), C18 a warning in both.
+- Exit of an online check on `reports`: TraceForge 0, JMC (named form) 1; TraceForge aligns to 1 in 4c.
