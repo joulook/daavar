@@ -1,6 +1,6 @@
 # a2-store: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/a2-store/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-a2-store`: XCE (57), XCON1 (31).
+> Provenance: a context-free rewrite of `a2-store` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Source of truth: `daavar/benchmarks/a2-store/rust/src/main.rs` (and `Cargo.toml`).
 Class: `bench.a2_store.A2Store` (`java/bench/a2_store/A2Store.java`), implements `MpProgram`,

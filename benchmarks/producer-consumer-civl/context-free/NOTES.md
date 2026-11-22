@@ -1,6 +1,6 @@
 # producer-consumer-civl — context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/producer-consumer-civl/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-producer-consumer-civl`: XCE (23), XCON1 (10).
+> Provenance: a context-free rewrite of `producer-consumer-civl` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.producer_consumer_civl.ProducerConsumerCivl` (constructor `(String[] args)`), in
 `java/bench/producer_consumer_civl/ProducerConsumerCivl.java`.

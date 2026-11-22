@@ -1,6 +1,6 @@
 # two-pc-trillium: Java twin (written without context, 2026-11-02)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/two-pc-trillium/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-two-pc-trillium`: XCE (28), XCON1 (15).
+> Provenance: a context-free rewrite of `two-pc-trillium` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Source of truth: `daavar/benchmarks/two-pc-trillium/rust/src/main.rs`.
 

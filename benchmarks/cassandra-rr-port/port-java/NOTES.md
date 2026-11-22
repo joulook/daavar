@@ -1,6 +1,6 @@
 # cassandra-rr-port: Cassandra 4.1 quorum write path and quorum read path with read repair, ported to JMC's Must API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/cassandra-rr-port/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-12 (cassandra-rr-port); no evaluation run in brain-data.
+> Provenance: a Java port of the existing code of `cassandra-rr-port` (moved here on 2026-11-20); added 2026-11-12 (cassandra-rr-port).
 
 Program `bench.cassandra_rr_port.CassandraReadRepair` (one file, `java/bench/cassandra_rr_port/CassandraReadRepair.java`),
 constructed from the launcher's argument string `impl,<q>,<blocking|none>,<fifo|bag>`. It ports the sources of the study's cut

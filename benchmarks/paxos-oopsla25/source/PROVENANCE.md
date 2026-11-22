@@ -10,7 +10,7 @@ Copied verbatim (`cp -p`, no edits) on 2026-10-30 from
   `oopsla25-artifact/oopsla552-artefact-amd64.zip`, md5 `5ce144a862977e1db0370960209033ca`.
 - Catalogue record: `related-work-papers/sources/CATALOGUE-oopsla25.md`,
   "oopsla25/refinement-examples/src/bin/ex05_paxos.rs: Paxos (paper §5.3)"; planned pair
-  `RELATED-BENCHMARKS.tex` §B1 (the benchmark brief, kept at tag `pldi27-artifact`).
+  `RELATED-BENCHMARKS.tex` §B1 (the benchmark brief, kept at commit `ceac1e1`).
 
 The program text the benchmark follows: `enum Message` (`Msg1a`, `Msg1b`, `Msg2a`, `Msg2b`),
 `run_leader_ballot` (1b collection until `majority = acceptor_count / 2 + 1`, the `max_vote` rule,

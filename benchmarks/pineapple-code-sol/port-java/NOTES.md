@@ -1,6 +1,6 @@
 # Pineapple Go-to-Java port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/pineapple-code-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Pineapple study); evaluation runs in brain-data under `cf-pineapple-code-sol`: XCE (5).
+> Provenance: a Java port of the existing code of `pineapple-code-sol` (moved here on 2026-11-20); added 2026-11-04 (Pineapple study).
 
 Implementation: `java/bench/pineapple_code_sol/PineappleCodeSol.java`.
 All source references below are line numbers in the supplied `code-src` files.

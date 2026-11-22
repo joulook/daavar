@@ -1,6 +1,6 @@
 # OmniPaxosPaper: notes
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-paper/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (omnipaxos-paper); evaluation runs in brain-data under `cf-omnipaxos-paper`: XCE (8).
+> Provenance: a context-free rewrite of `omnipaxos-paper` (moved here on 2026-11-20); added 2026-11-04 (omnipaxos-paper).
 
 Source: `java/bench/omnipaxos_paper/OmniPaxosPaper.java` (one file). It implements Sequence Paxos (§4, Figure 3b)
 and Ballot Leader Election (§5, Figure 4) from PAPER-EXCERPT.md. It does not implement reconfiguration, recovery

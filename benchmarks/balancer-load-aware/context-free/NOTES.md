@@ -1,6 +1,6 @@
 # balancer-load-aware: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/balancer-load-aware/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-balancer-load-aware`: XCE (13), XCON1 (7).
+> Provenance: a context-free rewrite of `balancer-load-aware` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Source of truth: `daavar/benchmarks/balancer-load-aware/rust/src/main.rs`.
 Java: `java/bench/balancer_load_aware/BalancerLoadAware.java`.

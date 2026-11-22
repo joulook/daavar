@@ -19,6 +19,3 @@ one `<bin>.SOURCE.md5` per bin beside the binary in `$EVAL_OUT/bench-target/rele
 `$EVAL_OUT/javaout/<bench>`). A binary or class file rebuilt after its manifest makes it stale, and the tools then
 record `"source": "unknown"` in the witness graphs. A benchmark built any other way needs its own
 `source-manifest.sh` call after the build.
-
-The scripts that ran the PLDI 2027 evaluation (cluster queues, records, publishing, table generators) are kept at
-tag `pldi27-artifact`; see `eval/README.md`.

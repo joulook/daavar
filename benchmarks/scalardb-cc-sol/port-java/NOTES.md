@@ -1,6 +1,6 @@
 # ScalarDB Consensus Commit port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/scalardb-cc-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-06 (scalardb-cc-sol); evaluation runs in brain-data under `cf-scalardb-cc-sol`: XCE (10).
+> Provenance: a Java port of the existing code of `scalardb-cc-sol` (moved here on 2026-11-20); added 2026-11-06 (scalardb-cc-sol).
 
 Source: scalar-labs/scalardb at the supplied revision `416cdc2`; only the supplied code cut and its README were used, not its docs. `C/` below means `cc-src/core/src/main/java/com/scalar/db/transaction/consensuscommit/`. The implementation is `java/bench/scalardb_sol/ConsensusCommit.java`, class `bench.scalardb_sol.ConsensusCommit` (the deliverable's explicit package takes precedence over INTERFACE.md's generic `bench.scalardb.<Name>` example).
 

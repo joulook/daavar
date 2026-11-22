@@ -1,6 +1,6 @@
 # Pineapple single-key implementation
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/pineapple-paper-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Pineapple study); evaluation runs in brain-data under `cf-pineapple-paper-sol`: XCE (3).
+> Provenance: a context-free rewrite of `pineapple-paper-sol` (moved here on 2026-11-20); added 2026-11-04 (Pineapple study).
 
 Source: `java/bench/pineapple_paper_sol/PineapplePaperSol.java`.
 Only the supplied `PAPER-EXCERPT.md`, `INTERFACE.md`, and local API sources

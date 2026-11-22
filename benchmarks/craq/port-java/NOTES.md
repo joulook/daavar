@@ -1,6 +1,6 @@
 # 3FS chain replication (CRAQ), one chunk, one chain of three targets: Java transliteration (JMC message passing)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/craq/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (3FS study, Java side); evaluation runs in brain-data under `cf-craq`: XCE (6).
+> Provenance: a Java port of the existing code of `craq` (moved here on 2026-11-20); added 2026-11-05 (3FS study, Java side).
 
 Source: DeepSeek 3FS main 22fca04, the cut in `plan/case-studies/3fs/craq-src` (paths below are relative to it),
 full tree in `plan/case-studies/3fs/code`. Program: `java/bench/craq/ChainReplication.java`, class

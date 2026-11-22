@@ -12,7 +12,7 @@
   A2Store and A3Lock programs, used as regression files for the exporter; they are not cross-tool tests).
 - `docs/` this guide. `daavar/`, `bin/daavar` the driver. `scripts/` the helpers the driver and the documentation
   rely on (witness rendering and joining, source manifests, the two one-line tool runners, node setup).
-- `jmc/`, `traceforge/` the two tools, pinned as submodules; `eval/` how the paper's tables are rebuilt from the tag.
+- `jmc/`, `traceforge/` the two tools, pinned as submodules.
 
 ## The format is versioned in lock-step
 The summary export format is shared by both tools. A change to it is one change in three places: `format/SPEC.md`,

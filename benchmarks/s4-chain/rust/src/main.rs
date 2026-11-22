@@ -57,7 +57,7 @@ fn synth_names(prefix: &str, n: usize) -> Vec<String> {
 /// forwards what it read (the Impl, spawned `v{d}, r{d}, …, v1, r1, v0`);
 /// without, `v{i-1}` sends to `v{i}` directly (the Spec, spawned `v{d}, …,
 /// v0`). Knob `d` is the size: 1 graph, 1 signature either side; `ord` a
-/// chain of `2d` visible events over `d` hops; `4d` Impl paper events, `2d`
+/// chain of `2d` visible events over `d` hops; `4d` Impl events, `2d`
 /// Spec.
 fn chain_prog(d: usize, relayed: bool) -> Prog {
     assert!(d >= 1, "conformance: chain(d) needs d >= 1");

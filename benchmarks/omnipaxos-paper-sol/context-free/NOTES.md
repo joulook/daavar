@@ -1,6 +1,6 @@
 # Omni-Paxos implementation notes
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-paper-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-paper-sol`: XCE (2).
+> Provenance: a context-free rewrite of `omnipaxos-paper-sol` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 Source: `java/bench/omnipaxos_paper_sol/OmniPaxosPaperSol.java`.
 Only `PAPER-EXCERPT.md`, `INTERFACE.md`, and the supplied local API sources were consulted. No reconfiguration, crashes, recovery, disconnections, real clocks, or extra processes are modeled.

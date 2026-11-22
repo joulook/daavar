@@ -1,6 +1,6 @@
 # rpc-at-most-once-aneris: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/rpc-at-most-once-aneris/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-rpc-at-most-once-aneris`: XCE (19), XCON1 (8).
+> Provenance: a context-free rewrite of `rpc-at-most-once-aneris` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.rpc_at_most_once_aneris.RpcAtMostOnce` (java/bench/rpc_at_most_once_aneris/RpcAtMostOnce.java)
 

@@ -1,6 +1,6 @@
 # SwiftPaxos ballot-zero Java port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/swiftpaxos-code-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (SwiftPaxos study); evaluation runs in brain-data under `cf-swiftpaxos-code-sol`: XCE (3).
+> Provenance: a Java port of the existing code of `swiftpaxos-code-sol` (moved here on 2026-11-20); added 2026-11-04 (SwiftPaxos study).
 
 Read `code-src/README.md` first. The implementation is
 `java/bench/swiftpaxos_code_sol/SwiftpaxosCodeSol.java`. All source references below

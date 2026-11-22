@@ -1,6 +1,6 @@
 # broadcast-consensus-civl: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/broadcast-consensus-civl/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-broadcast-consensus-civl`: XCE (15), XCON1 (18).
+> Provenance: a context-free rewrite of `broadcast-consensus-civl` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.broadcast_consensus_civl.BroadcastConsensus` (implements `MpProgram`, public `(String...)` constructor).
 Source: `java/bench/broadcast_consensus_civl/BroadcastConsensus.java`.

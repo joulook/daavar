@@ -1,6 +1,6 @@
 # OmniPaxosSpec: a replicated log over three nodes, written against JMC's message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-spec/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (omnipaxos-spec); evaluation runs in brain-data under `cf-omnipaxos-spec`: XCE (8).
+> Provenance: a context-free rewrite of `omnipaxos-spec` (moved here on 2026-11-20); added 2026-11-04 (omnipaxos-spec).
 
 Source: `java/bench/omnipaxos_spec/OmniPaxosSpec.java`, a single file. The entry is `impl,<e>,<t>,<cand>,<fifo|bag>`.
 

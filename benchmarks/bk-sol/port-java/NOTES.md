@@ -1,6 +1,6 @@
 # BookKeeper main port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/bk-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (BookKeeper study); evaluation runs in brain-data under `cf-bk-sol`: XCE (12).
+> Provenance: a Java port of the existing code of `bk-sol` (moved here on 2026-11-20); added 2026-11-05 (BookKeeper study).
 
 Target: the supplied main cut, commit `7b66b5d` identified by `bk-src/README.md`. No other BookKeeper version or external material was consulted. Source references below are relative to `bk-src/main` and use the supplied files' line numbers.
 

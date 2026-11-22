@@ -1,6 +1,6 @@
 # ewd998-termination: Java twin, written without context
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/ewd998-termination/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-ewd998-termination`: XCE (6), XCON1 (6).
+> Provenance: a context-free rewrite of `ewd998-termination` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.ewd998_termination.Ewd998Termination` (implements `MpProgram`, public `(String...)` constructor).
 Argument string: `<spec|impl>,<N>,<fifo|bag>[,<variant>]`, variant `correct` (default) or `no-black-on-receive`

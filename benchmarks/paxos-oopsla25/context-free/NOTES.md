@@ -1,6 +1,6 @@
 # paxos-oopsla25: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/paxos-oopsla25/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-paxos-oopsla25`: XCE (22), XCON1 (18).
+> Provenance: a context-free rewrite of `paxos-oopsla25` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.paxos_oopsla25.PaxosOopsla25` (implements `MpProgram`), constructor `(String...)`.
 Source read: `daavar/benchmarks/paxos-oopsla25/rust/src/main.rs` and `Cargo.toml`, the Java API

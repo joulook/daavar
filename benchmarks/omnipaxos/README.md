@@ -5,7 +5,7 @@
 **Expected verdict:** `correct`: **no derived verdict** (§4: one decided sequence, but the library
 may forward a client's buffered and later proposals out of arrival order, which the specification
 forbids; measured conformance at `1 0 1` only, where nothing is decided; every run at `t >= 1`
-reached the 600 s cap on the workstation; the campaign rows at 16 threads and the 48 h tier
+reached the 600 s cap on the workstation; larger runs at 16 threads and with a 48 h limit
 decide); `reorder`: **DOES NOT REFINE** at `2 1 1` (measured: both conformance engines report an
 uncovered implementation execution, §4: a client's own values delivered out of its proposal order);
 at `e = 1` unresolved (not measured, no verdict derived).
@@ -106,7 +106,7 @@ no specification execution produces. This schedule is derived from the source, n
 a run. The harness keeps no proposal queue, so it exposes the library's behaviour as is (raft-rs's
 harness queues proposals until a leader is known, a different submission discipline). Measured:
 conformance at `1 0 1` only (no timeouts, nothing decided, §7); every run at `t >= 1` reached the
-600 s cap on the workstation. The campaign rows decide `correct` at `t >= 1`; the expectation file
+600 s cap on the workstation. Larger runs decide `correct` at `t >= 1`; the expectation file
 carries no verdict for it.
 
 `reorder` at `2 1 1` (**measured**, `out/runs.log`, both engines, `--stop-at-first --threads 4`):
@@ -125,13 +125,13 @@ the same graph is not shown. Both say "candidate violation" (single-graph cover)
 union of spec graphs cannot cover it either, since no spec graph delivers 3 before 1 (hand-derived).
 
 `reorder` at `1 1 1`: **unresolved** (both conformance runs reached the 600 s cap; no verdict is
-derived; the campaign rows decide).
+derived; larger runs decide).
 
 ## 5. Variants and faults
 
 - `correct`: OmniPaxos as is. No derived verdict (§4: the library may forward a client's buffered
   and later proposals out of arrival order, which the specification forbids); measured conformance
-  at `1 0 1` only; the campaign rows decide at `t >= 1`.
+  at `1 0 1` only; larger runs decide at `t >= 1`.
 - `reorder`: a fault of this harness's delivery layer, not of OmniPaxos: each `read_decided_suffix`
   batch is handed to the client in reverse log order. DOES NOT REFINE at `2 1 1` (measured);
   unresolved at `1 1 1`.

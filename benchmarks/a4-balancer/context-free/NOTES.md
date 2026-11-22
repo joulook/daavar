@@ -1,6 +1,6 @@
 # a4-balancer: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/a4-balancer/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-a4-balancer`: XCE (26), XCON1 (19).
+> Provenance: a context-free rewrite of `a4-balancer` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.a4_balancer.A4Balancer` (`java/bench/a4_balancer/A4Balancer.java`), implements `MpProgram`,
 public `(String...)` constructor.

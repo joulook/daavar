@@ -1,6 +1,6 @@
 # Hermes-replicated key — Java (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/hermes/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Chain replication and Hermes paper-to-twin experiments); evaluation runs in brain-data under `cf-hermes`: XCE (6), XCON1 (3), XON1 (6).
+> Provenance: a context-free rewrite of `hermes` (moved here on 2026-11-20); added 2026-11-02 (Chain replication and Hermes paper-to-twin experiments).
 
 Source: `java/bench/hermes/Hermes.java`, class `bench.hermes.Hermes` (implements `MpProgram`),
 constructed from `impl,<N>,<K>,<fifo|bag>` (`fifo` -> `CommunicationModel.P2P`, `bag` -> `ASYN`).

@@ -1,6 +1,6 @@
 # TiKV transactions, Java port (bench.tikv.TxnKv)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/tikv-txn/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-10 (TiKV transactions study); evaluation runs in brain-data under `cf-tikv-txn`: XCE (20).
+> Provenance: a Java port of the existing code of `tikv-txn` (moved here on 2026-11-20); added 2026-11-10 (TiKV transactions study).
 
 Source: client tikv/client-rust 1b883bf, server tikv/tikv 96033a2, read through the cut
 (plan/case-studies/tikv/cut/README.md) and the agents' interface (INTERFACE-agents.md). Every line that

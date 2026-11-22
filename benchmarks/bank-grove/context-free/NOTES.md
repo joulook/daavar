@@ -1,6 +1,6 @@
 # bank-grove: context-free Java twin (2026-11-02)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/bank-grove/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-bank-grove`: XCE (12), XCON1 (6).
+> Provenance: a context-free rewrite of `bank-grove` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Written from `daavar/benchmarks/bank-grove/rust/src/main.rs` + `Cargo.toml`, the JMC Must API sources
 listed in plan/twins-contextfree/BRIEF.md and SUMMARY-FORMAT.md ("Values", "What both programs must

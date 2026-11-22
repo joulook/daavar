@@ -4,7 +4,7 @@ S_dt+ = S_dt (`../../tikv-txn-tla/rust`, `src/main.rs` md5 `360590b7d87f15f6b14b
 ACCEPTED) with exactly three changes A, B, C
 (owner's decision 2026-11-10 18:40; A, B, C are the three causes that the review of the correct port's verdict
 against S_dt attributed its violations to).
-S_dt stays the paper's reference; S_dt+ only tests the attribution. This program: `src/main.rs` md5
+S_dt stays the reference; S_dt+ only tests the attribution. This program: `src/main.rs` md5
 `f6f6dad5ca894a79763e6029cd490472`. Every change is marked `// PLUS-A:`, `// PLUS-B:` or `// PLUS-C:` in
 the source. S_dt's NOTES.md (D1-D17) applies to everything else.
 

@@ -68,7 +68,7 @@ Why the direct translation does not work:
    operator, and the timing-consistency `TOCKS` assertions are commented out; the timing
    restrictions follow from the process transitions and the `tock` synchronisation, not from the
    set name.) Translated as a non-blocking receive, a timeout can read ⊥ whether or not a message is
-   pending (rule 1 of `RELATED-BENCHMARKS.tex`, the benchmark brief kept at tag `pldi27-artifact`), so it can fire before an answer a live node is
+   pending (rule 1 of `RELATED-BENCHMARKS.tex`, the benchmark brief kept at commit `ceac1e1`), so it can fire before an answer a live node is
    about to send: node 0's test of node 1 times out, node 0 starts an election, its `AwaitAnswers`
    times out before node 1's `answer`, and the two nodes announce different leaders. The `bully.8`
    fix is itself a timing fix ("test their coordinator a small time after being sent the

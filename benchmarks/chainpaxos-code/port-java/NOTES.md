@@ -1,6 +1,6 @@
 # ChainPaxos (code port), Java / JMC message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/chainpaxos-code/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (ChainPaxos study); evaluation runs in brain-data under `cf-chainpaxos-code`: XCE (28).
+> Provenance: a Java port of the existing code of `chainpaxos-code` (moved here on 2026-11-20); added 2026-11-04 (ChainPaxos study).
 
 Source: `plan/case-studies/chainpaxos/code-src` (pfouto/chain cut). Interface: `plan/case-studies/chainpaxos/INTERFACE.md`.
 Code: `java/bench/chainpaxos_code/ChainpaxosCode.java` (one file). Argument string: `impl,<q>,<mixed|local>,<fifo|bag>`.

@@ -3,7 +3,7 @@
 **Family:** related-work  **Source:** Bílý, Pereira, Müller, "A Refinement Methodology for
 Distributed Programs in Rust", OOPSLA 2025 §5.1,
 `related-work-papers/sources/oopsla25-artifact/oopsla552-artefact-amd64/refinement-lib/case-study-memcached/`
-(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B5, kept at tag `pldi27-artifact`)  **Expected verdict:**
+(record in CATALOGUE-oopsla25.md; planned pair RELATED-BENCHMARKS.tex §B5, kept at commit `ceac1e1`)  **Expected verdict:**
 `v3`: **CONFORMS** (identity hash: a bucket serves exactly one key, so each bucket thread is that key's
 server, with an invisible relay in front); `shared-bucket`: **CONFORMS** (one bucket for both keys
 orders more than the per-key specification, and extra order is accepted; TraceForge's check is silent
@@ -166,7 +166,7 @@ Commands, run from `B=/local/home/mkhoshechin/Documents/github-jmc/plan/benchmar
 
 > The commands below are the record of the runs, made in the benchmark collection's working copy with the
 > former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
-> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at commit `ceac1e1`. From a daavar checkout, after
 > `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
 > `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 

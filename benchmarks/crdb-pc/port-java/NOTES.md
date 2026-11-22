@@ -1,6 +1,6 @@
 # crdb-pc, Java transliteration (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/crdb-pc/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (crdb-pc, crdb-pc-sol); evaluation runs in brain-data under `cf-crdb-pc`: XCE (19).
+> Provenance: a Java port of the existing code of `crdb-pc` (moved here on 2026-11-20); added 2026-11-05 (crdb-pc, crdb-pc-sol).
 
 Source: cockroachdb/cockroach at d30c905, the cut in `plan/case-studies/cockroach/cr-src` (README.md), with
 lookups in the full checkout `plan/case-studies/cockroach/code`. Interface: `INTERFACE-agents.md`.

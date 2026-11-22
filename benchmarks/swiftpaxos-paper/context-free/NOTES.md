@@ -1,6 +1,6 @@
 # SwiftPaxos (paper, Java / JMC message-passing API): notes
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/swiftpaxos-paper/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (SwiftPaxos study); evaluation runs in brain-data under `cf-swiftpaxos-paper`: XCE (4).
+> Provenance: a context-free rewrite of `swiftpaxos-paper` (moved here on 2026-11-20); added 2026-11-04 (SwiftPaxos study).
 
 Source: `java/bench/swiftpaxos_paper/SwiftpaxosPaper.java` (one file). Sources used: PAPER-EXCERPT.md
 (§§2-4, Figures 3 and 4, Appendix A), INTERFACE.md, and the JMC API sources named in the prompt.

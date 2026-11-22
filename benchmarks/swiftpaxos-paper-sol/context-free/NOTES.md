@@ -1,6 +1,6 @@
 # SwiftPaxos, Figures 3 and 4, ballot 0
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/swiftpaxos-paper-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (SwiftPaxos study); evaluation runs in brain-data under `cf-swiftpaxos-paper-sol`: XCE (3).
+> Provenance: a context-free rewrite of `swiftpaxos-paper-sol` (moved here on 2026-11-20); added 2026-11-04 (SwiftPaxos study).
 
 Source: `java/bench/swiftpaxos_paper_sol/SwiftpaxosPaperSol.java`.
 The implementation uses only the supplied message-passing API. There is no

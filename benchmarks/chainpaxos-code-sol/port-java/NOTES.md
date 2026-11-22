@@ -1,6 +1,6 @@
 # ChainPaxos Java port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/chainpaxos-code-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (ChainPaxos study); evaluation runs in brain-data under `cf-chainpaxos-code-sol`: XCE (31).
+> Provenance: a Java port of the existing code of `chainpaxos-code-sol` (moved here on 2026-11-20); added 2026-11-04 (ChainPaxos study).
 
 The implementation is `java/bench/chainpaxos_code_sol/ChainpaxosCodeSol.java`.
 Read `code-src/README.md` first; `INTERFACE.md` supplies the replacements and

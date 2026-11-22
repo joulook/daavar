@@ -1,6 +1,6 @@
 # PineapplePaper: Pineapple single-key protocol, implemented from the paper (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/pineapple-paper/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Pineapple study); evaluation runs in brain-data under `cf-pineapple-paper`: XCE (6).
+> Provenance: a context-free rewrite of `pineapple-paper` (moved here on 2026-11-20); added 2026-11-04 (Pineapple study).
 
 Source: `java/bench/pineapple_paper/PineapplePaper.java` (package `bench.pineapple_paper`, class
 `PineapplePaper`, implements `org.mpi_sws.jmc.mp.launch.MpProgram`, constructed from `impl,<q>,<fifo|bag>`).

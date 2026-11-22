@@ -1,6 +1,6 @@
 # VR normal operation (Java, JMC message-passing API) — notes
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/vrr/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment); evaluation runs in brain-data under `cf-vrr`: XCE (8), XCON1 (3), XON1 (2).
+> Provenance: a context-free rewrite of `vrr` (moved here on 2026-11-20); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment).
 
 Source: `java/bench/vrr/Vrr.java`, class `bench.vrr.Vrr` (implements `MpProgram`), argument string
 `impl,<N>,<K>,<fifo|bag>`. f = (N-1)/2. `bag` -> `CommunicationModel.ASYN`, `fifo` -> `CommunicationModel.P2P`;

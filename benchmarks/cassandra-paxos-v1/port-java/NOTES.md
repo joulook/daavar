@@ -1,6 +1,6 @@
 # Cassandra 4.1 LWT Paxos v1: Java port (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/cassandra-paxos-v1/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Cassandra study); evaluation runs in brain-data under `cf-cassandra-paxos-v1`: XCE (6).
+> Provenance: a Java port of the existing code of `cassandra-paxos-v1` (moved here on 2026-11-20); added 2026-11-04 (Cassandra study).
 
 Source file: `java/bench/cassandra_paxos_v1/CassandraPaxosV1.java` (one file, package `bench.cassandra_paxos_v1`,
 class `CassandraPaxosV1`, implementing `org.mpi_sws.jmc.mp.launch.MpProgram`, constructed from

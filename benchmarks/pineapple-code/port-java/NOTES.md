@@ -1,6 +1,6 @@
 # PineappleCode: a Java (JMC message-passing API) port of the Go Pineapple replica
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/pineapple-code/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Pineapple study); evaluation runs in brain-data under `cf-pineapple-code`: XCE (3).
+> Provenance: a Java port of the existing code of `pineapple-code` (moved here on 2026-11-20); added 2026-11-04 (Pineapple study).
 
 Source: `plan/twins-contextfree/pineapple/code-src/{pineapple.go, pineappleproto.go, genericsmr.go}`.
 Interface: `plan/twins-contextfree/pineapple/INTERFACE.md`. Line numbers below refer to `pineapple.go` unless they name another file.

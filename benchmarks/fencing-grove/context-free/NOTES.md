@@ -1,6 +1,6 @@
 # fencing-grove: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/fencing-grove/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-fencing-grove`: XCE (14), XCON1 (6).
+> Provenance: a context-free rewrite of `fencing-grove` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Written from `daavar/benchmarks/fencing-grove/rust/src/main.rs` (+ Cargo.toml), the JMC Must API
 sources, MpProgram/MpLauncher, the summary package, and SUMMARY-FORMAT.md ("Values", "What both

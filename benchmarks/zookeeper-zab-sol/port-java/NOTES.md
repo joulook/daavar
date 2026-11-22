@@ -1,6 +1,6 @@
 # ZooKeeper 3.9 Zab port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/zookeeper-zab-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (ZooKeeper Zab study); evaluation runs in brain-data under `cf-zookeeper-zab-sol`: XCE (7).
+> Provenance: a Java port of the existing code of `zookeeper-zab-sol` (moved here on 2026-11-20); added 2026-11-04 (ZooKeeper Zab study).
 
 The implementation is [ZookeeperZabSol.java](java/bench/zookeeper_zab_sol/ZookeeperZabSol.java), package `bench.zookeeper_zab_sol`. Source citations below are line numbers in the supplied `zab-src`, not another ZooKeeper checkout. `zab-src/README.md` was read first. No network sources or files outside this directory were inspected.
 

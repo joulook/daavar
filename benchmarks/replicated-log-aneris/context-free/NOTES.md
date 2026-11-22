@@ -1,6 +1,6 @@
 # replicated-log-aneris: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/replicated-log-aneris/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-replicated-log-aneris`: XCE (39), XCON1 (30).
+> Provenance: a context-free rewrite of `replicated-log-aneris` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.replicated_log_aneris.ReplicatedLogAneris` (implements `MpProgram`, public `(String...)` constructor).
 File: `java/bench/replicated_log_aneris/ReplicatedLogAneris.java`.

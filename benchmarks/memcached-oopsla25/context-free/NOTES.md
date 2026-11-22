@@ -1,6 +1,6 @@
 # memcached-oopsla25: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/memcached-oopsla25/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-memcached-oopsla25`: XCE (12), XCON1 (9).
+> Provenance: a context-free rewrite of `memcached-oopsla25` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Source of truth: `daavar/benchmarks/memcached-oopsla25/rust/src/main.rs` (+ Cargo.toml).
 Written from that file, the JMC Must API sources listed in the brief, and SUMMARY-FORMAT.md

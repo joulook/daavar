@@ -1,6 +1,6 @@
 # Chain replication, Java (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/chain-replication/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Chain replication and Hermes paper-to-twin experiments); evaluation runs in brain-data under `cf-chain-replication`: XCE (9), XCON1 (4), XON1 (4).
+> Provenance: a context-free rewrite of `chain-replication` (moved here on 2026-11-20); added 2026-11-02 (Chain replication and Hermes paper-to-twin experiments).
 
 Source: `bench/chainrep/ChainRep.java`, class `bench.chainrep.ChainRep` (implements `MpProgram`, constructed
 from `impl,<N>,<K>,<fifo|bag>`). `fifo` = `CommunicationModel.P2P`, `bag` = `CommunicationModel.ASYN`.

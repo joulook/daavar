@@ -1,6 +1,6 @@
 # Rust Sequence Paxos port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-rust-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-rust-sol`: XCE (2).
+> Provenance: a Java port of the existing code of `omnipaxos-rust-sol` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 The implementation is `java/bench/omnipaxos_rust_sol/OmniPaxosRustSol.java`.
 It ports the fixed-membership protocol in `omnipaxos-src/sequence_paxos/`,

@@ -1,6 +1,6 @@
 # 3FS one-chunk port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/craq-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (3FS study, Java side); evaluation runs in brain-data under `cf-craq-sol`: XCE (7).
+> Provenance: a Java port of the existing code of `craq-sol` (moved here on 2026-11-20); added 2026-11-05 (3FS study, Java side).
 
 The implementation is in `java/bench/craq_sol/ChainReplication.java`, package
 `bench.craq_sol`. The requested dotted basename `java/bench.craq_sol.ChainReplication.java`

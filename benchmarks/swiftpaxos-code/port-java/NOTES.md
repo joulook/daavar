@@ -1,6 +1,6 @@
 # SwiftPaxos (code port) on JMC's message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/swiftpaxos-code/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (SwiftPaxos study); evaluation runs in brain-data under `cf-swiftpaxos-code`: XCE (4).
+> Provenance: a Java port of the existing code of `swiftpaxos-code` (moved here on 2026-11-20); added 2026-11-04 (SwiftPaxos study).
 
 Source file: `java/bench/swiftpaxos_code/SwiftpaxosCode.java`, class `bench.swiftpaxos_code.SwiftpaxosCode`. It
 implements `org.mpi_sws.jmc.mp.launch.MpProgram` and is built from `impl,<q>,<fifo|bag>`.

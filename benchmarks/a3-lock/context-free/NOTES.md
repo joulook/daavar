@@ -1,6 +1,6 @@
 # a3-lock: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/a3-lock/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-a3-lock`: XCE (34), XCON1 (26).
+> Provenance: a context-free rewrite of `a3-lock` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 CLASS: `bench.a3_lock.A3Lock` (`java/bench/a3_lock/A3Lock.java`), implements `MpProgram`, public
 `(String...)` constructor.

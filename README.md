@@ -76,7 +76,3 @@ the TraceForge crate is the pinned submodule.
 | `daavar/`, `bin/daavar` | the driver |
 | `scripts/` | the helpers the driver and the guide rely on: witness joining and rendering, source manifests, the two one-line tool runners, node setup |
 | `jmc/`, `traceforge/` | the two checkers, pinned |
-
-## Reproducing the paper
-The PLDI 2027 Table 1 is rebuilt from tag `pldi27-artifact`, the inputs in `eval/` and the pinned records, see
-`eval/README.md`; Tables 2 and 3 are not yet reproduced from this repository.

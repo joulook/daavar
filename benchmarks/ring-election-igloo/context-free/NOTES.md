@@ -1,6 +1,6 @@
 # ring-election-igloo: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/ring-election-igloo/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-ring-election-igloo`: XCE (4).
+> Provenance: a context-free rewrite of `ring-election-igloo` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.ring_election_igloo.RingElectionIgloo` (implements `MpProgram`), file
 `java/bench/ring_election_igloo/RingElectionIgloo.java`.

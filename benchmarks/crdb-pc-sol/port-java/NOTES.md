@@ -1,6 +1,6 @@
 # Parallel commits port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/crdb-pc-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (crdb-pc, crdb-pc-sol); evaluation runs in brain-data under `cf-crdb-pc-sol`: XCE (11).
+> Provenance: a Java port of the existing code of `crdb-pc-sol` (moved here on 2026-11-20); added 2026-11-05 (crdb-pc, crdb-pc-sol).
 
 Source: CockroachDB d30c905fff79ef825adc96bcc647f1872a90f2ff, the cut in `cr-src/README.md`.
 Implementation: `java/bench/cockroach_sol/ParallelCommits.java`, class

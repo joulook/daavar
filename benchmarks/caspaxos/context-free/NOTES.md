@@ -1,6 +1,6 @@
 # CASPaxos register, Java (JMC Must API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/caspaxos/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (CASPaxos paper-to-twin experiment); evaluation runs in brain-data under `cf-caspaxos`: XCE (4), XCON1 (3), XON1 (6).
+> Provenance: a context-free rewrite of `caspaxos` (moved here on 2026-11-20); added 2026-11-02 (CASPaxos paper-to-twin experiment).
 
 Source: `java/bench/caspaxos/CasPaxos.java`, class `bench.caspaxos.CasPaxos` (implements
 `org.mpi_sws.jmc.mp.launch.MpProgram`, constructed from `impl,<A>,<K>,<fifo|bag>`).

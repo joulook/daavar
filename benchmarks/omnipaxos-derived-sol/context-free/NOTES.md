@@ -1,6 +1,6 @@
 # Replicated log implementation
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-derived-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-derived-sol`: XCE (1).
+> Provenance: a context-free rewrite of `omnipaxos-derived-sol` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 Source: `java/bench/omnipaxos_derived_sol/OmniPaxosDerivedSol.java`.
 The design uses only the supplied interface, Rust specification, and local API

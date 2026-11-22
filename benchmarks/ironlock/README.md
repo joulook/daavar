@@ -289,7 +289,7 @@ time, for `n ∈ {2, 3, 4}`, `m ∈ {fifo, bag}`, `v ∈ {correct, double-hold, 
 
 > The commands below are the record of the runs, made in the benchmark collection's working copy with the
 > former helpers `_tools/run-rust.sh` (`cargo run --release` in `<dir>/rust`) and `_tools/run-java.sh` (javac, then
-> JMC's `MpLauncher` with seed 1 and no export); both are kept at tag `pldi27-artifact`. From a daavar checkout, after
+> JMC's `MpLauncher` with seed 1 and no export); both are kept at commit `ceac1e1`. From a daavar checkout, after
 > `scripts/setup-node.sh`, the same runs are `scripts/rust-run.sh <dir> <args...>` and
 > `scripts/jmc-run.sh <dir> '<Class:args>' <strategy> <iterations> 1 - <timeoutS>`.
 

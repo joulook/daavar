@@ -1,6 +1,6 @@
 # election: context-free Java twin (notes)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/election/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-election`: XCE (14).
+> Provenance: a context-free rewrite of `election` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.election.Election` (`java/bench/election/Election.java`), implements `MpProgram`,
 public `(String...)` constructor.

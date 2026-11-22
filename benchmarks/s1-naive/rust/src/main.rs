@@ -1,4 +1,4 @@
-//! TraceForge's S1 (`P5-SYNTH`): the paper's `ex:naive` and its conforming twin `naive-self`,
+//! TraceForge's S1 (`P5-SYNTH`): the `ex:naive` example and its conforming twin `naive-self`,
 //! as an ordinary Must program run by TraceForge's shared main (`traceforge::program`).
 //!
 //! Ported for H (`criteria/H.md` H-0.3; `log/dev/H.derived.md` §1.2–§1.4) from

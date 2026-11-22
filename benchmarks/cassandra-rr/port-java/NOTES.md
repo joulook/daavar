@@ -1,6 +1,6 @@
 # Cassandra 4.1 quorum read with read repair: Java reference port (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/cassandra-rr/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (cassandra-rr); evaluation runs in brain-data under `cf-cassandra-rr`: XCE (10).
+> Provenance: a Java port of the existing code of `cassandra-rr` (moved here on 2026-11-20); added 2026-11-05 (cassandra-rr).
 
 Source: `java/bench/cassandra_rr/CassandraReadRepair.java` (one file). Transliterated from the 4.1 cut in
 `plan/case-studies/cassandra/read-repair-src` (paths below are relative to `src/java/org/apache/cassandra`),

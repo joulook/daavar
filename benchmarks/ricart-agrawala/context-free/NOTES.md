@@ -1,6 +1,6 @@
 # Ricart–Agrawala (Java, JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/ricart-agrawala/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment); evaluation runs in brain-data under `cf-ricart-agrawala`: XCE (5), XCON1 (3), XON1 (3).
+> Provenance: a context-free rewrite of `ricart-agrawala` (moved here on 2026-11-20); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment).
 
 Source: `java/bench/ricart_agrawala/RicartAgrawala.java`, class `bench.ricart_agrawala.RicartAgrawala`
 (implements `org.mpi_sws.jmc.mp.launch.MpProgram`, constructed from `impl,<N>,<fifo|bag>`).

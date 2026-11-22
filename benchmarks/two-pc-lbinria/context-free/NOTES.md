@@ -1,6 +1,6 @@
 # two-pc-lbinria: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/two-pc-lbinria/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-two-pc-lbinria`: XCE (25), XCON1 (15).
+> Provenance: a context-free rewrite of `two-pc-lbinria` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.two_pc_lbinria.TwoPcLbinria` (implements `MpProgram`, public `(String...)` constructor).
 Source: `java/bench/two_pc_lbinria/TwoPcLbinria.java`. Written from `rust/src/main.rs` + `Cargo.toml` and the

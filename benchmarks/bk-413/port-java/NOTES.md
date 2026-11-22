@@ -1,6 +1,6 @@
 # BookKeeper 4.13 ledger replication with fencing: Java transliteration (agent `java-4.13`)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/bk-413/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-05 (BookKeeper study); evaluation runs in brain-data under `cf-bk-413`: XCE (12).
+> Provenance: a Java port of the existing code of `bk-413` (moved here on 2026-11-20); added 2026-11-05 (BookKeeper study).
 
 Source: `plan/case-studies/bookkeeper/bk-src/4.13` (tag release-4.13.0) and the 4.13 tree
 `code-4.13` (for `ReadOnlyLedgerHandle`, `LedgerOpenOp`, `MetadataUpdateLoop`). Interface:

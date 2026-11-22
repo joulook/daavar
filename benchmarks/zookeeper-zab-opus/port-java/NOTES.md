@@ -1,6 +1,6 @@
 # Zab (ZooKeeper 3.9) on JMC's message-passing API — NOTES
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/zookeeper-zab-opus/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-09 (ZooKeeper Zab Java port by Claude Opus); evaluation runs in brain-data under `cf-zookeeper-zab-opus`: XCE (6).
+> Provenance: a Java port of the existing code of `zookeeper-zab-opus` (moved here on 2026-11-20); added 2026-11-09 (ZooKeeper Zab Java port by Claude Opus).
 
 Source: `java/bench/zookeeper_zab_opus/ZookeeperZabOpus.java` (one file, class
 `bench.zookeeper_zab_opus.ZookeeperZabOpus`, an `MpProgram`, constructed from `impl,<e>,<late>,<fifo|bag>`).

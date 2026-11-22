@@ -1,6 +1,6 @@
 # OmniPaxosDerivedImpl: replicated log over three nodes (Java, JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-derived-impl/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-derived-impl`: XCE (7).
+> Provenance: a context-free rewrite of `omnipaxos-derived-impl` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 Source: `java/bench/omnipaxos_derived_impl/OmniPaxosDerivedImpl.java` (one file).
 Interface followed: INTERFACE.md (roles n0 n1 n2 c0 c1, `Propose { value }`, `Committed { value }`,

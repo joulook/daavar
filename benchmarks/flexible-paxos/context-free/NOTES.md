@@ -1,6 +1,6 @@
 # Flexible Paxos (single decree), Java / JMC message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/flexible-paxos/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Flexible Paxos paper-to-twin experiment); evaluation runs in brain-data under `cf-flexible-paxos`: XCE (3), XCON1 (2), XON1 (2).
+> Provenance: a context-free rewrite of `flexible-paxos` (moved here on 2026-11-20); added 2026-11-02 (Flexible Paxos paper-to-twin experiment).
 
 Source: `java/bench/fpaxos/FPaxos.java`, class `bench.fpaxos.FPaxos` (implements `MpProgram`),
 constructed from `impl,<A>,<K>,<fifo|bag>`; P = K; R = 1 (constant `FPaxos.R`).

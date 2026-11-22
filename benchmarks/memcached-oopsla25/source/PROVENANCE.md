@@ -11,7 +11,7 @@ the whole `src/` tree (18 files) and `Cargo.toml`. `diff -r` against the origina
   (3,286,357,442 bytes). The library is built against Prusti commit `79d48686`
   (README of the artefact).
 - Catalogue record: `related-work-papers/sources/CATALOGUE-oopsla25.md`,
-  "oopsla25/case-study-memcached: Memcached (paper §5.1, v1–v3)"; planned pair `RELATED-BENCHMARKS.tex` §B5 (the benchmark brief, kept at tag `pldi27-artifact`).
+  "oopsla25/case-study-memcached: Memcached (paper §5.1, v1–v3)"; planned pair `RELATED-BENCHMARKS.tex` §B5 (the benchmark brief, kept at commit `ceac1e1`).
 - Only v3 (fine-grained locking: one `MutexWrap<Bucket>` and one `StorageBucket(hash)` guard per
   bucket) is in the artefact.
 

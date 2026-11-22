@@ -1,6 +1,6 @@
 # replicated-log-esop20: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/replicated-log-esop20/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-replicated-log-esop20`: XCE (7).
+> Provenance: a context-free rewrite of `replicated-log-esop20` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.replicated_log_esop20.ReplicatedLog` (`java/bench/replicated_log_esop20/ReplicatedLog.java`),
 public `(String...)` constructor.

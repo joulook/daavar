@@ -1,6 +1,6 @@
 # ZooKeeper 3.9 Zab, Java port against JMC's message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/zookeeper-zab/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (ZooKeeper study); evaluation runs in brain-data under `cf-zookeeper-zab`: XCE (13).
+> Provenance: a Java port of the existing code of `zookeeper-zab` (moved here on 2026-11-20); added 2026-11-04 (ZooKeeper study).
 
 File: `java/bench/zookeeper_zab/ZookeeperZab.java`, one source file, class
 `bench.zookeeper_zab.ZookeeperZab implements org.mpi_sws.jmc.mp.launch.MpProgram`, built from the

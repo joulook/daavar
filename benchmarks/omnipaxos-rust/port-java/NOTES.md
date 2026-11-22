@@ -1,6 +1,6 @@
 # OmniPaxosRust: Java port of OmniPaxos (Sequence Paxos and Ballot Leader Election)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-rust/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-rust`: XCE (2).
+> Provenance: a Java port of the existing code of `omnipaxos-rust` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 Source: `java/bench/omnipaxos_rust/OmniPaxosRust.java` (one file). It is ported from
 `plan/twins-contextfree/omnipaxos-rust/omnipaxos-src` (`sequence_paxos/{mod,leader,follower}.rs`,

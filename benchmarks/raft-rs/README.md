@@ -54,7 +54,7 @@ same program on both sides.
   in opposite orders, are two such patterns (the Java side's measured witness, §7, is a third:
   each client sees only its own value, which no single log order with both values appended
   allows). The rows of this variant run as an experiment; their result is not a benchmark verdict
-  of this directory and the tables of the paper do not report it as one. raft-rs requires an
+  of this directory. raft-rs requires an
   ordered transport, so the variant is not run under `bag`.
 
 ## 3. Counts (plain Must, `count`)
@@ -91,20 +91,20 @@ Measurements of this crate (with the `<variant>` argument and the full-`u64` val
 Observed: the spec counts and the `correct` implementation count equal the spike's, and `reorder`
 and `correct` have the same count at `1 1 1` (an observation at this size, not derived). Wall
 times are in `out/runs.log`. Conformance of this crate (`conf`, the exports and the join,
-`reorder`'s verdict) is measured by the campaign rows (§4), not run yet.
+`reorder`'s verdict) is measured by the larger runs of §4, not run yet.
 
 ## 4. Sizes
 
 `<variant> <e> <t> [<cand>]`. The spike: `correct 1 1 1` finished (certified); `correct 1 1 2` and
 larger did not finish in 10 min at one thread (every execution ends blocked: the nodes loop
-forever, so every graph counts as blocked, as in `a4-balancer`). Campaign rows: `1 1 1` in the
+forever, so every graph counts as blocked, as in `a4-balancer`). Larger runs: `1 1 1` in the
 three TraceForge modes at 16 threads; `1 1 2`, `1 2 1` and `2 1 1` on the 48 h tier.
 
 ## 5. What this benchmark is for
 
 A refinement check of real software: the implementation side is an unmodified Raft library used
-in production (TiKV), wired to the Must API by a 300-line harness. The paper reports it as a case
-study with the sizes reached, not as a scaling row.
+in production (TiKV), wired to the Must API by a 300-line harness. It is a case study with the
+sizes reached, not a scaling benchmark.
 
 ## 6. Sources and runs
 

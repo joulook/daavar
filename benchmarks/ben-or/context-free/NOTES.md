@@ -1,6 +1,6 @@
 # Ben-Or consensus — Java (JMC message-passing API)
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/ben-or/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment); evaluation runs in brain-data under `cf-ben-or`: XCE (2).
+> Provenance: a context-free rewrite of `ben-or` (moved here on 2026-11-20); added 2026-11-02 (Ricart-Agrawala, VR normal operation, Ben-Or paper-to-twin experiment).
 
 Source: `java/bench/ben_or/BenOr.java`, public class `bench.ben_or.BenOr` implementing
 `org.mpi_sws.jmc.mp.launch.MpProgram`, constructed from `impl,<N>,<fifo|bag>`

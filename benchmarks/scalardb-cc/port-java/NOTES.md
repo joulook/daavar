@@ -1,6 +1,6 @@
 # ScalarDB Consensus Commit, Java transliteration on JMC's message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/scalardb-cc/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-06 (scalardb-cc); evaluation runs in brain-data under `cf-scalardb-cc`: XCE (12).
+> Provenance: a Java port of the existing code of `scalardb-cc` (moved here on 2026-11-20); added 2026-11-06 (scalardb-cc).
 
 Source: scalar-labs/scalardb at 416cdc2, cut in plan/case-studies/scalardb/cc-src (`C/` =
 core/src/main/java/com/scalar/db/transaction/consensuscommit/). Interface:

@@ -1,6 +1,6 @@
 # bk-port: BookKeeper ledger replication with fencing, ported to JMC's message-passing API
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/bk-port/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-12 (bk-port); no evaluation run in brain-data.
+> Provenance: a Java port of the existing code of `bk-port` (moved here on 2026-11-20); added 2026-11-12 (bk-port).
 
 Source: apache/bookkeeper main 7b66b5d (cut in plan/case-studies/bookkeeper/bk-src/main; paths below relative to
 it). Interface: plan/case-studies/bookkeeper/INTERFACE-agents.md. Program: `java/bench/bookkeeper_port/BookKeeperPort.java`

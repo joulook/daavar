@@ -1,6 +1,6 @@
 # ChainPaxos, fixed chain and one register
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/chainpaxos-paper-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (ChainPaxos study); evaluation runs in brain-data under `cf-chainpaxos-paper-sol`: XCE (18).
+> Provenance: a context-free rewrite of `chainpaxos-paper-sol` (moved here on 2026-11-20); added 2026-11-04 (ChainPaxos study).
 
 Source: `java/bench/chainpaxos_paper_sol/ChainpaxosPaperSol.java`.
 The implementation uses only the provided JMC message-passing API for process

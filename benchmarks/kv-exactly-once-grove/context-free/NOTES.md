@@ -1,6 +1,6 @@
 # kv-exactly-once-grove: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/kv-exactly-once-grove/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-kv-exactly-once-grove`: XCE (17), XCON1 (6).
+> Provenance: a context-free rewrite of `kv-exactly-once-grove` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.kv_exactly_once_grove.KvExactlyOnceGrove` (one file,
 `java/bench/kv_exactly_once_grove/KvExactlyOnceGrove.java`), public `(String...)` constructor.

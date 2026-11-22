@@ -1,6 +1,6 @@
 # two-pc-disel: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/two-pc-disel/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-two-pc-disel`: XCE (27), XCON1 (24).
+> Provenance: a context-free rewrite of `two-pc-disel` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Class: `bench.two_pc_disel.TwoPcDisel` (implements `MpProgram`, constructor `(String...)`).
 Arguments: `<spec|impl>,<N>,<fifo|bag>[,<variant>]`, variant `correct` (default) or `skip-ack-loop`.

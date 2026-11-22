@@ -1,6 +1,6 @@
 # Cassandra 4.1 Paxos v1 port
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/cassandra-paxos-v1-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (Cassandra LWT Paxos v1 study); evaluation runs in brain-data under `cf-cassandra-paxos-v1-sol`: XCE (7).
+> Provenance: a Java port of the existing code of `cassandra-paxos-v1-sol` (moved here on 2026-11-20); added 2026-11-04 (Cassandra LWT Paxos v1 study).
 
 The implementation is `java/bench/cassandra_paxos_v1_sol/CassandraPaxosV1Sol.java`.
 All source references below are to the supplied `paxos-v1-src` cut, with its original line numbers. `service/StorageProxy.java` is abbreviated SP; `service/paxos/PaxosState.java` is PS. The supplied README was read first. No files outside this directory were read and no web sources were used.

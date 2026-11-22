@@ -1,6 +1,6 @@
 # reliable-channel-aneris: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/reliable-channel-aneris/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java twins of the eleven families); evaluation runs in brain-data under `cf-reliable-channel-aneris`: XCE (24), XCON1 (12).
+> Provenance: a context-free rewrite of `reliable-channel-aneris` (moved here on 2026-11-20); added 2026-11-02 (context-free Java twins of the eleven families).
 
 Written from `daavar/benchmarks/reliable-channel-aneris/rust/src/main.rs` and the JMC Must API
 sources only (brief: plan/twins-contextfree/BRIEF.md).

@@ -1,6 +1,6 @@
 # Replicated log decisions
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/omnipaxos-spec-sol/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-04 (OmniPaxos study); evaluation runs in brain-data under `cf-omnipaxos-spec-sol`: XCE (6).
+> Provenance: a context-free rewrite of `omnipaxos-spec-sol` (moved here on 2026-11-20); added 2026-11-04 (OmniPaxos study).
 
 The implementation is `java/bench/omnipaxos_spec_sol/OmniPaxosSpecSol.java`.
 It was designed from SPEC.md, INTERFACE.md, and the supplied API sources. No paper,

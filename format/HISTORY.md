@@ -132,7 +132,7 @@ Canonical, compared by the bytes of this encoding on both sides:
   `MpProcess.spawnDaemon`) is never a visible role (ruling of 2026-10-27).
 - The specification side raises no assertion. Neither tool exports an implementation execution
   with a failed assertion: the run fails and no line is written (TraceForge `export impl`,
-  sequential and parallel, and `online --out`, sequential and partitioned; JMC). The status `err` is reserved for that case; exporting it, the paper's
+  sequential and parallel, and `online --out`, sequential and partitioned; JMC). The status `err` is reserved for that case; exporting it, the
   errored status, is the known gap K1 and the first follow-up after P5 (P5 ruling 8). JMC's
   truncated graph after an error is not exported.
 - Non-blocking receives may read ⊥ whether or not a message is pending, on both sides.

@@ -1,6 +1,6 @@
 # a1-commit: context-free Java twin
 
-> Provenance: moved on 2026-11-20 from `benchmarks-cf/a1-commit/` (the evaluation's twin and port tree, kept at tag `pldi27-artifact`); added 2026-11-02 (context-free Java ports of the sixteen remaining families); evaluation runs in brain-data under `cf-a1-commit`: XCE (61), XCON1 (33).
+> Provenance: a context-free rewrite of `a1-commit` (moved here on 2026-11-20); added 2026-11-02 (context-free Java ports of the sixteen remaining families).
 
 Class: `bench.a1_commit.A1Commit` (file `java/bench/a1_commit/A1Commit.java`), implements `MpProgram`,
 public `(String...)` constructor.
