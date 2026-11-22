@@ -128,3 +128,18 @@ Uncovered / all words of the implementation, against the spec:
 
 `daavar.toml` lists every cell and direction for `bin/daavar check` (scenarios `one`, `deleg`, `gated`).
 
+## Upstream
+
+The findings of this benchmark were reported to the A2A projects on 2026-11-22, each with the reproduction
+commands above:
+
+| Finding | Issue | Pull request |
+|---|---|---|
+| Streaming send begins with a status event instead of the Task (a2a-java) | [a2a-java#1352](https://github.com/a2aproject/a2a-java/issues/1352) | [a2a-java#1353](https://github.com/a2aproject/a2a-java/pull/1353) |
+| Streaming send begins with a status event instead of the Task (a2a-rs) | [a2a-rs#585](https://github.com/a2aproject/a2a-rs/issues/585) | [a2a-rs#587](https://github.com/a2aproject/a2a-rs/pull/587) |
+| A Message answer is followed by a Canceled status and the task is retained (a2a-rs) | [a2a-rs#586](https://github.com/a2aproject/a2a-rs/issues/586) | [a2a-rs#588](https://github.com/a2aproject/a2a-rs/pull/588) |
+| Neither server core begins the stream with the Task; who carries that requirement | [A2A#2494](https://github.com/a2aproject/A2A/issues/2494) | [A2A#2503](https://github.com/a2aproject/A2A/pull/2503) (test) |
+| When a cancellation takes effect | [A2A#2495](https://github.com/a2aproject/A2A/issues/2495) | [A2A#2501](https://github.com/a2aproject/A2A/pull/2501) |
+| Ending a task stream with an error after an accepted cancel | [A2A#2496](https://github.com/a2aproject/A2A/issues/2496) | awaiting the maintainers' choice |
+| From when a task id is valid | [A2A#2497](https://github.com/a2aproject/A2A/issues/2497) | [A2A#2502](https://github.com/a2aproject/A2A/pull/2502) |
+| A task kept after a Message answer ("no task tracking") | [A2A#2498](https://github.com/a2aproject/A2A/issues/2498) | awaiting the maintainers' choice |
