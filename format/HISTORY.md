@@ -182,3 +182,34 @@ pins (rows before and after are never mixed in one table):
   pruned entries still gives `budget`).
 - Exit codes: a checker that reached a verdict exits 0, a failed run 1, a refusal or bad arguments 2; documented
   exceptions: `conf-join` exits 1 on a violation, `conf` exits 1 when it reports and 2 when inconclusive (P5 M4).
+
+## Phase 4 (2026-11-22)
+
+Pins: JMC `eb58ec75` (merge of `feat/replay-source-files`; the tree of `fa90c0e0`), TraceForge `c2a2b69`
+(`feat/conformance`, on 0.3.0 `6bcd5cf`). The JMC launcher is in main sources (`org.mpi_sws.jmc.mp.cli`) since 0.3.0.
+`SPEC.md` revision 5; 5.1 the same day after review (exceptions to the pairing check, JMC named-form exit codes).
+
+- Pairing check (TraceForge P4-1, JMC J4-3). `conf-join --check-pairing spec impl`, also run before every join
+  unless `--no-pairing-check`; JMC runs it before the online check (`--spec`), against the program. Rows of the
+  release-1 comparison contract: C2 (names and roles), C3 (model, `p2p` or `asyn`), C4 (complete specification),
+  C6 (distinct lines; byte order under `--merge`), C10 (counts and words ≤ 2^31−1), C13 (tag arities: TraceForge equal
+  sets across the two files, JMC the specification's a subset of the program's), C18 (`ThreadId`/`Tid` tag, warning
+  only). Failure: exit 2. TraceForge's C10 sees only counts that fit in 64 bits. `--check-pairing` alone does not
+  validate the files. With `--no-pairing-check` the readers still refuse most C2, C3, C4, C6 and C10 cases;
+  TraceForge's join then accepts an unsorted `visible` list both files share, two equal models outside
+  `p2p`/`asyn`, and words of up to 2^32−1 events with their counts. TraceForge `online --spec` runs no pairing
+  check. Not checked by the pairing check: per-thread projection, guards, ⊥, maps/arrays/tuples, shapes.
+- Reader strictness (TraceForge P4-3, JMC J4-2). Both readers accept only the writers' form and refuse, naming the
+  line, rows R1-R10: repeated line, blank line, unknown line key, line not in normal form, unknown header key,
+  header not in writer form, missing `program`/`size`/`tool`, `roles` without `minor` or the reverse, `seed` or
+  `iterations` outside a `sampled` file or not an integer, some but not all three online fields, bare CR. Explicit `"minor":0`, `{"f","t"}` and duplicate keys outside
+  `n` are refused by both. Each reader accepts the other writer's canonical output (C21).
+- Replay source identity (JMC J4-1, contract C22). JMC compares only the `files` maps, ignoring `root`, as
+  TraceForge does; `"unknown"` stays refused unless `--allow-source-change`, in both JMC forms.
+- Empty maps (TraceForge P4-2, C16). TraceForge refuses every map; a `{}` is an empty set only where the message
+  type's declared shape (`SummaryShape`, `declare`) has a set.
+- Per-tool differences pending phase 4b: (1) C6 wording without `--merge`, TraceForge `line N repeats an earlier
+  line`, JMC `line N repeats line M`; (2) `n`: TraceForge accepts a non-integer, an integer outside signed 64 bits
+  and a duplicate-key object, JMC refuses them.
+- Exit codes (5.1): JMC's named commands (`count`, `export`, `online`, `replay`) use 0 ok/conforms, 1 a failure of
+  the program or `reports`, 2 a refusal, 3 partial or incomplete; the positional form keeps its codes.

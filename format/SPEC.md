@@ -1,11 +1,13 @@
 # Summary interchange format, version 1
 
-Normative: the summary files, join, witness files, measurements and exit codes as implemented by JMC `c1bbf657`
-(`jmc/`) and TraceForge `d775f70` (`traceforge/`). Differences are per tool.
+Normative (revision 5.1): the summary files, readers, pairing check, join, witness files, measurements and exit
+codes as implemented by JMC `eb58ec75` (`jmc/`) and TraceForge `c2a2b69` (`traceforge/`). Differences are per tool.
 
-Verification comments: `J/` = `jmc/core/src/main/java/org/mpi_sws/jmc/`, `JL/` =
-`jmc/core/src/test/java/org/mpi_sws/jmc/mp/launch/` (`MpLauncher`, `MpProgram`: test sources at this commit),
-`T/` = `traceforge/traceforge/src/`.
+Verification comments: `J/` = `jmc/core/src/main/java/org/mpi_sws/jmc/` (the launcher, `MpLauncher`, `MpProgram`,
+`NamedCli`, is `J/mp/cli/`, main sources), `T/` = `traceforge/traceforge/src/`. A comment `Verified (rev 5):` was
+checked at these pins. A comment `Verified:` was checked at the revision-4 pins, JMC `c1bbf657` and TraceForge
+`d775f70`, and its line numbers are those commits'; in it `JL/` = `jmc/core/src/test/java/org/mpi_sws/jmc/mp/launch/`
+(the launcher's test sources at `c1bbf657`).
 
 ## 1. Files
 
@@ -41,14 +43,17 @@ Written in this key order:
   sequential segment order, or −1 when an earlier segment is missing (its measurement is then empty).
 
 Reading. `format` and `encoding` must be 1. No `minor` means minor 0 (no `roles`; readers warn that roles were not
-compared). TraceForge accepts `"minor":0` or `1`; JMC only `1` or none. Minor 1 needs `roles`; TraceForge checks them
-(sorted, unique, valid names, covering `visible`) and requires string `tool`, `program`, `size`, `model`,
-`enumeration`; JMC requires `enumeration` and `model`. Unknown header keys are ignored.
+compared); otherwise `minor` is 1, never an explicit 0, and `roles` is present exactly when `minor` is. Both readers
+require string `tool`, `program`, `size`, `model`, `enumeration` and refuse an unknown key and any header not in the
+writers' form (§7.1). TraceForge checks `roles` itself (sorted, unique, valid names, covering `visible`); JMC compares
+`visible`, `roles` and `model` with the program's.
 
 <!-- Verified: T/conformance/interchange.rs:754-778, 1558-1633; T/program.rs:216-223, 678-684;
 T/conformance/online.rs:513-541, 783-787; T/conformance/online_p.rs:299-311; J/mp/summary/SummaryExporter.java:192-254;
 JL/MpLauncher.java:609-648; J/strategies/must/MustStrategy.java:108-113; J/mp/summary/SpecificationFile.java:138-185;
 T/conformance/report.rs:3072-3076. -->
+<!-- Verified (rev 5): Reading: T/conformance/interchange.rs:1688-1753, 1767-1825; J/mp/summary/SpecificationFile.java:156-207,
+284-336; J/mp/cli/MpLauncher.java:515-519. -->
 
 ## 3. Summary lines
 
@@ -68,15 +73,19 @@ T/conformance/report.rs:3072-3076. -->
   spawn and join, through invisible events): Σ|w_t|·(T−1) entries, each at most |w_u|.
 - `n`: execution count (JMC), never compared.
 
-Normal form: `statuses`, `words`, `counts`, names sorted, no `n`, no whitespace, §4 values; readers re-render to it. TraceForge refuses an unknown line key and a repeated line; JMC
-ignores unknown keys, skips blank lines, and holds a repeated line once.
+Normal form: `statuses`, `words`, `counts`, names sorted, no `n`, no whitespace, §4 values. Both readers accept a
+line only as its normal form, optionally followed by a compact `n` as its last member, and refuse a repeated line
+(§7.1).
 
-Limits: words ≤ 2^32−1 events (TraceForge), counts ≤ 2^31−1 (JMC), counts ≤ 65535 in lines `--decide` classifies.
+Limits: words ≤ 2^32−1 events (TraceForge reader), counts ≤ 2^31−1 (JMC reader), counts and words ≤ 2^31−1 under
+the pairing check (§7.2), counts ≤ 65535 in lines `--decide` classifies.
 
 <!-- Verified: T/conformance/interchange.rs:534-598, 1416-1544, 1684-1689, 1222-1234, 1274-1279;
 T/conformance/morphism.rs:323-365; T/conformance/obs.rs:333-378; T/conformance/compact.rs:161-200;
 T/exec_graph.rs:1223; J/mp/summary/SummaryExporter.java:55-143; J/mp/summary/Summary.java:30-64;
 J/mp/graph/ExecutionGraph.java:341; J/mp/summary/SpecificationFile.java:189-199, 230-298. -->
+<!-- Verified (rev 5): normal form and limits: T/conformance/interchange.rs:1493-1517, 1536-1545, 1599, 1641-1664,
+1873-1903; J/mp/summary/SpecificationFile.java:40-46, 210-229, 344-371; T/conformance/pairing.rs:44-51. -->
 
 ## 4. Values
 
@@ -94,20 +103,24 @@ Values compare by bytes.
 | set | JSON array sorted by the bytes of the encoded elements | `Set` | `{a, b}` (`HashSet`, `BTreeSet`) |
 | process identity | JSON string: the process's role, main as `"main"` (§5) | `Tid` | `ThreadId` |
 
-Both encoders refuse floats, maps (TraceForge writes an empty map as `[]`), characters, sets with two equal
-encodings and integers outside signed 64 bits. JMC also refuses `null`, arrays, untagged records and other classes;
+Both encoders refuse floats, maps (empty ones included), characters, sets with two equal encodings and integers
+outside signed 64 bits. TraceForge tells an empty set from an empty map by the message type's declared shape
+(`#[derive(SummaryShape)]`, `conformance::declare::<T>()`): a `{}` is an empty set (`[]`) where the shape has a set
+and is refused elsewhere, in an undeclared type included; the text witness still writes an undeclared `{}` as `[]`. JMC also refuses `null`, arrays, untagged records and other classes;
 TraceForge anonymous tuples (`()` included), ranges, `Debug` text outside the derived syntax or holding `..`, and two
 summaries rendering one line. TraceForge cannot tell a hand-written `Debug` that prints accepted syntax from a derived
 one: a derived (or equally faithful) `Debug` is the program author's obligation, not checked. `null` occurs only as
 ⊥.
 
 Readers accept signed-64-bit integers, strings, booleans, arrays and objects with exactly `t` (string) and `f`
-(array); both refuse `-0` (TraceForge parses it as a float). JMC requires the order `t`, `f` and refuses duplicate
-keys; TraceForge takes either order. Arrays compare as written (a reader cannot tell a set).
+(array); both refuse `-0` (TraceForge parses it as a float), the order `f`, `t` and a duplicate key outside `n`
+(TraceForge by the writer-form comparison, §7.1). Arrays compare as written (a reader cannot tell a set).
 
 <!-- Verified: J/mp/summary/MpValueEncoder.java:116-202, 216-255, 263-301, 311-322; J/mp/summary/Tag.java;
 T/conformance/interchange.rs:178-301, 351-418, 1341-1381; J/mp/summary/SpecificationFile.java:300-517;
 traceforge/Cargo.lock:1229-1230 (serde_json 1.0.154). -->
+<!-- Verified (rev 5): maps and shapes: T/conformance/interchange.rs:433-470, 548-575; T/conformance/shape.rs:52-66;
+readers: T/conformance/interchange.rs:1641-1664; J/mp/summary/SpecificationFile.java:785-830. -->
 
 ## 5. Identifiers and roles
 
@@ -152,13 +165,35 @@ in-process check (`conf`) requires that no send or receive be causally before th
 thread; paired programs must satisfy it. It panics with `conformance: visible thread `NAME` is created at CREATE, which is porf-after the communication event AFTER; §8
 requires each declared visible thread to be spawned before its program communicates`.
 
-### 6.3 Pairing restrictions (both programs; not checked by either tool)
+### 6.3 Pairing restrictions (both programs)
 
+Checked by the pairing check (§7.2), on the two files (TraceForge `conf-join`) or on the specification file and the
+program (JMC online check):
+- **C2, names and roles.** `visible` byte-sorted with distinct names; `visible` and minor-1 `roles` equal on both
+  sides.
+- **C3, model.** Equal on both sides, `p2p` or `asyn`.
+- **C4, enumeration.** The specification is `complete`.
+- **C6, repeated lines.** Each summary once per file; under `--merge` (TraceForge) also in byte order.
+- **C10, numeric bounds.** Counts ≤ 2^31−1; words ≤ 2^31−1 events. TraceForge's check sees only counts that fit
+  in 64 bits (a count such as `18446744073709551616` passes it, and the reader refuses it); JMC's sees every
+  integer literal.
+- **C13, tag arity.** A tag used on both sides is used with compatible field arities: TraceForge, equal arity sets
+  in the two files; JMC, the specification's arities a subset of those the program declares (its `@Tag` records and
+  enums implementing `MpMessage` in the program class's package, and the types their components reach). A tag on
+  one side only is a warning.
+- **C18, identities.** A value tagged `ThreadId` or `Tid` is a warning. Otherwise a role name cannot be told from
+  another string: sending identities only as role names (§5) stays the programs' obligation.
+
+Not checked by the pairing check (other enforcement noted):
 - **Per-thread projection.** A paired program does not use TraceForge's per-event visibility (`send_msg_as`,
   `recv_msg_block_as`); JMC observes every send and receive of a visible thread, so hiding changes the projection.
 - **Guards** are type tests only (JMC accepts any message predicate, TraceForge one over sender and tag).
 - **⊥.** A non-blocking receive (JMC `Channel.tryRecv`, TraceForge `recv_msg`) may read ⊥ even with a message
   pending; both explorations cover that case.
+- **Maps, arrays, tuples.** Both encoders refuse maps (§4); JMC refuses Java arrays, TraceForge anonymous tuples,
+  but TraceForge encodes a Rust fixed array as a list: a paired program uses lists.
+- **Shapes.** §6.1 binds the Java program and §6.2 is checked only by TraceForge `conf`; neither tool checks the
+  other program's shape.
 
 ### 6.4 Specification side
 
@@ -168,8 +203,9 @@ N assertion failure(s)`), a non-exhausted run and a `--threshold` stop.
 ### 6.5 Failed executions
 
 No tool writes a line for a failed execution. TraceForge `export` writes no file (exit 2); TraceForge `online --out`
-and sequential JMC write `aborted` with the other executions' lines and exit 1; a failed JMC `--split` run writes no
-export (exit 1), a successful one writes `complete`. Hence `err` is never written.
+and sequential JMC write `aborted` with the other executions' lines and exit 1 (JMC named form: 1 for a failure of
+the program, 2 for a refusal); a failed JMC `--split` run writes no export (exit 1; named form by outcome, §10), a
+successful one writes `complete`. Hence `err` is never written.
 
 <!-- Verified: J/strategies/must/MustStrategy.java:541-574, 763-779, 1071-1075, 1101-1103, 1178-1180, 1606-1611,
 1779-1786; J/strategies/mp/MpRecordingStrategy.java:214-220, 258-261, 284-286, 393-394, 403-417;
@@ -177,15 +213,95 @@ T/conformance/ctx.rs:451-456, 535-577, 1446-1448; T/conformance/compact.rs:323-3
 J/api/mp/Channel.java:141-163; T/lib.rs:1267-1300, 1393, 1519; T/must.rs:2491-2532;
 T/conformance/interchange.rs:1006-1023; T/conformance/report.rs:3027-3062; T/conformance/online.rs:398-400, 479;
 JL/MpLauncher.java:609-691, 1224-1252; J/strategies/must/split/SplitCoordinator.java:496-539. -->
+<!-- Verified (rev 5): §6.3: T/conformance/pairing.rs:1-35, 44-51, 116-195, 257-364; J/mp/summary/PairingCheck.java:39-73,
+76-79, 120-239; T/conformance/interchange.rs:433-470. -->
 
-## 7. The join and the online check
+## 7. Readers, the pairing check, the join and the online check
+
+### 7.1 Readers
+
+The readers (TraceForge `conf-join` and `online --spec`; JMC's online check) accept a file only in the form both
+writers emit:
+- header: only the §2 keys, each once, compact, in §2 order; `minor` absent or 1, `roles` exactly when `minor` is
+  present; `seed`, `iterations` integers and only in a `sampled` file; the three online fields all or none,
+  integers; string `tool`, `program`, `size`, `model`, `enumeration`;
+- summary line: its normal form (§3), optionally followed by a compact `n` as its last member;
+- line ends `\n` or `\r\n`.
+
+Each refuses the rest, exit 2, with `line N: ` and the reason:
+
+| Row | Input | TraceForge | JMC |
+|---|---|---|---|
+| R1 | a repeated summary line | `the line repeats line M (each line is one distinct summary)` | `repeats line M (the same summary); a file holds each summary once` |
+| R2 | a blank line after the header | `not JSON: …` | `an empty line; every line after the header is a summary line` |
+| R3 | an unknown key in a summary line | ``unknown key `x` `` | `unknown key "x" in a summary line (neither writer emits it)` |
+| R4 | a line not in the normal form (whitespace, member or `statuses`/`words` key order, another spelling of a value, `n` not last) | ``the line is not in the form the writers emit (the normal form, then `n` if any; compact, each key once, in order): it differs at byte B`` | the same, `n` without backticks |
+| R5 | an unknown header key | ``unknown header key `x` (neither writer emits it)`` | `unknown header key "x" (neither writer emits it)` |
+| R6 | a header out of key order, with whitespace, or with another spelling of a string | `the header is not in the form the writers emit (compact, each key once, in the order format, minor, tool, program, size, visible, roles, model, enumeration, seed, iterations, the online fields, encoding): it differs at byte B` | the same |
+| R7 | no `program`, `size` or `tool` (K) | ``the header has no string `K` `` | `K is not a JSON string (missing)` |
+| R8 | `roles` without `minor`, or the reverse | ``the header has `roles` without `minor` or `minor` without `roles` `` | the same without backticks |
+| R9 | `seed` or `iterations` (each on its own) outside a `sampled` file, or not an integer; some but not all three online fields, or a non-integer one | ``the header has `K` in a file that is not `sampled` ``; `the header has some of the online fields (first_miss_iteration, first_miss_wall_ms, uncovered_total) but not all three`; ``the header's `K` is V, not an integer`` | the same without backticks; a fraction or exponent may be refused earlier: `number V is not an integer literal (the format refuses floating-point values)` |
+| R10 | bare CR line ends | the file is one line: `the header is not JSON: … trailing characters …` when CR separates records; the R6 message for a header-only file (a trailing CR is JSON whitespace) | `raw control character U+000D outside a string` |
+
+Both also refuse an explicit `"minor":0`, `{"f":…,"t":…}`, a duplicate key outside `n`, an unpaired surrogate escape
+and a non-`complete` specification. Each reader accepts the other writer's canonical output (C21), within the
+common domain: §3's limits and signed-64-bit integers. JMC decodes the file as a UTF-8 stream while splitting it into
+lines; TraceForge's plain join and `online --spec` read it whole, `--merge` and the pairing check line by line.
+
+Per tool, pending phase 4b:
+- `n` is information only. TraceForge checks only that it is compact JSON in last position and accepts `1.5`,
+  `18446744073709551616` (2^64) and a duplicate-key object; JMC refuses all three, as anywhere in a line.
+- TraceForge's reader accepts an unsorted `visible` list (its pairing check refuses one, C2); JMC compares the list
+  with the program's sorted list.
+
+### 7.2 Pairing check
+
+`conf-join --check-pairing [--merge] [--decide] spec.jsonl impl.jsonl` runs only the check (§6.3): `pairing: <row>: …`
+per failure, `pairing: warning: <row>: …` per warning, then `pairing: ok` (exit 0) or `pairing: failed (K checks)`
+(exit 2). Only with `--decide` is a count above 65535 a C10 warning.
+
+The check also runs before every join (TraceForge) and before JMC's online check (`MpLauncher … --spec F`, either
+form), there against the program's visible roles, header roles, model and declared tags. TraceForge `online --spec`
+runs no pairing check. Warnings go to stderr as `<tool>: pairing: warning: <row>: …` and the run proceeds; failures
+as `<tool>: pairing: <row>: …`, then `<tool>: refused: the pairing check failed (K checks; --no-pairing-check skips
+it)`, exit 2 (`<tool>` = `conf-join` or `MpLauncher`; JMC then prints its usage line). `--no-pairing-check` skips the
+check; the reader and the join, or the JMC reader, still refuse most C2, C3, C4, C6 and C10 cases on their own, in
+their own wording (§7.1, §7.3); C13 and C18 are skipped. What TraceForge's join then accepts:
+- C2: an unsorted `visible` list that both files share;
+- C3: two equal models outside `p2p`/`asyn` (`cd`, or any string): the join requires only equality;
+- C10: a word of up to 2^32−1 events, and so counts above 2^31−1 bounded by such a word.
+
+JMC's reader requires the program's model, and Must refuses `cd` (§6.1).
+
+A header the reader refuses contributes nothing to C2, C3 and C4; a JSON-object line the reader refuses contributes
+nothing to C13 and C18 but still counts for C6 (by its text) and C10. A line that is not a JSON object is refused by
+TraceForge's check (exit 2) and skipped by JMC's. Before a join or a JMC online check the reader's refusal follows;
+`--check-pairing` returns after its report, so `pairing: ok` does not validate the files (two headers `{}` pass).
+
+Wording (`F` the specification file, or either file in TraceForge), identical in the two tools after the prefix
+except C6:
+
+| Row | Failure (f) or warning (w) |
+|---|---|
+| C2 | f ``F: line 1: the `visible` list L is not byte-sorted with distinct names`` (`roles` cannot fail so: an unsorted `roles` list is the reader's refusal); f ``the two `visible` lists differ: A and B``; f ``the two `roles` lists differ: A and B`` |
+| C3 | f `the two models differ: A and B`; f ``the specification's model `M` is not supported for a join (p2p or asyn)`` (also `implementation's`) |
+| C4 | f ``the specification is `E`, not `complete` `` |
+| C6 | f TraceForge `F: line N repeats an earlier line`, JMC `F: line N repeats line M`; under `--merge` (TraceForge) f `F: line N repeats line M`, f `F: line N precedes line M in byte order (--merge needs sorted files)` |
+| C10 | f `F: line N: the count C is out of bounds (both readers accept counts up to 2^31-1)`; f ``F: line N: the word of `R` has K events (at most 2^31-1)``; w `F: line N: the count C exceeds 65535; --decide refuses the join if it classifies this line` |
+| C13 | f `the tag "T" has the field arities S in the specification and S' in the implementation`; w `the tag "T" (arities S) occurs only in the specification; the implementation never sends it, which the join does not count against it`; w `the tag "T" (arities S) occurs only in the implementation; the join reports the lines that carry it as uncovered` |
+| C18 | w `F: line N: a value is tagged "ThreadId", the name of an identity type; if it is a process identity, the programs must send its role name instead` (also `"Tid"`) |
+
+Per tool, pending phase 4b: the C6 wording without `--merge`.
+
+### 7.3 Join
 
 Coverage: an implementation summary is covered iff a specification summary has identical statuses and words and
 counts componentwise ≤ the implementation's (equality covers).
 
-`conf-join [--merge] [--decide [--decide-budget N]] spec.jsonl impl.jsonl` (TraceForge) reads either tool's files.
+`conf-join [--merge] [--decide [--decide-budget N]] [--no-pairing-check] spec.jsonl impl.jsonl` (TraceForge) reads
+either tool's files.
 
-It refuses (exit 2) a malformed file, a repeated line, a non-`complete` specification (`the specification is `E`,
+It refuses (exit 2) a failed pairing check (§7.2), a file its reader refuses (§7.1), a non-`complete` specification (`the specification is `E`,
 not `complete``), different models (`the two models differ: A and B`), `visible` lists (`the two files' `visible`
 lists differ: …`) or minor-1 `roles` (`the two roles lists differ: …`), and under `--merge` an unsorted file. It
 prints both headers, `verdict: conforms|violation|no verdict` with ` (sampled)` or ` (partial)` appended for a
@@ -196,14 +312,26 @@ prints both headers, `verdict: conforms|violation|no verdict` with ` (sampled)` 
 Covered `sampled` gives `no verdict`. `--decide` adds `  decide: violation|false-alarm|
 unresolved k=… k_min=… states=…` per line, and `  witness:` for a violation, without changing the verdict.
 
-The online check (JMC `MpLauncher … must 0 … --spec F`, TraceForge `<bin> online --spec F [--out F]`) looks each
-explored summary up in F; it refuses an F that is not `complete` or differs in model, `visible` or minor-1 `roles`; `--stop-at-first` stops after the first uncovered
-summary. Verdicts: `conforms`, `reports`, `partial` (TraceForge also `refused`).
+### 7.4 Online check
+
+The online check (JMC `MpLauncher … must 0 … --spec F [--no-pairing-check]` or `MpLauncher online … --spec F`,
+TraceForge `<bin> online --spec F [--out F]`) looks each explored summary up in F. JMC runs the pairing check first
+(§7.2). Both refuse an F their reader refuses (§7.1), an F that is not `complete` or differs in model, `visible` or
+minor-1 `roles`; `--stop-at-first` stops after the first uncovered summary. Verdicts: `conforms`, `reports`,
+`partial` (TraceForge also `refused`).
 
 <!-- Verified: T/bin/conf-join.rs:16-130; T/conformance/interchange.rs:1119-1136, 1701-1845, 1983-2010;
 T/conformance/report.rs:3099-3160, 3192-3240; T/conformance/online.rs:200-223, 552-581;
 J/mp/summary/SpecificationFile.java:138-185; J/strategies/must/MustStrategy.java:104-113;
 JL/MpLauncher.java:404-436, 576-603. -->
+<!-- Verified (rev 5): readers: T/conformance/interchange.rs:1493-1517, 1536-1545, 1599, 1641-1664, 1688-1825,
+1873-1903; T/conformance/online.rs:560; T/conformance/online_p.rs:375; J/mp/summary/SpecificationFile.java:47-58,
+156-232, 249-277, 284-371, 785-830, 898-900. Pairing check: T/bin/conf-join.rs:20-46, 56-59, 128-184;
+T/conformance/pairing.rs:1-35, 44-51, 116-364; J/mp/summary/PairingCheck.java:39-73, 76-79, 120-239;
+J/mp/cli/MpLauncher.java:263, 308-309, 357-358, 482-520, 2171-2199; J/mp/cli/NamedCli.java:28, 43, 207-208. -->
+<!-- Verified (rev 5.1): exceptions: T/conformance/pairing.rs:224-228, 262-276; T/conformance/interchange.rs:1580-1593,
+1706-1729, 1830-1838, 1936-1964, 2060-2090; T/bin/conf-join.rs:52-53, 132-147; J/mp/summary/PairingCheck.java:176-186;
+J/mp/summary/SpecificationFile.java:373-425, 868-874. -->
 
 ## 8. Witnesses
 
@@ -287,11 +415,15 @@ no-graph|refused`. Stdout adds `  graph: …` per uncovered line.
 ### 8.5 Replay
 
 `<bin> replay --graph G [--report R] [--allow-source-change] [--allow-tool-change] [-- ARGS]`;
-`MpLauncher --replay G [--report R] [--allow-…] [<class>[:<args>]]`.
+`MpLauncher --replay G [--report R] [--allow-…] [<class>[:<args>]]` or `MpLauncher replay --graph G [--report R]
+[--allow-…] [--program <class>[:<args>]]`.
 
 Both refuse before running an invalid or foreign graph, a `tool_commit` differing from the build's or `"unknown"`
-(unless `--allow-tool-change`), and a differing or `"unknown"` source (unless `--allow-source-change`). TraceForge
-compares only the `files` maps; JMC compares the whole `source`, `root` included. TraceForge refuses another
+(unless `--allow-tool-change`), and a differing or `"unknown"` source (unless `--allow-source-change`). Both
+compare only the `files` maps and ignore `root`; `"unknown"` on either side is refused unless `--allow-source-change`,
+in both JMC forms (JMC: `--replay refused: source files differ from the program's manifest; --allow-source-change
+accepts it`, `--replay refused: source unknown; …`; TraceForge: `replay: refused: the benchmark source differs from
+the graph's, or is unknown (--allow-source-change)`). TraceForge refuses another
 `entry`, a missing side or model, or ARGS after `--` other than the graph's, then restores side, model, seed and
 threshold from the graph. JMC requires `side` null, `model` null, `options` `{}` and at most one `args` element, and
 refuses an explicit program argument other than the graph's. The replay forces each `rf` and choice index and stops
@@ -306,6 +438,8 @@ J/mp/summary/GraphJson.java; J/mp/summary/RunIdentity.java:44-174; T/conformance
 T/program.rs:269-302, 355-511; T/conformance/witness_join.rs:28-72, 240-258, 380-469;
 JL/MpLauncher.java:1328-1530, 1605-1770; J/strategies/mp/GraphReplayStrategy.java;
 T/conformance/witness_replay.rs; J/api/mp/Nondet.java:51. -->
+<!-- Verified (rev 5): §8.5 source identity: T/program.rs:475-486; J/mp/cli/MpLauncher.java:1555-1569;
+J/mp/cli/NamedCli.java:132-157. -->
 
 ## 9. Measurements
 
@@ -313,7 +447,7 @@ The block (`--- measurements`, then `key: value` lines) is printed:
 - JMC: every `must` run past argument parsing, a refused specification included (`stop_reason: error`); a `--split`
   coordinator prints its own, workers none; never under `mp-random`; replay unless refused before running.
 - TraceForge: `count`; `export` unless refused before the run (bad arguments, index, model); `conf`; `online`
-  unless refused before the exploration; `conf-join` always (refused: `stop_reason: error`); replay after a result, unless writing a requested `--report` failed. Shared keys, in order: `wall_ms`, `explore_ms`, `summarise_ms`, `index_ms`,
+  unless refused before the exploration; `conf-join` always (refused: `stop_reason: error`), except `--check-pairing`, `--help` and argument errors; replay after a result, unless writing a requested `--report` failed. Shared keys, in order: `wall_ms`, `explore_ms`, `summarise_ms`, `index_ms`,
 `lookup_ms`, `export_ms`, `graphs_complete`, `graphs_blocked`, `summaries_distinct`, `iterations`, `stop_reason`,
 `peak_rss_kb`, `max_message_events`, `max_porf_pairs`, `first_miss_iteration`, `first_miss_wall_ms`,
 `uncovered_total` (these three only with a specification), `max_graph_events`, `mean_graph_events`,
@@ -340,19 +474,24 @@ JL/MpLauncher.java:169-195, 407, 683-686, 1081-1144, 1501-1513, 1967-1971; T/pro
 
 ## 10. Exit codes
 
-| Command | 0 | 1 | 2 |
-|---|---|---|---|
-| TraceForge `export` | written | — | bad arguments, refusal, assertion, store not written |
-| JMC export | completed (timeout: `aborted`) | failure, incl. shape/role/value refusals | bad arguments |
-| TraceForge `online` | verdict | failure | bad arguments, refused specification or declaration |
-| JMC online | verdict | failure, incl. refusals during the run | bad arguments, refused specification |
-| `conf-join` | conforms, no verdict | violation | bad arguments, refused input or store, witness output not writable |
-| TraceForge `conf` | conforms | reports | inconclusive, error |
-| replay | reproduced | deviation, failure (JMC: unwritable report) | refused (TraceForge: unwritable report) |
+| Command | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| TraceForge `export` | written | — | bad arguments, refusal, assertion, store not written | — |
+| JMC export, positional | completed (timeout: `aborted`) | failure, incl. shape/role/value refusals | bad arguments | — |
+| JMC `export`/`count`, named | exhausted | failure of the program (assertion, exception, throwing guard) | bad arguments, refusal (shape, role, value, API rule, model), output not writable | incomplete: timeout, bound, `mp-random` (sampled), unfinished split |
+| TraceForge `online` | verdict | failure | bad arguments, refused specification or declaration | — |
+| JMC online, positional | verdict | failure, incl. refusals during the run | bad arguments, refused specification, failed pairing check | — |
+| JMC `online`, named | `conforms` | `reports`, failure of the program | bad arguments, refused specification, failed pairing check, refusal during the run | `partial`, incomplete |
+| `conf-join` | conforms, no verdict | violation | bad arguments, refused input or store, failed pairing check, witness output not writable | — |
+| `conf-join --check-pairing` | passed | — | failed, unreadable input, bad arguments | — |
+| TraceForge `conf` | conforms | reports | inconclusive, error | — |
+| replay | reproduced | deviation, failure (JMC: unwritable report) | refused (TraceForge: unwritable report) | — |
 
 <!-- Verified: T/program.rs:752-761, 812-818, 968-976, 495; T/conformance/online.rs:214-223;
 T/conformance/interchange.rs:1324-1329; T/bin/conf-join.rs:106-129; T/conformance/witness_join.rs:342-372, 446, 465, 469;
 JL/MpLauncher.java:169-195, 683-691, 1440-1500, 2033-2065. -->
+<!-- Verified (rev 5): pairing exits: T/bin/conf-join.rs:45-46, 132-184; J/mp/cli/MpLauncher.java:495-502, 2171-2199.
+Named form (rev 5.1): J/mp/cli/MpLauncher.java:214-220, 774-814, 1343-1361, 1636-1648; J/strategies/mp/MpOutcome.java:6-24. -->
 
 ## 11. Golden files
 
