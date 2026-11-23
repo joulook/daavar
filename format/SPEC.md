@@ -1,15 +1,16 @@
 # Summary interchange format, version 1
 
-Normative (revision 5.2): the summary files, readers, pairing check, join, witness files, measurements and exit
-codes as implemented by JMC `bf742b28` (`jmc/`) and TraceForge `f9784da` (`traceforge/`). Differences are per tool.
+Normative (revision 5.3): the summary files, readers, pairing check, join, witness files, measurements and exit
+codes as implemented by JMC `1d248213` (`jmc/`) and TraceForge `30587e9` (`traceforge/`). Differences are per tool.
 
 Verification comments: `J/` = `jmc/core/src/main/java/org/mpi_sws/jmc/` (the launcher, `MpLauncher`, `MpProgram`,
 `NamedCli`, is `J/mp/cli/`, main sources), `T/` = `traceforge/traceforge/src/`. A comment `Verified (rev 5):` was
-checked at JMC `eb58ec75` and TraceForge `c2a2b69` (revisions 5 and 5.1), a comment `Verified (rev 5.2):` at the
-pins above; phase 4b changed, among the production-source files, only the launcher, `PairingCheck`, `SpecificationFile` (JMC), `interchange.rs`,
+checked at JMC `eb58ec75` and TraceForge `c2a2b69` (revisions 5 and 5.1), a comment `Verified (rev 5.2):` at JMC
+`bf742b28` and TraceForge `f9784da`, a comment `Verified (rev 5.3):` at the pins above; phase 4b changed, among the production-source files, only the launcher, `PairingCheck`, `SpecificationFile` (JMC), `interchange.rs`,
 `pairing.rs`, `program.rs` and `mod.rs` (TraceForge), so the rev-5 line numbers of other files still hold. A comment `Verified:` was checked at the revision-4 pins, JMC `c1bbf657` and TraceForge
 `d775f70`, and its line numbers are those commits'; in it `JL/` = `jmc/core/src/test/java/org/mpi_sws/jmc/mp/launch/`
-(the launcher's test sources at `c1bbf657`).
+(the launcher's test sources at `c1bbf657`). Between the 5.2 and 5.3 pins the production sources changed only in
+`interchange.rs`, `online.rs`, `program.rs` (TraceForge) and `SplitCoordinator`, `SplitWorker` (JMC).
 
 ## 1. Files
 
@@ -209,6 +210,13 @@ and sequential JMC write `aborted` with the other executions' lines and exit 1 (
 the program, 2 for a refusal); a failed JMC `--split` run writes no export (exit 1; named form by outcome, §10), a
 successful one writes `complete`. Hence `err` is never written.
 
+JMC `--split`: a worker streams each item's outcomes to the run directory (`outcomes-w<id>.part`, renamed
+`outcomes-<j>.<a>.jsonl` when the item ends) and keeps only the item's distinct summaries in its heap. A worker that
+runs out of memory in an item writes a retryable fail marker; the item is retried once (attempt 1) on the restarted
+worker or another live one, not the JVM that failed. A second failure aborts the run; when it is recorded by an item fail marker, the reason names the item, its
+attempt and worker, the first attempt's reason and how many items were committed (`K of N items committed`); a
+retry whose worker dies without a marker reports only `item J lost its worker twice` (J/strategies/must/split/SplitCoordinator.java:991).
+
 <!-- Verified: J/strategies/must/MustStrategy.java:541-574, 763-779, 1071-1075, 1101-1103, 1178-1180, 1606-1611,
 1779-1786; J/strategies/mp/MpRecordingStrategy.java:214-220, 258-261, 284-286, 393-394, 403-417;
 T/conformance/ctx.rs:451-456, 535-577, 1446-1448; T/conformance/compact.rs:323-330; T/conformance/obs.rs:355-369;
@@ -218,6 +226,8 @@ JL/MpLauncher.java:609-691, 1224-1252; J/strategies/must/split/SplitCoordinator.
 <!-- Verified (rev 5): §6.3: T/conformance/pairing.rs:1-35, 44-51, 116-195, 257-364; J/mp/summary/PairingCheck.java:39-73,
 76-79, 120-239; T/conformance/interchange.rs:433-470. -->
 <!-- Verified (rev 5.2): §6.3 online: T/conformance/pairing.rs:155-171, 196, 217; T/program.rs:949-980. -->
+<!-- Verified (rev 5.3): §6.5 split: J/strategies/must/split/SplitWorker.java:40-48, 135-161, 265-272, 430-462;
+J/strategies/must/split/SplitCoordinator.java:56-65, 952-963, 1176-1228. -->
 
 ## 7. Readers, the pairing check, the join and the online check
 
@@ -235,7 +245,7 @@ Each refuses the rest, exit 2, with `line N: ` and the reason:
 
 | Row | Input | TraceForge | JMC |
 |---|---|---|---|
-| R1 | a repeated summary line | `line N: the line repeats line M (each line is one distinct summary)` | `line N repeats line M` (the C6 row's text) |
+| R1 | a repeated summary line | `line N repeats line M` (the C6 row's text; plain and `--merge` readers) | the same |
 | R2 | a blank line after the header | `not JSON: …` | `an empty line; every line after the header is a summary line` |
 | R3 | an unknown key in a summary line | ``unknown key `x` `` | `unknown key "x" in a summary line (neither writer emits it)` |
 | R4 | a line not in the normal form (whitespace, member or `statuses`/`words` key order, another spelling of a value, `n` not last) | ``the line is not in the form the writers emit (the normal form, then `n` if any; compact, each key once, in order): it differs at byte B`` | the same, `n` without backticks |
@@ -254,9 +264,7 @@ canonical encoding of 0`) and a repeated key (`duplicate key "x" in an object`).
 common domain: §3's limits and signed-64-bit integers. JMC decodes the file as a UTF-8 stream while splitting it into
 lines; TraceForge's plain join and `online --spec` read it whole, `--merge` and the pairing check line by line.
 
-Per tool, pending phase 4c:
-- R1: TraceForge's reader keeps `line N: the line repeats line M (each line is one distinct summary)`; JMC's reader
-  prints the C6 text.
+Per tool, pending JMC phase 4c:
 - An exponent (`1e3`): TraceForge `number 1e3 is not an integer literal (…)`, JMC `number ending in "e" is not an
   integer literal (…)`.
 
@@ -305,8 +313,7 @@ prefix:
 | C13 | f `the tag "T" has the field arities S in the specification and S' in the implementation`; w `the tag "T" (arities S) occurs only in the specification; the implementation never sends it, which the join does not count against it`; w `the tag "T" (arities S) occurs only in the implementation; the join reports the lines that carry it as uncovered` |
 | C18 | w `F: line N: a value is tagged "ThreadId", the name of an identity type; if it is a process identity, the programs must send its role name instead` (also `"Tid"`) |
 
-Per tool, pending phase 4c: after a reader refusal TraceForge `online` prints its usage text (every reader refusal
-under `--no-pairing-check`, a line refusal by default); JMC prints none.
+Neither tool prints usage text after a pairing or reader refusal of the online check; usage errors still print it.
 
 ### 7.3 Join
 
@@ -333,8 +340,8 @@ The online check (JMC `MpLauncher … must 0 … --spec F [--no-pairing-check]` 
 TraceForge `<bin> online --spec F [--no-pairing-check] [--out F]`) looks each explored summary up in F. Both run
 the pairing check first (§7.2). Both refuse an F their reader refuses (§7.1), an F that is not `complete` or differs in model, `visible` or
 minor-1 `roles`; `--stop-at-first` stops after the first uncovered summary. Verdicts: `conforms`, `reports`,
-`partial` (TraceForge also `refused`). Exit on `reports`: TraceForge 0, JMC named form 1 (§10); a per-tool
-difference, TraceForge to exit 1 in phase 4c.
+`partial` (TraceForge also `refused`). Exit on `reports`: 1 in TraceForge and in JMC's named form (§10); on
+`partial`, TraceForge 0, JMC named form 3.
 
 <!-- Verified: T/bin/conf-join.rs:16-130; T/conformance/interchange.rs:1119-1136, 1701-1845, 1983-2010;
 T/conformance/report.rs:3099-3160, 3192-3240; T/conformance/online.rs:200-223, 552-581;
@@ -352,6 +359,8 @@ J/mp/summary/SpecificationFile.java:373-425, 868-874. -->
 T/conformance/pairing.rs:155-171, 176-251, 287, 381, 393; T/program.rs:681, 949-980, 1079; T/conformance/online.rs:214-223;
 J/mp/summary/SpecificationFile.java:227, 765; J/mp/summary/PairingCheck.java:131-134; J/mp/cli/MpLauncher.java:493-516,
 2188-2191. -->
+<!-- Verified (rev 5.3): R1: T/conformance/interchange.rs:1967-1975, 2194-2203; online refusals and exits:
+T/program.rs:198, 1079-1080; T/conformance/online.rs:214-225; J/mp/cli/MpLauncher.java:774-818, 2188-2191. -->
 
 ## 8. Witnesses
 
@@ -500,7 +509,7 @@ JL/MpLauncher.java:169-195, 407, 683-686, 1081-1144, 1501-1513, 1967-1971; T/pro
 | TraceForge `export` | written | — | bad arguments, refusal, assertion, store not written | — |
 | JMC export, positional | completed (timeout: `aborted`) | failure, incl. shape/role/value refusals | bad arguments | — |
 | JMC `export`/`count`, named | exhausted | failure of the program (assertion, exception, throwing guard) | bad arguments, refusal (shape, role, value, API rule, model), output not writable | incomplete: timeout, bound, `mp-random` (sampled), unfinished split |
-| TraceForge `online` | verdict (`reports` included) | failure | bad arguments, refused specification or declaration, failed pairing check | — |
+| TraceForge `online` | `conforms`, `partial` | `reports`, failure | bad arguments, refused specification or declaration, failed pairing check | — |
 | JMC online, positional | verdict | failure, incl. refusals during the run | bad arguments, refused specification, failed pairing check | — |
 | JMC `online`, named | `conforms` | `reports`, failure of the program | bad arguments, refused specification, failed pairing check, refusal during the run | `partial`, incomplete |
 | `conf-join` | conforms, no verdict | violation | bad arguments, refused input or store, failed pairing check, witness output not writable | — |
@@ -514,6 +523,7 @@ JL/MpLauncher.java:169-195, 683-691, 1440-1500, 2033-2065. -->
 <!-- Verified (rev 5): pairing exits: T/bin/conf-join.rs:45-46, 132-184; J/mp/cli/MpLauncher.java:495-502, 2171-2199.
 Named form (rev 5.1): J/mp/cli/MpLauncher.java:214-220, 774-814, 1343-1361, 1636-1648; J/strategies/mp/MpOutcome.java:6-24. -->
 <!-- Verified (rev 5.2): TraceForge online: T/conformance/online.rs:214-223; T/program.rs:970-976. -->
+<!-- Verified (rev 5.3): TraceForge online exits: T/conformance/online.rs:214-225; T/program.rs:198. -->
 
 ## 11. Golden files
 

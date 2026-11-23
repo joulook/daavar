@@ -230,3 +230,18 @@ revision 5.2.
 - TraceForge `online --spec` runs the pairing check (`--no-pairing-check` skips it): C3 as model equality only, C13
   not checked (JMC checks it), C18 a warning in both.
 - Exit of an online check on `reports`: TraceForge 0, JMC (named form) 1; TraceForge aligns to 1 in 4c.
+
+## Phase 4c (2026-11-23)
+
+Pins: JMC `1d248213` (main, merge of `fix/split-item-memory`; no phase-4c change yet), TraceForge `30587e9`
+(`feat/conformance`). `SPEC.md` revision 5.3.
+
+- C6: TraceForge's readers (plain and `--merge`) refuse a repeated line as `line N repeats line M`, as the pairing
+  checks and JMC's reader do.
+- TraceForge `online`: no usage text after any refusal of the specification or the program's names; exit 1 on
+  `reports` (0 `conforms`/`partial`, 1 a failed run, 2 refused). The per-tool difference on `reports` is gone;
+  on `partial` TraceForge exits 0, JMC's named form 3.
+- Still per tool, pending JMC 4c: the reader's message for an exponent (`1e3`).
+- JMC `--split`: a worker streams each item's outcomes to a file; an item whose worker runs out of memory is retried
+  once on another worker JVM; a second failure aborts, naming the item and (when an item fail marker records it) how many items were committed.
+- Unchanged: the `n` domain and the join total.
