@@ -1,16 +1,18 @@
 # Summary interchange format, version 1
 
-Normative (revision 5.3): the summary files, readers, pairing check, join, witness files, measurements and exit
-codes as implemented by JMC `1d248213` (`jmc/`) and TraceForge `30587e9` (`traceforge/`). Differences are per tool.
+Normative (revision 5.4): the summary files, readers, pairing check, join, witness files, measurements and exit
+codes as implemented by JMC `5a8dd343` (`jmc/`) and TraceForge `191f521` (`traceforge/`). Differences are per tool.
 
 Verification comments: `J/` = `jmc/core/src/main/java/org/mpi_sws/jmc/` (the launcher, `MpLauncher`, `MpProgram`,
 `NamedCli`, is `J/mp/cli/`, main sources), `T/` = `traceforge/traceforge/src/`. A comment `Verified (rev 5):` was
 checked at JMC `eb58ec75` and TraceForge `c2a2b69` (revisions 5 and 5.1), a comment `Verified (rev 5.2):` at JMC
-`bf742b28` and TraceForge `f9784da`, a comment `Verified (rev 5.3):` at the pins above; phase 4b changed, among the production-source files, only the launcher, `PairingCheck`, `SpecificationFile` (JMC), `interchange.rs`,
+`bf742b28` and TraceForge `f9784da`, a comment `Verified (rev 5.3):` at JMC `1d248213` and TraceForge `30587e9`, a comment
+`Verified (rev 5.4):` at the pins above; phase 4b changed, among the production-source files, only the launcher, `PairingCheck`, `SpecificationFile` (JMC), `interchange.rs`,
 `pairing.rs`, `program.rs` and `mod.rs` (TraceForge), so the rev-5 line numbers of other files still hold. A comment `Verified:` was checked at the revision-4 pins, JMC `c1bbf657` and TraceForge
 `d775f70`, and its line numbers are those commits'; in it `JL/` = `jmc/core/src/test/java/org/mpi_sws/jmc/mp/launch/`
 (the launcher's test sources at `c1bbf657`). Between the 5.2 and 5.3 pins the production sources changed only in
-`interchange.rs`, `online.rs`, `program.rs` (TraceForge) and `SplitCoordinator`, `SplitWorker` (JMC).
+`interchange.rs`, `online.rs`, `program.rs` (TraceForge) and `SplitCoordinator`, `SplitWorker` (JMC); between the
+5.3 and 5.4 pins only in `online.rs`, `program.rs` (TraceForge) and `SpecificationFile` (JMC).
 
 ## 1. Files
 
@@ -264,9 +266,13 @@ canonical encoding of 0`) and a repeated key (`duplicate key "x" in an object`).
 common domain: §3's limits and signed-64-bit integers. JMC decodes the file as a UTF-8 stream while splitting it into
 lines; TraceForge's plain join and `online --spec` read it whole, `--merge` and the pairing check line by line.
 
-Per tool, pending JMC phase 4c:
-- An exponent (`1e3`): TraceForge `number 1e3 is not an integer literal (…)`, JMC `number ending in "e" is not an
-  integer literal (…)`.
+An exponent (`1e3`) is refused in both as `number 1e3 is not an integer literal (the format refuses floating-point
+values)`, also `3e0` and `-2.5E+3`.
+
+Per tool, unscheduled: another letter after a digit (`1x`) is refused by both, exit 2, in different text: TraceForge
+`not JSON: expected `,` or `}` at line 1 column C` (serde's message), JMC `number ending in "x" is not an integer
+literal (the format refuses floating-point values)`.
+<!-- Verified (rev 5.4): T/conformance/interchange.rs:1507; J/mp/summary/SpecificationFile.java:761-768. -->
 
 Per tool, unscheduled:
 - TraceForge's reader accepts an unsorted `visible` list (its pairing check refuses one, C2); JMC compares the list
@@ -340,8 +346,9 @@ The online check (JMC `MpLauncher … must 0 … --spec F [--no-pairing-check]` 
 TraceForge `<bin> online --spec F [--no-pairing-check] [--out F]`) looks each explored summary up in F. Both run
 the pairing check first (§7.2). Both refuse an F their reader refuses (§7.1), an F that is not `complete` or differs in model, `visible` or
 minor-1 `roles`; `--stop-at-first` stops after the first uncovered summary. Verdicts: `conforms`, `reports`,
-`partial` (TraceForge also `refused`). Exit on `reports`: 1 in TraceForge and in JMC's named form (§10); on
-`partial`, TraceForge 0, JMC named form 3.
+`partial` (TraceForge also `refused`). Exit (TraceForge, JMC named form, §10): 0 `conforms`, 1 `reports` or a
+failed run, 2 refused, 3 `partial`. TraceForge's `partial` includes a run ended at `--threshold`, even after an
+uncovered summary; JMC has no threshold, and a JMC run that timed out after an uncovered summary is `reports`.
 
 <!-- Verified: T/bin/conf-join.rs:16-130; T/conformance/interchange.rs:1119-1136, 1701-1845, 1983-2010;
 T/conformance/report.rs:3099-3160, 3192-3240; T/conformance/online.rs:200-223, 552-581;
@@ -361,6 +368,8 @@ J/mp/summary/SpecificationFile.java:227, 765; J/mp/summary/PairingCheck.java:131
 2188-2191. -->
 <!-- Verified (rev 5.3): R1: T/conformance/interchange.rs:1967-1975, 2194-2203; online refusals and exits:
 T/program.rs:198, 1079-1080; T/conformance/online.rs:214-225; J/mp/cli/MpLauncher.java:774-818, 2188-2191. -->
+<!-- Verified (rev 5.4): exponent: J/mp/summary/SpecificationFile.java:761-781; online exits:
+T/conformance/online.rs:200-212, 214-234; T/program.rs:198; J/mp/cli/MpLauncher.java:670-677, 812-819. -->
 
 ## 8. Witnesses
 
@@ -509,7 +518,7 @@ JL/MpLauncher.java:169-195, 407, 683-686, 1081-1144, 1501-1513, 1967-1971; T/pro
 | TraceForge `export` | written | — | bad arguments, refusal, assertion, store not written | — |
 | JMC export, positional | completed (timeout: `aborted`) | failure, incl. shape/role/value refusals | bad arguments | — |
 | JMC `export`/`count`, named | exhausted | failure of the program (assertion, exception, throwing guard) | bad arguments, refusal (shape, role, value, API rule, model), output not writable | incomplete: timeout, bound, `mp-random` (sampled), unfinished split |
-| TraceForge `online` | `conforms`, `partial` | `reports`, failure | bad arguments, refused specification or declaration, failed pairing check | — |
+| TraceForge `online` | `conforms` | `reports`, failure | bad arguments, refused specification or declaration, failed pairing check | `partial` (threshold end included) |
 | JMC online, positional | verdict | failure, incl. refusals during the run | bad arguments, refused specification, failed pairing check | — |
 | JMC `online`, named | `conforms` | `reports`, failure of the program | bad arguments, refused specification, failed pairing check, refusal during the run | `partial`, incomplete |
 | `conf-join` | conforms, no verdict | violation | bad arguments, refused input or store, failed pairing check, witness output not writable | — |
@@ -524,6 +533,7 @@ JL/MpLauncher.java:169-195, 683-691, 1440-1500, 2033-2065. -->
 Named form (rev 5.1): J/mp/cli/MpLauncher.java:214-220, 774-814, 1343-1361, 1636-1648; J/strategies/mp/MpOutcome.java:6-24. -->
 <!-- Verified (rev 5.2): TraceForge online: T/conformance/online.rs:214-223; T/program.rs:970-976. -->
 <!-- Verified (rev 5.3): TraceForge online exits: T/conformance/online.rs:214-225; T/program.rs:198. -->
+<!-- Verified (rev 5.4): TraceForge online exits: T/conformance/online.rs:214-234; T/program.rs:198. -->
 
 ## 11. Golden files
 

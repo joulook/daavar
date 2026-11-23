@@ -245,3 +245,16 @@ Pins: JMC `1d248213` (main, merge of `fix/split-item-memory`; no phase-4c change
 - JMC `--split`: a worker streams each item's outcomes to a file; an item whose worker runs out of memory is retried
   once on another worker JVM; a second failure aborts, naming the item and (when an item fail marker records it) how many items were committed.
 - Unchanged: the `n` domain and the join total.
+
+## Phase 4d (2026-11-23)
+
+Pins: JMC `5a8dd343` (main, merge of `fix/reader-exponent-number`, JMC's phase-4c item), TraceForge `191f521`
+(`feat/conformance`). `SPEC.md` revision 5.4.
+
+- Exponent form: both readers refuse `1e3` as `number 1e3 is not an integer literal (the format refuses
+  floating-point values)`, also `3e0` and `-2.5E+3`; that per-tool difference is gone. Another letter after a
+  digit (`1x`) is refused by both in different text: TraceForge `not JSON: …` (serde), JMC `number ending in "x"
+  is not an integer literal (…)`.
+- TraceForge `online` exits 0 `conforms`, 1 `reports` or a failed run, 2 refused, 3 `partial`, as JMC's named
+  `online`; the per-tool difference on `partial` is gone. A TraceForge run ended at `--threshold` is `partial` even
+  after an uncovered summary (JMC has no threshold; a JMC timeout after an uncovered summary stays `reports`).
