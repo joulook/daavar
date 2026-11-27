@@ -1,6 +1,6 @@
 //! The implementation program of the FIXED a2a-rs SDK: a copy of `imp.rs` changed only where the
 //! two fixes change `a2a-server/src/handler.rs` (both applied): the task-first-stream patch and
-//! the message-stream-close patch, each built on a2a-rs `e9b00bc`. Each change is marked
+//! the message-stream-close patch, each built on a2a-rs `e7d507b`. Each change is marked
 //! `FIX task-first` or `FIX message-close` with the line of the patched `handler.rs` (`fork tf:N`
 //! for the task-first patch, `fork mc:N` for the message-close patch). Every other line, and every
 //! `handler.rs:N` citation, is `imp.rs`'s, on the unfixed source below.
@@ -139,7 +139,7 @@ struct Server {
     pending: Option<PendingCancel>,
     /// While the cancel's answer is being placed: the step's stream items, held back.
     held: Option<Vec<ToClient>>,
-    /// FIX task-first (fork tf:1067, tf:1142-1143, tf:522): the task `start_execution` returns
+    /// FIX task-first (fork tf:1077, tf:1152-1153, tf:522): the task `start_execution` returns
     /// (`prepare_task_for_execution`'s task, taken before the executor runs) and
     /// `open_with_task` holds until the response stream's first item; `None` once that item went
     /// by, or before any streaming send.
@@ -261,7 +261,7 @@ impl Server {
     /// a terminal item or an error (`handler.rs:483-484`), which ends the response
     /// (`StreamClose`). Fixed: the response stream's first item, if a status update, is preceded
     /// by the baseline Task (`open_with_task`, fork tf:513-537); a Message also ends the stream
-    /// (fork mc:484-487).
+    /// (fork mc:491, the arm after the expanded comment).
     fn publish(&mut self, item: Item, snapshot: Option<St>) {
         if let Some(s) = snapshot {
             self.snapshot = Some(s);
@@ -288,7 +288,7 @@ impl Server {
             Item::Error(e) => ToClient::Err { req: 1, code: ErrCode(e.name()) },
         };
         self.to_client(m);
-        // FIX message-close (fork mc:484-487): `Ok(StreamResponse::Message(_)) | Err(_) =>
+        // FIX message-close (fork mc:491, the arm after the expanded comment): `Ok(StreamResponse::Message(_)) | Err(_) =>
         // state.done = true`: a delivered Message ends the stream, as an error does.
         let done = match item {
             Item::Error(_) | Item::Message => true,
@@ -318,7 +318,7 @@ impl Server {
     /// with that snapshot, the stream subscribed before the drive starts, the executor asked to
     /// execute. Nothing is sent to the client: the stream starts with no snapshot
     /// (`subscription_stream(receiver, None, 0)`, `handler.rs:1033`). Fixed: the stream is wrapped
-    /// in `open_with_task` with the task as prepared (fork tf:1067, tf:1142-1143).
+    /// in `open_with_task` with the task as prepared (fork tf:1077, tf:1152-1153).
     fn send_stream(&mut self, req: u32) {
         assert_eq!(req, 1, "server: the streaming send is request 1");
         if self.store.is_some() {
@@ -327,7 +327,7 @@ impl Server {
         }
         // `prepare_task_for_execution` (`handler.rs:883-967`).
         self.store_create(St::Submitted).expect("new task");
-        // FIX task-first (fork tf:1032, tf:1067, tf:1142-1143): `start_execution` returns the
+        // FIX task-first (fork tf:1042, tf:1077, tf:1152-1153): `start_execution` returns the
         // prepared task (here the new SUBMITTED task: this program has no continuation turn), and
         // `send_streaming_message` wraps the stream in `open_with_task(stream, initial_task)`.
         self.baseline = Some(St::Submitted);

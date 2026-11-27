@@ -5,7 +5,7 @@ a2aproject/A2A `5f931b8a25fe66789f987ec4a55fc16ee9fe41ee` (docs/specification.md
 docs/topics/life-of-a-task.md, docs/topics/streaming-and-async.md); Java core a2aproject/a2a-java
 `f40664f85f61d232fc794dfe9b7cdc8557bcd7b8`; Rust core a2aproject/a2a-rs `700a6a28eb001f6fc32bc9446078ff87bdd18c6c`.
 Fixed rewrites: the same cores with the patches proposed upstream applied: for a2a-rs, task-first stream and
-message-stream close (built on `e9b00bc`, whose `handler.rs` equals `700a6a2`'s); for a2a-java, task-first stream
+message-stream close (built on `e9b00bc`, whose `handler.rs` equals `700a6a2`'s, and rebased onto `e7d507b` on 2026-11-24 without a change in the modelled behaviour); for a2a-java, task-first stream
 (built on `586fdd5`, equivalent to `f40664f` under the model's abstraction). The results below were measured with
 TraceForge `387e30d` (feat/conformance) and JMC `5ad3c7b4`. Each rewrite cites its source lines in its header and
 comments.
@@ -135,11 +135,15 @@ commands above:
 
 | Finding | Issue | Pull request |
 |---|---|---|
-| Streaming send begins with a status event instead of the Task (a2a-java) | [a2a-java#1352](https://github.com/a2aproject/a2a-java/issues/1352) | [a2a-java#1353](https://github.com/a2aproject/a2a-java/pull/1353) |
-| Streaming send begins with a status event instead of the Task (a2a-rs) | [a2a-rs#585](https://github.com/a2aproject/a2a-rs/issues/585) | [a2a-rs#587](https://github.com/a2aproject/a2a-rs/pull/587) |
-| A Message answer is followed by a Canceled status and the task is retained (a2a-rs) | [a2a-rs#586](https://github.com/a2aproject/a2a-rs/issues/586) | [a2a-rs#588](https://github.com/a2aproject/a2a-rs/pull/588) |
+| Streaming send begins with a status event instead of the Task (a2a-java) | [a2a-java#1352](https://github.com/a2aproject/a2a-java/issues/1352) | [a2a-java#1353](https://github.com/a2aproject/a2a-java/pull/1353), merged 2026-11-24 (commit `369ee867`) |
+| Streaming send begins with a status event instead of the Task (a2a-rs) | [a2a-rs#585](https://github.com/a2aproject/a2a-rs/issues/585) | [a2a-rs#587](https://github.com/a2aproject/a2a-rs/pull/587), merged 2026-11-27 (commit `80dce6d7`) |
+| A Message answer is followed by a Canceled status and the task is retained (a2a-rs) | [a2a-rs#586](https://github.com/a2aproject/a2a-rs/issues/586) | [a2a-rs#588](https://github.com/a2aproject/a2a-rs/pull/588), merged 2026-11-25 (commit `74ebd92c`) |
 | Neither server core begins the stream with the Task; who carries that requirement | [A2A#2494](https://github.com/a2aproject/A2A/issues/2494) | [A2A#2503](https://github.com/a2aproject/A2A/pull/2503) (test) |
 | When a cancellation takes effect | [A2A#2495](https://github.com/a2aproject/A2A/issues/2495) | [A2A#2501](https://github.com/a2aproject/A2A/pull/2501) |
 | Ending a task stream with an error after an accepted cancel | [A2A#2496](https://github.com/a2aproject/A2A/issues/2496) | awaiting the maintainers' choice |
 | From when a task id is valid | [A2A#2497](https://github.com/a2aproject/A2A/issues/2497) | [A2A#2502](https://github.com/a2aproject/A2A/pull/2502) |
 | A task kept after a Message answer ("no task tracking") | [A2A#2498](https://github.com/a2aproject/A2A/issues/2498) | awaiting the maintainers' choice |
+
+The two a2a-rs pull requests, #587 and #588, were rebased onto upstream main `e7d507b`. The `fork tf:N` citations
+in `rust/src/imp_fixed.rs` are lines of the rebased task-first patch; a re-check of both Rust rewrites against
+`e7d507b` and the rebased patches found no modelled word changed.

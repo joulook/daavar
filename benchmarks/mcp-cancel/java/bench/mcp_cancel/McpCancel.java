@@ -31,6 +31,14 @@ import java.util.List;
  * request 2 ({@code cancel2}) is not offered: the server writes request 2's items without a
  * separate check, which holds only while request 2 is never cancelled.
  *
+ * <p>Receipt of a cancel (owner ruling R-A, 2026-11-23): the receive of {@code Cancelled} is the
+ * moment the SDK has the parsed cancel and enters {@code handleCancel} (SMT 219), not the read of
+ * its line; the receive and that entry are one step. What follows the entry stays step by step,
+ * each at a later point: the validation and the remove (SMT 220-224), then the flag (SMT 227) and
+ * the dispose (SMT 228). From the receive until the flag the reader reads no further line; a
+ * response's callback may remove the entry (SMT 273) before the cancel's remove, which then finds
+ * nothing. Before R-A the cancel line was read first and handled later (receipt at readLine).
+ *
  * <p>Termination (no daemons, no messages from main): the client's last send is {@code Shutdown};
  * on it the server sends {@code Shutdown} to both handlers, writes nothing else and ends; each
  * handler ends on {@code Shutdown}. The SDK instead ends on stdin EOF, after which its writer may
@@ -291,7 +299,7 @@ public final class McpCancel implements MpProgram {
     private record Item(int req, MpMessage msg) {}
 
     /** The micro-actions a flush may take inside a step. */
-    private enum Act { HALT, WRITER, FLAG, HANDLE, ENQ1, ENQ2 }
+    private enum Act { HALT, WRITER, REMOVE, FLAG, HANDLE, ENQ1, ENQ2 }
 
     /**
      * The SDK's server side on stdio: the reader ({@code handleLine}, SMT 187-217), the in-flight
@@ -302,9 +310,12 @@ public final class McpCancel implements MpProgram {
      * and the writer run concurrently; here their actions that are not receives happen at
      * nondeterministic points of a flush:
      * <ul>
-     *   <li>HANDLE: the reader's handling of the client line it has read (a request is registered
-     *       and subscribed, SMT 232-268; a cancel removes the entry, SMT 224). Until then the
-     *       reader reads no further line, while handler output still arrives.</li>
+     *   <li>HANDLE: the reader's handling of the request line it has read (it is registered and
+     *       subscribed, SMT 232-268). Until then the reader reads no further line, while handler
+     *       output still arrives. A cancel is received at its identification, the entry into
+     *       {@code handleCancel} (R-A); its line is not read before.</li>
+     *   <li>REMOVE: the cancel's validation and remove (SMT 220-224), if the entry is still in the
+     *       map. The reader reads no further line until it has happened.</li>
      *   <li>FLAG: the cancel's second half, flag (SMT 227) and dispose (SMT 228). The reader reads
      *       no further line until it has happened.</li>
      *   <li>ENQ1, ENQ2: a response's callback removes its entry (SMT 273) when the response
@@ -327,8 +338,10 @@ public final class McpCancel implements MpProgram {
         private final ArrayDeque<Item> queue = new ArrayDeque<>();
         /** The item the writer has checked (SMT 299) but not yet written (SMT 303), or null. */
         private Item checked;
-        /** The client line the reader has read and not yet handled, or null. */
+        /** The request line the reader has read and not yet handled, or null (never a cancel: R-A). */
         private MpMessage pending;
+        /** The request whose cancel is received (entered, SMT 219) and not yet removed (SMT 224), or 0. */
+        private int entered;
         /** A response whose entry is removed (SMT 273) and that is not yet queued (SMT 275). */
         private final boolean[] enq = {false, false};
 
@@ -354,9 +367,9 @@ public final class McpCancel implements MpProgram {
             return 0;
         }
 
-        /** The reader is inside a line: read and not yet handled, or a cancel not yet flagged. */
+        /** The reader is inside a line: read and not yet handled, or a cancel not yet removed or flagged. */
         private boolean readerBusy() {
-            return pending != null || cancelling() != 0;
+            return pending != null || entered != 0 || cancelling() != 0;
         }
 
         void run() {
@@ -370,14 +383,15 @@ public final class McpCancel implements MpProgram {
                     Channel.send(M, handler[1], new Shutdown());
                     return;
                 }
-                if (m instanceof Call || m instanceof Cancelled) {
+                if (m instanceof Call c) {
                     pending = m; // read by the reader; handled at a later point (HANDLE)
-                    if (m instanceof Call c) {
-                        calls++;
-                        gotCall[c.req() - 1] = true;
-                    } else {
-                        gotCancel[((Cancelled) m).req() - 1] = true;
-                    }
+                    calls++;
+                    gotCall[c.req() - 1] = true;
+                } else if (m instanceof Cancelled c) {
+                    // R-A: received at the entry into handleCancel (SMT 219); the remove (SMT 224)
+                    // follows at REMOVE, the flag and the dispose at FLAG.
+                    gotCancel[c.req() - 1] = true;
+                    entered = c.req();
                 } else {
                     callback(m);
                 }
@@ -385,7 +399,7 @@ public final class McpCancel implements MpProgram {
             }
         }
 
-        /** The reader's handling of a client line (SMT 202-215). */
+        /** The reader's handling of a client line (SMT 202-215): a request at HANDLE, a cancel at REMOVE. */
         private void handleLine(MpMessage m) {
             if (m instanceof Call c) {
                 int i = c.req() - 1;
@@ -463,33 +477,37 @@ public final class McpCancel implements MpProgram {
 
         private boolean idle() {
             return queue.isEmpty() && checked == null && pending == null && !enq[0] && !enq[1]
-                    && cancelling() == 0;
+                    && entered == 0 && cancelling() == 0;
         }
 
         /**
          * A nondeterministic sequence of micro-actions, ending at HALT. HALT is offered when
          * nothing is left to do, or when a further message is certain; otherwise the flush goes
-         * on. The actions without a visible event (ENQ, the handling of a cancel) commute with the
-         * writer's and with each other's, except that two ENQs give the queue order; they are
-         * offered only before the flush's first visible action, unless HALT is not available.
+         * on. The actions without a visible event (ENQ) commute with the writer's and with each
+         * other's, except that two ENQs give the queue order; they are offered only before the
+         * flush's first visible action, unless HALT is not available. REMOVE (no visible event
+         * either) is offered at every point.
          */
         private void flush() {
             boolean visible = false;
             while (true) {
                 boolean halt = idle() || certain();
-                List<Act> acts = new ArrayList<>(6);
+                List<Act> acts = new ArrayList<>(7);
                 if (halt) {
                     acts.add(Act.HALT);
                 }
                 if (checked != null || !queue.isEmpty()) {
                     acts.add(Act.WRITER);
                 }
+                if (entered != 0) {
+                    acts.add(Act.REMOVE);
+                }
                 if (cancelling() != 0) {
                     acts.add(Act.FLAG);
                 }
                 boolean silent = !visible || !halt;
-                if (pending != null && (pending instanceof Call || silent)) {
-                    acts.add(Act.HANDLE);
+                if (pending != null) {
+                    acts.add(Act.HANDLE); // a request: sends Work, visible
                 }
                 if (enq[0] && silent) {
                     acts.add(Act.ENQ1);
@@ -503,6 +521,11 @@ public final class McpCancel implements MpProgram {
                         return;
                     }
                     case WRITER -> visible |= writer();
+                    case REMOVE -> {
+                        int r = entered;
+                        entered = 0;
+                        handleLine(new Cancelled(r));
+                    }
                     case FLAG -> {
                         int r = cancelling();
                         st[r - 1] = St.CANCELLED;
@@ -516,7 +539,7 @@ public final class McpCancel implements MpProgram {
                         MpMessage m = pending;
                         pending = null;
                         handleLine(m);
-                        visible |= m instanceof Call;
+                        visible = true;
                     }
                     case ENQ1 -> enqueue(0);
                     case ENQ2 -> enqueue(1);

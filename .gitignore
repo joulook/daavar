@@ -4,3 +4,4 @@ out/
 *.class
 .gradle/
 /local/
+__pycache__/

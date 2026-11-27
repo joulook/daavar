@@ -5,12 +5,19 @@
 //!   modelcontextprotocol/modelcontextprotocol d4b317231161ee96d3eefb2448bda4230c76f4c6, revision
 //!   2026-07-28 (`spec.rs`);
 //! * impl: the rmcp server core (modelcontextprotocol/rust-sdk 165f8fd5), rewritten (`imp.rs`);
+//! * implf: the same core with the fix that stops progress for a request once its cancellation is
+//!   read (modelcontextprotocol/rust-sdk 7d6c30ed), rewritten (`imp_fixed.rs`);
+//! * implt, impltf: the cores of impl and implf with their tasks and shared objects as Must
+//!   processes (`imp_threaded.rs`, `imp_threaded_fixed.rs`); same client and handler behaviour,
+//!   copied there;
+//! * impltp, impltfp: implt and impltf with object processes on `traceforge::sync`
+//!   (`imp_threaded_pred.rs`, `imp_threaded_fixed_pred.rs`; fix/PREDICATED-NOTE.md);
 //! * mutant<n> (n = 1..3): a deliberately wrong variant of the specification program, run on the
 //!   impl side, to check that the specification rejects it.
 //!
 //! All run the same client and handlers (`env.rs`) and the same messages (`msgs.rs`).
 //!
-//! ARGS: `<spec|impl|mutant1|mutant2|mutant3>[,<h1><h2>[,<reading>]]` (one comma-separated argument);
+//! ARGS: `<spec|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<h1><h2>[,<reading>]]` (one comma-separated argument);
 //! `<reading>` is the specification's reading of the cancellation rule, `s0` (strict, the default),
 //! `s1`, `s2` or `s3` (see spec.rs); a fourth field `c2` lets the client also cancel request 2. `<h1>`
 //! is handler1's branch, `a`, `b`, `c` or `x` (any of the three); `<h2>` is handler2's, `a`, `b` or
@@ -23,6 +30,11 @@
 
 mod env;
 mod imp;
+mod imp_fixed;
+mod imp_threaded;
+mod imp_threaded_fixed;
+mod imp_threaded_fixed_pred;
+mod imp_threaded_pred;
 mod msgs;
 mod spec;
 
@@ -31,7 +43,8 @@ use std::process::ExitCode;
 use msgs::{Args, Branch};
 
 const PROGRAM: &str = "mcp-cancel";
-const USAGE: &str = "`<spec|impl|mutant1|mutant2|mutant3>[,<a|b|c|x><a|b|x>[,s0|s1|s2|s3[,c2]]]`";
+const USAGE: &str =
+    "`<spec|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<a|b|c|x><a|b|x>[,s0|s1|s2|s3[,c2]]]`";
 
 /// Reports a bad argument: the reason and the usage line on stderr, exit 2 (the usage convention:
 /// a program never panics on its arguments).
@@ -40,7 +53,25 @@ fn usage(why: String) -> ! {
     std::process::exit(2)
 }
 
-fn parse(args: &[String]) -> Args {
+/// Which implementation program the impl side runs.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Imp {
+    /// `impl` (`imp.rs`), and `spec`, `mutant<n>` (which do not use it).
+    Plain,
+    /// `implf` (`imp_fixed.rs`).
+    Fixed,
+    /// `implt` (`imp_threaded.rs`).
+    Threaded,
+    /// `impltf` (`imp_threaded_fixed.rs`).
+    ThreadedFixed,
+    /// `impltp` (`imp_threaded_pred.rs`).
+    ThreadedPred,
+    /// `impltfp` (`imp_threaded_fixed_pred.rs`).
+    ThreadedFixedPred,
+}
+
+/// The arguments, and the implementation program the first field names.
+fn parse(args: &[String]) -> (Args, Imp) {
     if args.len() != 1 {
         usage(format!("expected 1 argument, got {} ({args:?})", args.len()));
     }
@@ -48,8 +79,17 @@ fn parse(args: &[String]) -> Args {
     if !(1..=4).contains(&f.len()) {
         usage(format!("expected 1 to 4 fields in `{}`", args[0]));
     }
+    // `implf`, `implt` and `impltf` run their programs on the impl side.
+    let imp = match f[0] {
+        "implf" => Imp::Fixed,
+        "implt" => Imp::Threaded,
+        "impltf" => Imp::ThreadedFixed,
+        "impltp" => Imp::ThreadedPred,
+        "impltfp" => Imp::ThreadedFixedPred,
+        _ => Imp::Plain,
+    };
     let mutant = match f[0] {
-        "spec" | "impl" => 0u8,
+        "spec" | "impl" | "implf" | "implt" | "impltf" | "impltp" | "impltfp" => 0u8,
         "mutant1" => 1,
         "mutant2" => 2,
         "mutant3" => 3,
@@ -78,7 +118,7 @@ fn parse(args: &[String]) -> Args {
         Some("c2") => true,
         Some(x) => usage(format!("unknown option `{x}`")),
     };
-    Args { h1: b(v[0], true), h2: b(v[1], false), mutant, reading, cancel2 }
+    (Args { h1: b(v[0], true), h2: b(v[1], false), mutant, reading, cancel2 }, imp)
 }
 
 fn main() -> ExitCode {
@@ -87,13 +127,20 @@ fn main() -> ExitCode {
             visible: &|_| ["client", "server"].iter().map(|n| n.to_string()).collect(),
             // The specification side never runs a mutant: a mutant is compared against the
             // unmodified specification.
-            spec: &|a| env::entry(Args { mutant: 0, ..parse(a) }, spec::server),
+            spec: &|a| env::entry(Args { mutant: 0, ..parse(a).0 }, spec::server),
             imp: &|a| {
-                let p = parse(a);
+                let (p, imp) = parse(a);
                 if p.mutant > 0 {
                     env::entry(p, spec::server)
                 } else {
-                    env::entry(p, imp::server)
+                    match imp {
+                        Imp::Fixed => env::entry(p, imp_fixed::server),
+                        Imp::Threaded => imp_threaded::entry(p),
+                        Imp::ThreadedFixed => imp_threaded_fixed::entry(p),
+                        Imp::ThreadedPred => imp_threaded_pred::entry(p),
+                        Imp::ThreadedFixedPred => imp_threaded_fixed_pred::entry(p),
+                        Imp::Plain => env::entry(p, imp::server),
+                    }
                 }
             },
         },

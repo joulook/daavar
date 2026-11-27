@@ -20,6 +20,20 @@ lang = "java"
 class = "bench.mcp_cancel.McpCancel"
 args = ["impl", "{variant}"]
 
+# the fixed rmcp (imp_fixed.rs, rust-sdk 7d6c30e); like imp.rs it ignores the reading
+[programs.rust-fixed]
+kind = "impl"
+lang = "rust"
+side = "impl"
+args = ["implf", "{variant}", "{c2.reading}", "{c2.flag}"]
+
+# the fixed java-sdk (java-sdk 69e6cd1e); same ARGS as McpCancel
+[programs.java-fixed]
+kind = "impl"
+lang = "java"
+class = "bench.mcp_cancel.McpCancelFixed"
+args = ["impl", "{variant}"]
+
 # the mutants run spec::server and read the reading
 [programs.mutant1]
 kind = "mutant"
@@ -45,9 +59,10 @@ args = ["mutant3", "{variant}", "{reading}", "{c2.flag}"]
 # ---- pairs: both twins, no cancel of request 2
 [scenarios.pairs]
 visible = ["client", "server"]
-programs = ["spec", "rust", "java", "mutant1", "mutant2", "mutant3"]
+programs = ["spec", "rust", "rust-fixed", "java", "java-fixed", "mutant1", "mutant2", "mutant3"]
 c2 = { reading = "", flag = "" }
-directions = ["rust<=spec", "java<=spec", "java<=rust", "rust<=java",
+directions = ["rust<=spec", "rust-fixed<=spec", "java<=spec", "java-fixed<=spec",
+              "java<=rust", "rust<=java", "java-fixed<=rust-fixed", "rust-fixed<=java-fixed",
               "mutant1<=spec", "mutant2<=spec", "mutant3<=spec"]
 
 [scenarios.pairs.matrix]
@@ -55,7 +70,8 @@ variant = ["aa", "ab", "ax", "ba", "bb", "bx", "ca", "cb", "cx", "xa", "xb", "xx
 reading = ["s0", "s1", "s2", "s3"]
 label = "{variant}.{reading}"
 
-# ---- pairs-c2: the client may also cancel request 2; Rust only (McpCancel does not offer it)
+# ---- pairs-c2: the client may also cancel request 2; Rust only (McpCancel does not offer it); the fixed
+#      rewrites are not in it (not measured with c2)
 [scenarios.pairs-c2]
 visible = ["client", "server"]
 programs = ["spec", "rust", "mutant1", "mutant2", "mutant3"]
