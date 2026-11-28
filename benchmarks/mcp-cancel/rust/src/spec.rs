@@ -33,6 +33,13 @@
 //! request received so far has its response written or its cancel received (the client then sends
 //! its second call, if it sent one, or `Shutdown`). Restriction: a queued item is never kept across a
 //! receive that was not certain.
+//!
+//! Variant `spec-nom10` (`Args::nom10`): the same program with that flush restriction (SD-M10, README
+//! "Vocabulary") lifted, i.e. `certain()` is always true: a flush may halt with items queued
+//! before any receive, so an execution may block with an item never written. Nothing else changes.
+//! The restriction is a property of this program, not of the specification text; a model that
+//! keeps items queued across an uncertain receive (a thread-level model whose writer runs
+//! independently of the server's receives) is rejected by it for that reason alone.
 
 use traceforge::thread::ThreadId;
 use traceforge::{nondet, recv_msg_block, send_msg, Nondet};
@@ -60,6 +67,8 @@ struct Server {
     client: ThreadId,
     h: [ThreadId; 2],
     mutant: u8,
+    /// SD-M10 lifted (`spec-nom10`): every receive counts as certain for the flush rule.
+    nom10: bool,
     /// The reading of the cancellation rule (0 strict, 1 hand-over, 2 completed exempt, 3 both).
     reading: u8,
     st: [St; 2],
@@ -89,7 +98,8 @@ impl Server {
     }
 
     fn certain(&self) -> bool {
-        self.st[0] == St::Unknown
+        self.nom10
+            || self.st[0] == St::Unknown
             || (!self.prog1_seen && self.st[0] != St::Unknown && self.work[0].is_none())
             || (!self.done2_seen && self.st[1] != St::Unknown && self.work[1].is_none())
             || (0..2).all(|i| self.st[i] == St::Unknown || self.wres[i] || self.cancel_seen[i])
@@ -271,6 +281,7 @@ pub fn server(client: ThreadId, h1: ThreadId, h2: ThreadId, args: Args) {
         client,
         h: [h1, h2],
         mutant: args.mutant,
+        nom10: args.nom10,
         reading: args.reading,
         st: [St::Unknown; 2],
         last: [0; 2],

@@ -4,6 +4,8 @@
 //! * spec: the specification program, from the MCP specification at
 //!   modelcontextprotocol/modelcontextprotocol d4b317231161ee96d3eefb2448bda4230c76f4c6, revision
 //!   2026-07-28 (`spec.rs`);
+//! * spec-nom10: the specification program with its flush restriction SD-M10 lifted (`spec.rs`
+//!   header), spec side only; the reference for the thread-level models;
 //! * impl: the rmcp server core (modelcontextprotocol/rust-sdk 165f8fd5), rewritten (`imp.rs`);
 //! * implf: the same core with the fix that stops progress for a request once its cancellation is
 //!   read (modelcontextprotocol/rust-sdk 7d6c30ed), rewritten (`imp_fixed.rs`);
@@ -17,7 +19,7 @@
 //!
 //! All run the same client and handlers (`env.rs`) and the same messages (`msgs.rs`).
 //!
-//! ARGS: `<spec|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<h1><h2>[,<reading>]]` (one comma-separated argument);
+//! ARGS: `<spec|spec-nom10|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<h1><h2>[,<reading>]]` (one comma-separated argument);
 //! `<reading>` is the specification's reading of the cancellation rule, `s0` (strict, the default),
 //! `s1`, `s2` or `s3` (see spec.rs); a fourth field `c2` lets the client also cancel request 2. `<h1>`
 //! is handler1's branch, `a`, `b`, `c` or `x` (any of the three); `<h2>` is handler2's, `a`, `b` or
@@ -44,7 +46,7 @@ use msgs::{Args, Branch};
 
 const PROGRAM: &str = "mcp-cancel";
 const USAGE: &str =
-    "`<spec|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<a|b|c|x><a|b|x>[,s0|s1|s2|s3[,c2]]]`";
+    "`<spec|spec-nom10|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<a|b|c|x><a|b|x>[,s0|s1|s2|s3[,c2]]]`";
 
 /// Reports a bad argument: the reason and the usage line on stderr, exit 2 (the usage convention:
 /// a program never panics on its arguments).
@@ -89,7 +91,7 @@ fn parse(args: &[String]) -> (Args, Imp) {
         _ => Imp::Plain,
     };
     let mutant = match f[0] {
-        "spec" | "impl" | "implf" | "implt" | "impltf" | "impltp" | "impltfp" => 0u8,
+        "spec" | "spec-nom10" | "impl" | "implf" | "implt" | "impltf" | "impltp" | "impltfp" => 0u8,
         "mutant1" => 1,
         "mutant2" => 2,
         "mutant3" => 3,
@@ -118,7 +120,8 @@ fn parse(args: &[String]) -> (Args, Imp) {
         Some("c2") => true,
         Some(x) => usage(format!("unknown option `{x}`")),
     };
-    (Args { h1: b(v[0], true), h2: b(v[1], false), mutant, reading, cancel2 }, imp)
+    let nom10 = f[0] == "spec-nom10";
+    (Args { h1: b(v[0], true), h2: b(v[1], false), mutant, reading, cancel2, nom10 }, imp)
 }
 
 fn main() -> ExitCode {
@@ -130,6 +133,9 @@ fn main() -> ExitCode {
             spec: &|a| env::entry(Args { mutant: 0, ..parse(a).0 }, spec::server),
             imp: &|a| {
                 let (p, imp) = parse(a);
+                if p.nom10 {
+                    usage("`spec-nom10` is a spec-side selector".to_string());
+                }
                 if p.mutant > 0 {
                     env::entry(p, spec::server)
                 } else {

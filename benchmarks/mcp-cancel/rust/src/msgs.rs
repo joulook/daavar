@@ -100,4 +100,7 @@ pub struct Args {
     pub reading: u8,
     /// `true`: the client may also cancel request 2 (default `false`).
     pub cancel2: bool,
+    /// `true`: the specification program with its flush restriction SD-M10 lifted (selector
+    /// `spec-nom10`, spec side only; see spec.rs). Default `false`.
+    pub nom10: bool,
 }

@@ -18,6 +18,7 @@ header and comments; `rust/src/spec.rs` cites the specification text it follows.
 | Program | Where | Source |
 |---|---|---|
 | spec | `rust/src/spec.rs` | the MCP specification text only |
+| spec-nom10 | `rust/src/spec.rs` with `nom10` | spec with its flush restriction SD-M10 lifted (Vocabulary); the reference for the threaded models |
 | impl (Rust) | `rust/src/imp.rs` | rmcp server core |
 | implf (Rust) | `rust/src/imp_fixed.rs` | rmcp server core at the fix commit `7d6c30e` (github.com/joulook/rust-sdk) |
 | impl (Java) | `java/bench/mcp_cancel/McpCancel.java` | java-sdk server core |
@@ -74,14 +75,27 @@ server → handler: `Work{req,token}`, `Stop{req}`, `Shutdown`.
 
 Values: `req` ∈ {1,2}, `token` ∈ {"t1","t2"}, `value` ∈ {1,2}.
 
+SD-M10 is the spec program's flush restriction (Roles and observation; `spec.rs` header, `Server::certain`): an item
+may stay queued across a receive only when that receive is certain to come. It is a property of the program, needed
+so that every spec execution terminates, not of the specification text. `spec-nom10` is the same program with
+SD-M10 lifted (`certain()` always true; nothing else changes): a flush may stop with items queued before any
+receive, so a spec execution may also block with an item never written. Lifting it only adds spec observations
+(aa: 12 040 → 138 910 under S0; study log `thr-nom10.out`). The hand joins keep the committed spec, the smaller and stricter reference: the Rust hand rewrites flush under the
+same restriction (`imp.rs:42-44`, `imp_fixed.rs:69-71`), and every hand result in this README was measured against it. The threaded models
+have a writer that runs independently of the serve loop's receives, so an item may stay queued across any receive;
+against the committed spec most of their uncovered observations are rejected by SD-M10 alone (for `impltf` aa under
+S1, all 1 517), which is not a defect of the SDK. Their joins therefore use `spec-nom10`, with the size label
+`spec_<pair>_nom10`.
+
 ## ARGS
 
-`<spec|impl|implf|mutant1|mutant2|mutant3>[,<h1><h2>]`:
+`<spec|spec-nom10|impl|implf|implt|impltf|impltp|impltfp|mutant1|mutant2|mutant3>[,<h1><h2>]`:
 - `<h1>` ∈ `a b c x` is handler1's branch; `<h2>` ∈ `a b x` is handler2's;
 - `x` = nondeterministic; the default is `xx`.
 - an optional third field selects the spec's reading of the cancellation rule: `s0` strict (the default), `s1`
   (sent = handed to the writer), `s2` (a request completed before the cancel is exempt), `s3` (both);
 - an optional fourth field `c2` lets the client also cancel request 2 (Rust only; `implf` was not measured with it);
+- `spec-nom10` takes the spec's fields (pair, reading, `c2`) and is refused on the impl side (exit 2);
 - `implf` runs the fixed rmcp rewrite (`imp_fixed.rs`); the fixed Java rewrite is the class `McpCancelFixed` with
   McpCancel's ARGS (`impl[,<h1><h2>]`).
 
@@ -205,10 +219,30 @@ unchanged (the fixed model has no T1 or T2 word under any reading; the baseline 
 observations only the threaded models produce are absent from the hand exports because of the hand rewrites' flush
 restriction; against the specification the uncovered ones are of three kinds (the rest conform: for `impltf` aa 105 of the 706 server
 words only in its threaded export): rejected by the specification program's flush
-restriction SD-M10 only (for `impltf` aa shown by admission: all of them covered once SD-M10 is lifted), T3 words that
+restriction SD-M10 only (all of them covered once SD-M10 is lifted: against `spec-nom10` no uncovered observation is
+M10-only, in any pair or reading run), T3 words that
 the strict reading rejects, and, for the baseline, T1 and T2 words at interleavings the hand rewrite does not reach.
-Java: the baseline threaded model of pair aa exported 763,017 lines (59,661 after the
+Java: the baseline threaded model of pair aa exported 763,017 observations (59,661 after the
 projection) within a 12-hour cap; the fixed one did not finish within it.
+
+
+Reproduce (thread level, against `spec-nom10`; from `rust`, `B` and `J` as in "Joins by hand"):
+
+```
+$B export spec --out spec-s2.jsonl --program mcp-cancel --size spec_aa_nom10 --model fifo -- spec-nom10,aa,s2
+$B export impl --out base.jsonl --threads 16 --model fifo -- impltp,aa
+$J --decide spec-s2.jsonl base.jsonl     # violation: 634 uncovered, T1 154, T2 480
+$B export spec --out spec-s1.jsonl --program mcp-cancel --size spec_aa_nom10 --model fifo -- spec-nom10,aa,s1
+$B export impl --out fixed.jsonl --threads 16 --model fifo -- impltfp,aa
+$J --decide spec-s1.jsonl fixed.jsonl    # conforms (S2 too; S0: 736 uncovered, all T3)
+```
+
+About 35 s per spec export, 14 s and 3 s for the two impl exports on 16 threads, 15 s and 3.4 GB per join. Java
+baseline, pair aa, from `benchmarks/mcp-cancel` with `rust/spec-s2.jsonl` from above: `mkdir rep`, `MpLauncher
+bench.mcp_cancel.McpCancelThreaded:implt,aa must 0 1 rep export.jsonl 43200 --split 16 --k 16` (10.8 h, 21 GB), then
+`python3 java/scripts/project_threaded.py export.jsonl projected.jsonl` and
+`../../traceforge/target/release/conf-join --decide rust/spec-s2.jsonl projected.jsonl`: violation, 19 068
+uncovered, T1 14 765, T2 8 853, no T3. Numbers: study log `nom10-runs.out` (brain03, 16 cores).
 
 ## Upstream
 
